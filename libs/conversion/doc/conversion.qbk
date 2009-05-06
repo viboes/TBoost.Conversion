@@ -5,8 +5,8 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[library Boost.Conversion
-    [quickbook 1.3]
+[article Toward Boost.Conversion
+    [quickbook 1.4]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2009 Vicente J. Botet Escriba]
     [id boost.conversion]
@@ -22,7 +22,7 @@
 [def __convert_to__  `convert_to`]
 [def __assign_to__  `assign_to`]
 
-[import ../../../boost/conversion/chrono_time_point_to_posix_time_ptime.hpp]
+[import ../../../boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp]
 [import ../../../boost/conversion/std/pair.hpp]
 [import ../../../boost/conversion/boost/optional.hpp]
 
@@ -394,6 +394,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:complex_hpp Header `<boost/conversion/std/complex.hpp>`]
 [/==========================================================================================]
 
+Include this file when using conversions between complex of convertible types.
+
     namespace boost {
         namespace partial_specialization_workaround {
             template < class T, class U>
@@ -413,6 +415,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:pair_hpp Header `<boost/conversion/std/pair.hpp>`]
 [/==========================================================================================]
 
+Include this file when using conversions between pairs of convertible types.
+
     namespace boost {
         namespace partial_specialization_workaround {
             template < class T1, class T2, class U1, class U2>
@@ -430,6 +434,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [/==========================================================================================]
 [section:string_hpp Header `<boost/conversion/std/string.hpp>`]
 [/==========================================================================================]
+
+Include this file when using conversions to std::string.
 
     namespace boost {
         namespace partial_specialization_workaround {
@@ -459,6 +465,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:rational_hpp Header `<boost/conversion/boost/rational.hpp>`]
 [/==========================================================================================]
 
+Include this file when using conversions between rational of convertible types.
+
     namespace boost {
         namespace partial_specialization_workaround {
             template < class T, class U>
@@ -476,6 +484,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [/==========================================================================================]
 [section:chrono_posix_time_hpp Header `<boost/conversion/boost/chrono_posix_time.hpp>`]
 [/==========================================================================================]
+
+Include this file when using conversions between chrono and posix_time time and duration types.
 
     namespace boost {
         namespace partial_specialization_workaround {
@@ -535,6 +545,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:interval_hpp Header `<boost/conversion/boost/interval.hpp>`]
 [/==========================================================================================]
 
+Include this file when using conversions between intervals of convertible types.
+
     namespace boost {
         namespace partial_specialization_workaround {
             template < class T, class PT, class U, class PU>
@@ -555,6 +567,8 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:optional_hpp Header `<boost/conversion/boost/optional.hpp>`]
 [/==========================================================================================]
 
+Include this file when using conversions between optional of convertible types.
+
     namespace boost {
         namespace partial_specialization_workaround {
             template < class Target, class Source>
@@ -565,6 +579,53 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
             struct assign_to< optional<Target>, optional<Source> > {
                 static optional<Target>& apply(
                     const optional<Target>& from, optional<Target>& to);
+            };
+
+        }
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section:array_hpp Header `<boost/conversion/boost/array.hpp>`]
+[/==========================================================================================]
+
+Include this file when using conversions between arrays of convertible types.
+
+    namespace boost {
+
+        namespace partial_specialization_workaround {
+            template < typename T1, typename T2, std::size_t N>
+            struct convert_to< array<T1,N>, array<T2,N> > {
+                inline static array<T1,N> apply(array<T2,N> const & from);
+            };
+            template < typename T1, typename T2, std::size_t N>
+            struct assign_to< array<T1,N>, array<T2,N> > {        
+                inline static array<T1,N>& apply(array<T2,N> const & from, array<T1,N>& to);
+            };
+        }
+    }
+
+
+[endsect]
+
+[/==========================================================================================]
+[section:tuple_hpp Header `<boost/conversion/boost/tuple.hpp>`]
+[/==========================================================================================]
+
+Include this file when using conversions between fusion::tuple of convertible types.
+
+    namespace boost {
+        namespace partial_specialization_workaround {
+            template < class T1, ..., class Tn, class U1, ..., class Un>
+            struct convert_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
+                inline static boost::fusion::tuple<T1,...,T3> 
+                apply(boost::fusion::tuple<U1,...,U3> const & from);
+            };
+            template < class T1, ..., class Tn, class U1, ..., class Un>
+            struct assign_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
+                inline static boost::fusion::tuple<T1,...,T3> 
+                apply(boost::fusion::tuple<U1,...,U3> const & from, boost::fusion::tuple<T1,...,T3>& to);
             };
 
         }
@@ -592,7 +653,16 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section Appendices]
 [/=================]
 [section:history Appendix A: History]
+[section [*Version 0.2.0, Mai 16, 2009] ['Adding]]
+
+[*New Features:]
+
+* conversion between boost::array of explicitly convertible types.
+* conversion between Boost.Fusion sequences of explicitly convertible types.
+
+[endsect]
 [section [*Version 0.1.0, April 16, 2009] ['Announcement of Conversions]]
+
 
 [*Features:]
 
@@ -616,13 +686,56 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 
 [section:rationale Appendix B: Rationale]
 
+[heading Mathematical background]
+
+Let be
+
+    A a,a2;
+    B b;
+    C c;
+
+* Reflexive: A is convertible to A if it is CopyConstructible
+
+* Symetric : A convertible to B implies B convertible to C
+
+* Loss of precission: Conversions can loss precission but not at infinitum
+
+Two convertible types don't loss precission if 
+
+    b = convert_to<B>(a);
+    a2 = convert_to<A>(b);
+    assert(a==a2);
+    
+If they can loss precission they satisfy
+
+    b = convert_to<B>(a)
+    a2 = convert_to<A>(b)
+    assert(a==a2 || ct(a2)==b
+
+* Transitive: A convertible to B && B convertible to C implies A convertible to C
+
+The implementation could use a intermediary B b to make the conversion or make the conversion directly.
+
+    template <>
+    convert_to<C,A>(const C& c) {
+        return convert_to<A>(convert_to<B>(c));
+    }
+
+
+
 [heading Why use partial function specialization and not ADL?]
+
 
 [endsect]
 
 [section:implementation Appendix C: Implementation Notes]
 
-TBC
+[heading Why `convert_to` between tuples is not be implemented using `boost::fusion::transform`?]
+
+`convert_to<T>` is a kind of transaformation, so the natural implementation of convert_to for homegeneus containers could be to use the transform function.
+
+This can not be applied to heterogeneus containers as tuples because the function change with the type.
+
 
 [endsect]
 [section:acknowledgements Appendix D: Acknowledgements]
@@ -632,11 +745,11 @@ Thanks to Vladimir Batov proposing Boost.StringConversion which was the source o
 [endsect]
 [section  Appendix E: Tests]
 
-[section Builtings]
+[section Builtins]
 [table
     [[Name]                                  [kind]          [Description]                                           [Result] [Ticket]]
-    [[convert_to_with_builting_types]        [run]       [check convert_to works for builting types]                [Pass]   [#]]
-    [[assign_to_with_builting_types]         [run]       [check assign_to works for builting types]                 [Pass]   [#]]
+    [[convert_to_with_builtin_types]        [run]       [check convert_to works for builting types]                [Pass]   [#]]
+    [[assign_to_with_builtin_types]         [run]       [check assign_to works for builting types]                 [Pass]   [#]]
 ]
 [endsect]
 
@@ -681,6 +794,8 @@ Thanks to Vladimir Batov proposing Boost.StringConversion which was the source o
     [[convert_to_ptime]         [run]   [check convert_to ptime from time_point works]                          [Pass]   [#]]
     [[convert_to_duration]      [run]   [check convert_to duration from time_duration works]                    [Pass]   [#]]
     [[convert_to_time_duration] [run]   [check convert_to time_duration from duration works]                    [Pass]   [#]]
+    [[convert_to_array]      [run]   [check convert_to array works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_tuple]      [run]   [check convert_to tuple works when the parameters are convertible]   [Pass]   [#]]
 ]
 [endsect]
 
@@ -696,8 +811,6 @@ Thanks to Vladimir Batov proposing Boost.StringConversion which was the source o
 [heading Tasks to do before review]
 
 * conversion between std::vector of explicitly convertible types.
-* conversion between boost::array of explicitly convertible types.
-* conversion between Boost.Fusion sequences of explicitly convertible types.
 
 [heading For later releases]
 

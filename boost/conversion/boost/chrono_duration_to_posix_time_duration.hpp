@@ -49,7 +49,7 @@ namespace boost {
         struct convert_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
             inline static chrono::duration<Rep, Period> apply(posix_time::time_duration const & from)
             {
-                return  chrono::nanoseconds(from.total_nanoseconds());
+                return  chrono::duration_cast<chrono::duration<Rep, Period> >(chrono::nanoseconds(from.total_nanoseconds()));
             }
         };
         template < class Rep, class Period>

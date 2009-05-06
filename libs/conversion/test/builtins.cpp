@@ -17,7 +17,7 @@ using namespace boost::unit_test;
 
 
 
-void convert_to_with_builting_types() {
+void convert_to_with_builtin_types() {
     char c=0;
     short s=1;
     int i=2;
@@ -66,7 +66,7 @@ void convert_to_with_builting_types() {
 }
 
 
-void assign_to_with_builting_types() {
+void assign_to_with_builtin_types() {
     char c=0;
     short s=1;
     int i=2;
@@ -117,9 +117,9 @@ void assign_to_with_builting_types() {
 
 test_suite* init_unit_test_suite(int, char*[])
 {
-  test_suite* test = BOOST_TEST_SUITE("builtings");
-  test->add(BOOST_TEST_CASE(&convert_to_with_builting_types));
-  test->add(BOOST_TEST_CASE(&assign_to_with_builting_types));
+  test_suite* test = BOOST_TEST_SUITE("builtins");
+  test->add(BOOST_TEST_CASE(&convert_to_with_builtin_types));
+  test->add(BOOST_TEST_CASE(&assign_to_with_builtin_types));
   return test;
 }
 

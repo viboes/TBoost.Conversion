@@ -17,34 +17,32 @@ if ! $(BOOST_ROOT)
 
 project :
     : requirements
-        <include>$(BOOST_ROOT)
+#        <include>$BOOST_ROOT
         <include>../../..
         <include>../../../../chrono
         
-        <threading>multi
+#        <threading>multi
 #        <target-os>cygwin
         #<threadapi>pthread
-        <variant>debug
+#        <variant>debug
         
-        #<library>/boost/test//boost_unit_test_framework/<link>static
+#        <library>/boost/test//boost_unit_test_framework/<link>static
         #<library>/boost/thread//boost_thread/<link>static
-        <library>../../../../chrono/libs/chrono/build//boost_chrono/<link>static
+        <library>/sandbox/chrono/libs/chrono/build//boost_chrono/<link>static
+        <library>/boost_1_39_0/libs/system/build//boost_system/<link>static
+        #<library>/sandbox/chrono/libs/chrono/build//boost_chrono
         
-        <library>../../../../../boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
-#        <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
+        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
+#        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
 #        <library>../../../../../boost_1_38_0/libs/system/build//boost_system/<link>static
       
 ;
 
-#exe helpers
-#    : ../example/IL_BancAccount.cpp
-#    : <define>BOOST_SYNCHRO_DO_NOT_COMPILE
-#    ;
 
 
      
 test-suite "conversion" :
-     [ run builtings.cpp ]
+     [ run builtins.cpp ]
      [ run intrinsec.cpp ]
      [ run extrinsec.cpp ]
      [ run pair.cpp ]
@@ -52,6 +50,10 @@ test-suite "conversion" :
      [ run interval.cpp ]
      [ run rational.cpp ]
      [ run optional.cpp ]
+     [ run array.cpp ]
+     [ run tuple.cpp ]
+     [ run chrono_posix_time_time.cpp ]
+     [ run chrono_posix_time_duration.cpp ]
     ; 
 
 
