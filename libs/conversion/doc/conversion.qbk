@@ -235,7 +235,7 @@ compiler include path.
 [heading Requirements]
 [/=========================]
 
-[*Boost.Conversion] do not depends on any Boost library, at least for the generic part. Of course it dependens on the specific libraries when specific conversion are used. For these specific parts you must use either Boost version 1.38.0 or the version in SVN trunk (even if Boost version 1.35.x should works also). 
+[*Boost.Conversion] do not depends on any Boost library, at least for the generic part. Of course it dependens on the specific libraries when specific conversion are used. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if Boost version 1.35.x should works also). 
 
 
 [/========================]
@@ -653,7 +653,7 @@ Include this file when using conversions between fusion::tuple of convertible ty
 [section Appendices]
 [/=================]
 [section:history Appendix A: History]
-[section [*Version 0.2.0, Mai 16, 2009] ['Adding]]
+[section [*Version 0.2.0, Mai 16, 2009] ['Adding array + fusion::tuples + Adaptation to Boost 1.39]]
 
 [*New Features:]
 
