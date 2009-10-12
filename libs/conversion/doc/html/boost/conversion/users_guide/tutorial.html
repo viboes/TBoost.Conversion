@@ -1,0 +1,123 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../../index.html" title="Toward Boost.Conversion">
+<link rel="up" href="../users_guide.html" title=" Users'Guide">
+<link rel="prev" href="getting_started.html" title=" Getting
+      Started">
+<link rel="next" href="ext_references.html" title=" References">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost.conversion.users_guide.tutorial"></a><a href="tutorial.html" title="Tutorial">Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost.conversion.users_guide.tutorial.using_generic_conversions">Using
+        generic conversions</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost.conversion.users_guide.tutorial.using_specific_conversions">Using
+        specific conversions</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost.conversion.users_guide.tutorial.how_to_completly_specialize_the_conversion_functions">How
+        to completly specialize the conversion functions</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions">How
+        to partially specialize the conversion functions</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.tutorial.using_generic_conversions"></a><a href="tutorial.html#boost.conversion.users_guide.tutorial.using_generic_conversions" title="Using
+        generic conversions">Using
+        generic conversions</a>
+</h4></div></div></div>
+<p>
+          When you need to make a generic explicit conversion or assignation you
+          just need to include the file boost/conversion/convert_to.hpp or boost/conversion/assign_to.hpp
+          and just use the boost conversion function.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// ...
+</span>
+<span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="number">3.5</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.tutorial.using_specific_conversions"></a><a href="tutorial.html#boost.conversion.users_guide.tutorial.using_specific_conversions" title="Using
+        specific conversions">Using
+        specific conversions</a>
+</h4></div></div></div>
+<p>
+          When you need make a specific conversion you will need to include the specific
+          conversion file. E.g.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">pint</span><span class="special">(</span><span class="number">0</span><span class="special">,</span><span class="number">1</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">pdouble</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">pint</span><span class="special">);</span>
+</pre>
+<p>
+          Do not forget to include this files when you use a generic class or algorithm
+          using the generic convert_to or assign_to, otherwise your program should
+          not compile. E.g. if you want to convert a pair of chrono::time_point&lt;&gt;
+          to a pair of posix_time::ptime do not forget to include in addition to
+          the boost/conversion/std/pair.hpp the file boost/conversion/boost/chrono_posix_time.hpp
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.tutorial.how_to_completly_specialize_the_conversion_functions"></a><a href="tutorial.html#boost.conversion.users_guide.tutorial.how_to_completly_specialize_the_conversion_functions" title="How
+        to completly specialize the conversion functions">How
+        to completly specialize the conversion functions</a>
+</h4></div></div></div>
+<p>
+          You can completly specialize the convert_to and assign_to functions as
+          you will do for other functions. Just add an complete overload. E.g. if
+          you want to add an explicit convertion from a type F to a type T do the
+          following:
+        </p>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">F</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions"></a><a href="tutorial.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions" title="How
+        to partially specialize the conversion functions">How
+        to partially specialize the conversion functions</a>
+</h4></div></div></div>
+<p>
+          As it has been explained in the introduction, until you use a C++ compiler
+          supporting the new partial specialization of function templates you will
+          need to follow partial specialization workaround and partialy specialize
+          the partial_specialization_workaround::convert_to class.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

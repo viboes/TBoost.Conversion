@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix B: Rationale</title>
+<link rel="stylesheet" href="../../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../../index.html" title="Toward Boost.Conversion">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="history.html" title=" Appendix A: History">
+<link rel="next" href="implementation.html" title=" Appendix
+      C: Implementation Notes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="history.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost.conversion.appendices.rationale"></a><a href="rationale.html" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
+</h3></div></div></div>
+<a name="boost.conversion.appendices.rationale.mathematical_background"></a><h4>
+<a name="id4826260"></a>
+        <a href="rationale.html#boost.conversion.appendices.rationale.mathematical_background">Mathematical
+        background</a>
+      </h4>
+<p>
+        Let be
+      </p>
+<pre class="programlisting"><span class="identifier">A</span> <span class="identifier">a</span><span class="special">,</span><span class="identifier">a2</span><span class="special">;</span>
+<span class="identifier">B</span> <span class="identifier">b</span><span class="special">;</span>
+<span class="identifier">C</span> <span class="identifier">c</span><span class="special">;</span>
+</pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Reflexive: A is convertible to A if it is CopyConstructible
+        </li>
+<li>
+          Symetric : A convertible to B implies B convertible to C
+        </li>
+<li>
+          Loss of precission: Conversions can loss precission but not at infinitum
+        </li>
+</ul></div>
+<p>
+        Two convertible types don't loss precission if
+      </p>
+<pre class="programlisting"><span class="identifier">b</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">a2</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">a</span><span class="special">==</span><span class="identifier">a2</span><span class="special">);</span>
+</pre>
+<p>
+        If they can loss precission they satisfy
+      </p>
+<pre class="programlisting"><span class="identifier">b</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">a</span><span class="special">)</span>
+<span class="identifier">a2</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">)</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">a</span><span class="special">==</span><span class="identifier">a2</span> <span class="special">||</span> <span class="identifier">ct</span><span class="special">(</span><span class="identifier">a2</span><span class="special">)==</span><span class="identifier">b</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+          Transitive: A convertible to B &amp;&amp; B convertible to C implies A
+          convertible to C
+        </li></ul></div>
+<p>
+        The implementation could use a intermediary B b to make the conversion or
+        make the conversion directly.
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">,</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">C</span><span class="special">&amp;</span> <span class="identifier">c</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">c</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<a name="boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_"></a><h4>
+<a name="id4826775"></a>
+        <a href="rationale.html#boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_">Why
+        use partial function specialization and not ADL?</a>
+      </h4>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="history.html"><img src="../../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

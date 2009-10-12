@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Toward Boost.Conversion</title>
+<link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="index.html" title="Toward Boost.Conversion">
+<link rel="next" href="boost/conversion/overview.html" title="Overview">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost/conversion/overview.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="boost.conversion"></a>Toward Boost.Conversion</h2></div>
+<div><div class="authorgroup"><div class="author"><h3 class="author">
+<span class="firstname">Vicente J.</span> <span class="surname">Botet Escriba</span>
+</h3></div></div></div>
+<div><p class="copyright">Copyright © 2009 Vicente J. Botet Escriba</p></div>
+<div><div class="legalnotice">
+<a name="id4803234"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="boost/conversion/overview.html">Overview</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost/conversion/overview/motivation.html">Motivation</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost/conversion/users_guide.html"> Users'Guide</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost/conversion/users_guide/getting_started.html"> Getting
+      Started</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/users_guide/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/users_guide/ext_references.html"> References</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost/conversion/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost/conversion/reference/convert_to_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/assign_to_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/complex_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">complex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/pair_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/string_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">string</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/rational_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">rational</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/chrono_posix_time_hpp.html"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono_posix_time</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/interval_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interval</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/optional_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/array_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">array</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="boost/conversion/reference/tuple_hpp.html"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tuple</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost/conversion/examples.html">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost/conversion/examples/chrono__time_point_and_posix_time__ptime.html">chrono::time_point
+      and posix_time::ptime</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/examples/boost__optional.html">boost::optional</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/examples/std__pair.html">std::pair</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost/conversion/appendices.html">Appendices</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost/conversion/appendices/history.html"> Appendix A: History</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/rationale.html"> Appendix B: Rationale</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/implementation.html"> Appendix
+      C: Implementation Notes</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/acknowledgements.html"> Appendix
+      D: Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/appendix_e__tests.html">Appendix
+      E: Tests</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/appendix_f__tickets.html">Appendix
+      F: Tickets</a></span></dt>
+<dt><span class="section"><a href="boost/conversion/appendices/todo.html"> Appendix F: Future
+      plans</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      Conversion is not a part of the Boost libraries.
+    </p></td></tr>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: October 05, 2009 at 16:16:23 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost/conversion/overview.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>
