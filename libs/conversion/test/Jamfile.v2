@@ -54,6 +54,6 @@ test-suite "conversion" :
 
 
 test-suite "compile_fail_test"  :
-#    [ compile-fail ../example/IL_BancAccount.cpp : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
+#    [ compile-fail ../example/IL_BancAccount.cpp : : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
     ;
     

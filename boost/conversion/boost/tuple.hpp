@@ -13,6 +13,7 @@
 
 #include <boost/fusion/tuple.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -29,7 +30,7 @@ namespace boost {
         };
         template < class T1, class T2, class U1, class U2>
         struct assign_to< boost::fusion::tuple<T1,T2>, boost::fusion::tuple<U1,U2> > {
-            inline static boost::fusion::tuple<T1,T2>& apply(boost::fusion::tuple<U1,U2> const & from, boost::fusion::tuple<T1,T2>& to)
+            inline static boost::fusion::tuple<T1,T2>& apply(boost::fusion::tuple<T1,T2>& to, boost::fusion::tuple<U1,U2> const & from)
             {
                 to = boost::convert_to<boost::fusion::tuple<T1,T2> >(from);
                 return to;
@@ -48,7 +49,7 @@ namespace boost {
         };
         template < class T1, class T2, class T3, class U1, class U2, class U3>
         struct assign_to< boost::fusion::tuple<T1,T2,T3>, boost::fusion::tuple<U1,U2,U3> > {
-            inline static boost::fusion::tuple<T1,T2,T3> apply(boost::fusion::tuple<U1,U2,U3> const & from, boost::fusion::tuple<T1,T2,T3>& to)
+            inline static boost::fusion::tuple<T1,T2,T3> apply(boost::fusion::tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from)
             {
                 to = boost::convert_to<boost::fusion::tuple<T1,T2> >(from);
                 return to;

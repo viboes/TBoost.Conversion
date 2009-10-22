@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/ca_wrapper.hpp>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
 
@@ -25,7 +26,7 @@ namespace boost {
   }
 
   template <>
-  A& assign_to<A,B>(const B& from, A& to) {
+  A& assign_to<A,B>(A& to, const B& from) {
     return to;
   }
 
@@ -38,7 +39,8 @@ void explicit_convert_to() {
 void explicit_assign_to() {
     B b;
     A a;
-    assign_to(b,a);
+    assign_to(a, b);
+    mca(a)= b;
     
 }
 test_suite* init_unit_test_suite(int, char*[])

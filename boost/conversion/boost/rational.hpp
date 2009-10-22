@@ -13,6 +13,7 @@
 
 #include <boost/rational.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -26,7 +27,7 @@ namespace boost {
         };
         template < class T, class U>
         struct assign_to< rational<T>, rational<U> > {
-            inline static rational<T>& apply(const rational<U>& from, rational<T>& to)
+            inline static rational<T>& apply(rational<T>& to, const rational<U>& from)
             {
                 to.assign(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
                 return to;

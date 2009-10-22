@@ -13,6 +13,7 @@
 
 #include <boost/numeric/interval.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -26,7 +27,7 @@ namespace boost {
         };
         template < class T, class PT, class U, class PU>
         struct assign_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
-            inline static numeric::interval<T,PT>& apply(const numeric::interval<U,PU>& from, numeric::interval<T,PT>& to)
+            inline static numeric::interval<T,PT>& apply(numeric::interval<T,PT>& to, const numeric::interval<U,PU>& from)
             {
                 to.assign(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
                 return to;

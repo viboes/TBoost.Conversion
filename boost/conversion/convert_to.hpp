@@ -26,25 +26,6 @@ namespace boost {
         return To(val);
       }
     };
-    template < typename To, typename From >
-    struct assign_to {
-      inline static To& apply(const From& from, To& to)
-      {
-        to = from;
-        return to;
-      }
-    };
-    template < typename To, typename From, std::size_t N  >
-    struct assign_to<To[N],From[N]> {
-      inline static To*& apply(const From(& from)[N], To (&to)[N])
-      {
-        for (std::size_t i = 0; i < N; ++i)
-        {
-          to[i] = boost::convert_to(from[i]);
-        }
-        return to;
-      }
-    };
 #if 0    
     template < typename To, typename From, std::size_t N >
     struct convert_to<To[N],From[N]> {
@@ -65,12 +46,6 @@ namespace boost {
   To convert_to(const From& val) {
     return partial_specialization_workaround::convert_to<To,From>::apply(val);
   }
-
-  template < typename To, typename From >
-  To& assign_to(const From& from, To& to) {
-    return partial_specialization_workaround::assign_to<To,From>::apply(from, to);
-  }
-
 
 }
 

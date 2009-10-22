@@ -13,6 +13,7 @@
 
 #include <string>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <boost/convert/convert.hpp>
 
 namespace boost {
@@ -28,7 +29,7 @@ namespace boost {
         }
         template<typename T, typename CharT, typename Traits, typename Alloc>
         struct assign_to< std::basic_string<CharT,Traits,Alloc>, T > {
-            inline static std::basic_string<CharT,Traits,Alloc>& apply(const T& from, std::basic_string<CharT,Traits,Alloc>& to)
+            inline static std::basic_string<CharT,Traits,Alloc>& apply(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
             {
                 to = convert<std::basic_string<CharT,Traits,Alloc> >::from(from);
                 return to;
@@ -43,7 +44,7 @@ namespace boost {
         };
         template<typename T, typename CharT, typename Traits, typename Alloc>
         struct assign_to< T, std::basic_string<CharT,Traits,Alloc>> {
-            inline static void apply(const std::basic_string<CharT,Traits,Alloc>& from, T& to)
+            inline static void apply(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
             {
                 to = convert<T>::from(from);
                 return to;

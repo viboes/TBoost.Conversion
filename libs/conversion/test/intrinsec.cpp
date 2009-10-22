@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/ca_wrapper.hpp>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
 
@@ -79,10 +80,15 @@ void assign_to_with_assignemet_operator() {
     {
     A a(0);
     AA aa(0);
-    assign_to(a,aa);
+    assign_to(aa,a);
     }
-    
 }
+void mca_with_assignemet_operator() {
+    A a(0);
+    AA aa(0);
+    mca(aa) =a;  
+}
+
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
@@ -91,24 +97,36 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     }
     {
     B b;
-    AA a(1);
-    assign_to(b,a);
+    AA aa(1);
+    assign_to(aa,b);
     }
-    
+}    
+void mca_with_assignemet_operator_and_implicit_constructor() {
+    B b;
+    AA aa(1);
+    mca(aa)=b;    
 }
+
 void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
-    CC a(1);
-    a=c;
+    CC cc(1);
+    cc=c;
     }
     {
     C c;
     CC cc(1);
-    assign_to(c,cc);
+    assign_to(cc,c);
     }
-    
 }
+
+void mca_with_assignemet_operator_and_conversion_operator() {
+    C c;
+    CC cc(1);
+    mca(cc)=c;
+}
+    
+
 test_suite* init_unit_test_suite(int, char*[])
 {
   test_suite* test = BOOST_TEST_SUITE("intrinsec");
@@ -118,6 +136,11 @@ test_suite* init_unit_test_suite(int, char*[])
   test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator));
   test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator_and_implicit_constructor));
   test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator_and_conversion_operator));
+  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator));
+  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_implicit_constructor));
+  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_conversion_operator));
+    
   return test;
+    
 }
 

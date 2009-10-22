@@ -14,6 +14,7 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -38,7 +39,7 @@ namespace boost {
         };
         template < class Rep, class Period>
         struct assign_to<posix_time::time_duration, chrono::duration<Rep, Period> > {        
-            inline static posix_time::time_duration& apply(const chrono::duration<Rep, Period>& from, posix_time::time_duration& to)
+            inline static posix_time::time_duration& apply(posix_time::time_duration& to, const chrono::duration<Rep, Period>& from)
             {
                 to = boost::convert_to<posix_time::time_duration>(from);
                 return to;
@@ -54,7 +55,7 @@ namespace boost {
         };
         template < class Rep, class Period>
         struct assign_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
-            inline static chrono::duration<Rep, Period> & apply(const posix_time::time_duration& from, chrono::duration<Rep, Period> & to)
+            inline static chrono::duration<Rep, Period> & apply(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
             {
                 to = boost::convert_to<chrono::duration<Rep, Period> >(from);
                 return to;

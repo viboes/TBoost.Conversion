@@ -13,6 +13,7 @@
 
 #include <complex>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -26,7 +27,7 @@ namespace boost {
         };
         template < class T, class U>
         struct assign_to< std::complex<T>, std::complex<U> > {
-            inline static std::complex<T>& apply(const std::complex<U>& from, std::complex<T>& to)
+            inline static std::complex<T>& apply(std::complex<T>& to, const std::complex<U>& from)
             {
                 to.real() = boost::convert_to<T>(from.real());
                 to.imag() = boost::convert_to<T>(from.imag());

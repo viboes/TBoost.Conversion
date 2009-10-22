@@ -32,8 +32,8 @@ void explicit_assign_to() {
     B1 b2(2);
     boost::rational<A1> a;
     boost::rational<B1> b(1,2);
-    assign_to(b,a);
-    assign_to(boost::rational<B1>(b1,b2),a);
+    assign_to(a, b);
+    assign_to(a, boost::rational<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

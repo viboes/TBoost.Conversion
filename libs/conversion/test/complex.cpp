@@ -28,7 +28,7 @@ namespace boost {
   }
 
   template <>
-  A1& assign_to<A1,B1>(const B1& from, A1& to) {
+  A1& assign_to<A1,B1>(A1& to, const B1& from) {
     return to;
   }
     
@@ -42,7 +42,7 @@ namespace boost {
         };
         template < >
         struct assign_to< A2,B2 > {
-            inline static A2& apply(const B2& from, A2& to)
+            inline static A2& apply(A2& to, const B2& from)
             {
                 return to;
             }
@@ -64,8 +64,8 @@ void explicit_assign_to() {
     B1 b2;
     std::complex<A1> a;
     std::complex<B1> b;
-    assign_to(b,a);
-    assign_to(std::complex<B1>(b1,b2),a);
+    assign_to(a,b);
+    assign_to(a,std::complex<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

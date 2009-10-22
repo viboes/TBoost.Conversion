@@ -32,8 +32,8 @@ void explicit_assign_to() {
     B1 b2;
     boost::numeric::interval<A1> a;
     boost::numeric::interval<B1> b;
-    assign_to(b,a);
-    assign_to(boost::numeric::interval<B1>(b1,b2),a);
+    assign_to(a,b);
+    assign_to(a,boost::numeric::interval<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

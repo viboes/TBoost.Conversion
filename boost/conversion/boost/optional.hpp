@@ -15,6 +15,7 @@
 #include <boost/optional.hpp>
 #include <boost/none.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -28,7 +29,7 @@ namespace boost {
         };
         template < class Target, class Source>
         struct assign_to< optional<Target>, optional<Source> > {
-            inline static optional<Target>& apply(const optional<Source>& from, optional<Target>& to)
+            inline static optional<Target>& apply(optional<Target>& to, const optional<Source>& from)
             {
                 to = from?boost::convert_to<Target>(from.get()):optional<Target>();
                 return to;

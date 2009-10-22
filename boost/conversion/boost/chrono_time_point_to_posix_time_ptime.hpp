@@ -16,6 +16,7 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/posix_time/conversion.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 
 namespace boost {
 
@@ -41,7 +42,7 @@ namespace boost {
         };
         template < class Clock, class Duration>
         struct assign_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-            inline static posix_time::ptime& apply(const chrono::time_point<Clock, Duration>& from, posix_time::ptime& to)
+            inline static posix_time::ptime& apply(posix_time::ptime& to, const chrono::time_point<Clock, Duration>& from)
             {
                 to = boost::convert_to<posix_time::ptime>(from);
                 return to;
@@ -61,7 +62,7 @@ namespace boost {
         };
         template < class Clock, class Duration>
         struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-            inline static chrono::time_point<Clock, Duration>& apply(const posix_time::ptime& from, chrono::time_point<Clock, Duration>& to)
+            inline static chrono::time_point<Clock, Duration>& apply(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
             {
                 to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
                 return to;

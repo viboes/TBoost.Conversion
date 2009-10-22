@@ -28,9 +28,9 @@ void explicit_convert_to() {
 void explicit_assign_to() {
     chrono::seconds a(3);
     posix_time::time_duration b;
-    assign_to(a, b);
+    assign_to(b, a);
     chrono::seconds c;
-    assign_to(b,c);
+    assign_to(c, b);
 }
 
 test_suite* init_unit_test_suite(int, char*[])

@@ -13,6 +13,7 @@
 
 #include <boost/array.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <algorithm>
 
 namespace boost {
@@ -23,13 +24,13 @@ namespace boost {
             inline static array<T1,N> apply(array<T2,N> const & from)
             {
                 array<T1,N> to;
-                boost::assign_to(from, to);
+                boost::assign_to(to, from);
                 return to;
             }
         };
         template < typename T1, typename T2, std::size_t N>
         struct assign_to< array<T1,N>, array<T2,N> > {        
-            inline static array<T1,N>& apply(array<T2,N> const & from, array<T1,N>& to)
+            inline static array<T1,N>& apply(array<T1,N>& to, array<T2,N> const & from)
             {
                 std::transform(from.begin(), from.end(), to.begin(), boost::convert_to<T1,T2>);
                 //for (unsigned int i =0; i<N; ++i) {

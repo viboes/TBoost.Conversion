@@ -33,7 +33,7 @@ void explicit_assign_to() {
     boost::optional<A1> a;
     boost::optional<B1> b;
     //assign_to(b,a);
-    assign_to(boost::optional<B1>(b1),a);
+    assign_to(a, boost::optional<B1>(b1));
 }
 
 test_suite* init_unit_test_suite(int, char*[])
