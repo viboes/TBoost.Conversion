@@ -35,7 +35,7 @@
 <dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.builtins">Builtins</a></span></dt>
 <dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.intrinsec_conversions">Intrinsec
         Conversions</a></span></dt>
-<dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.extrinsec_conversions">Extrinsec
+<dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.extrinsic_conversions">Extrinsic
         Conversions</a></span></dt>
 <dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.std">STD</a></span></dt>
 <dt><span class="section"><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.boost">Boost</a></span></dt>
@@ -93,7 +93,8 @@
                 </td>
 <td>
                 <p>
-                  check convert_to works for builting types
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  works for builting types
                 </p>
                 </td>
 <td>
@@ -120,7 +121,91 @@
                 </td>
 <td>
                 <p>
-                  check assign_to works for builting types
+                  check <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  works for builting types
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  assign_to_transitive
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  Use of <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  transitively
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  mca_assign_to_with_builtin_types
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check <code class="computeroutput"><span class="identifier">mca</span></code> <code class="computeroutput"><span class="identifier">works</span></code> for builting types
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  mca_assign_to_transitive
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  use of <code class="computeroutput"><span class="identifier">mca</span></code> to multiple
+                  assignements
                 </p>
                 </td>
 <td>
@@ -192,7 +277,8 @@
                 </td>
 <td>
                 <p>
-                  check convert_to works when there is an implicit constructor
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  works when there is an implicit constructor
                 </p>
                 </td>
 <td>
@@ -219,7 +305,8 @@
                 </td>
 <td>
                 <p>
-                  check convert_to works when there is an explicit constructor
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  works when there is an explicit constructor
                 </p>
                 </td>
 <td>
@@ -246,7 +333,8 @@
                 </td>
 <td>
                 <p>
-                  check assign_to works when there is an conversion operator
+                  check <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  works when there is an conversion operator
                 </p>
                 </td>
 <td>
@@ -273,7 +361,8 @@
                 </td>
 <td>
                 <p>
-                  check assign_to works when there is an assignement operator
+                  check <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  works when there is an assignement operator
                 </p>
                 </td>
 <td>
@@ -300,8 +389,8 @@
                 </td>
 <td>
                 <p>
-                  check assign_to works when there is an assignemet operator and
-                  implicit constructor
+                  check <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  works when there is an assignemet operator and implicit constructor
                 </p>
                 </td>
 <td>
@@ -328,8 +417,92 @@
                 </td>
 <td>
                 <p>
-                  check convert_to works when there is an assignemet operator and
-                  a conversion operator
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  works when there is an assignemet operator and a conversion operator
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  mca_with_assignemet_operator
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check <code class="computeroutput"><span class="identifier">mca</span></code> works
+                  when there is an assignement operator
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  mca_with_assignemet_operator_and_implicit_constructor
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check <code class="computeroutput"><span class="identifier">mca</span></code> works
+                  when there is an assignemet operator and implicit constructor
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  mca_with_assignemet_operator_and_conversion_operator
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check <code class="computeroutput"><span class="identifier">mca</span></code> works
+                  when there is an assignemet operator and a conversion operator
                 </p>
                 </td>
 <td>
@@ -348,8 +521,8 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.appendix_e__tests.extrinsec_conversions"></a><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.extrinsec_conversions" title="Extrinsec
-        Conversions">Extrinsec
+<a name="boost.conversion.appendices.appendix_e__tests.extrinsic_conversions"></a><a href="appendix_e__tests.html#boost.conversion.appendices.appendix_e__tests.extrinsic_conversions" title="Extrinsic
+        Conversions">Extrinsic
         Conversions</a>
 </h4></div></div></div>
 <div class="informaltable"><table class="table">
@@ -401,7 +574,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to works when convert_to is overloaded
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  works when <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  is overloaded
                 </p>
                 </td>
 <td>
@@ -428,7 +603,38 @@
                 </td>
 <td>
                 <p>
-                  check assign_to works when assign_to is overloaded
+                  check <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  works when <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  is overloaded
+                </p>
+                </td>
+<td>
+                <p>
+                  Pass
+                </p>
+                </td>
+<td>
+                <p>
+                  #
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  explicit_mca
+                </p>
+                </td>
+<td>
+                <p>
+                  run
+                </p>
+                </td>
+<td>
+                <p>
+                  check <code class="computeroutput"><span class="identifier">mca</span></code> works
+                  when <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                  is overloaded
                 </p>
                 </td>
 <td>
@@ -498,7 +704,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to pair works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -525,7 +733,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to complex works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">complex</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -552,7 +762,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to string works when the parameter defines the operator&lt;&lt;
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> works when the parameter
+                  defines the <code class="computeroutput"><span class="keyword">operator</span><span class="special">&lt;&lt;</span></code>
                 </p>
                 </td>
 <td>
@@ -579,8 +791,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to from string works when the parameter defines the
-                  operator&gt;&gt;
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> works when the parameter
+                  defines the <code class="computeroutput"><span class="keyword">operator</span><span class="special">&gt;&gt;</span></code>
                 </p>
                 </td>
 <td>
@@ -650,7 +863,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to rational works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">rational</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -677,7 +892,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to interval works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interval</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -704,7 +921,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to optional works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -731,7 +950,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to time_point from ptime works
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span></code> from boost::posix_time::ptime
+                  works
                 </p>
                 </td>
 <td>
@@ -758,7 +979,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to ptime from time_point works
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span></code> from boost::chrono::system_clock::time_point
+                  works
                 </p>
                 </td>
 <td>
@@ -785,7 +1008,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to duration from time_duration works
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span></code> from <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span></code>
+                  works
                 </p>
                 </td>
 <td>
@@ -812,7 +1037,8 @@
                 </td>
 <td>
                 <p>
-                  check convert_to time_duration from duration works
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span></code> from <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span></code> works
                 </p>
                 </td>
 <td>
@@ -839,7 +1065,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to array works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>
@@ -866,7 +1094,9 @@
                 </td>
 <td>
                 <p>
-                  check convert_to tuple works when the parameters are convertible
+                  check <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tuple</span></code> works when the parameters
+                  are convertible
                 </p>
                 </td>
 <td>

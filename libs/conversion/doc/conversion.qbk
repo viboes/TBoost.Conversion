@@ -1,4 +1,5 @@
 [/
+[/
  / Copyright (c) 2008 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -55,8 +56,19 @@ The main source of inspiration of this library were Boost.StringConvert.
 
 [*Boost.Conversion] provides:
 
-* a generic convert_to function which can be specialized by the user to make explict conversion between unrelated types.
-* a generic assign_to function which can be specialized by the user to make explict assignation between unrelated types.
+* a generic __convert_to__ function which can be specialized by the user to make explict conversion between unrelated types.
+* a generic __assign_to__ function which can be specialized by the user to make explict assignation between unrelated types.
+* a generic `mca` function returning a wrapper which replace assignments by a call to `assign_to` and conversion operators by a call `convert_to`.
+* a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.
+* conversion between `std::complex` of explicitly convertible types.
+* conversion between `std::pair` of explicitly convertible types.
+* conversion between `boost::optional` of explicitly convertible types.
+* conversion between `boost::rational` of explicitly convertible types.
+* conversion between `boost::interval` of explicitly convertible types.
+* conversion between `boost::chrono::time_point` and `boost::ptime`.
+* conversion between `boost::chrono::duration` and `boost::time_duration`. 
+* conversion between `boost::array` of explicitly convertible types.
+* conversion between Boost.Fusion sequences of explicitly convertible types.
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -77,46 +89,46 @@ This documentation makes use of the following naming and formatting conventions.
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all of Conversion files
+    // Include all of the core Conversion files
     #include <boost/conversion.hpp>
+    
+    using namespace boost;
 
 [section Motivation]
-   
-Imagine you need to convert unrelated types Source and Target. You can get it by defining a specific function such as
+
+Imagine you need to convert unrelated types `Source` and `Target`. You can get it by defining a specific function such as
 
     Target SourceToTarget(Source& v);
-    
+
 Imagine now that you need to convert a `std::pair<Source, Source>` to a `std::pair<Target, Target>`. Well you can again define a specific function
 
     std::pair<Target,Target> PairOfSourceToPairOfTarget(std::pair<Source,Source>& v) {
         return std::make_pair(SourceToTarget(v.fisrt), SourceToTarget(v.second));
     }
-    
-While the SourceToTarget could be specific, the PairOfSourceToPairOfTarget sould be generic
+
+While the `SourceToTarget` could be specific, the `PairOfSourceToPairOfTarget` sould be generic
 
     template <typename Target1, typename Target2, typename Source1, typename Source2)
     std::pair<Target1,Target2> ConvertPair(std::pair<Source1,Source2>& v);
-    
-In order to do that we need that the pair template parameters define a common function, let it call convert_to,
+
+In order to do that we need that the pair template parameters define a common function, let it call `convert_to`,
 
     template <typename Target, typename Source)
     Target convert_to(Source& v);
-    
-so ConvertPair can be defined as
+
+so `ConvertPair` can be defined as
 
     template <typename Target1, typename Target2, typename Source1, typename Source2)
     std::pair<Target1,Target2> ConvertPair(std::pair<Source1,Source2>& v) {
         return std::make_pair(convert_to(v.fisrt), convert_to(v.second));
     }
-    
-The issue is that we need to specialize the convert_to function for the classes Source and Target. We can do it as follows
+
+The issue is that we need to specialize the `convert_to` function for the classes `Source` and `Target`. We can do it as follows
 
     template <>
     Target  convert_to<Target, Source>(Source& v) {return SourceToTarget(v);}
-    
-What about converting std::pair<Source,std::pair<Source,Source>> to std::pair<Target,std::pair<Target,Target>>?
 
-The issue now is that convert_to(std::make_pair<to, std::make_pair<to,to>>) do not compiles because the conversion of std::pair is named ConvertPair. So we need to specialize the function convert_to for pairs. With C++0x there is no major problem as it allows partial specialization of function templates. With C++98, we need to use a trick; as it allows partial specialization of classes we can define convert_to by as relying to a specific function of a class, as follows:
+What about converting `std::pair<Source,std::pair<Source,Source> >` to `std::pair<Target,std::pair<Target,Target> >`? The issue now is that `convert_to(std::make_pair<to, std::make_pair<to,to> >)` do not compiles because the conversion of `std::pair` is named `ConvertPair`. So we need to specialize the function `convert_to` for pairs. There is no major problem with compilers supporting partial specialization of function templates. If this is not the case, we need to use a trick; as it allows partial specialization of classes we can define __convert_to__ by as relying to a specific function of a class, as follows:
 
   namespace partial_specialization_workaround {
     template < typename Target, typename Source >
@@ -130,7 +142,7 @@ The issue now is that convert_to(std::make_pair<to, std::make_pair<to,to>>) do n
     return partial_specialization_workaround::convert_to<Target,Source>::apply(val);
   }
 
-So now we can specialize partial_specialization_workaround::convert_to for pairs as follows:
+So now we can specialize `partial_specialization_workaround::convert_to` for pairs as follows:
 
     namespace partial_specialization_workaround {
         template <typename Target1, typename Target2, typename Source1, typename Source2)
@@ -156,28 +168,28 @@ There is one more issue. The preceding design works well with unrelated classes,
     }
 
 
-What have we learned? Classes or algorithms relying on a conversion by construction or by the conversion operator can be made more generic by relaying in a function that explicitly states this conversion. So instead of requiring
+What have we learned? Classes or algorithms relying on a conversion by copy-construction or by the conversion operator can be made more generic by relaying in a function that explicitly states this conversion. Thus, instead of requiring
 
     Target(from)
-    
+
 requires
 
     convert_to<Target>(from)
-    
+
 The same applies to classes or algorithms relying on the assignment operator. So instead of requiring
 
     to = from
 
 requires
 
-    assign_to(from, to);
-    
-The default implementation of assign_to relies on the assignement operator
+    assign_to(to, from);
+
+The default implementation of __assign_to__ relies on the assignement operator
 
     namespace partial_specialization_workaround {
         template < typename Target, typename Source >
         struct assign_to {
-            inline static To& apply(const Source& from, Target& to)
+            inline static To& apply(Target& to, const Source& from)
             {
                 to = from;
                 return to;
@@ -185,15 +197,29 @@ The default implementation of assign_to relies on the assignement operator
         };
     }
     template < typename Target, typename Source >
-    To& assign_to(const Source& from, Target& to) {
-        return partial_specialization_workaround::assign_to<Target,Source>::apply(from, to);
+    To& assign_to(Target& to, const Source& from) {
+        return partial_specialization_workaround::assign_to<Target,Source>::apply(to, from);
     }
-    
-For classes that are explicitly convertible and having a self assignment operator it is easy to make a specialization of assign_to as follows.
+
+For classes that are explicitly convertible and having a self assignment operator it is easy to make a specialization of __assign_to__ as follows.
 
     to = convert_to<Target>(from);
+
+The rationale is that if there was not a copy constructor from a Source seems reasonable to think that there will not be an assignment operator. So in most of the cases, once we have specialized the convert_to function we recover a reasonable implementation for the __assign_to__ function.
+
+When doing multiple assignements we use to do
+
+    a = b = c;
     
-The rationale is that if there was not a copy constructor from a Source seems reasonable to think that there will not be an assignment operator. So in most of the cases, once we have specialized the convert_to function we recover a reasonable implementation for the assign_to function.
+With __assign_to__ we could do 
+
+    assign_to(a, assign_to(b, c));
+
+and if we find this not really readable we can try with 
+
+    mca(a) = mca(b) = c;
+    
+The behavior of mca recall the tie function of Boost.Tuple, but instead of allowing multiple assignations, allows a single assign_to call.
 
 We can even generalize this, so classes or algorithms relying on a member function can be made more generic by relaying on a function. The default function implementation could just to call to the member function with the equivalent prototype, but this is out of the scope of this library.
 
@@ -219,7 +245,7 @@ So one of the advantages of using this common functions is uniformity. The other
 [/=================================]
 
 You can get the last stable release of Boost.Conversion by downloading [^conversion.zip] from the
-[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Boost Vault]
+[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=conversion.zip&directory=Utilities& Boost Vault Utilities directory]
 
 You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/conversion Boost Sandbox].
 
@@ -235,7 +261,7 @@ compiler include path.
 [heading Requirements]
 [/=========================]
 
-[*Boost.Conversion] do not depends on any Boost library, at least for the generic part. Of course it dependens on the specific libraries when specific conversion are used. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if Boost version 1.35.x should works also). 
+[*Boost.Conversion] do not depends on any Boost library, at least for the generic part. Of course it dependens on the specific libraries when specific conversion are used. For these specific parts you must use either Boost version 1.39.0 or the version in SVN trunk (even if Boost version 1.35.x should works also).
 
 
 [/========================]
@@ -250,7 +276,6 @@ the underlying parameters provide it.
 [/====================]
 
 All functions in the library are thread-unsafe except when noted explicitly.
-
 
 [/=======================]
 [heading Tested compilers]
@@ -278,32 +303,32 @@ Currently, [*Boost.Conversion] has been tested in the following compilers/platfo
 
 [section Using generic conversions]
 
-When you need to make a generic explicit conversion or assignation you just need to include the file boost/conversion/convert_to.hpp or boost/conversion/assign_to.hpp and just use the boost conversion function.
+When you need to make a generic explicit conversion or assignation you just need to include the file `boost/conversion/convert_to.hpp` or `boost/conversion/assign_to.hpp` and just use the boost conversion function.
 
-    #include <boost/conversion/std/pair.hpp>
-    
+    #include <boost/conversion/convert_to.hpp>
+
     // ...
-    
+
     int i = convert_to<int>(3.5);
 
 [endsect]
 
 [section Using specific conversions]
 
-When you need make a specific conversion you will need to include the specific conversion file. E.g.
+When you need to make a specific conversion you will need to include the specific conversion file. E.g.
 
     #include <boost/conversion/std/pair.hpp>
 
     std::pair<int,int> pint(0,1);
     std::pair<double,double> pdouble=boost::convert_to<std::pair<double,double> >(pint);
 
-Do not forget to include this files when you use a generic class or algorithm using the generic convert_to or assign_to, otherwise your program should not compile. E.g. if you want to convert a pair of chrono::time_point<> to a pair of posix_time::ptime do not forget to include in addition to the boost/conversion/std/pair.hpp the file boost/conversion/boost/chrono_posix_time.hpp
+Do not forget to include this files when you use a generic class or algorithm using the generic __convert_to__ or __assign_to__, otherwise your program should not compile. E.g. if you want to convert a pair of `chrono::time_point<>` to a pair of `posix_time::ptime` do not forget to include in addition to the `boost/conversion/std/pair.hpp` the file `boost/conversion/boost/chrono_posix_time.hpp`
 
 [endsect]
 
 [section How to completly specialize the conversion functions]
 
-You can completly specialize the convert_to and assign_to functions as you will do for other functions. Just add an complete overload. E.g. if you want to add an explicit convertion from a type F to a type T do the following:
+You can completly specialize the __convert_to__ and __assign_to__ functions as you will do for other functions. Just add an complete overload. E.g. if you want to add an explicit convertion from a type `F` to a type `T` do the following:
 
     T convert_to(const F& from);
 
@@ -311,7 +336,7 @@ You can completly specialize the convert_to and assign_to functions as you will 
 
 [section How to partially specialize the conversion functions]
 
-As it has been explained in the introduction, until you use a C++ compiler supporting the new partial specialization of function templates you will need to follow partial specialization workaround and partialy specialize the partial_specialization_workaround::convert_to class.
+As it has been explained in the introduction, until you use a C++ compiler supporting the partial specialization of function templates you will need to follow partial specialization workaround and partialy specialize the `partial_specialization_workaround::convert_to` class.
 
 [endsect]
 
@@ -322,7 +347,7 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 [section:ext_references References]
 [variablelist
 [
-    [[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=boost-string-convert.zip&directory=& 
+    [[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=boost-string-convert.zip&directory=&
     [*Boost.Convert]]]
     [Vladimir Batov. Not yet scheduled]
 ]
@@ -345,6 +370,23 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
 
 
 [section Reference]
+
+[/==========================================================================================]
+[section:conversion_hpp Header `<boost/conversion.hpp>`]
+[/==========================================================================================]
+
+Include all the core conversion public header files. Note thatyou will need to include explicitly the C++ standard or Boost specific files when usin specific classes.
+
+    #include <boost/conversion/convert_to.hpp>
+    #include <boost/conversion/assign_to.hpp>
+    #include <boost/conversion/convert_to_via.hpp>
+    #include <boost/conversion/ca_wrapper.hpp>
+
+[endsect]
+
+[section Core]
+
+
 [/==========================================================================================]
 [section:convert_to_hpp Header `<boost/conversion/convert_to.hpp>`]
 [/==========================================================================================]
@@ -355,16 +397,32 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
         struct convert_to {
           static To apply(const From& val);
         };
-        
-        template < typename To, typename From, std::size_t N >
-        struct convert_to<To[N],From[N]> {
-          static To[N] apply(const From (& val)[N]);
-        };
       }
 
       template < typename To, typename From >
-      To convert_to(const From& val);
+      To convert_to(const From& from);
     }
+
+Defines a free function __convert_to__ which converts the `from` parameter to a `To` type. The default implementation applies the conversion `To` operator of the `From` class or the copy constructor of the `To` class. A user adapting another type could need to specialize the __convert_to__ free function if the default behavior is not satisfactory.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly to the __convert_to__ member function, __convert_to__ calls to the static operation `apply` on a class with the same name in the namespace __partial_specialization_workaround__. Thus the user can specialize partially this class.
+
+
+
+[section Function `convert_to()`]
+
+      template < typename To, typename From >
+      To convert_to(const From& from);
+
+[variablelist
+
+[[Effects:] [Converts the from parameter to an instance of the To type, using by default the conversion operator or copy constructor.]]
+
+[[Throws:] [Whatever the underlying conversion `To` operator of the `From` class or the copy constructor of the `To` class throws.]]
+
+]
+
+[endsect]
 
 [endsect]
 
@@ -376,19 +434,148 @@ As it has been explained in the introduction, until you use a C++ compiler suppo
       namespace partial_specialization_workaround {
         template < typename To, typename From >
         struct assign_to {
-          static void apply(const From& from, To& to);
+          static void apply(To& toconst From& from);
         };
         template < typename To, typename From, std::size_t N  >
         struct assign_to<To[N],From[N]> {
-          static void apply(const From(& from)[N], To (&to)[N]);
+          static void apply(To (&to)[N], const From(& from)[N]);
         };
       }
 
       template < typename To, typename From >
-      void assign_to(const From& from, To& to);
+      void assign_to(To& to, const From& from);
     }
 
+Defines a free function __assign_to__ which assigns the `from` parameter to the `to` parameter. The default implementation applies the the assignement operator of the `To` class. A user adapting another type could need to specialize the __assign_to__ free function if the default behavior is not satisfactory.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly to the __assign_to__ member function, __assign_to__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__.
+This the user can specialize partially this class.
+
+[section Function `assign_to()`]
+
+      template < typename To, typename From >
+      void assign_to(To& to, const From& from);
+
+[variablelist
+
+[[Effects:] [Assigns the `from` parameter to the `to` parameter, using by default the assignement operator of the `To` class.]]
+
+[[Throws:] [Whatever the underlying the assignement operator of the `To` class throws.]]
+
+]
+
 [endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section:convert_to_via_hpp Header `<boost/conversion/convert_to_via.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+
+        template < typename To, typename Via, typename From >
+        To convert_to_via(const From& val) {
+            convert_to<To>(convert_to<Via>(val));
+        }
+    }
+
+[section Function `convert_to_via<>()`]
+
+[variablelist
+
+[[Effects:] [Converts the from parameter to an instance of the To type using a intermediary Via type.]]
+
+[[Throws:] [Whatever the underlying conversions functions throws.]]
+
+]
+
+[endsect]
+[endsect]
+
+[/==========================================================================================]
+[section:ca_wrapper_hpp Header `<boost/conversion/ca_wrapper.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+
+        template <typename T> class ca_wrapper;
+        template <typename T> ca_wrapper<T> mca(T& r);
+    }
+
+[section Template Class `ca_wrapper<>`]
+
+        template <typename T>
+        class ca_wrapper {
+        public:
+            ca_wrapper(T& r);
+            template <typename U> operator U();
+            template <typename U> T& operator =(U const& u);
+        };
+
+[section Constructor]
+
+            ca_wrapper(T& r);
+
+[variablelist
+
+[[Effects:] [Stores the reference to type.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section Conversion operator]
+
+            template <typename U> operator U();
+
+[variablelist
+
+[[Effects:] [Call to the `convert_to<U>` on the stored reference.]]
+
+[[Throws:] [Whatever __convert_to__ throws.]]
+
+]
+
+[endsect]
+
+[section Assignement operator]
+
+            template <typename U> T& operator =(U const& u);
+
+[variablelist
+
+[[Effects:] [Call to the `assignt_to<T,U>` with the stored reference and the passed parameter `u`.]]
+
+[[Throws:] [Whatever __assign_to__ throws.]]
+
+]
+
+[endsect]
+
+
+[endsect]
+
+[section Function `mca<>()`]
+
+        template <typename T> ca_wrapper<T> mca(T& r);
+
+[variablelist
+
+[[Effects:] [Creates a ca_wrapper.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+[endsect]
+
+[endsect]
+
+[section C++ Standard classes specializations]
 
 [/==========================================================================================]
 [section:complex_hpp Header `<boost/conversion/std/complex.hpp>`]
@@ -425,7 +612,7 @@ Include this file when using conversions between pairs of convertible types.
             };
             template < class T1, class T2, class U1, class U2>
             struct assign_to< std::pair<T1,T2>, std::pair<U1,U2> > {
-                static std::pair<T1,T2>& apply(const std::pair<U1,U2>& from, std::pair<T1,T2>& to);
+                static std::pair<T1,T2>& apply(std::pair<T1,T2>& to, const std::pair<U1,U2>& from);
             };
         }
     }
@@ -446,7 +633,7 @@ Include this file when using conversions to std::string.
             template<typename T, typename CharT, typename Traits, typename Alloc>
             struct assign_to< std::basic_string<CharT,Traits,Alloc>, T > {
                 static std::basic_string<CharT,Traits,Alloc>& apply(
-                    const T& from, std::basic_string<CharT,Traits,Alloc>& to);
+                    std::basic_string<CharT,Traits,Alloc>& to, const T& from);
             };
             template<typename T, typename CharT, typename Traits, typename Alloc>
             struct convert_to< T, std::basic_string<CharT,Traits,Alloc>> {
@@ -454,13 +641,17 @@ Include this file when using conversions to std::string.
             };
             template<typename T, typename CharT, typename Traits, typename Alloc>
             struct assign_to< T, std::basic_string<CharT,Traits,Alloc>> {
-                static void apply(
-                    const std::basic_string<CharT,Traits,Alloc>& from, T& to);
+                static void apply(T& to
+                    const std::basic_string<CharT,Traits,Alloc>& from);
             };
         }
     }
 
 [endsect]
+[endsect]
+
+[section Boost classes specializations]
+
 [/==========================================================================================]
 [section:rational_hpp Header `<boost/conversion/boost/rational.hpp>`]
 [/==========================================================================================]
@@ -475,7 +666,7 @@ Include this file when using conversions between rational of convertible types.
             };
             template < class T, class U>
             struct assign_to< rational<T>, rational<U> > {
-                inline static rational<T>& apply(const rational<U>& from, rational<T>& to);
+                inline static rational<T>& apply(rational<T>& to, const rational<U>& from);
             };
         }
     }
@@ -495,10 +686,11 @@ Include this file when using conversions between chrono and posix_time time and 
                     chrono::duration<Rep, Period> const & from);
             };
             template < class Rep, class Period>
-            struct assign_to<posix_time::time_duration, chrono::duration<Rep, Period> > {        
+            struct assign_to<posix_time::time_duration, chrono::duration<Rep, Period> > {
                 static posix_time::time_duration& apply(
-                    const chrono::duration<Rep, Period>& from, 
-                    posix_time::time_duration& to);
+                    posix_time::time_duration& to,
+                    const chrono::duration<Rep, Period>& from
+                    );
             };
 
             template < class Rep, class Period>
@@ -508,8 +700,8 @@ Include this file when using conversions between chrono and posix_time time and 
             template < class Rep, class Period>
             struct assign_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
                 static chrono::duration<Rep, Period> & apply(
-                    const posix_time::time_duration& from, 
-                    chrono::duration<Rep, Period> & to);
+                    chrono::duration<Rep, Period> & to,
+                    const posix_time::time_duration& from);
             };
         }
     }
@@ -522,11 +714,10 @@ Include this file when using conversions between chrono and posix_time time and 
             };
             template < class Clock, class Duration>
             struct assign_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-                static posix_time::ptime& apply(
-                    const chrono::time_point<Clock, Duration>& from, 
-                    posix_time::ptime& to);
+                static posix_time::ptime& apply(posix_time::ptime& to,
+                    const chrono::time_point<Clock, Duration>& from);
             };
-            
+
             template < class Clock, class Duration>
             struct convert_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
                 static chrono::time_point<Clock, Duration> apply(const posix_time::ptime& from);
@@ -534,8 +725,8 @@ Include this file when using conversions between chrono and posix_time time and 
             template < class Clock, class Duration>
             struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
                 static chrono::time_point<Clock, Duration>& apply(
-                    const posix_time::ptime& from, 
-                    chrono::time_point<Clock, Duration>& to);
+                    chrono::time_point<Clock, Duration>& to,
+                    const posix_time::ptime& from);
             };
         }
     }
@@ -556,7 +747,7 @@ Include this file when using conversions between intervals of convertible types.
             template < class T, class PT, class U, class PU>
             struct assign_to< interval<T,PT>, interval<U,PU> > {
                 static interval<T,PT>& apply(
-                    const interval<U,PU>& from, interval<T,PT>& to);
+                    interval<T,PT>& to, const interval<U,PU>& from);
             };
 
         }
@@ -578,7 +769,7 @@ Include this file when using conversions between optional of convertible types.
             template < class Target, class Source>
             struct assign_to< optional<Target>, optional<Source> > {
                 static optional<Target>& apply(
-                    const optional<Target>& from, optional<Target>& to);
+                    optional<Target>& to, const optional<Target>& from);
             };
 
         }
@@ -597,11 +788,11 @@ Include this file when using conversions between arrays of convertible types.
         namespace partial_specialization_workaround {
             template < typename T1, typename T2, std::size_t N>
             struct convert_to< array<T1,N>, array<T2,N> > {
-                inline static array<T1,N> apply(array<T2,N> const & from);
+                static array<T1,N> apply(array<T2,N> const & from);
             };
             template < typename T1, typename T2, std::size_t N>
-            struct assign_to< array<T1,N>, array<T2,N> > {        
-                inline static array<T1,N>& apply(array<T2,N> const & from, array<T1,N>& to);
+            struct assign_to< array<T1,N>, array<T2,N> > {
+                static array<T1,N>& apply(array<T1,N>& to, array<T2,N> const & from);
             };
         }
     }
@@ -619,18 +810,19 @@ Include this file when using conversions between fusion::tuple of convertible ty
         namespace partial_specialization_workaround {
             template < class T1, ..., class Tn, class U1, ..., class Un>
             struct convert_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
-                inline static boost::fusion::tuple<T1,...,T3> 
+                inline static boost::fusion::tuple<T1,...,T3>
                 apply(boost::fusion::tuple<U1,...,U3> const & from);
             };
             template < class T1, ..., class Tn, class U1, ..., class Un>
             struct assign_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
-                inline static boost::fusion::tuple<T1,...,T3> 
-                apply(boost::fusion::tuple<U1,...,U3> const & from, boost::fusion::tuple<T1,...,T3>& to);
+                inline static boost::fusion::tuple<T1,...,T3>
+                apply(boost::fusion::tuple<T1,...,T3>& to, boost::fusion::tuple<U1,...,U3> const & from);
             };
 
         }
     }
 
+[endsect]
 [endsect]
 [endsect]
 
@@ -653,11 +845,30 @@ Include this file when using conversions between fusion::tuple of convertible ty
 [section Appendices]
 [/=================]
 [section:history Appendix A: History]
+[section [*Version 0.3.0, Oct 22, 2009] ['Changing the order of `to` and `from` parameters on __assign_to__ + Added `mca' function]]
+
+[*Incopatibility:]
+
+* Changing the order of `to` and `from` parameters on __assign_to__.
+* Now `boost/conversion/convert_to.hpp` and `boost/conversion/assign_to.hpp` files are separated.
+
+[*New Features:]
+
+* Added <boost/conversion.hpp> global file.
+* Added `mca()` function.
+* Added `convert_to_via` function.
+
+[*Test:]
+
+* Added test for the new features
+
+
+[endsect]
 [section [*Version 0.2.0, Mai 16, 2009] ['Adding array + fusion::tuples + Adaptation to Boost 1.39]]
 
 [*New Features:]
 
-* conversion between boost::array of explicitly convertible types.
+* conversion between `boost::array` of explicitly convertible types.
 * conversion between Boost.Fusion sequences of explicitly convertible types.
 
 [endsect]
@@ -666,20 +877,20 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
 [*Features:]
 
-* a generic convert_to function which can be specialized by the user to make explict conversion between unrelated types.
-* a generic assign_to function which can be specialized by the user to make explict assignation between unrelated types.
+* a generic __convert_to__ function which can be specialized by the user to make explict conversion between unrelated types.
+* a generic __assign_to__ function which can be specialized by the user to make explict assignation between unrelated types.
 * conversion between C-arrays of explicitly convertible types.
 
-* conversion between std::complex of explicitly convertible types.
-* conversion between std::pair of explicitly convertible types.
-* conversion between std::string and Streamable types.
+* conversion between `std::complex` of explicitly convertible types.
+* conversion between `std::pair` of explicitly convertible types.
+* conversion between `std::string` and Streamable types.
 
-* conversion between boost::optional of explicitly convertible types.
-* conversion between boost::rational of explicitly convertible types.
-* conversion between boost::interval of explicitly convertible types.
+* conversion between `boost::optional` of explicitly convertible types.
+* conversion between `boost::rational` of explicitly convertible types.
+* conversion between `boost::interval` of explicitly convertible types.
 
-* conversion between boost::chrono::time_point and boost::ptime.
-* conversion between boost::chrono::duration and boost::time_duration.
+* conversion between `boost::chrono::time_point` and `boost::ptime`.
+* conversion between `boost::chrono::duration` and `boost::time_duration`.
 
 [endsect]
 [endsect]
@@ -694,18 +905,18 @@ Let be
     B b;
     C c;
 
-* Reflexive: A is convertible to A if it is CopyConstructible
+* Reflexive: A is convertible to A if it is CopyConstructible or a specialization of convert_to is provided.
 
-* Symetric : A convertible to B implies B convertible to C
+* AntiSymetric : A convertible to B don't implies B convertible to A
 
 * Loss of precission: Conversions can loss precission but not at infinitum
 
-Two convertible types don't loss precission if 
+Two convertible types don't loss precission if
 
     b = convert_to<B>(a);
     a2 = convert_to<A>(b);
     assert(a==a2);
-    
+
 If they can loss precission they satisfy
 
     b = convert_to<B>(a)
@@ -721,7 +932,7 @@ The implementation could use a intermediary B b to make the conversion or make t
         return convert_to<A>(convert_to<B>(c));
     }
 
-
+The library provides a convert_to_via function which helps to implement that.
 
 [heading Why use partial function specialization and not ADL?]
 
@@ -730,26 +941,29 @@ The implementation could use a intermediary B b to make the conversion or make t
 
 [section:implementation Appendix C: Implementation Notes]
 
-[heading Why `convert_to` between tuples is not be implemented using `boost::fusion::transform`?]
+[heading Why `convert_to` between tuples is not implemented using `boost::fusion::transform`?]
 
-`convert_to<T>` is a kind of transaformation, so the natural implementation of convert_to for homegeneus containers could be to use the transform function.
+`convert_to<T>` is a kind of transaformation, so the natural implementation of `convert_to` for homegeneus containers could be to use the transform function.
 
 This can not be applied to heterogeneus containers as tuples because the function change with the type.
-
 
 [endsect]
 [section:acknowledgements Appendix D: Acknowledgements]
 
 Thanks to Vladimir Batov proposing Boost.StringConversion which was the source of inspiration of this generic library.
+Thanks to Edward Diener to showing me indirectly that multiple assignements should be taken in account.
 
 [endsect]
 [section  Appendix E: Tests]
 
 [section Builtins]
 [table
-    [[Name]                                  [kind]          [Description]                                           [Result] [Ticket]]
-    [[convert_to_with_builtin_types]        [run]       [check convert_to works for builting types]                [Pass]   [#]]
-    [[assign_to_with_builtin_types]         [run]       [check assign_to works for builting types]                 [Pass]   [#]]
+    [[Name]                             [kind]      [Description]                                   [Result] [Ticket]]
+    [[convert_to_with_builtin_types]    [run]       [check `convert_to` works for builting types]     [Pass]   [#]]
+    [[assign_to_with_builtin_types]     [run]       [check `assign_to` works for builting types]      [Pass]   [#]]
+    [[assign_to_transitive]             [run]       [Use of `assign_to` transitively]                 [Pass]   [#]]
+    [[mca_assign_to_with_builtin_types] [run]       [check `mca` `works` for builting types]      [Pass]   [#]]
+    [[mca_assign_to_transitive]         [run]       [use of `mca` to multiple assignements]           [Pass]   [#]]
 ]
 [endsect]
 
@@ -757,45 +971,49 @@ Thanks to Vladimir Batov proposing Boost.StringConversion which was the source o
 [section Intrinsec Conversions]
 [table
     [[Name]                                         [kind]          [Description]                                           [Result] [Ticket]]
-    [[convert_to_with_implicit_constructor]         [run]       [check convert_to works when there is an implicit constructor] [Pass]   [#]]
-    [[convert_to_with_explicit_constructor]         [run]       [check convert_to works when there is an explicit constructor] [Pass]   [#]]
-    [[convert_to_with_conversion_operator]          [run]       [check assign_to works when there is an conversion operator]  [Pass]   [#]]
-    [[assign_to_with_assignemet_operator]           [run]       [check assign_to works when there is an assignement operator] [Pass]   [#]]
-    [[assign_to_with_assignemet_operator_and_implicit_constructor]  [run]   [check assign_to works when there is an assignemet operator and implicit constructor] [Pass]   [#]]
-    [[assign_to_with_assignemet_operator_and_conversion_operator]   [run]   [check convert_to works when there is an assignemet operator and a conversion operator] [Pass]   [#]]
+    [[convert_to_with_implicit_constructor]         [run]       [check `convert_to` works when there is an implicit constructor] [Pass]   [#]]
+    [[convert_to_with_explicit_constructor]         [run]       [check `convert_to` works when there is an explicit constructor] [Pass]   [#]]
+    [[convert_to_with_conversion_operator]          [run]       [check `assign_to` works when there is an conversion operator]  [Pass]   [#]]
+    [[assign_to_with_assignemet_operator]           [run]       [check `assign_to` works when there is an assignement operator] [Pass]   [#]]
+    [[assign_to_with_assignemet_operator_and_implicit_constructor]  [run]   [check `assign_to` works when there is an assignemet operator and implicit constructor] [Pass]   [#]]
+    [[assign_to_with_assignemet_operator_and_conversion_operator]   [run]   [check `convert_to` works when there is an assignemet operator and a conversion operator] [Pass]   [#]]
+    [[mca_with_assignemet_operator]           [run]       [check `mca` works when there is an assignement operator] [Pass]   [#]]
+    [[mca_with_assignemet_operator_and_implicit_constructor]  [run]   [check `mca` works when there is an assignemet operator and implicit constructor] [Pass]   [#]]
+    [[mca_with_assignemet_operator_and_conversion_operator]   [run]   [check `mca` works when there is an assignemet operator and a conversion operator] [Pass]   [#]]
 ]
 [endsect]
 
-[section Extrinsec Conversions]
+[section Extrinsic Conversions]
 [table
     [[Name]                 [kind]  [Description]                                           [Result] [Ticket]]
-    [[explicit_convert_to]  [run]   [check convert_to works when convert_to is overloaded]  [Pass]   [#]]
-    [[explicit_assign_to]   [run]   [check assign_to works when assign_to is overloaded]    [Pass]   [#]]
+    [[explicit_convert_to]  [run]   [check `convert_to` works when `convert_to` is overloaded]  [Pass]   [#]]
+    [[explicit_assign_to]   [run]   [check `assign_to` works when `assign_to` is overloaded]    [Pass]   [#]]
+    [[explicit_mca]   [run]   [check `mca` works when `assign_to` is overloaded]    [Pass]   [#]]
 ]
 [endsect]
 
 [section STD]
 [table
     [[Name]                     [kind]      [Description]                                                                   [Result] [Ticket]]
-    [[convert_to_pair]          [run]       [check convert_to pair works when the parameters are convertible]               [Pass]   [#]]
-    [[convert_to_complex]       [run]       [check convert_to complex works when the parameters are convertible]            [Pass]   [#]]
-    [[convert_to_string]        [run]       [check convert_to string works when the parameter defines the operator<<]       [Pass]   [#]]
-    [[convert_from_string]      [run]       [check convert_to from string works when the parameter defines the operator>>]  [Pass]   [#]]
+    [[convert_to_pair]          [run]       [check `convert_to` `std::pair` works when the parameters are convertible]               [Pass]   [#]]
+    [[convert_to_complex]       [run]       [check `convert_to` `std::complex` works when the parameters are convertible]            [Pass]   [#]]
+    [[convert_to_string]        [run]       [check `convert_to` `std::string` works when the parameter defines the `operator<<`]       [Pass]   [#]]
+    [[convert_from_string]      [run]       [check `convert_to` from `std::string` works when the parameter defines the `operator>>`]  [Pass]   [#]]
 ]
 [endsect]
 
 [section Boost]
 [table
     [[Name]                     [kind]  [Description]                                                           [Result] [Ticket]]
-    [[convert_to_rational]      [run]   [check convert_to rational works when the parameters are convertible]   [Pass]   [#]]
-    [[convert_to_interval]      [run]   [check convert_to interval works when the parameters are convertible]   [Pass]   [#]]
-    [[convert_to_optional]      [run]   [check convert_to optional works when the parameters are convertible]   [Pass]   [#]]
-    [[convert_to_time_point]    [run]   [check convert_to time_point from ptime works]                          [Pass]   [#]]
-    [[convert_to_ptime]         [run]   [check convert_to ptime from time_point works]                          [Pass]   [#]]
-    [[convert_to_duration]      [run]   [check convert_to duration from time_duration works]                    [Pass]   [#]]
-    [[convert_to_time_duration] [run]   [check convert_to time_duration from duration works]                    [Pass]   [#]]
-    [[convert_to_array]      [run]   [check convert_to array works when the parameters are convertible]   [Pass]   [#]]
-    [[convert_to_tuple]      [run]   [check convert_to tuple works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_rational]      [run]   [check `convert_to` `boost::rational` works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_interval]      [run]   [check `convert_to` `boost::interval` works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_optional]      [run]   [check `convert_to` `boost::optional` works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_time_point]    [run]   [check `convert_to` `boost::chrono::system_clock::time_point` from boost::posix_time::ptime works]                          [Pass]   [#]]
+    [[convert_to_ptime]         [run]   [check `convert_to` `boost::posix_time::ptime` from boost::chrono::system_clock::time_point works]                          [Pass]   [#]]
+    [[convert_to_duration]      [run]   [check `convert_to` `boost::chrono::duration` from `boost::posix_time::time_duration` works]                    [Pass]   [#]]
+    [[convert_to_time_duration] [run]   [check `convert_to` `boost::posix_time::time_duration` from `boost::chrono::duration` works]                    [Pass]   [#]]
+    [[convert_to_array]      [run]   [check `convert_to` `boost::array` works when the parameters are convertible]   [Pass]   [#]]
+    [[convert_to_tuple]      [run]   [check `convert_to` `boost::tuple` works when the parameters are convertible]   [Pass]   [#]]
 ]
 [endsect]
 
@@ -810,14 +1028,46 @@ Thanks to Vladimir Batov proposing Boost.StringConversion which was the source o
 
 [heading Tasks to do before review]
 
-* conversion between std::vector of explicitly convertible types.
+* On compilers supporting partial template functions specialization no use of the workarround.
+* Add conversion between std::vector of explicitly convertible types.
+* Add a is_convertible_to metafunction. Inherits: If an imaginary lvalue of type From is convertible to type To using convert_to then inherits from true_type, otherwise inherits from false_type.
+
+    template <class From, class To>
+    struct is_convertible : public true_type-or-false_type {};
+ 
+* Add a is_asignable_to metafunction.
 
 [heading For later releases]
-
 
 * conversion between types for which lexical_cast works.
 * conversion between types for which numeric_cast works.
 
+[heading Make a proposal to the C++ standard]
+
+C++1x has added explicit conversion operators, but they must always be defined in the Source class. The same applies to the assignement operator, it must be defined on the Target class.
+
+It will be interesting to be able to implicitly or explicitly add extrinsic conversion operators between unrelated types. Assignement operators could also be specialized.
+
+  template < typename To, typename From >
+  operator To(const From& val);
+
+  template < typename To, typename From >
+  To& operator=(To& to, const From& from);
+
+For example we could specialize this the conversion from as chrono::time_point<Clock, Duration> to posix_time::ptime follows
+
+    template < class Clock, class Duration>
+    operator boost::posix_time::ptime(const boost::chrono::time_point<Clock, Duration>& from) {
+        typedef boost::chrono::time_point<Clock, Duration> time_point_t;
+        typedef boost::chrono::nanoseconds duration_t;
+        typedef boost::duration_t::rep rep_t;
+        rep_t d = boost::chrono::duration_cast<duration_t>(from.time_since_epoch()).count();
+        rep_t sec = d/1000000000;
+        rep_t nsec = d%1000000000;
+        return  boost::posix_time::from_time_t(0)+
+                boost::posix_time::seconds(static_cast<long>(sec))+
+                boost::posix_time::nanoseconds(nsec);
+    }
 
 [endsect]
 [endsect]

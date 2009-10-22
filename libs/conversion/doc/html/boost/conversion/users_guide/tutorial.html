@@ -45,10 +45,11 @@
 </h4></div></div></div>
 <p>
           When you need to make a generic explicit conversion or assignation you
-          just need to include the file boost/conversion/convert_to.hpp or boost/conversion/assign_to.hpp
-          and just use the boost conversion function.
+          just need to include the file <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span></code>
+          or <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span></code> and just use the boost conversion
+          function.
         </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="comment">// ...
 </span>
@@ -62,8 +63,8 @@
         specific conversions</a>
 </h4></div></div></div>
 <p>
-          When you need make a specific conversion you will need to include the specific
-          conversion file. E.g.
+          When you need to make a specific conversion you will need to include the
+          specific conversion file. E.g.
         </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -72,10 +73,13 @@
 </pre>
 <p>
           Do not forget to include this files when you use a generic class or algorithm
-          using the generic convert_to or assign_to, otherwise your program should
-          not compile. E.g. if you want to convert a pair of chrono::time_point&lt;&gt;
-          to a pair of posix_time::ptime do not forget to include in addition to
-          the boost/conversion/std/pair.hpp the file boost/conversion/boost/chrono_posix_time.hpp
+          using the generic <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          or <code class="computeroutput"><span class="identifier">assign_to</span></code>, otherwise
+          your program should not compile. E.g. if you want to convert a pair of
+          <code class="computeroutput"><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;&gt;</span></code>
+          to a pair of <code class="computeroutput"><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span></code>
+          do not forget to include in addition to the <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">std</span><span class="special">/</span><span class="identifier">pair</span><span class="special">.</span><span class="identifier">hpp</span></code>
+          the file <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono_posix_time</span><span class="special">.</span><span class="identifier">hpp</span></code>
         </p>
 </div>
 <div class="section" lang="en">
@@ -85,10 +89,11 @@
         to completly specialize the conversion functions</a>
 </h4></div></div></div>
 <p>
-          You can completly specialize the convert_to and assign_to functions as
-          you will do for other functions. Just add an complete overload. E.g. if
-          you want to add an explicit convertion from a type F to a type T do the
-          following:
+          You can completly specialize the <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          and <code class="computeroutput"><span class="identifier">assign_to</span></code> functions
+          as you will do for other functions. Just add an complete overload. E.g.
+          if you want to add an explicit convertion from a type <code class="computeroutput"><span class="identifier">F</span></code>
+          to a type <code class="computeroutput"><span class="identifier">T</span></code> do the following:
         </p>
 <pre class="programlisting"><span class="identifier">T</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">F</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
 </pre>
@@ -101,9 +106,10 @@
 </h4></div></div></div>
 <p>
           As it has been explained in the introduction, until you use a C++ compiler
-          supporting the new partial specialization of function templates you will
-          need to follow partial specialization workaround and partialy specialize
-          the partial_specialization_workaround::convert_to class.
+          supporting the partial specialization of function templates you will need
+          to follow partial specialization workaround and partialy specialize the
+          <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+          class.
         </p>
 </div>
 </div>

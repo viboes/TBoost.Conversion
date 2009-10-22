@@ -27,8 +27,9 @@
 <a name="boost.conversion.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
 </h3></div></div></div>
 <p>
-        Imagine you need to convert unrelated types Source and Target. You can get
-        it by defining a specific function such as
+        Imagine you need to convert unrelated types <code class="computeroutput"><span class="identifier">Source</span></code>
+        and <code class="computeroutput"><span class="identifier">Target</span></code>. You can get it
+        by defining a specific function such as
       </p>
 <pre class="programlisting"><span class="identifier">Target</span> <span class="identifier">SourceToTarget</span><span class="special">(</span><span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
@@ -41,7 +42,8 @@
 <span class="special">}</span>
 </pre>
 <p>
-        While the SourceToTarget could be specific, the PairOfSourceToPairOfTarget
+        While the <code class="computeroutput"><span class="identifier">SourceToTarget</span></code>
+        could be specific, the <code class="computeroutput"><span class="identifier">PairOfSourceToPairOfTarget</span></code>
         sould be generic
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Target2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source2</span><span class="special">)</span>
@@ -49,13 +51,14 @@
 </pre>
 <p>
         In order to do that we need that the pair template parameters define a common
-        function, let it call convert_to,
+        function, let it call <code class="computeroutput"><span class="identifier">convert_to</span></code>,
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">)</span>
 <span class="identifier">Target</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">);</span>
 </pre>
 <p>
-        so ConvertPair can be defined as
+        so <code class="computeroutput"><span class="identifier">ConvertPair</span></code> can be defined
+        as
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Target2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source2</span><span class="special">)</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Target1</span><span class="special">,</span><span class="identifier">Target2</span><span class="special">&gt;</span> <span class="identifier">ConvertPair</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Source1</span><span class="special">,</span><span class="identifier">Source2</span><span class="special">&gt;&amp;</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span>
@@ -63,24 +66,23 @@
 <span class="special">}</span>
 </pre>
 <p>
-        The issue is that we need to specialize the convert_to function for the classes
-        Source and Target. We can do it as follows
+        The issue is that we need to specialize the <code class="computeroutput"><span class="identifier">convert_to</span></code>
+        function for the classes <code class="computeroutput"><span class="identifier">Source</span></code>
+        and <code class="computeroutput"><span class="identifier">Target</span></code>. We can do it
+        as follows
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;&gt;</span>
 <span class="identifier">Target</span>  <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">&gt;(</span><span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">v</span><span class="special">)</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">SourceToTarget</span><span class="special">(</span><span class="identifier">v</span><span class="special">);}</span>
 </pre>
 <p>
-        What about converting std::pair&lt;Source,std::pair&lt;Source,Source&gt;&gt;
-        to std::pair&lt;Target,std::pair&lt;Target,Target&gt;&gt;?
-      </p>
-<p>
-        The issue now is that convert_to(std::make_pair&lt;to, std::make_pair&lt;to,to&gt;&gt;)
-        do not compiles because the conversion of std::pair is named ConvertPair.
-        So we need to specialize the function convert_to for pairs. With C++0x there
-        is no major problem as it allows partial specialization of function templates.
-        With C++98, we need to use a trick; as it allows partial specialization of
-        classes we can define convert_to by as relying to a specific function of
-        a class, as follows:
+        What about converting <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">,</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span></code> to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>? The issue now is that <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">&lt;</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">&lt;</span><span class="identifier">to</span><span class="special">,</span><span class="identifier">to</span><span class="special">&gt;</span> <span class="special">&gt;)</span></code>
+        do not compiles because the conversion of <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>
+        is named <code class="computeroutput"><span class="identifier">ConvertPair</span></code>. So
+        we need to specialize the function <code class="computeroutput"><span class="identifier">convert_to</span></code>
+        for pairs. There is no major problem with compilers supporting partial specialization
+        of function templates. If this is not the case, we need to use a trick; as
+        it allows partial specialization of classes we can define <code class="computeroutput"><span class="identifier">convert_to</span></code>
+        by as relying to a specific function of a class, as follows:
       </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
   <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span> <span class="special">&gt;</span>
@@ -95,8 +97,8 @@
 <span class="special">}</span>
 </pre>
 <p>
-        So now we can specialize partial_specialization_workaround::convert_to for
-        pairs as follows:
+        So now we can specialize <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+        for pairs as follows:
       </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Target2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source2</span><span class="special">)</span>
@@ -128,9 +130,9 @@
 <span class="special">}</span>
 </pre>
 <p>
-        What have we learned? Classes or algorithms relying on a conversion by construction
+        What have we learned? Classes or algorithms relying on a conversion by copy-construction
         or by the conversion operator can be made more generic by relaying in a function
-        that explicitly states this conversion. So instead of requiring
+        that explicitly states this conversion. Thus, instead of requiring
       </p>
 <pre class="programlisting"><span class="identifier">Target</span><span class="special">(</span><span class="identifier">from</span><span class="special">)</span>
 </pre>
@@ -148,15 +150,16 @@
 <p>
         requires
       </p>
-<pre class="programlisting"><span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">from</span><span class="special">,</span> <span class="identifier">to</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">from</span><span class="special">);</span>
 </pre>
 <p>
-        The default implementation of assign_to relies on the assignement operator
+        The default implementation of <code class="computeroutput"><span class="identifier">assign_to</span></code>
+        relies on the assignement operator
       </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
     <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span> <span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">assign_to</span> <span class="special">{</span>
-        <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">)</span>
+        <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
         <span class="special">{</span>
             <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">;</span>
             <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
@@ -164,13 +167,14 @@
     <span class="special">};</span>
 <span class="special">}</span>
 <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span> <span class="special">&gt;</span>
-<span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">)</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">Source</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">from</span><span class="special">,</span> <span class="identifier">to</span><span class="special">);</span>
+<span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">Source</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">from</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <p>
         For classes that are explicitly convertible and having a self assignment
-        operator it is easy to make a specialization of assign_to as follows.
+        operator it is easy to make a specialization of <code class="computeroutput"><span class="identifier">assign_to</span></code>
+        as follows.
       </p>
 <pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
 </pre>
@@ -178,7 +182,27 @@
         The rationale is that if there was not a copy constructor from a Source seems
         reasonable to think that there will not be an assignment operator. So in
         most of the cases, once we have specialized the convert_to function we recover
-        a reasonable implementation for the assign_to function.
+        a reasonable implementation for the <code class="computeroutput"><span class="identifier">assign_to</span></code>
+        function.
+      </p>
+<p>
+        When doing multiple assignements we use to do
+      </p>
+<pre class="programlisting"><span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span><span class="special">;</span>
+</pre>
+<p>
+        With <code class="computeroutput"><span class="identifier">assign_to</span></code> we could do
+      </p>
+<pre class="programlisting"><span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">c</span><span class="special">));</span>
+</pre>
+<p>
+        and if we find this not really readable we can try with
+      </p>
+<pre class="programlisting"><span class="identifier">mca</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">c</span><span class="special">;</span>
+</pre>
+<p>
+        The behavior of mca recall the tie function of Boost.Tuple, but instead of
+        allowing multiple assignations, allows a single assign_to call.
       </p>
 <p>
         We can even generalize this, so classes or algorithms relying on a member

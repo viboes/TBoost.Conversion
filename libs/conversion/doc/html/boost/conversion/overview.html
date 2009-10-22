@@ -42,16 +42,62 @@
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-        a generic convert_to function which can be specialized by the user to make
-        explict conversion between unrelated types.
+        a generic <code class="computeroutput"><span class="identifier">convert_to</span></code> function
+        which can be specialized by the user to make explict conversion between unrelated
+        types.
       </li>
 <li>
-        a generic assign_to function which can be specialized by the user to make
-        explict assignation between unrelated types.
+        a generic <code class="computeroutput"><span class="identifier">assign_to</span></code> function
+        which can be specialized by the user to make explict assignation between
+        unrelated types.
+      </li>
+<li>
+        a generic <code class="computeroutput"><span class="identifier">mca</span></code> function returning
+        a wrapper which replace assignments by a call to <code class="computeroutput"><span class="identifier">assign_to</span></code>
+        and conversion operators by a call <code class="computeroutput"><span class="identifier">convert_to</span></code>.
+      </li>
+<li>
+        a generic <code class="computeroutput"><span class="identifier">convert_to_via</span></code>
+        function which convert a type <code class="computeroutput"><span class="identifier">From</span></code>
+        to another <code class="computeroutput"><span class="identifier">To</span></code> using a temporary
+        one <code class="computeroutput"><span class="identifier">Via</span></code>.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">complex</span></code> of explicitly convertible types.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code> of explicitly convertible types.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>
+        of explicitly convertible types.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">rational</span></code>
+        of explicitly convertible types.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interval</span></code>
+        of explicitly convertible types.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span></code>
+        and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ptime</span></code>.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span></code>
+        and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">time_duration</span></code>.
+      </li>
+<li>
+        conversion between <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span></code>
+        of explicitly convertible types.
+      </li>
+<li>
+        conversion between Boost.Fusion sequences of explicitly convertible types.
       </li>
 </ul></div>
 <a name="boost.conversion.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4762305"></a>
+<a name="id4765018"></a>
       <a href="overview.html#boost.conversion.overview.how_to_use_this_documentation">How
       to Use This Documentation</a>
     </h3>
@@ -103,8 +149,10 @@
 <p>
       Finally, you can mentally add the following to any code fragments in this document:
     </p>
-<pre class="programlisting"><span class="comment">// Include all of Conversion files
+<pre class="programlisting"><span class="comment">// Include all of the core Conversion files
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 </pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

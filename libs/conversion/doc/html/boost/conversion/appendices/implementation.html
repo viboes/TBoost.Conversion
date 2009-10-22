@@ -30,16 +30,16 @@
       C: Implementation Notes"> Appendix
       C: Implementation Notes</a>
 </h3></div></div></div>
-<a name="boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_be_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__"></a><h4>
-<a name="id4826820"></a>
-        <a href="implementation.html#boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_be_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__">Why
+<a name="boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__"></a><h4>
+<a name="id4830841"></a>
+        <a href="implementation.html#boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__">Why
         <code class="computeroutput"><span class="identifier">convert_to</span></code> between tuples
-        is not be implemented using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span></code>?</a>
+        is not implemented using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span></code>?</a>
       </h4>
 <p>
         <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
-        a kind of transaformation, so the natural implementation of convert_to for
-        homegeneus containers could be to use the transform function.
+        a kind of transaformation, so the natural implementation of <code class="computeroutput"><span class="identifier">convert_to</span></code> for homegeneus containers could
+        be to use the transform function.
       </p>
 <p>
         This can not be applied to heterogeneus containers as tuples because the

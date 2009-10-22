@@ -28,7 +28,7 @@
 <a name="boost.conversion.appendices.rationale"></a><a href="rationale.html" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.rationale.mathematical_background"></a><h4>
-<a name="id4826260"></a>
+<a name="id4830276"></a>
         <a href="rationale.html#boost.conversion.appendices.rationale.mathematical_background">Mathematical
         background</a>
       </h4>
@@ -41,10 +41,11 @@
 </pre>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          Reflexive: A is convertible to A if it is CopyConstructible
+          Reflexive: A is convertible to A if it is CopyConstructible or a specialization
+          of convert_to is provided.
         </li>
 <li>
-          Symetric : A convertible to B implies B convertible to C
+          AntiSymetric : A convertible to B don't implies B convertible to A
         </li>
 <li>
           Loss of precission: Conversions can loss precission but not at infinitum
@@ -77,8 +78,11 @@
     <span class="keyword">return</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">c</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
+<p>
+        The library provides a convert_to_via function which helps to implement that.
+      </p>
 <a name="boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_"></a><h4>
-<a name="id4826775"></a>
+<a name="id4830797"></a>
         <a href="rationale.html#boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_">Why
         use partial function specialization and not ADL?</a>
       </h4>
