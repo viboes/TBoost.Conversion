@@ -12,10 +12,12 @@
 #include <boost/conversion/boost/tuple.hpp>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
+#include "helper.hpp"
 
 using namespace boost;
 using namespace boost::unit_test;
 
+#if 0
 struct A1{};
 struct A2{};
 struct B1{};
@@ -51,23 +53,24 @@ namespace boost {
 
 
 }    
+#endif
 void explicit_convert_to() {
     B1 b1;
     B2 b2;
-    boost::fusion::tuple<B1,B2> b;
-    boost::fusion::tuple<A1,A2> a1(convert_to<boost::fusion::tuple<A1,A2> >(b));
-    boost::fusion::tuple<A1,A2> a2(convert_to<boost::fusion::tuple<A1,A2> >(boost::fusion::tuple<B1,B2>(b1,b2)));
-    boost::fusion::tuple<A1,A2> a3(convert_to<boost::fusion::tuple<A1,A2> >(boost::fusion::make_tuple(b1,b2)));
+    fusion::tuple<B1,B2> b;
+    fusion::tuple<A1,A2> a1(convert_to<fusion::tuple<A1,A2> >(b));
+    fusion::tuple<A1,A2> a2(convert_to<fusion::tuple<A1,A2> >(fusion::tuple<B1,B2>(b1,b2)));
+    fusion::tuple<A1,A2> a3(convert_to<fusion::tuple<A1,A2> >(fusion::make_tuple(b1,b2)));
     
 }
 void explicit_assign_to() {
     B1 b1;
     B2 b2;
-    boost::fusion::tuple<A1,A2> a;
-    boost::fusion::tuple<B1,B2> b;
+    fusion::tuple<A1,A2> a;
+    fusion::tuple<B1,B2> b;
     assign_to(a, b);
-    assign_to(a, boost::fusion::tuple<B1,B2>(b1,b2));
-    assign_to(a, boost::fusion::make_tuple(b1,b2));
+    assign_to(a, fusion::tuple<B1,B2>(b1,b2));
+    assign_to(a, fusion::make_tuple(b1,b2));
     
 }
 

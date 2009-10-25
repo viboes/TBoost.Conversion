@@ -17,7 +17,8 @@
 
 namespace boost {
 
-    namespace partial_specialization_workaround {
+    #if 0
+    namespace conversion { namespace partial_specialization_workaround {
         template < class T, class PT, class U, class PU>
         struct convert_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
             inline static numeric::interval<T,PT> apply(numeric::interval<U,PU> const & from)
@@ -34,7 +35,22 @@ namespace boost {
             }
         };
 
+    }}
+    #else
+    namespace numeric {
+        template < class T, class PT, class U, class PU>
+        inline static interval<T,PT> convert_to(interval<U,PU> const & from)
+        {
+            return interval<T,PT>(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
+        }
+        template < class T, class PT, class U, class PU>
+        inline static interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from)
+        {
+            to.assign(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
+            return to;
+        }
     }
+    #endif
 }
 
 #endif

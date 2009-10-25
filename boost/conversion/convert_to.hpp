@@ -13,18 +13,18 @@
 
 #include <cstddef> //for std::size_t
 
-namespace boost {
-
+namespace boost { namespace conversion {
+    
     template < typename To, typename From >
     To convert_to(const From& val);
 
   namespace partial_specialization_workaround {
     template < typename To, typename From >
     struct convert_to {
-      inline static To apply(const From& val)
-      {
-        return To(val);
-      }
+        inline static To apply(const From& val)
+        {
+            return To(val);
+        }
     };
 #if 0    
     template < typename To, typename From, std::size_t N >
@@ -46,8 +46,24 @@ namespace boost {
   To convert_to(const From& val) {
     return partial_specialization_workaround::convert_to<To,From>::apply(val);
   }
+}}
 
+namespace boost_conversion_impl {
+    template <typename Target, typename Source>
+    Target convert_to_impl(Source const& from) {
+        using namespace boost::conversion;
+        //use boost::conversion::convert_to if ADL fails
+        return convert_to<Target>(from);
+    }
 }
+
+namespace boost {
+    template <typename Target, typename Source>
+    Target convert_to(Source const& from) {
+        return ::boost_conversion_impl::convert_to_impl<Target>(from);
+    }
+}
+
 
 #endif
 

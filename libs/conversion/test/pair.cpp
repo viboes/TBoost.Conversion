@@ -9,48 +9,15 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/std/pair.hpp>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
+#include "helper.hpp"
 
 using namespace boost;
 using namespace boost::unit_test;
 
-struct A1{};
-struct A2{};
-struct B1{};
-struct B2{};
-
-namespace boost {
-  template <>
-  A1 convert_to<A1,B1>(const B1& val) {
-    return A1();
-  }
-
-  template <>
-  A1& assign_to<A1,B1>(A1& to, const B1& from) {
-    return to;
-  }
-    
-    namespace partial_specialization_workaround {
-        template <>
-        struct convert_to< A2,B2 > {
-            inline static A2 apply(B2 const & from)
-            {
-                return A2();
-            }
-        };
-        template < >
-        struct assign_to< A2,B2 > {
-            inline static A2& apply(A2& to, const B2& from)
-            {
-                return to;
-            }
-        };
-    }
-
-
-}    
 void explicit_convert_to() {
     B1 b1;
     B2 b2;

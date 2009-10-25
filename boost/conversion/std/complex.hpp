@@ -16,6 +16,7 @@
 #include <boost/conversion/assign_to.hpp>
 
 namespace boost {
+namespace conversion {
 
     namespace partial_specialization_workaround {
         template < class T, class U>
@@ -36,7 +37,7 @@ namespace boost {
         };
 
     }
-}
+}}
 
 #endif
 

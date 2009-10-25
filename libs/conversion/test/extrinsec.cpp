@@ -19,7 +19,7 @@ using namespace boost::unit_test;
 struct A{};
 struct B{};
 
-namespace boost {
+namespace boost { namespace conversion {
   template <>
   A convert_to<A,B>(const B& val) {
     return A();
@@ -30,7 +30,8 @@ namespace boost {
     return to;
   }
 
-}    
+}    }
+
 void explicit_convert_to() {
     B b;
     A a(convert_to<A>(b));

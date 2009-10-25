@@ -22,18 +22,18 @@ typedef short B1;
 void explicit_convert_to() {
     B1 b1;
     B1 b2(2);
-    boost::rational<B1> b(1,2);
-    boost::rational<A1> a1(convert_to<boost::rational<A1> >(b));
-    boost::rational<A1> a2(convert_to<boost::rational<A1> >(boost::rational<B1>(b1,b2)));
+    rational<B1> b(1,2);
+    rational<A1> a1(convert_to<rational<A1> >(b));
+    rational<A1> a2(convert_to<rational<A1> >(rational<B1>(b1,b2)));
     
 }
 void explicit_assign_to() {
     B1 b1;
     B1 b2(2);
-    boost::rational<A1> a;
-    boost::rational<B1> b(1,2);
+    rational<A1> a;
+    rational<B1> b(1,2);
     assign_to(a, b);
-    assign_to(a, boost::rational<B1>(b1,b2));
+    assign_to(a, rational<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

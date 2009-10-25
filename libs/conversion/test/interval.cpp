@@ -22,18 +22,18 @@ typedef short B1;
 void explicit_convert_to() {
     B1 b1;
     B1 b2;
-    boost::numeric::interval<B1> b;
-    boost::numeric::interval<A1> a1(convert_to<boost::numeric::interval<A1> >(b));
-    boost::numeric::interval<A1> a2(convert_to<boost::numeric::interval<A1> >(boost::numeric::interval<B1>(b1,b2)));
+    numeric::interval<B1> b;
+    numeric::interval<A1> a1(convert_to<numeric::interval<A1> >(b));
+    numeric::interval<A1> a2(convert_to<numeric::interval<A1> >(numeric::interval<B1>(b1,b2)));
     
 }
 void explicit_assign_to() {
     B1 b1;
     B1 b2;
-    boost::numeric::interval<A1> a;
-    boost::numeric::interval<B1> b;
+    numeric::interval<A1> a;
+    numeric::interval<B1> b;
     assign_to(a,b);
-    assign_to(a,boost::numeric::interval<B1>(b1,b2));
+    assign_to(a,numeric::interval<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

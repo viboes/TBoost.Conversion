@@ -15,10 +15,12 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/config.hpp>
+#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
 
 namespace boost {
-
-    namespace partial_specialization_workaround {
+    #ifdef BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING
+    namespace conversion { namespace partial_specialization_workaround {
         template < class Rep, class Period>
         struct convert_to<posix_time::time_duration, chrono::duration<Rep, Period> > {
             inline static posix_time::time_duration apply(chrono::duration<Rep, Period> const & from)
@@ -61,7 +63,49 @@ namespace boost {
                 return to;
             }
         };
+    }}
+    #else
+    namespace chrono {
+        template < class Rep, class Period>
+        inline static posix_time::time_duration convert_to(chrono::duration<Rep, Period> const & from)
+        {
+            typedef duration<Rep, Period> src_duration_t;
+            typedef nanoseconds duration_t;
+            typedef duration_t::rep rep_t;
+            rep_t d = chrono::duration_cast<duration_t>(from).count();
+            rep_t sec = d/1000000000;
+            rep_t nsec = d%1000000000;
+            return  boost::posix_time::seconds(static_cast<long>(sec))+
+#ifdef BOOST_DATE_TIME_HAS_NANOSECONDS
+                    boost::posix_time::nanoseconds(nsec);
+#else
+                    boost::posix_time::microseconds((nsec+500)/1000);
+#endif
+        }
+
+        template < class Rep, class Period>
+        inline static chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
+        {
+            to = boost::convert_to<duration<Rep, Period> >(from);
+            return to;
+        }
     }
+    
+    namespace posix_time {
+        template < class Rep, class Period>
+        inline static chrono::duration<Rep, Period> convert_to(time_duration const & from)
+        {
+            return  chrono::duration_cast<chrono::duration<Rep, Period> >(chrono::nanoseconds(from.total_nanoseconds()));
+        }
+        
+        template < class Rep, class Period>
+        inline static time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from)
+        {
+            to = boost::convert_to<time_duration>(from);
+            return to;
+        }
+    }
+    #endif
 }
 
 #endif

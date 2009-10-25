@@ -17,6 +17,7 @@
 #include <boost/convert/convert.hpp>
 
 namespace boost {
+namespace conversion {
 
     namespace partial_specialization_workaround {
 
@@ -52,7 +53,7 @@ namespace boost {
         };
 
     }
-}
+}}
 
 #endif
 

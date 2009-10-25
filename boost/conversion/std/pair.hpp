@@ -13,10 +13,11 @@
 #define BOOST_CONVERT_TO_PAIR__HPP
 
 #include <utility>
-#include <boost/conversion/convert_to.hpp>
+//#include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 
-namespace boost {
+namespace boost { namespace conversion {
+    
     namespace partial_specialization_workaround {
         template < class T1, class T2, class U1, class U2>
         struct convert_to< std::pair<T1,T2>, std::pair<U1,U2> > {
@@ -35,7 +36,7 @@ namespace boost {
             }
         };
     }
-}
+}}
 
 #endif
 
