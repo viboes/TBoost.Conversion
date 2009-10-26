@@ -21,7 +21,7 @@ struct B2{};
 
 namespace boost { 
     template <>
-    A1 convert_to<A1,B1>(const B1& val) {
+    A1 convert_to<A1,B1>(const B1& val, type_tag<A1>) {
         return A1();
     }
 

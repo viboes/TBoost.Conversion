@@ -13,10 +13,14 @@
 
 #include <cstddef> //for std::size_t
 
-namespace boost { namespace conversion {
+namespace boost { 
+    template <typename T>
+    struct type_tag {};
+        
+    namespace conversion {
     
-    template < typename To, typename From >
-    To convert_to(const From& val);
+    //template < typename To, typename From >
+    //To convert_to(const From& val, type_tag<To> p=type_tag<To>());
 
   namespace partial_specialization_workaround {
     template < typename To, typename From >
@@ -26,26 +30,13 @@ namespace boost { namespace conversion {
             return To(val);
         }
     };
-#if 0    
-    template < typename To, typename From, std::size_t N >
-    struct convert_to<To[N],From[N]> {
-      inline static To[N] apply(const From (& val)[N])
-      {
-        To[N] to;
-        for (std::size_t i = 0; i < N; ++i)
-        {
-          to[i] = boost::convert(from[i]);
-        }
-        return to;
-      }
-    };
-#endif    
   }
 
   template < typename To, typename From >
-  To convert_to(const From& val) {
+  To convert_to(const From& val, type_tag<To>) {
     return partial_specialization_workaround::convert_to<To,From>::apply(val);
   }
+  
 }}
 
 namespace boost_conversion_impl {
@@ -53,13 +44,13 @@ namespace boost_conversion_impl {
     Target convert_to_impl(Source const& from) {
         using namespace boost::conversion;
         //use boost::conversion::convert_to if ADL fails
-        return convert_to<Target>(from);
+        return convert_to<Target, Source>(from, boost::type_tag<Target>());
     }
 }
 
 namespace boost {
     template <typename Target, typename Source>
-    Target convert_to(Source const& from) {
+    Target convert_to(Source const& from, type_tag<Target> p=type_tag<Target>()) {
         return ::boost_conversion_impl::convert_to_impl<Target>(from);
     }
 }

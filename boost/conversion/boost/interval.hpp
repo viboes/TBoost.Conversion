@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_PAIR__HPP
-#define BOOST_CONVERT_TO_PAIR__HPP
+#ifndef BOOST_CONVERT_TO_INTERVAL__HPP
+#define BOOST_CONVERT_TO_INTERVAL__HPP
 
 #include <boost/numeric/interval.hpp>
 #include <boost/conversion/convert_to.hpp>
@@ -39,7 +39,7 @@ namespace boost {
     #else
     namespace numeric {
         template < class T, class PT, class U, class PU>
-        inline static interval<T,PT> convert_to(interval<U,PU> const & from)
+        inline static interval<T,PT> convert_to(interval<U,PU> const & from, type_tag<interval<T,PT> >)
         {
             return interval<T,PT>(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
         }

@@ -23,11 +23,11 @@ namespace boost {
         ca_wrapper(T& r) : ref_(r) {}
         template <typename U>
         operator U() {
-            return convert_to<U>(ref_);
+            return boost::convert_to<U>(ref_);
         }
         template <typename U>
         T& operator =(U const& u) {
-            return assign_to(ref_, u);
+            return boost::assign_to(ref_, u);
         }
     };
 
