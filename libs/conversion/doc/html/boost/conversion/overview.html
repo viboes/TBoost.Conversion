@@ -32,10 +32,27 @@
       <a href="overview.html#boost.conversion.overview.description">Description</a>
     </h3>
 <p>
-      Generic explict conversion between unrelated types.
+      Generic explicit conversion between unrelated types.
     </p>
 <p>
-      The main source of inspiration of this library were Boost.StringConvert.
+      The template function <code class="computeroutput"><span class="identifier">convert_to</span></code>
+      allows to convert a source type to a target type, using argument dependent
+      lookup to select a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
+      function if available. If no specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
+      function is available, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+      is used.
+    </p>
+<p>
+      The generic <code class="computeroutput"><span class="identifier">convert_to</span></code> function
+      requires that the elements to be converted are assignable and copy constructible.
+      It is implemented using the Target copy construction from a Source or the Source
+      conversion operator Target - this is sometimes unavailable.
+    </p>
+<p>
+      For standard types, we can not add a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
+      function on the namespace std. The alternative to using argument dependent
+      lookup in this situation is to provide a template specialization of boost::conversion::convert_to
+      for every pair of standard types that requires a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>.
     </p>
 <p>
       <span class="bold"><strong>Boost.Conversion</strong></span> provides:
@@ -43,12 +60,12 @@
 <div class="itemizedlist"><ul type="disc">
 <li>
         a generic <code class="computeroutput"><span class="identifier">convert_to</span></code> function
-        which can be specialized by the user to make explict conversion between unrelated
-        types.
+        which can be specialized by the user to make explicit conversion between
+        unrelated types.
       </li>
 <li>
         a generic <code class="computeroutput"><span class="identifier">assign_to</span></code> function
-        which can be specialized by the user to make explict assignation between
+        which can be specialized by the user to make explicit assignation between
         unrelated types.
       </li>
 <li>
@@ -97,7 +114,7 @@
       </li>
 </ul></div>
 <a name="boost.conversion.overview.how_to_use_this_documentation"></a><h3>
-<a name="id4765018"></a>
+<a name="id4765126"></a>
       <a href="overview.html#boost.conversion.overview.how_to_use_this_documentation">How
       to Use This Documentation</a>
     </h3>

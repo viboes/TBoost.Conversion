@@ -17,7 +17,7 @@ namespace boost { namespace conversion {
 
     template < typename To, typename Via, typename From >
     To convert_to_via(const From& val) {
-        boost::convert_to<To>(boost::convert_to<Via>(val)); 
+        boost::convert_to<To>(boost::convert_to<Via>(val));
     }
 }}
 

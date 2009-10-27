@@ -27,8 +27,90 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost.conversion.appendices.rationale"></a><a href="rationale.html" title=" Appendix B: Rationale"> Appendix B: Rationale</a>
 </h3></div></div></div>
+<a name="boost.conversion.appendices.rationale.trick_to_avoid_recursion_on_the_convert_to_calls"></a><h4>
+<a name="id4836138"></a>
+        <a href="rationale.html#boost.conversion.appendices.rationale.trick_to_avoid_recursion_on_the_convert_to_calls">Trick
+        to avoid recursion on the convert_to calls</a>
+      </h4>
+<p>
+        The implementation of this utility contains various workarounds:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">conversion_impl</span></code> is put
+          outside the boost namespace, to avoid infinite recursion (causing stack
+          overflow) when converting objects of a primitive type.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">conversion_impl</span></code> has a using-directive
+          <code class="computeroutput"><span class="keyword">using</span> <span class="keyword">namespace</span>
+          <span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">;</span></code>,
+          rather than a using-declaration, because some compilers (including MSVC
+          7.1, Borland 5.9.3, and Intel 8.1) don't do argument-dependent lookup when
+          it has a using-declaration instead.
+        </li>
+<li>
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span></code> has an additional template
+          argument, a tag, to avoid ambiguity between the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+          and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span></code> and the when converting from
+          objects of a Boost type that does not have its own <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+          overload. This additional argument is a reference to a base tag class
+          <code class="computeroutput"><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span>
+          <span class="keyword">const</span><span class="special">&amp;</span></code>
+          for the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span></code> and a reference derived tag
+          class <code class="computeroutput"><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span></code>
+          for all others.
+        </li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">dummy</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">base_tag</span> <span class="special">{};</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">type_tag</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{};</span>
+<span class="special">}</span>
+</pre>
+<p>
+        In this way
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+<span class="identifier">Target</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">=</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;())</span> <span class="special">{</span>
+</pre>
+<p>
+        would be never chosen when called in this context
+      </p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">;</span>
+<span class="keyword">return</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;());</span>
+</pre>
+<p>
+        as the library defines
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
+    <span class="identifier">To</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+<span class="special">}</span>
+</pre>
+<a name="boost.conversion.appendices.rationale.trick_to_avoid_the_use_of_the_tag_on_the_user_side"></a><h4>
+<a name="id4837036"></a>
+        <a href="rationale.html#boost.conversion.appendices.rationale.trick_to_avoid_the_use_of_the_tag_on_the_user_side">Trick
+        to avoid the use of the tag on the user side</a>
+      </h4>
+<p>
+        The tag type is there to avoid infinite recursion, but it is quite cumbersome
+        at the user side.
+      </p>
+<pre class="programlisting"><span class="identifier">a</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;());</span>
+</pre>
+<p>
+        To avoid to pass it as parameter the tag parameter has a default value boost::dummy::base_tag&lt;Target&gt;().
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+<span class="identifier">Target</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">p</span><span class="special">=</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;())</span> <span class="special">{</span>
+</pre>
+<p>
+        This default value needs however to give the Target template parameter
+      </p>
+<pre class="programlisting"><span class="identifier">a</span><span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">);</span>
+</pre>
 <a name="boost.conversion.appendices.rationale.mathematical_background"></a><h4>
-<a name="id4830276"></a>
+<a name="id4837384"></a>
         <a href="rationale.html#boost.conversion.appendices.rationale.mathematical_background">Mathematical
         background</a>
       </h4>
@@ -45,21 +127,21 @@
           of convert_to is provided.
         </li>
 <li>
-          AntiSymetric : A convertible to B don't implies B convertible to A
+          Anti-Symetric : A convertible to B don't implies B convertible to A
         </li>
 <li>
-          Loss of precission: Conversions can loss precission but not at infinitum
+          Loss of precision: Conversions can loss precision but not at infinitum
         </li>
 </ul></div>
 <p>
-        Two convertible types don't loss precission if
+        Two convertible types don't loss precision if
       </p>
 <pre class="programlisting"><span class="identifier">b</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">a</span><span class="special">);</span>
 <span class="identifier">a2</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">);</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="identifier">a</span><span class="special">==</span><span class="identifier">a2</span><span class="special">);</span>
 </pre>
 <p>
-        If they can loss precission they satisfy
+        If they can loss precision they satisfy
       </p>
 <pre class="programlisting"><span class="identifier">b</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">a</span><span class="special">)</span>
 <span class="identifier">a2</span> <span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">)</span>
@@ -81,11 +163,20 @@
 <p>
         The library provides a convert_to_via function which helps to implement that.
       </p>
-<a name="boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_"></a><h4>
-<a name="id4830797"></a>
-        <a href="rationale.html#boost.conversion.appendices.rationale.why_use_partial_function_specialization_and_not_adl_">Why
-        use partial function specialization and not ADL?</a>
+<a name="boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadins"></a><h4>
+<a name="id4837905"></a>
+        <a href="rationale.html#boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadins">Ambiguity
+        of multiple overloadins</a>
       </h4>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Ambiguity of multiple overloadins
+        </p></td></tr>
+</table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

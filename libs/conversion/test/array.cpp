@@ -20,15 +20,15 @@ using namespace boost::unit_test;
 void explicit_convert_to() {
     boost::array<B1,3> bs;
     boost::array<A1,3> as;
-    as = conversion::convert_to<boost::array<A1,3> >(bs);
-    
+    as = boost::convert_to<boost::array<A1,3> >(bs);
+
 }
 void explicit_assign_to() {
     boost::array<int,3> bs;
     boost::array<short,3> as;
-    conversion::assign_to(as,bs);
-    
-    
+    boost::assign_to(as,bs);
+
+
 }
 
 test_suite* init_unit_test_suite(int, char*[])

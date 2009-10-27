@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/conversion/convert_to.hpp>
+#include <complex>
 #include <boost/conversion/std/complex.hpp>
 #include <iostream>
 #include <boost/test/unit_test.hpp>
@@ -21,17 +21,17 @@ void explicit_convert_to() {
     B1 b1;
     B1 b2;
     std::complex<B1> b;
-    std::complex<A1> a1(conversion::convert_to<std::complex<A1> >(b));
-    std::complex<A1> a2(conversion::convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
-    
+    std::complex<A1> a1(boost::convert_to<std::complex<A1> >(b));
+    std::complex<A1> a2(boost::convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
+
 }
 void explicit_assign_to() {
     B1 b1;
     B1 b2;
     std::complex<A1> a;
     std::complex<B1> b;
-    conversion::assign_to(a,b);
-    conversion::assign_to(a,std::complex<B1>(b1,b2));
+    boost::assign_to(a,b);
+    boost::assign_to(a,std::complex<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

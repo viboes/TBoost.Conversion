@@ -30,7 +30,7 @@ struct AA {
 };
 
 struct C {
-    operator B()  const{return B();};    
+    operator B()  const{return B();};
 };
 struct CC {
     CC(int){};
@@ -44,9 +44,9 @@ void convert_to_with_implicit_constructor() {
     }
     {
     B b;
-    A a(conversion::convert_to<A>(b));
+    A a(boost::convert_to<A>(b));
     }
-    
+
 }
 void convert_to_with_explicit_constructor() {
     {
@@ -55,9 +55,9 @@ void convert_to_with_explicit_constructor() {
     }
     {
     B b;
-    AE ae(conversion::convert_to<AE>(b));
+    AE ae(boost::convert_to<AE>(b));
     }
-    
+
 }
 
 void convert_to_with_conversion_operator() {
@@ -67,9 +67,9 @@ void convert_to_with_conversion_operator() {
     }
     {
     C c;
-    A a(conversion::convert_to<A>(c));
+    A a(boost::convert_to<A>(c));
     }
-    
+
 }
 void assign_to_with_assignemet_operator() {
     {
@@ -80,13 +80,13 @@ void assign_to_with_assignemet_operator() {
     {
     A a(0);
     AA aa(0);
-    conversion::assign_to(aa,a);
+    boost::assign_to(aa,a);
     }
 }
 void mca_with_assignemet_operator() {
     A a(0);
     AA aa(0);
-    conversion::mca(aa) =a;  
+    boost::mca(aa) =a;
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -98,13 +98,13 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
-    conversion::assign_to(aa,b);
+    boost::assign_to(aa,b);
     }
-}    
+}
 void mca_with_assignemet_operator_and_implicit_constructor() {
     B b;
     AA aa(1);
-    conversion::mca(aa)=b;    
+    boost::mca(aa)=b;
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -116,16 +116,16 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    conversion::assign_to(cc,c);
+    boost::assign_to(cc,c);
     }
 }
 
 void mca_with_assignemet_operator_and_conversion_operator() {
     C c;
     CC cc(1);
-    conversion::mca(cc)=c;
+    boost::mca(cc)=c;
 }
-    
+
 
 test_suite* init_unit_test_suite(int, char*[])
 {
@@ -139,8 +139,8 @@ test_suite* init_unit_test_suite(int, char*[])
   test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator));
   test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_implicit_constructor));
   test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_conversion_operator));
-    
+
   return test;
-    
+
 }
 

@@ -19,19 +19,16 @@ struct A2{};
 struct B1{};
 struct B2{};
 
-namespace boost { 
-    namespace conversion { 
-    template <>
-    A1 convert_to<A1,B1>(const B1& val, boost::dummy::type_tag<A1>) {
+namespace boost {
+    A1 convert_to(const B1& val, boost::dummy::type_tag<A1> const&) {
         return A1();
     }
 
-    template <>
-    A1& assign_to<A1,B1>(A1& to, const B1& from) {
+    A1& assign_to(A1& to, const B1& from, boost::dummy::type_tag<A1> const&) {
         return to;
     }
-  
-    namespace partial_specialization_workaround {
+
+    namespace conversion { namespace partial_specialization_workaround {
         template <>
         struct convert_to< A2,B2 > {
             inline static A2 apply(B2 const & from)

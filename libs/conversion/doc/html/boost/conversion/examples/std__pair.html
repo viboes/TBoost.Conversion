@@ -35,10 +35,11 @@
 <span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_PAIR__HPP</span>
 
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="comment">//#include &lt;boost/conversion/convert_to.hpp&gt;
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
+
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U2</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -57,7 +58,7 @@
             <span class="special">}</span>
         <span class="special">};</span>
     <span class="special">}</span>
-<span class="special">}</span>
+<span class="special">}}</span>
 
 <span class="preprocessor">#endif</span>
 

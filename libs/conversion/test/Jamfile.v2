@@ -20,23 +20,23 @@ project :
 #        <include>$BOOST_ROOT
         <include>../../..
         <include>../../../../chrono
-        
+
 #        <threading>multi
 #        <target-os>cygwin
         #<threadapi>pthread
 #        <variant>debug
-        
+
         #<library>/boost/thread//boost_thread/<link>static
         <library>/sandbox/chrono/libs/chrono/build//boost_chrono/<link>static
         <library>/boost/system//boost_system/<link>static
-        
+
         <library>/boost/test//boost_unit_test_framework/<link>static
-      
+
 ;
 
 
 
-     
+
 test-suite "conversion" :
      [ run builtins.cpp ]
      [ run intrinsec.cpp ]
@@ -50,10 +50,10 @@ test-suite "conversion" :
      [ run tuple.cpp ]
      [ run chrono_posix_time_time.cpp ]
      [ run chrono_posix_time_duration.cpp ]
-    ; 
+    ;
 
 
 test-suite "compile_fail_test"  :
 #    [ compile-fail ../example/IL_BancAccount.cpp : : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
     ;
-    
+

@@ -42,12 +42,8 @@
           <code class="computeroutput"><span class="identifier">convert_to_via</span><span class="special">&lt;&gt;()</span></code></a></span></dt></dl></dd>
 <dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">ca_wrapper</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___">Template
-          Class <code class="computeroutput"><span class="identifier">ca_wrapper</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____">Function
-          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
-</dl></dd>
+<dd><dl><dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____">Function
+          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a></span></dt></dl></dd>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -58,15 +54,25 @@
 <div class="toc"><dl><dt><span class="section"><a href="core.html#boost.conversion.reference.core.convert_to_hpp.function__convert_to___">Function
           <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">()</span></code></a></span></dt></dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">convert_to</span> <span class="special">{</span>
-      <span class="keyword">static</span> <span class="identifier">To</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
-    <span class="special">};</span>
-  <span class="special">}</span>
+    <span class="keyword">namespace</span> <span class="identifier">dummy</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">base_tag</span> <span class="special">{};</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">type_tag</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{};</span>
+    <span class="special">}</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">type_tag</span><span class="special">;</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
+        <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+            <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
+            <span class="keyword">struct</span> <span class="identifier">convert_to</span> <span class="special">{</span>
+                <span class="keyword">static</span> <span class="identifier">To</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+            <span class="special">};</span>
+        <span class="special">}</span>
 
-  <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
-  <span class="identifier">To</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
+        <span class="identifier">To</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+    <span class="identifier">Target</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;=</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;());</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -76,14 +82,23 @@
           The default implementation applies the conversion <code class="computeroutput"><span class="identifier">To</span></code>
           operator of the <code class="computeroutput"><span class="identifier">From</span></code> class
           or the copy constructor of the <code class="computeroutput"><span class="identifier">To</span></code>
-          class. A user adapting another type could need to specialize the <code class="computeroutput"><span class="identifier">convert_to</span></code> free function if the default
-          behavior is not satisfactory.
+          class. Of course if both exist the conversion is ambiguous. A user adapting
+          another type could need to specialize the <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          free function if the default behavior is not satisfactory.
         </p>
 <p>
-          As for the moment we can not partially specialize a function a trick is
-          used: instead of calling directly to the <code class="computeroutput"><span class="identifier">convert_to</span></code>
-          member function, <code class="computeroutput"><span class="identifier">convert_to</span></code>
-          calls to the static operation <code class="computeroutput"><span class="identifier">apply</span></code>
+          The user can add the <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          overloading on the namespace of a specific Source. But sometimes as it
+          is the case for the standard classes, we can not add new functions on the
+          std namespace, so we need a different technique.
+        </p>
+<p>
+          The technique is partially specialize on the function <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          on the boost::conversion namespace. For compilers for which we can not
+          partially specialize a function a trick is used: instead of calling directly
+          to the <code class="computeroutput"><span class="identifier">convert_to</span></code> member
+          function, <code class="computeroutput"><span class="identifier">convert_to</span></code> calls
+          to the static operation <code class="computeroutput"><span class="identifier">apply</span></code>
           on a class with the same name in the namespace __partial_specialization<span class="underline">workaround</span>_. Thus the user can specialize partially
           this class.
         </p>
@@ -94,7 +109,7 @@
           <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">()</span></code></a>
 </h5></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
-<span class="identifier">To</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+<span class="identifier">To</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -124,36 +139,51 @@
 <div class="toc"><dl><dt><span class="section"><a href="core.html#boost.conversion.reference.core.assign_to_hpp.function__assign_to___">Function
           <code class="computeroutput"><span class="identifier">assign_to</span><span class="special">()</span></code></a></span></dt></dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">assign_to</span> <span class="special">{</span>
-      <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">toconst</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
-    <span class="special">};</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">N</span>  <span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">[</span><span class="identifier">N</span><span class="special">],</span><span class="identifier">From</span><span class="special">[</span><span class="identifier">N</span><span class="special">]&gt;</span> <span class="special">{</span>
-      <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">To</span> <span class="special">(&amp;</span><span class="identifier">to</span><span class="special">)[</span><span class="identifier">N</span><span class="special">],</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">(&amp;</span> <span class="identifier">from</span><span class="special">)[</span><span class="identifier">N</span><span class="special">]);</span>
-    <span class="special">};</span>
-  <span class="special">}</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
+        <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+            <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
+            <span class="keyword">struct</span> <span class="identifier">assign_to</span> <span class="special">{</span>
+                <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+            <span class="special">};</span>
+            <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">N</span>  <span class="special">&gt;</span>
+            <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">[</span><span class="identifier">N</span><span class="special">],</span><span class="identifier">From</span><span class="special">[</span><span class="identifier">N</span><span class="special">]&gt;</span> <span class="special">{</span>
+                <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">To</span> <span class="special">(&amp;</span><span class="identifier">to</span><span class="special">)[</span><span class="identifier">N</span><span class="special">],</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">(&amp;</span> <span class="identifier">from</span><span class="special">)[</span><span class="identifier">N</span><span class="special">]);</span>
+            <span class="special">};</span>
+        <span class="special">}</span>
 
-  <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
-  <span class="keyword">void</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
+        <span class="keyword">void</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+    <span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">Target</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">,</span> <span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;=</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">base_tag</span><span class="special">&lt;</span><span class="identifier">To</span><span class="special">&gt;())</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">::</span><span class="identifier">boost_conversion_impl</span><span class="special">::</span><span class="identifier">assign_to_impl</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">&gt;(</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">from</span><span class="special">);</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 </pre>
 <p>
           Defines a free function <code class="computeroutput"><span class="identifier">assign_to</span></code>
           which assigns the <code class="computeroutput"><span class="identifier">from</span></code>
           parameter to the <code class="computeroutput"><span class="identifier">to</span></code> parameter.
-          The default implementation applies the the assignement operator of the
+          The default implementation applies the the assignment operator of the
           <code class="computeroutput"><span class="identifier">To</span></code> class. A user adapting
           another type could need to specialize the <code class="computeroutput"><span class="identifier">assign_to</span></code>
           free function if the default behavior is not satisfactory.
         </p>
 <p>
-          As for the moment we can not partially specialize a function a trick is
-          used: instead of calling directly to the <code class="computeroutput"><span class="identifier">assign_to</span></code>
-          member function, <code class="computeroutput"><span class="identifier">assign_to</span></code>
-          calls to the static operation apply on a class with the same name in the
-          namespace __partial_specialization<span class="underline">workaround</span>_.
+          The user can add the <code class="computeroutput"><span class="identifier">assign_to</span></code>
+          overloading on the namespace of the Source or Target classes. But sometimes
+          as it is the case for the standard classes, we can not add new functions
+          on the std namespace, so we need a different technique.
+        </p>
+<p>
+          The technique is partially specialize on the function <code class="computeroutput"><span class="identifier">assign_to</span></code>
+          on the boost::conversion namespace. For compilers for which we can not
+          partially specialize a function a trick is used: instead of calling directly
+          to the <code class="computeroutput"><span class="identifier">assign_to</span></code> member
+          function, <code class="computeroutput"><span class="identifier">assign_to</span></code> calls
+          to the static operation apply on a class with the same name in the namespace
+          __partial_specialization<span class="underline">workaround</span>_.
           This the user can specialize partially this class.
         </p>
 <div class="section" lang="en">
@@ -172,11 +202,11 @@
 <dd><p>
                 Assigns the <code class="computeroutput"><span class="identifier">from</span></code>
                 parameter to the <code class="computeroutput"><span class="identifier">to</span></code>
-                parameter, using by default the assignement operator of the <code class="computeroutput"><span class="identifier">To</span></code> class.
+                parameter, using by default the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class.
               </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Whatever the underlying the assignement operator of the <code class="computeroutput"><span class="identifier">To</span></code> class throws.
+                Whatever the underlying the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class throws.
               </p></dd>
 </dl>
 </div>
@@ -214,7 +244,7 @@
               </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Whatever the underlying conversions functions throws.
+                Whatever the underlying conversions functions throw.
               </p></dd>
 </dl>
 </div>
@@ -226,64 +256,82 @@
         &lt;boost/conversion/ca_wrapper.hpp&gt;"> Header
         <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">ca_wrapper</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
 </h4></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___">Template
-          Class <code class="computeroutput"><span class="identifier">ca_wrapper</span><span class="special">&lt;&gt;</span></code></a></span></dt>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____">Function
-          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
-</dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____">Function
+          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a></span></dt></dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">ca_wrapper</span><span class="special">;</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ca_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="char">'implementation_dependent&lt;T&gt;'</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___" title="Template
-          Class ca_wrapper&lt;&gt;">Template
-          Class <code class="computeroutput"><span class="identifier">ca_wrapper</span><span class="special">&lt;&gt;</span></code></a>
+<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____" title="Function
+          mca&lt;&gt;()">Function
+          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a>
 </h5></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.constructor">Constructor</a></span></dt>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.conversion_operator">Conversion
-            operator</a></span></dt>
-<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.assignement_operator">Assignement
-            operator</a></span></dt>
-</dl></div>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">ca_wrapper</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">ca_wrapper</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
-<span class="special">};</span>
-</pre>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h6 class="title">
-<a name="boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.constructor"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.constructor" title="Constructor">Constructor</a>
-</h6></div></div></div>
-<pre class="programlisting"><span class="identifier">ca_wrapper</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+<div class="toc"><dl><dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_">Template
+            Class <code class="computeroutput"><span class="identifier">implementation_dependent</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="char">'implementation_dependent&lt;T&gt;'</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                  Stores the reference to type.
-                </p></dd>
+                Returns a implementation dependent class able to transform conversion
+                by convert_to call and assignments by assign_to calls.
+              </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                  Nothing
-                </p></dd>
+                Nothing.
+              </p></dd>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_" title="Template
+            Class implementation_dependent">Template
+            Class <code class="computeroutput"><span class="identifier">implementation_dependent</span></code></a>
+</h6></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.constructor">Constructor</a></span></dt>
+<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.conversion_operator">Conversion
+              operator</a></span></dt>
+<dt><span class="section"><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.assignment_operator">Assignment
+              operator</a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">implementation_dependent</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">implementation_dependent</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.constructor"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.constructor" title="Constructor">Constructor</a>
+</h6></div></div></div>
+<pre class="programlisting"><span class="identifier">implementation_dependent</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+                    Stores the reference to type.
+                  </p></dd>
+<dt><span class="term">Throws:</span></dt>
+<dd><p>
+                    Nothing
+                  </p></dd>
 </dl>
 </div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
-<a name="boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.conversion_operator"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.conversion_operator" title="Conversion
-            operator">Conversion
-            operator</a>
+<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.conversion_operator"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.conversion_operator" title="Conversion
+              operator">Conversion
+              operator</a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
 </pre>
@@ -292,21 +340,21 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                  Call to the <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> on the stored reference.
-                </p></dd>
+                    Call to the <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> on the stored reference.
+                  </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                  Whatever <code class="computeroutput"><span class="identifier">convert_to</span></code>
-                  throws.
-                </p></dd>
+                    Whatever <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                    throws.
+                  </p></dd>
 </dl>
 </div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h6 class="title">
-<a name="boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.assignement_operator"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.template_class__ca_wrapper___.assignement_operator" title="Assignement
-            operator">Assignement
-            operator</a>
+<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.assignment_operator"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____.template_class__implementation_dependent_.assignment_operator" title="Assignment
+              operator">Assignment
+              operator</a>
 </h6></div></div></div>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
 </pre>
@@ -315,38 +363,17 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                  Call to the <code class="computeroutput"><span class="identifier">assignt_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">U</span><span class="special">&gt;</span></code> with the stored reference and
-                  the passed parameter <code class="computeroutput"><span class="identifier">u</span></code>.
-                </p></dd>
+                    Call to the <code class="computeroutput"><span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">U</span><span class="special">&gt;</span></code> with the stored reference
+                    and the passed parameter <code class="computeroutput"><span class="identifier">u</span></code>.
+                  </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                  Whatever <code class="computeroutput"><span class="identifier">assign_to</span></code>
-                  throws.
-                </p></dd>
+                    Whatever <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                    throws.
+                  </p></dd>
 </dl>
 </div>
 </div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h5 class="title">
-<a name="boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____"></a><a href="core.html#boost.conversion.reference.core.ca_wrapper_hpp.function__mca_____" title="Function
-          mca&lt;&gt;()">Function
-          <code class="computeroutput"><span class="identifier">mca</span><span class="special">&lt;&gt;()</span></code></a>
-</h5></div></div></div>
-<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ca_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-                Creates a ca_wrapper.
-              </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-                Nothing.
-              </p></dd>
-</dl>
 </div>
 </div>
 </div>

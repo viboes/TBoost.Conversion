@@ -18,24 +18,22 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
 
-//#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
-
 namespace boost {
-    
-    #ifdef BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING
+
+    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     namespace conversion { namespace partial_specialization_workaround {
         template < class Target, class Source>
         struct convert_to< optional<Target>, optional<Source> > {
             inline static optional<Target> apply(optional<Source> const & from)
             {
-                return (from?optional<Target>(conversion::convert_to<Target>(from.get())):optional<Target>());
+                return (from?optional<Target>(boost::convert_to<Target>(from.get())):optional<Target>());
             }
         };
         template < class Target, class Source>
         struct assign_to< optional<Target>, optional<Source> > {
             inline static optional<Target>& apply(optional<Target>& to, const optional<Source>& from)
             {
-                to = from?conversion::convert_to<Target>(from.get()):optional<Target>();
+                to = from?boost::convert_to<Target>(from.get()):optional<Target>();
                 return to;
             }
         };
@@ -43,15 +41,17 @@ namespace boost {
     }}
     #else
     template < class Target, class Source>
-    inline optional<Target> convert_to(optional<Source> const & from, boost::dummy::type_tag<optional<Target> >)
+    inline optional<Target> convert_to(optional<Source> const & from
+                , boost::dummy::type_tag<optional<Target> > const&)
     {
-        return (from?optional<Target>(conversion::convert_to<Target>(from.get())):optional<Target>());
+        return (from?optional<Target>(boost::convert_to<Target>(from.get())):optional<Target>());
     }
 
     template < class Target, class Source>
-    inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from)
+    inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
+                , boost::dummy::type_tag<optional<Target> > const&)
     {
-        to = from?conversion::convert_to<Target>(from.get()):optional<Target>();
+        to = from?boost::convert_to<Target>(from.get()):optional<Target>();
         return to;
     }
     #endif

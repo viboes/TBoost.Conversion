@@ -14,29 +14,30 @@
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 
-namespace boost { namespace conversion {
-    
-    template <typename T> 
-    class ca_wrapper {
-        T& ref_;
-    public:
-        ca_wrapper(T& r) : ref_(r) {}
-        template <typename U>
-        operator U() {
-            return boost::conversion::convert_to<U>(ref_);
-        }
-        template <typename U>
-        T& operator =(U const& u) {
-            return boost::conversion::assign_to(ref_, u);
-        }
-    };
+namespace boost {
+    namespace conversion {
 
-    template <typename T>
-    ca_wrapper<T> mca(T& r) {
-        return ca_wrapper<T>(r);
+        template <typename T>
+        class ca_wrapper {
+            T& ref_;
+        public:
+            ca_wrapper(T& r) : ref_(r) {}
+            template <typename U>
+            operator U() {
+                return boost::convert_to<U>(ref_);
+            }
+            template <typename U>
+            T& operator =(U const& u) {
+                return boost::assign_to(ref_, u);
+            }
+        };
     }
-    
-}}
+    template <typename T>
+    conversion::ca_wrapper<T> mca(T& r) {
+        return conversion::ca_wrapper<T>(r);
+    }
+
+}
 
 #endif
 

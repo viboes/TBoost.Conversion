@@ -22,20 +22,20 @@ void explicit_convert_to() {
     B1 b1;
     B2 b2;
     std::pair<B1,B2> b;
-    std::pair<A1,A2> a1(conversion::convert_to<std::pair<A1,A2> >(b));
-    std::pair<A1,A2> a2(conversion::convert_to<std::pair<A1,A2> >(std::pair<B1,B2>(b1,b2)));
-    std::pair<A1,A2> a3(conversion::convert_to<std::pair<A1,A2> >(std::make_pair(b1,b2)));
-    
+    std::pair<A1,A2> a1(boost::convert_to<std::pair<A1,A2> >(b));
+    std::pair<A1,A2> a2(boost::convert_to<std::pair<A1,A2> >(std::pair<B1,B2>(b1,b2)));
+    std::pair<A1,A2> a3(boost::convert_to<std::pair<A1,A2> >(std::make_pair(b1,b2)));
+
 }
 void explicit_assign_to() {
     B1 b1;
     B2 b2;
     std::pair<A1,A2> a;
     std::pair<B1,B2> b;
-    conversion::assign_to(a,b);
-    conversion::assign_to(a, std::pair<B1,B2>(b1,b2));
-    conversion::assign_to(a, std::make_pair(b1,b2));
-    
+    boost::assign_to(a,b);
+    boost::assign_to(a, std::pair<B1,B2>(b1,b2));
+    boost::assign_to(a, std::make_pair(b1,b2));
+
 }
 
 test_suite* init_unit_test_suite(int, char*[])

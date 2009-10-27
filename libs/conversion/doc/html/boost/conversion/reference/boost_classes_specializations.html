@@ -55,6 +55,7 @@
           types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -64,7 +65,7 @@
         <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
             <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">rational</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>
@@ -79,6 +80,7 @@
           time and duration types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -103,10 +105,11 @@
                 <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span>
                 <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -128,7 +131,7 @@
                 <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span>
                 <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>
@@ -143,6 +146,7 @@
           types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">PT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">PU</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">interval</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">PT</span><span class="special">&gt;,</span> <span class="identifier">interval</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">,</span><span class="identifier">PU</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -153,8 +157,7 @@
             <span class="keyword">static</span> <span class="identifier">interval</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">PT</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span>
                 <span class="identifier">interval</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">PT</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">interval</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">,</span><span class="identifier">PU</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>
@@ -169,6 +172,7 @@
           types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -179,8 +183,7 @@
             <span class="keyword">static</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span>
                 <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>
@@ -195,7 +198,7 @@
           types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">N</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;,</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -205,7 +208,7 @@
         <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;,</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
             <span class="keyword">static</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">,</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>
@@ -220,6 +223,7 @@
           types.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
         <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">class</span> <span class="identifier">Tn</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="special">...,</span> <span class="keyword">class</span> <span class="identifier">Un</span><span class="special">&gt;</span>
         <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,...,</span><span class="identifier">T3</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,...,</span><span class="identifier">U3</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
@@ -232,7 +236,7 @@
             <span class="identifier">apply</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,...,</span><span class="identifier">T3</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">tuple</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,...,</span><span class="identifier">U3</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
         <span class="special">};</span>
 
-    <span class="special">}</span>
+    <span class="special">}}</span>
 <span class="special">}</span>
 </pre>
 </div>

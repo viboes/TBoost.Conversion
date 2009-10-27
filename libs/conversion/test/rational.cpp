@@ -18,22 +18,22 @@ using namespace boost::unit_test;
 
 typedef int A1;
 typedef short B1;
-   
+
 void explicit_convert_to() {
     B1 b1;
     B1 b2(2);
     boost::rational<B1> b(1,2);
-    boost::rational<A1> a1(conversion::convert_to<boost::rational<A1> >(b));
-    boost::rational<A1> a2(conversion::convert_to<boost::rational<A1> >(boost::rational<B1>(b1,b2)));
-    
+    boost::rational<A1> a1(boost::convert_to<boost::rational<A1> >(b));
+    boost::rational<A1> a2(boost::convert_to<boost::rational<A1> >(boost::rational<B1>(b1,b2)));
+
 }
 void explicit_assign_to() {
     B1 b1;
     B1 b2(2);
     boost::rational<A1> a;
     boost::rational<B1> b(1,2);
-    conversion::assign_to(a, b);
-    conversion::assign_to(a, boost::rational<B1>(b1,b2));
+    boost::assign_to(a, b);
+    boost::assign_to(a, boost::rational<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

@@ -30,15 +30,11 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.todo.tasks_to_do_before_review"></a><h4>
-<a name="id4833238"></a>
+<a name="id4840353"></a>
         <a href="todo.html#boost.conversion.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h4>
 <div class="itemizedlist"><ul type="disc">
-<li>
-          On compilers supporting partial template functions specialization no use
-          of the workarround.
-        </li>
 <li>
           Add conversion between std::vector of explicitly convertible types.
         </li>
@@ -55,7 +51,7 @@
           Add a is_asignable_to metafunction.
         </li></ul></div>
 <a name="boost.conversion.appendices.todo.for_later_releases"></a><h4>
-<a name="id4833390"></a>
+<a name="id4840499"></a>
         <a href="todo.html#boost.conversion.appendices.todo.for_later_releases">For later
         releases</a>
       </h4>
@@ -68,19 +64,34 @@
         </li>
 </ul></div>
 <a name="boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard"></a><h4>
-<a name="id4833424"></a>
+<a name="id4840533"></a>
         <a href="todo.html#boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard">Make
         a proposal to the C++ standard</a>
       </h4>
 <p>
         C++1x has added explicit conversion operators, but they must always be defined
-        in the Source class. The same applies to the assignement operator, it must
+        in the Source class. The same applies to the assignment operator, it must
         be defined on the Target class.
       </p>
 <p>
-        It will be interesting to be able to implicitly or explicitly add extrinsic
-        conversion operators between unrelated types. Assignement operators could
-        also be specialized.
+        What it will interesting is to be able to add constructors and assignments
+        operators to the class std::pair, so we can say that two pairs are convertible
+        if the parameters are explicitly convertible using a convert_to function
+      </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span> <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">V</span><span class="special">&gt;</span>
+<span class="comment">//requires HasConvertTo&lt;T1, const U&amp;&gt; &amp;&amp; HasConvertTo&lt;T2, const V&amp;&gt;
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U</span> <span class="special">,</span> <span class="identifier">V</span><span class="special">&gt;&amp;</span> <span class="identifier">p</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">first</span><span class="special">),</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">second</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+        But this is not possible. We can not add operations to a class.
+      </p>
+<p>
+        Another possibility could be to make an evolution to the standard, so the
+        convertible concept takes car of extrinsic conversions. We could be able
+        to implicitly or explicitly add extrinsic conversion operators between unrelated
+        types. Assignment operators could also be specialized.
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">To</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">From</span> <span class="special">&gt;</span>
 <span class="keyword">operator</span> <span class="identifier">To</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
@@ -89,7 +100,7 @@
 <span class="identifier">To</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">To</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">From</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">);</span>
 </pre>
 <p>
-        For example we could specialize this the conversion from as chrono::time_point&lt;Clock,
+        For example we could specialize the conversion from as chrono::time_point&lt;Clock,
         Duration&gt; to posix_time::ptime follows
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>

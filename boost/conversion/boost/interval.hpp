@@ -17,20 +17,20 @@
 
 namespace boost {
 
-    #if 0
+    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     namespace conversion { namespace partial_specialization_workaround {
         template < class T, class PT, class U, class PU>
         struct convert_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
             inline static numeric::interval<T,PT> apply(numeric::interval<U,PU> const & from)
             {
-                return numeric::interval<T,PT>(conversion::convert_to<T>(from.lower()), conversion::convert_to<U>(from.upper()));
+                return numeric::interval<T,PT>(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
             }
         };
         template < class T, class PT, class U, class PU>
         struct assign_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
             inline static numeric::interval<T,PT>& apply(numeric::interval<T,PT>& to, const numeric::interval<U,PU>& from)
             {
-                to.assign(conversion::convert_to<T>(from.lower()), conversion::convert_to<U>(from.upper()));
+                to.assign(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
                 return to;
             }
         };
@@ -39,14 +39,16 @@ namespace boost {
     #else
     namespace numeric {
         template < class T, class PT, class U, class PU>
-        inline static interval<T,PT> convert_to(interval<U,PU> const & from, boost::dummy::type_tag<interval<T,PT> >)
+        inline interval<T,PT> convert_to(interval<U,PU> const & from
+                        , boost::dummy::type_tag<interval<T,PT> > const&)
         {
-            return interval<T,PT>(conversion::convert_to<T>(from.lower()), conversion::convert_to<U>(from.upper()));
+            return interval<T,PT>(boost::convert_to<T>(from.lower()), boost::convert_to<U>(from.upper()));
         }
         template < class T, class PT, class U, class PU>
-        inline static interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from)
+        inline interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from
+                        , boost::dummy::type_tag<interval<T,PT> > const&)
         {
-            to.assign(conversion::convert_to<T>(from.lower()),conversion::convert_to<U>(from.upper()));
+            to.assign(boost::convert_to<T>(from.lower()),boost::convert_to<U>(from.upper()));
             return to;
         }
     }

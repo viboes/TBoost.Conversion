@@ -19,30 +19,28 @@ using namespace boost::unit_test;
 struct A{};
 struct B{};
 
-namespace boost { namespace conversion {
-  template <>
-  A convert_to<A,B>(const B& val, boost::dummy::type_tag<A>) {
+namespace boost {
+  A convert_to(const B& val, boost::dummy::type_tag<A> const&) {
     return A();
   }
 
-  template <>
-  A& assign_to<A,B>(A& to, const B& from) {
+  A& assign_to(A& to, const B& from, boost::dummy::type_tag<A> const&) {
     return to;
   }
 
-}    }
+}
 
 void explicit_convert_to() {
     B b;
-    A a(conversion::convert_to<A>(b));
-    
+    A a(boost::convert_to<A>(b));
+
 }
 void explicit_assign_to() {
     B b;
     A a;
-    conversion::assign_to(a, b);
-    conversion::mca(a)= b;
-    
+    boost::assign_to(a, b);
+    boost::mca(a)= b;
+
 }
 test_suite* init_unit_test_suite(int, char*[])
 {
