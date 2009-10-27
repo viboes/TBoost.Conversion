@@ -21,8 +21,8 @@ void explicit_convert_to() {
     B1 b1;
     B1 b2;
     std::complex<B1> b;
-    std::complex<A1> a1(convert_to<std::complex<A1> >(b));
-    std::complex<A1> a2(convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
+    std::complex<A1> a1(conversion::convert_to<std::complex<A1> >(b));
+    std::complex<A1> a2(conversion::convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
     
 }
 void explicit_assign_to() {
@@ -30,8 +30,8 @@ void explicit_assign_to() {
     B1 b2;
     std::complex<A1> a;
     std::complex<B1> b;
-    assign_to(a,b);
-    assign_to(a,std::complex<B1>(b1,b2));
+    conversion::assign_to(a,b);
+    conversion::assign_to(a,std::complex<B1>(b1,b2));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

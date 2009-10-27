@@ -44,7 +44,7 @@ void convert_to_with_implicit_constructor() {
     }
     {
     B b;
-    A a(convert_to<A>(b));
+    A a(conversion::convert_to<A>(b));
     }
     
 }
@@ -55,7 +55,7 @@ void convert_to_with_explicit_constructor() {
     }
     {
     B b;
-    AE ae(convert_to<AE>(b));
+    AE ae(conversion::convert_to<AE>(b));
     }
     
 }
@@ -67,7 +67,7 @@ void convert_to_with_conversion_operator() {
     }
     {
     C c;
-    A a(convert_to<A>(c));
+    A a(conversion::convert_to<A>(c));
     }
     
 }
@@ -80,13 +80,13 @@ void assign_to_with_assignemet_operator() {
     {
     A a(0);
     AA aa(0);
-    assign_to(aa,a);
+    conversion::assign_to(aa,a);
     }
 }
 void mca_with_assignemet_operator() {
     A a(0);
     AA aa(0);
-    mca(aa) =a;  
+    conversion::mca(aa) =a;  
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -98,13 +98,13 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
-    assign_to(aa,b);
+    conversion::assign_to(aa,b);
     }
 }    
 void mca_with_assignemet_operator_and_implicit_constructor() {
     B b;
     AA aa(1);
-    mca(aa)=b;    
+    conversion::mca(aa)=b;    
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -116,14 +116,14 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    assign_to(cc,c);
+    conversion::assign_to(cc,c);
     }
 }
 
 void mca_with_assignemet_operator_and_conversion_operator() {
     C c;
     CC cc(1);
-    mca(cc)=c;
+    conversion::mca(cc)=c;
 }
     
 

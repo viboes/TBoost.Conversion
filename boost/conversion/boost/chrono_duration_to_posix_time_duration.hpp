@@ -16,7 +16,8 @@
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
-#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
+
+//#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
 
 namespace boost {
     #ifdef BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING
@@ -43,7 +44,7 @@ namespace boost {
         struct assign_to<posix_time::time_duration, chrono::duration<Rep, Period> > {        
             inline static posix_time::time_duration& apply(posix_time::time_duration& to, const chrono::duration<Rep, Period>& from)
             {
-                to = boost::convert_to<posix_time::time_duration>(from);
+                to = conversion::convert_to<posix_time::time_duration>(from);
                 return to;
             }
         };
@@ -59,7 +60,7 @@ namespace boost {
         struct assign_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
             inline static chrono::duration<Rep, Period> & apply(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
             {
-                to = boost::convert_to<chrono::duration<Rep, Period> >(from);
+                to = conversion::convert_to<chrono::duration<Rep, Period> >(from);
                 return to;
             }
         };
@@ -67,7 +68,8 @@ namespace boost {
     #else
     namespace chrono {
         template < class Rep, class Period>
-        inline static posix_time::time_duration convert_to(chrono::duration<Rep, Period> const & from)
+        inline posix_time::time_duration convert_to(chrono::duration<Rep, Period> const & from
+                        , boost::dummy::type_tag<posix_time::time_duration>)
         {
             typedef duration<Rep, Period> src_duration_t;
             typedef nanoseconds duration_t;
@@ -84,24 +86,25 @@ namespace boost {
         }
 
         template < class Rep, class Period>
-        inline static chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
+        inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
         {
-            to = boost::convert_to<duration<Rep, Period> >(from);
+            to = conversion::convert_to<duration<Rep, Period> >(from);
             return to;
         }
     }
     
     namespace posix_time {
         template < class Rep, class Period>
-        inline static chrono::duration<Rep, Period> convert_to(time_duration const & from)
+        inline chrono::duration<Rep, Period> convert_to(time_duration const & from
+                            , boost::dummy::type_tag<chrono::duration<Rep, Period> >)
         {
             return  chrono::duration_cast<chrono::duration<Rep, Period> >(chrono::nanoseconds(from.total_nanoseconds()));
         }
         
         template < class Rep, class Period>
-        inline static time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from)
+        inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from)
         {
-            to = boost::convert_to<time_duration>(from);
+            to = conversion::convert_to<time_duration>(from);
             return to;
         }
     }

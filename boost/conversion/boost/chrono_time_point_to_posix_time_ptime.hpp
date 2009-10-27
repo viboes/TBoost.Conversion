@@ -18,7 +18,8 @@
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
-#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
+
+//#define BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING 1
 
 namespace boost {
     #ifdef BOOST_CONVERSION_NO_FUNCTION_TEMPLATE_ORDERING
@@ -46,7 +47,7 @@ namespace boost {
         struct assign_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
             inline static posix_time::ptime& apply(posix_time::ptime& to, const chrono::time_point<Clock, Duration>& from)
             {
-                to = boost::convert_to<posix_time::ptime>(from);
+                to = conversion::convert_to<posix_time::ptime>(from);
                 return to;
             }
         };
@@ -66,7 +67,7 @@ namespace boost {
         struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
             inline static chrono::time_point<Clock, Duration>& apply(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
             {
-                to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
+                to = conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
                 return to;
             }
         };
@@ -74,9 +75,9 @@ namespace boost {
     #else
     namespace chrono {
         template < class Clock, class Duration>
-        struct convert_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-            inline static posix_time::ptime apply(const chrono::time_point<Clock, Duration>& from)
-            {
+        inline posix_time::ptime convert_to(const chrono::time_point<Clock, Duration>& from
+                    , boost::dummy::type_tag<posix_time::ptime>)
+        {
                 typedef chrono::time_point<Clock, Duration> time_point_t;
                 typedef chrono::nanoseconds duration_t;
                 typedef duration_t::rep rep_t;
@@ -90,21 +91,21 @@ namespace boost {
 #else
                         boost::posix_time::microseconds((nsec+500)/1000);
 #endif
-            }
-        };
+        }
+        
         
         template < class Clock, class Duration>
-        struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-            inline static chrono::time_point<Clock, Duration>& apply(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
-            {
-                to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
-                return to;
-            }
-        };
+        inline chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
+        {
+            to = conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
+            return to;
+        }
+        
     }
     namespace posix_time {
         template < class Clock, class Duration>
-        inline static chrono::time_point<Clock, Duration> convert_to(const ptime& from)
+        inline chrono::time_point<Clock, Duration> convert_to(const ptime& from
+                , boost::dummy::type_tag<chrono::time_point<Clock, Duration> >)
         {
             time_duration const time_since_epoch=from-from_time_t(0);
             chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
@@ -113,9 +114,9 @@ namespace boost {
         }
         
         template < class Clock, class Duration>
-        inline static ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from)
+        inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from)
         {
-            to = boost::convert_to<ptime>(from);
+            to = conversion::convert_to<ptime>(from);
             return to;
         }
         

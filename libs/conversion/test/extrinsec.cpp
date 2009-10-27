@@ -21,7 +21,7 @@ struct B{};
 
 namespace boost { namespace conversion {
   template <>
-  A convert_to<A,B>(const B& val, type_tag<A>) {
+  A convert_to<A,B>(const B& val, boost::dummy::type_tag<A>) {
     return A();
   }
 
@@ -34,14 +34,14 @@ namespace boost { namespace conversion {
 
 void explicit_convert_to() {
     B b;
-    A a(convert_to<A>(b));
+    A a(conversion::convert_to<A>(b));
     
 }
 void explicit_assign_to() {
     B b;
     A a;
-    assign_to(a, b);
-    mca(a)= b;
+    conversion::assign_to(a, b);
+    conversion::mca(a)= b;
     
 }
 test_suite* init_unit_test_suite(int, char*[])

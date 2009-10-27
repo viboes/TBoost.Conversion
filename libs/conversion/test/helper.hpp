@@ -20,8 +20,9 @@ struct B1{};
 struct B2{};
 
 namespace boost { 
+    namespace conversion { 
     template <>
-    A1 convert_to<A1,B1>(const B1& val, type_tag<A1>) {
+    A1 convert_to<A1,B1>(const B1& val, boost::dummy::type_tag<A1>) {
         return A1();
     }
 
@@ -30,7 +31,7 @@ namespace boost {
         return to;
     }
   
-    namespace conversion { namespace partial_specialization_workaround {
+    namespace partial_specialization_workaround {
         template <>
         struct convert_to< A2,B2 > {
             inline static A2 apply(B2 const & from)
@@ -45,7 +46,8 @@ namespace boost {
                 return to;
             }
         };
-    }}
+    }
+    }
 }
 
 #endif //BOOST_CONVERSION_TEST_HELPER__HPP

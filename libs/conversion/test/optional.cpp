@@ -16,24 +16,32 @@
 using namespace boost;
 using namespace boost::unit_test;
 
-typedef int A1;
-typedef short B1;
+    struct A1{};
+    struct B1{};
+    A1 convert_to(const B1& val, boost::dummy::type_tag<A1>) {
+        return A1();
+    }
+
+    A1& assign_to(A1& to, const B1& from) {
+        return to;
+    }
+
 
 void explicit_convert_to() {
     B1 b1;
-    optional<B1> b;
-    optional<A1> a1(convert_to<optional<A1> >(b));
+    boost::optional<B1> b;
+    boost::optional<A1> a1(conversion::convert_to<boost::optional<A1> >(b));
     //optional<A1> a1;
     //a1=convert_to<optional<A1> >(b);
-    optional<A1> a2(convert_to<optional<A1> >(optional<B1>(b1)));
+    boost::optional<A1> a2(conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
     
 }
 void explicit_assign_to() {
     B1 b1;
-    optional<A1> a;
-    optional<B1> b;
+    boost::optional<A1> a;
+    boost::optional<B1> b;
     //assign_to(b,a);
-    assign_to(a, optional<B1>(b1));
+    conversion::assign_to(a, boost::optional<B1>(b1));
 }
 
 test_suite* init_unit_test_suite(int, char*[])

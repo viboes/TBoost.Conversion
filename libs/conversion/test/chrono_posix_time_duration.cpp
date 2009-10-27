@@ -20,17 +20,17 @@ typedef int A1;
 typedef short B1;
 
 void explicit_convert_to() {
-    chrono::seconds a(3);
-    posix_time::time_duration b(convert_to<posix_time::time_duration >(a));
-    chrono::seconds c(convert_to<chrono::seconds>(b));
+    boost::chrono::seconds a(3);
+    boost::posix_time::time_duration b(conversion::convert_to<boost::posix_time::time_duration >(a));
+    boost::chrono::seconds c(conversion::convert_to<boost::chrono::seconds>(b));
     
 }
 void explicit_assign_to() {
-    chrono::seconds a(3);
-    posix_time::time_duration b;
-    assign_to(b, a);
-    chrono::seconds c;
-    assign_to(c, b);
+    boost::chrono::seconds a(3);
+    boost::posix_time::time_duration b;
+    conversion::assign_to(b, a);
+    boost::chrono::seconds c;
+    conversion::assign_to(c, b);
 }
 
 test_suite* init_unit_test_suite(int, char*[])
