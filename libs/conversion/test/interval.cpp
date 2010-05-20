@@ -20,19 +20,19 @@ typedef int A1;
 typedef short B1;
 
 void explicit_convert_to() {
-    B1 b1;
-    B1 b2;
-    boost::numeric::interval<B1> b;
+    B1 b1(1);
+    B1 b2(3);
+    boost::numeric::interval<B1> b(1,5);
     boost::numeric::interval<A1> a1(boost::convert_to<boost::numeric::interval<A1> >(b));
     boost::numeric::interval<A1> a2(boost::convert_to<boost::numeric::interval<A1> >(
                 boost::numeric::interval<B1>(b1,b2)));
 
 }
 void explicit_assign_to() {
-    B1 b1;
-    B1 b2;
-    boost::numeric::interval<A1> a;
-    boost::numeric::interval<B1> b;
+    B1 b1(1);
+    B1 b2(3);
+    boost::numeric::interval<A1> a(1,4);
+    boost::numeric::interval<B1> b(1,4);
     boost::assign_to(a,b);
     boost::assign_to(a,boost::numeric::interval<B1>(b1,b2));
 }

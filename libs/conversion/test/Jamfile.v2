@@ -18,19 +18,21 @@ if ! $(BOOST_ROOT)
 project :
     : requirements
 #        <include>$BOOST_ROOT
-        <include>../../..
-        <include>../../../../chrono
+#        <include>../../..
+#        <include>../../../../chrono
 
 #        <threading>multi
 #        <target-os>cygwin
         #<threadapi>pthread
 #        <variant>debug
 
+        <library>/boost/system//boost_system
+        <library>/boost/chrono//boost_chrono
+
         #<library>/boost/thread//boost_thread/<link>static
-        <library>/sandbox/chrono/libs/chrono/build//boost_chrono/<link>static
-        <library>/boost/system//boost_system/<link>static
 
         <library>/boost/test//boost_unit_test_framework/<link>static
+        #<library>/boost/test//boost_unit_test_framework
 
 ;
 
