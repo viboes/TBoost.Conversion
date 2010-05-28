@@ -45,6 +45,7 @@ test-suite "conversion" :
      [ run extrinsec.cpp ]
      [ run pair.cpp ]
      [ run complex.cpp ]
+     [ run vector.cpp ]
      [ run interval.cpp ]
      [ run rational.cpp ]
      [ run optional.cpp ]
