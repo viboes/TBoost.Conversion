@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Core</title>
 <link rel="stylesheet" href="../../../../../../../doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
@@ -116,16 +116,16 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Converts the from parameter to an instance of the To type, using
-                by default the conversion operator or copy constructor.
-              </p></dd>
+                  Converts the from parameter to an instance of the To type, using
+                  by default the conversion operator or copy constructor.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Whatever the underlying conversion <code class="computeroutput"><span class="identifier">To</span></code>
-                operator of the <code class="computeroutput"><span class="identifier">From</span></code>
-                class or the copy constructor of the <code class="computeroutput"><span class="identifier">To</span></code>
-                class throws.
-              </p></dd>
+                  Whatever the underlying conversion <code class="computeroutput"><span class="identifier">To</span></code>
+                  operator of the <code class="computeroutput"><span class="identifier">From</span></code>
+                  class or the copy constructor of the <code class="computeroutput"><span class="identifier">To</span></code>
+                  class throws.
+                </p></dd>
 </dl>
 </div>
 </div>
@@ -200,14 +200,14 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Assigns the <code class="computeroutput"><span class="identifier">from</span></code>
-                parameter to the <code class="computeroutput"><span class="identifier">to</span></code>
-                parameter, using by default the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class.
-              </p></dd>
+                  Assigns the <code class="computeroutput"><span class="identifier">from</span></code>
+                  parameter to the <code class="computeroutput"><span class="identifier">to</span></code>
+                  parameter, using by default the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Whatever the underlying the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class throws.
-              </p></dd>
+                  Whatever the underlying the assignment operator of the <code class="computeroutput"><span class="identifier">To</span></code> class throws.
+                </p></dd>
 </dl>
 </div>
 </div>
@@ -239,13 +239,13 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Converts the from parameter to an instance of the To type using a
-                intermediary Via type.
-              </p></dd>
+                  Converts the from parameter to an instance of the To type using
+                  a intermediary Via type.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Whatever the underlying conversions functions throw.
-              </p></dd>
+                  Whatever the underlying conversions functions throw.
+                </p></dd>
 </dl>
 </div>
 </div>
@@ -277,13 +277,13 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                Returns a implementation dependent class able to transform conversion
-                by convert_to call and assignments by assign_to calls.
-              </p></dd>
+                  Returns a implementation dependent class able to transform conversion
+                  by convert_to call and assignments by assign_to calls.
+                </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                Nothing.
-              </p></dd>
+                  Nothing.
+                </p></dd>
 </dl>
 </div>
 <div class="section" lang="en">
@@ -318,12 +318,12 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                    Stores the reference to type.
-                  </p></dd>
+                      Stores the reference to type.
+                    </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                    Nothing
-                  </p></dd>
+                      Nothing
+                    </p></dd>
 </dl>
 </div>
 </div>
@@ -340,13 +340,13 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                    Call to the <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> on the stored reference.
-                  </p></dd>
+                      Call to the <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> on the stored reference.
+                    </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                    Whatever <code class="computeroutput"><span class="identifier">convert_to</span></code>
-                    throws.
-                  </p></dd>
+                      Whatever <code class="computeroutput"><span class="identifier">convert_to</span></code>
+                      throws.
+                    </p></dd>
 </dl>
 </div>
 </div>
@@ -363,14 +363,14 @@
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-                    Call to the <code class="computeroutput"><span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">U</span><span class="special">&gt;</span></code> with the stored reference
-                    and the passed parameter <code class="computeroutput"><span class="identifier">u</span></code>.
-                  </p></dd>
+                      Call to the <code class="computeroutput"><span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier">U</span><span class="special">&gt;</span></code> with the stored reference
+                      and the passed parameter <code class="computeroutput"><span class="identifier">u</span></code>.
+                    </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
-                    Whatever <code class="computeroutput"><span class="identifier">assign_to</span></code>
-                    throws.
-                  </p></dd>
+                      Whatever <code class="computeroutput"><span class="identifier">assign_to</span></code>
+                      throws.
+                    </p></dd>
 </dl>
 </div>
 </div>
@@ -380,7 +380,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2009 Vicente J. Botet Escriba<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 Vicente J. Botet Escriba<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

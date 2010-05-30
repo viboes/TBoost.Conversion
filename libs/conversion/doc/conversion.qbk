@@ -64,6 +64,7 @@ For standard types, we can not add a specialized `convert_to` function on the na
 * a generic __assign_to__ function which can be specialized by the user to make explicit assignation between unrelated types.
 * a generic `mca` function returning a wrapper which replace assignments by a call to __assign_to__ and conversion operators by a call __convert_to__.
 * a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.
+* a generic `pack` function used to pack Source and target constructor arguments.
 * conversion between `std::complex` of explicitly convertible types.
 * conversion between `std::pair` of explicitly convertible types.
 * conversion between `boost::optional` of explicitly convertible types.
@@ -73,6 +74,7 @@ For standard types, we can not add a specialized `convert_to` function on the na
 * conversion between `boost::chrono::duration` and `boost::time_duration`.
 * conversion between `boost::array` of explicitly convertible types.
 * conversion between Boost.Fusion sequences of explicitly convertible types.
+* conversion between `std::vector` of explicitly convertible types.
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -361,7 +363,7 @@ You can add an overload of __convert_to__ and __assign_to__ functions as you wil
 
 [endsect]
 
-[section How to partially specialize the conversion functions for standadr types]
+[section How to partially specialize the conversion functions for standadr types?]
 
 As it has been explained in the introduction, we can not use ADL for standard types, as we can not add new functions on the standad std namespace. For these types we need to specialize the boost::conversion::convert_to function.
 
@@ -417,6 +419,11 @@ The same applies to the generic __assign_to__ function.
     
 [endsect]
 
+[section How to convert to types needing some constructors arguments?]
+
+Sometimes we need the conversion construct the resulting type with some arguments. This could be the case for example of std::vector, for which we need to pass an allocator to the constructor. In order to maintain the same signature, the library provides a `pack` function that will wrap the Source and the Target constructor parameters in a single parameter. So the overloading must be done on the result of this `pack` function.
+
+[endsect]
 
 [endsect]
 
@@ -458,6 +465,7 @@ Include all the core conversion public header files. Note that you will need to 
     #include <boost/conversion/assign_to.hpp>
     #include <boost/conversion/convert_to_via.hpp>
     #include <boost/conversion/ca_wrapper.hpp>
+    #include <boost/conversion/paxk.hpp>
 
 [endsect]
 
@@ -671,6 +679,56 @@ This the user can specialize partially this class.
 [endsect]
 [endsect]
 
+
+[/==========================================================================================]
+[section:pack_hpp Header `<boost/conversion/pack.hpp>`]
+[/==========================================================================================]
+
+
+The result of the `pack` function is equivalent to a fusion sequence containing reference_warpper's instead of C++ reference (&) as this are not allowed.
+
+    namespace boost { namespace conversion {
+        namespace result_of
+        template <typename T1, typename T2, ...>
+        struct pack {
+            typedef fusion::sequence<
+                reference_wrapper<T1>, reference_wrapper<T2, ...>
+            > type;
+        };    
+        }
+        template <typename T1, typename T2, ...>
+        typename result_of_pack<T1 const, T2 const>::type pack(
+                T1 const& t1, T2 const& t2);
+
+        template <typename T1, typename T2, ...>
+        typename result_of_pack<T1 const, T2, ...>::type pack(T1 const& t1, T2 & t2, ...);
+        
+        ...
+
+    } }
+
+[section Function `pack<>()`]
+
+        template <typename T1, typename T2>
+        typename result_of_pack<T1 const, T2 const>::type pack(
+                T1 const& t1, T2 const& t2);
+
+        template <typename T1, typename T2>
+        typename result_of_pack<T1 const, T2>::type pack(
+                T1 const& t1, T2 & t2);
+
+[variablelist
+
+[[Effects:] [Returns a packed type from the template parameters.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+[endsect]
+
+
 [endsect]
 
 [section C++ Standard classes specializations]
@@ -718,6 +776,39 @@ Include this file when using conversions between pairs of convertible types.
     }
 
 [endsect]
+
+[/==========================================================================================]
+[section:vector_hpp Header `<boost/conversion/std/vector.hpp>`]
+[/==========================================================================================]
+
+Include this file when using conversions between std::vector of convertible types.
+
+    namespace boost {
+        namespace conversion {
+        namespace partial_specialization_workaround {
+            template < class T1, class A1, class T2, class A2>
+            struct convert_to< std::vector<T1,A1>, std::vector<T2,A2> > {
+                inline static std::vector<T1,A1> apply(std::vector<T2,A2> const & from);
+            };
+            template < class T1, class A1, class T2, class A2>
+            struct assign_to< std::vector<T1,A1>, std::vector<T2,A2> > {
+                inline static std::vector<T1,A1>& apply(
+                    std::vector<T1,A1>& to, 
+                    std::vector<T2,A2> const & from);
+            };
+            
+            template < class T1, class A1, class T2, class A2>
+            struct convert_to< std::vector<T1,A1>, 
+                    typename result_of_pack<std::vector<T2,A2> const, A1 const>::type 
+                > {
+                inline static std::vector<T1,A1> apply(
+                    typename result_of_pack<std::vector<T2,A2> const, A1 const>::type const & pack);
+            };
+        }}
+    }
+
+[endsect]
+
 [/==========================================================================================]
 [section:string_hpp Header `<boost/conversion/std/string.hpp>`]
 [/==========================================================================================]
@@ -952,6 +1043,21 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
 [section:history Appendix A: History]
 
+* Add conversion between std::vector of explicitly convertible types.
+
+[section [*Version 0.5.0, May 30, 2010] ['Adding pack expression]]
+[*New Features:]
+
+* Added a pack funcrion able to pack the Source and the Target constructor arguments in one parameter.
+* Added conversion between std::vector of explicitly convertible types.
+* Added is_convertible_to metafunction. Inherits: If an imaginary lvalue of type From is convertible to type To using convert_to then inherits from true_type, otherwise inherits from false_type.
+
+    template <class From, class To>
+    struct is_convertible : public true_type-or-false_type {};
+
+* Added is_asignable_to metafunction.
+
+
 [section [*Version 0.4.0, October 27, 2009] ['Applying the same technique that boost::swap applies making use of ADL]]
 [*New Features:]
 
@@ -1160,11 +1266,12 @@ Thanks to Jeffrey Hellrung to showing me that Boost.Conversion should use also A
 ]
 [endsect]
 
-[section STD]
+[section Std]
 [table
     [[Name]                     [kind]      [Description]                                                                   [Result] [Ticket]]
     [[convert_to_pair]          [run]       [check `convert_to` `std::pair` works when the parameters are convertible]               [Pass]   [#]]
     [[convert_to_complex]       [run]       [check `convert_to` `std::complex` works when the parameters are convertible]            [Pass]   [#]]
+    [[convert_to_vector]       [run]       [check `convert_to` `std::vector` works when the parameters are convertible]            [Pass]   [#]]
     [[convert_to_string]        [run]       [check `convert_to` `std::string` works when the parameter defines the `operator<<`]       [Pass]   [#]]
     [[convert_from_string]      [run]       [check `convert_to` from `std::string` works when the parameter defines the `operator>>`]  [Pass]   [#]]
 ]
@@ -1196,13 +1303,6 @@ Thanks to Jeffrey Hellrung to showing me that Boost.Conversion should use also A
 
 [heading Tasks to do before review]
 
-* Add conversion between std::vector of explicitly convertible types.
-* Add a is_convertible_to metafunction. Inherits: If an imaginary lvalue of type From is convertible to type To using convert_to then inherits from true_type, otherwise inherits from false_type.
-
-    template <class From, class To>
-    struct is_convertible : public true_type-or-false_type {};
-
-* Add a is_asignable_to metafunction.
 
 [heading For later releases]
 

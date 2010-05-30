@@ -13,9 +13,23 @@
 #include <iostream>
 #include <boost/test/unit_test.hpp>
 #include "helper.hpp"
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 using namespace boost;
 using namespace boost::unit_test;
+
+
+BOOST_STATIC_ASSERT((
+    boost::is_same<
+        boost::conversion::result_of::pack2<std::vector<B1,std::allocator<B1> > const, std::allocator<A1> const>::type, 
+        std::pair<
+        //~ boost::fusion::tuple<
+            boost::reference_wrapper<std::vector<B1,std::allocator<B1> > const>, 
+            boost::reference_wrapper<std::allocator<A1> const> 
+        >
+    >::value
+    ));
 
 void explicit_convert_to() {
     std::vector<B1> vb1;
@@ -29,16 +43,20 @@ void explicit_convert_to() {
     vb2[3]=b13;
     std::vector<A1> va2(boost::convert_to<std::vector<A1> >(vb2));
     
-    //~ std::allocator<A1> all;
-    //~ std::vector<A1,std::allocator<A1> > va3(
-        //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(
-            //~ std::pair<
-                //~ boost::reference_wrapper<std::vector<B1> const>, 
-                //~ boost::reference_wrapper<std::allocator<A1> const>
-            //~ >(boost::cref(vb2), boost::cref(all))));
-     
-    //~ boost::conversion::result_of_pack<std::vector<B1> const, std::allocator<A1> const>::type v = 
-        //~ boost::conversion::pack(vb2, all);
+    std::allocator<A1> all;
+    std::vector<A1,std::allocator<A1> > va3(
+        boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+            std::pair<
+                boost::reference_wrapper<std::vector<B1> const>, 
+                boost::reference_wrapper<std::allocator<A1> const>
+            >(boost::cref(vb2), boost::cref(all))));
+
+    std::vector<A1,std::allocator<A1> > va32(
+        boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+            std::make_pair(boost::cref(vb2), boost::cref(all))));
+    
+    boost::conversion::result_of::pack2<std::vector<B1> const, std::allocator<A1> const>::type v = 
+        boost::conversion::pack(vb2, all);
         
     //~ std::vector<A1,std::allocator<A1> > va4(
         //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(v));
