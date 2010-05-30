@@ -18,6 +18,7 @@
 namespace boost {
 namespace conversion {
 
+    // std namespace can not be overloaded
     namespace partial_specialization_workaround {
         template < class T, class U>
         struct convert_to< std::complex<T>, std::complex<U> > {

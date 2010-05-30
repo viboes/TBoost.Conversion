@@ -19,6 +19,7 @@
 namespace boost {
 namespace conversion {
 
+    // std namespace can not be overloaded
     namespace partial_specialization_workaround {
 
         template<typename T, typename CharT, typename Traits, typename Alloc>

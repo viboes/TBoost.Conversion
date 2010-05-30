@@ -94,7 +94,8 @@ namespace boost {
 
         template < class Clock, class Duration>
         inline chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from
-                        , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&)
+                        , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&
+        )
         {
             to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
             return to;
@@ -114,7 +115,8 @@ namespace boost {
 
         template < class Clock, class Duration>
         inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from
-                    , boost::dummy::type_tag<posix_time::ptime> const&)
+                    , boost::dummy::type_tag<posix_time::ptime> const&
+        )
         {
             to = boost::convert_to<ptime>(from);
             return to;

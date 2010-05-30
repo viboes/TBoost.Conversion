@@ -18,6 +18,7 @@
 
 namespace boost { namespace conversion {
 
+    // std namespace can not be overloaded
     namespace partial_specialization_workaround {
         template < class T1, class T2, class U1, class U2>
         struct convert_to< std::pair<T1,T2>, std::pair<U1,U2> > {

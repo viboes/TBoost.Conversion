@@ -85,7 +85,8 @@ namespace boost {
 
         template < class Rep, class Period>
         inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from
-                            , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&)
+                            , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&
+        )
 
         {
             to = boost::convert_to<duration<Rep, Period> >(from);
@@ -103,7 +104,8 @@ namespace boost {
 
         template < class Rep, class Period>
         inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from
-                        , boost::dummy::type_tag<posix_time::time_duration> const&)
+                        , boost::dummy::type_tag<posix_time::time_duration> const&
+        )
         {
             to = boost::convert_to<time_duration>(from);
             return to;

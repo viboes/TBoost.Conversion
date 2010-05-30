@@ -73,7 +73,8 @@ namespace boost {
 
     template < class T1, class T2, class U1, class U2>
     inline tuple<T1,T2>& assign_to(tuple<T1,T2>& to, tuple<U1,U2> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2> > const&)
+                    , boost::dummy::type_tag<tuple<T1,T2> > const&
+    )
     {
         to = boost::convert_to<boost::fusion::tuple<T1,T2> >(from);
         return to;
@@ -81,7 +82,8 @@ namespace boost {
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>
     inline tuple<T1,T2,T3> convert_to(tuple<U1,U2,U3> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&)
+                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&
+    )
     {
         return boost::fusion::tuple<T1,T2, T3>(
                 boost::convert_to<T1>(boost::fusion::get<0>(from))
@@ -92,7 +94,8 @@ namespace boost {
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>
     inline tuple<T1,T2,T3> assign_to(tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&)
+                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&
+    )
     {
         to = boost::convert_to<boost::fusion::tuple<T1,T2> >(from);
         return to;

@@ -47,7 +47,8 @@ namespace boost {
 
     template < class T, class U>
     inline rational<T>& assign_to(rational<T>& to, const rational<U>& from
-                        , boost::dummy::type_tag<rational<T> > const&)
+                        , boost::dummy::type_tag<rational<T> > const&
+    )
     {
         to.assign(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
         return to;

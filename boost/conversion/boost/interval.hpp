@@ -46,7 +46,8 @@ namespace boost {
         }
         template < class T, class PT, class U, class PU>
         inline interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from
-                        , boost::dummy::type_tag<interval<T,PT> > const&)
+                        , boost::dummy::type_tag<interval<T,PT> > const&
+                    )
         {
             to.assign(boost::convert_to<T>(from.lower()),boost::convert_to<U>(from.upper()));
             return to;

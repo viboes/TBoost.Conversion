@@ -49,7 +49,8 @@ namespace boost {
 
     template < class Target, class Source>
     inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
-                , boost::dummy::type_tag<optional<Target> > const&)
+                , boost::dummy::type_tag<optional<Target> > const&
+                )
     {
         to = from?boost::convert_to<Target>(from.get()):optional<Target>();
         return to;

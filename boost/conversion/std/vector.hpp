@@ -20,6 +20,7 @@
 
 namespace boost { namespace conversion {
 
+    // std namespace can not be overloaded
     namespace partial_specialization_workaround {
         template < class T1, class A1, class T2, class A2>
         struct convert_to< std::vector<T1,A1>, std::vector<T2,A2> > {
@@ -46,16 +47,16 @@ namespace boost { namespace conversion {
         
         template < class T1, class A1, class T2, class A2>
         struct convert_to< std::vector<T1,A1>, 
+                //~ typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type 
+                //~ boost::fusion::tuple<
                 std::pair<
                     boost::reference_wrapper<std::vector<T2,A2> const>, 
                     boost::reference_wrapper<A1 const> 
                 > 
             > {
             inline static std::vector<T1,A1> apply(
-                std::pair<
-                    boost::reference_wrapper<std::vector<T2,A2> const>, 
-                    boost::reference_wrapper<A1 const> 
-                > const & pack)
+                typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type 
+                const & pack)
             {
                 std::vector<T1,A1> res(fusion::at_c<1>(pack));
                 boost::assign_to(res, fusion::at_c<0>(pack).get());

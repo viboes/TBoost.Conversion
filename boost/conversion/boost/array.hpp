@@ -44,7 +44,8 @@ namespace boost {
     #else
     template < typename T1, typename T2, std::size_t N>
     inline array<T1,N> convert_to(array<T2,N> const & from
-                        , boost::dummy::type_tag<array<T1,N> > const&)
+                        , boost::dummy::type_tag<array<T1,N> > const&
+    )
     {
         array<T1,N> to;
         boost::assign_to(to, from);
@@ -52,7 +53,9 @@ namespace boost {
     }
 
     template < typename T1, typename T2, std::size_t N>
-    inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from, boost::dummy::type_tag<array<T1,N> > const&)
+    inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
+    , boost::dummy::type_tag<array<T1,N> > const&
+    )
     {
         for (unsigned int i =0; i<N; ++i) {
             to[i]=boost::convert_to<T1>(from[i]);
