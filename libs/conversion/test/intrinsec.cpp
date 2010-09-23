@@ -19,14 +19,14 @@ using namespace boost::unit_test;
 struct B{};
 struct A {
     A(int){};
-    A(const B&b){};
+    A(const B&){};
 };
 struct AE {
-    explicit AE(const B&b){};
+    explicit AE(const B&){};
 };
 struct AA {
     AA(int){};
-    AA& operator=(const A&a) { return *this;}
+    AA& operator=(const A&) { return *this;}
 };
 
 struct C {
@@ -34,7 +34,7 @@ struct C {
 };
 struct CC {
     CC(int){};
-    CC& operator=(const B&b) { return *this;}
+    CC& operator=(const B&) { return *this;}
 };
 
 void convert_to_with_implicit_constructor() {

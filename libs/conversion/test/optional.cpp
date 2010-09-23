@@ -18,11 +18,11 @@ using namespace boost::unit_test;
 
     struct A1{};
     struct B1{};
-    A1 convert_to(const B1& val, boost::dummy::type_tag<A1> const&) {
+    A1 convert_to(const B1&, boost::dummy::type_tag<A1> const&) {
         return A1();
     }
 
-    A1& assign_to(A1& to, const B1& from) {
+    A1& assign_to(A1& to, const B1&) {
         return to;
     }
 

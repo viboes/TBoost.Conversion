@@ -18,33 +18,56 @@ struct A1{};
 struct A2{};
 struct B1{};
 struct B2{};
+    
+#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 namespace boost {
-    A1 convert_to(const B1& val, boost::dummy::type_tag<A1> const&) {
-        return A1();
-    }
-
-    A1& assign_to(A1& to, const B1& from, boost::dummy::type_tag<A1> const&) {
-        return to;
-    }
-
     namespace conversion { namespace partial_specialization_workaround {
         template <>
+        struct convert_to< A1,B1 > {
+            inline static A1 apply(B1 const &)
+            {
+                return A1();
+            }
+        };
+        template < >
+        struct assign_to< A1,B1 > {
+            inline static A1& apply(A1& to, const B1&)
+            {
+                return to;
+            }
+        };
+        template <>
         struct convert_to< A2,B2 > {
-            inline static A2 apply(B2 const & from)
+            inline static A2 apply(B2 const &)
             {
                 return A2();
             }
         };
         template < >
         struct assign_to< A2,B2 > {
-            inline static A2& apply(A2& to, const B2& from)
+            inline static A2& apply(A2& to, const B2&)
             {
                 return to;
             }
         };
     }
-    }
 }
+#else
+    A1 convert_to(const B1&, boost::dummy::type_tag<A1> const&) {
+        return A1();
+    }
 
+    A1& assign_to(A1& to, const B1&, boost::dummy::type_tag<A1> const&) {
+        return to;
+    }
+    A2 convert_to(const B2&, boost::dummy::type_tag<A2> const&) {
+        return A2();
+    }
+
+    A2& assign_to(A2& to, const B2&, boost::dummy::type_tag<A2> const&) {
+        return to;
+    }
+
+#endif
 #endif //BOOST_CONVERSION_TEST_HELPER__HPP
