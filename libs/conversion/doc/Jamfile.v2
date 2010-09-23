@@ -33,7 +33,7 @@ boostbook standalone
         # Use graphics not text for navigation:
         <xsl:param>navig.graphics=1
         # How far down we chunk nested sections, basically all of them:
-        <xsl:param>chunk.section.depth=2
+        <xsl:param>chunk.section.depth=0
         # Don't put the first section on the same page as the TOC:
         <xsl:param>chunk.first.sections=1
         # How far down sections get TOC's

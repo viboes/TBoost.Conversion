@@ -8,8 +8,9 @@
 
 [article Toward Boost.Conversion
     [quickbook 1.4]
+    [version 0.5.0]
     [authors [Botet Escriba, Vicente J.]]
-    [copyright 2009 Vicente J. Botet Escriba]
+    [copyright 2009-2010 Vicente J. Botet Escriba]
     [id boost.conversion]
     [dirname conversion]
     [purpose Conversion utilities]
@@ -428,7 +429,7 @@ Sometimes we need the conversion construct the resulting type with some argument
 [endsect]
 
 
-[section:ext_references References]
+[section:ext_references External Resources]
 [variablelist
 [
     [[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=boost-string-convert.zip&directory=&
@@ -444,6 +445,30 @@ Sometimes we need the conversion construct the resulting type with some argument
 [
     [[@http://www.boost.org/libs/numeric/conversion [*Boost.NumericConversion]]]
     [Optimized Policy-based Numeric Conversions from Fernando Cacciola.]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2380.pdf [*N2380 - Explicit Conversion Operator Draft Working Paper (revision 2)]]]
+    [Lois Goldthwaite, Michael Wong, Jens Mauer, Alisdair Meredith.]
+]
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2200.pdf [*N2200 - Operator Overloading]]]
+    [Gary Powell, Doug Gregor, Jaakko Jarvi.]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1671.pdf [*N1671 - Overloading operator.() & operator.*()]]]
+    [Gary Powell, Doug Gregor, Jaakko Jarvi.]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1676.htm [*N1676 - Non-member overloaded copy assignment operator]]]
+    [Bronek Kozicki.]
+]
+
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1694.html [*N1694 - A Proposal to Extend the Function Call Operator]]]
+    [Bronek Kozicki.]
 ]
 
 ]
@@ -465,7 +490,7 @@ Include all the core conversion public header files. Note that you will need to 
     #include <boost/conversion/assign_to.hpp>
     #include <boost/conversion/convert_to_via.hpp>
     #include <boost/conversion/ca_wrapper.hpp>
-    #include <boost/conversion/paxk.hpp>
+    #include <boost/conversion/pack.hpp>
 
 [endsect]
 
@@ -851,17 +876,13 @@ Include this file when using conversions to std::string.
 Include this file when using conversions between rational of convertible types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class T, class U>
-            struct convert_to< rational<T>, rational<U> > {
-                inline static rational<T> apply(rational<U> const & from);
-            };
-            template < class T, class U>
-            struct assign_to< rational<T>, rational<U> > {
-                inline static rational<T>& apply(rational<T>& to, const rational<U>& from);
-            };
-        }}
+        template < class T, class U>
+        rational<T> convert_to(rational<U> const & from
+                            , boost::dummy::type_tag<rational<T> > const&);
+
+        template < class T, class U>
+        rational<T>& assign_to(rational<T>& to, const rational<U>& from
+                            , boost::dummy::type_tag<rational<T> > const&);
     }
 
 [endsect]
@@ -872,58 +893,45 @@ Include this file when using conversions between rational of convertible types.
 Include this file when using conversions between chrono and posix_time time and duration types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class Rep, class Period>
-            struct convert_to<posix_time::time_duration, chrono::duration<Rep, Period> > {
-                static posix_time::time_duration apply(
-                    chrono::duration<Rep, Period> const & from);
-            };
-            template < class Rep, class Period>
-            struct assign_to<posix_time::time_duration, chrono::duration<Rep, Period> > {
-                static posix_time::time_duration& apply(
-                    posix_time::time_duration& to,
-                    const chrono::duration<Rep, Period>& from
-                    );
-            };
+    namespace chrono {
+        template < class Clock, class Duration>
+        posix_time::ptime convert_to(const chrono::time_point<Clock, Duration>& from
+                    , boost::dummy::type_tag<posix_time::ptime> const&);
 
-            template < class Rep, class Period>
-            struct convert_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
-                static chrono::duration<Rep, Period> apply(posix_time::time_duration const & from);
-            };
-            template < class Rep, class Period>
-            struct assign_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
-                static chrono::duration<Rep, Period> & apply(
-                    chrono::duration<Rep, Period> & to,
-                    const posix_time::time_duration& from);
-            };
-        }}
+        template < class Clock, class Duration>
+        chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from
+                        , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&);;
+
+    }
+    namespace posix_time {
+        template < class Clock, class Duration>
+        chrono::time_point<Clock, Duration> convert_to(const ptime& from
+                , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&);
+
+        template < class Clock, class Duration>
+        ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from
+                    , boost::dummy::type_tag<posix_time::ptime> const&);
     }
 
-    namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class Clock, class Duration>
-            struct convert_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-                static posix_time::ptime apply(const chrono::time_point<Clock, Duration>& from);
-            };
-            template < class Clock, class Duration>
-            struct assign_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-                static posix_time::ptime& apply(posix_time::ptime& to,
-                    const chrono::time_point<Clock, Duration>& from);
-            };
+    namespace chrono {
+        template < class Rep, class Period>
+        inline posix_time::time_duration convert_to(chrono::duration<Rep, Period> const & from
+                        , boost::dummy::type_tag<posix_time::time_duration> const&);
 
-            template < class Clock, class Duration>
-            struct convert_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-                static chrono::time_point<Clock, Duration> apply(const posix_time::ptime& from);
-            };
-            template < class Clock, class Duration>
-            struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-                static chrono::time_point<Clock, Duration>& apply(
-                    chrono::time_point<Clock, Duration>& to,
-                    const posix_time::ptime& from);
-            };
-        }}
+        template < class Rep, class Period>
+        inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from
+                            , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&);
+    }
+
+    namespace posix_time {
+        template < class Rep, class Period>
+        inline chrono::duration<Rep, Period> convert_to(time_duration const & from
+                            , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&);
+
+        template < class Rep, class Period>
+        inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from
+                        , boost::dummy::type_tag<posix_time::time_duration> const&);
+    }    
     }
 
 [endsect]
@@ -934,18 +942,15 @@ Include this file when using conversions between chrono and posix_time time and 
 Include this file when using conversions between intervals of convertible types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class T, class PT, class U, class PU>
-            struct convert_to< interval<T,PT>, interval<U,PU> > {
-                static interval<T,PT> apply(interval<U,PU> const & from);
-            };
-            template < class T, class PT, class U, class PU>
-            struct assign_to< interval<T,PT>, interval<U,PU> > {
-                static interval<T,PT>& apply(
-                    interval<T,PT>& to, const interval<U,PU>& from);
-            };
-        }}
+    namespace numeric {
+        template < class T, class PT, class U, class PU>
+        interval<T,PT> convert_to(interval<U,PU> const & from
+                        , boost::dummy::type_tag<interval<T,PT> > const&);
+                        
+        template < class T, class PT, class U, class PU>
+        inline interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from
+                        , boost::dummy::type_tag<interval<T,PT> > const&);
+    }
     }
 
 [endsect]
@@ -956,18 +961,13 @@ Include this file when using conversions between intervals of convertible types.
 Include this file when using conversions between optional of convertible types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class Target, class Source>
-            struct convert_to< optional<Target>, optional<Source> > {
-                static optional<Target> apply(optional<Source> const & from);
-            };
-            template < class Target, class Source>
-            struct assign_to< optional<Target>, optional<Source> > {
-                static optional<Target>& apply(
-                    optional<Target>& to, const optional<Target>& from);
-            };
-        }}
+        template < class Target, class Source>
+        optional<Target> convert_to(optional<Source> const & from
+                    , boost::dummy::type_tag<optional<Target> > const&);
+
+        template < class Target, class Source>
+        optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
+                    , boost::dummy::type_tag<optional<Target> > const&);
     }
 
 [endsect]
@@ -979,17 +979,13 @@ Include this file when using conversions between optional of convertible types.
 Include this file when using conversions between arrays of convertible types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < typename T1, typename T2, std::size_t N>
-            struct convert_to< array<T1,N>, array<T2,N> > {
-                static array<T1,N> apply(array<T2,N> const & from);
-            };
-            template < typename T1, typename T2, std::size_t N>
-            struct assign_to< array<T1,N>, array<T2,N> > {
-                static array<T1,N>& apply(array<T1,N>& to, array<T2,N> const & from);
-            };
-        }}
+        template < typename T1, typename T2, std::size_t N>
+        array<T1,N> convert_to(array<T2,N> const & from
+                            , boost::dummy::type_tag<array<T1,N> > const&);;
+
+        template < typename T1, typename T2, std::size_t N>
+        array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
+        , boost::dummy::type_tag<array<T1,N> > const&);
     }
 
 
@@ -1002,20 +998,23 @@ Include this file when using conversions between arrays of convertible types.
 Include this file when using conversions between fusion::tuple of convertible types.
 
     namespace boost {
-        namespace conversion {
-        namespace partial_specialization_workaround {
-            template < class T1, ..., class Tn, class U1, ..., class Un>
-            struct convert_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
-                inline static boost::fusion::tuple<T1,...,T3>
-                apply(boost::fusion::tuple<U1,...,U3> const & from);
-            };
-            template < class T1, ..., class Tn, class U1, ..., class Un>
-            struct assign_to< boost::fusion::tuple<T1,...,T3>, boost::fusion::tuple<U1,...,U3> > {
-                inline static boost::fusion::tuple<T1,...,T3>
-                apply(boost::fusion::tuple<T1,...,T3>& to, boost::fusion::tuple<U1,...,U3> const & from);
-            };
+    namespace fusion {
+        template < class T1, class T2, class U1, class U2>
+        tuple<T1,T2> convert_to(tuple<U1,U2> const & from
+                        , boost::dummy::type_tag<tuple<T1,T2> > const&);
 
-        }}
+        template < class T1, class T2, class U1, class U2>
+        tuple<T1,T2>& assign_to(tuple<T1,T2>& to, tuple<U1,U2> const & from
+                        , boost::dummy::type_tag<tuple<T1,T2> > const&);
+
+        template < class T1, class T2, class T3, class U1, class U2, class U3>
+        tuple<T1,T2,T3> convert_to(tuple<U1,U2,U3> const & from
+                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);;
+
+        template < class T1, class T2, class T3, class U1, class U2, class U3>
+        tuple<T1,T2,T3> assign_to(tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from
+                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);;
+    }
     }
 
 [endsect]
@@ -1057,6 +1056,7 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
 * Added is_asignable_to metafunction.
 
+[endsect]
 
 [section [*Version 0.4.0, October 27, 2009] ['Applying the same technique that boost::swap applies making use of ADL]]
 [*New Features:]
@@ -1311,19 +1311,19 @@ Thanks to Jeffrey Hellrung to showing me that Boost.Conversion should use also A
 
 [heading Make a proposal to the C++ standard]
 
-C++1x has added explicit conversion operators, but they must always be defined in the Source class. The same applies to the assignment operator, it must be defined on the Target class.
+C++1x has added explicit conversion operators, but they must always be defined in the source class. The same applies to the assignment operator, it must be defined on the Target class.
 
 What it will interesting is to be able to add constructors and assignments operators to the class std::pair, so we can say that two pairs are convertible if the parameters are explicitly convertible using a convert_to function
 
     template<class U , class V>
     //requires HasConvertTo<T1, const U&> && HasConvertTo<T2, const V&>
     std::pair& operator=(const std::pair<U , V>& p) {
-        return std::make_pair(convert_to<T1>(p.first), convert_to<T1>(p.second));
+        return std::make_pair(convert_to<T1>(p.first), convert_to<T2>(p.second));
     }
 
 But this is not possible. We can not add operations to a class.
 
-Another possibility could be to make an evolution to the standard, so the convertible concept takes car of extrinsic conversions. We could be able to implicitly or explicitly add extrinsic conversion operators between unrelated types. Assignment operators could also be specialized.
+Another possibility could be to make an evolution to the standard, so the convertible concept takes car of extrinsic conversions. We could be able to implicitly or explicitly add extrinsic conversion operators between unrelated types. Non-member assignment operators could also be specialized.
 
   template < typename To, typename From >
   operator To(const From& val);
@@ -1331,10 +1331,10 @@ Another possibility could be to make an evolution to the standard, so the conver
   template < typename To, typename From >
   To& operator=(To& to, const From& from);
 
-For example we could specialize the conversion from as chrono::time_point<Clock, Duration> to posix_time::ptime follows
+For example we could define the explicit conversion from as chrono::time_point<Clock, Duration> to posix_time::ptime follows
 
     template < class Clock, class Duration>
-    operator boost::posix_time::ptime(const boost::chrono::time_point<Clock, Duration>& from) {
+    explicit operator boost::posix_time::ptime(const boost::chrono::time_point<Clock, Duration>& from) {
         typedef boost::chrono::time_point<Clock, Duration> time_point_t;
         typedef boost::chrono::nanoseconds duration_t;
         typedef boost::duration_t::rep rep_t;
@@ -1345,6 +1345,13 @@ For example we could specialize the conversion from as chrono::time_point<Clock,
                 boost::posix_time::seconds(static_cast<long>(sec))+
                 boost::posix_time::nanoseconds(nsec);
     }
+
+With this explicit conversion and the equivalen for duration, the actual definition of std::pair will allows to 
+
+    std::pair<chrono::time_point<Clock, Duration>, boost::chrono::duration<Rep, Period> > tp_dur_pair;
+    std::pair<boost::posix_time::ptime, boost::posix_time::time_duration> ppt;
+    ppt = tp_dur_pair;
+
 
 [endsect]
 [endsect]
