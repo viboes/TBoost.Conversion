@@ -55,6 +55,7 @@ namespace boost {
 
     template <typename Target, typename Source>
     Target& assign_to(Target& to, const Source& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+        (void)p;
         return conversion_impl::assign_to_impl<Target, Source>(to, from);
     }
 }

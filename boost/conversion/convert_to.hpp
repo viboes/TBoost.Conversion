@@ -24,7 +24,7 @@ namespace boost {
             struct convert_to {
                 inline static To apply(const From& val)
                 {
-                    return To(val);
+                    return To((val));
                 }
             };
         }
@@ -44,6 +44,7 @@ namespace boost {
     }
     template <typename Target, typename Source>
     Target convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+        (void)p;
         return conversion_impl::convert_to_impl<Target>(from);
     }
 
