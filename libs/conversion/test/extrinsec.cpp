@@ -19,16 +19,14 @@ using namespace boost::unit_test;
 struct A{};
 struct B{};
 
-namespace boost {
-  A convert_to(const B& val, boost::dummy::type_tag<A> const&) {
+  A convert_to(const B&, boost::dummy::type_tag<A> const&) {
     return A();
   }
 
-  A& assign_to(A& to, const B& from, boost::dummy::type_tag<A> const&) {
+  A& assign_to(A& to, const B&, boost::dummy::type_tag<A> const&) {
     return to;
   }
 
-}
 
 void explicit_convert_to() {
     B b;
