@@ -57,8 +57,7 @@ namespace boost {
                 posix_time::time_duration const time_since_epoch=from-posix_time::from_time_t(0);
                 chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
                 long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
-                return  t+chrono::nanoseconds(nsec);
-
+                return  t+chrono::duration_cast<Duration>(chrono::nanoseconds(nsec));
             }
         };
         template < class Clock, class Duration>
@@ -102,16 +101,18 @@ namespace boost {
         }
 
     }
+
     namespace posix_time {
-        template < class Clock, class Duration>
-        inline chrono::time_point<Clock, Duration> convert_to(const ptime& from
-                , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&)
+        template < class TP>
+        inline TP convert_to(const ptime& from
+                , boost::dummy::type_tag<TP > const&)
         {
             time_duration const time_since_epoch=from-from_time_t(0);
-            chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
+            TP t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
             long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
-            return  t+chrono::nanoseconds(nsec);
+            return  t+chrono::duration_cast<typename TP::duration>(chrono::nanoseconds(nsec));
         }
+
 
         template < class Clock, class Duration>
         inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from

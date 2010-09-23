@@ -95,11 +95,11 @@ namespace boost {
     }
 
     namespace posix_time {
-        template < class Rep, class Period>
-        inline chrono::duration<Rep, Period> convert_to(time_duration const & from
-                            , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&)
+        template < class Duration>
+        inline Duration convert_to(time_duration const & from
+                            , boost::dummy::type_tag<Duration> const&)
         {
-            return  chrono::duration_cast<chrono::duration<Rep, Period> >(chrono::nanoseconds(from.total_nanoseconds()));
+            return  chrono::duration_cast<Duration>(chrono::nanoseconds(from.total_nanoseconds()));
         }
 
         template < class Rep, class Period>
