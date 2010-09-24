@@ -30,6 +30,7 @@ project :
         <toolset>gcc-mingw-4.5.0:<cxxflags>-Wno-missing-field-initializers        
         <toolset>gcc-mingw-4.5.0:<cxxflags>-fdiagnostics-show-option
         <toolset>msvc:<cxxflags>/wd4127
+        <toolset>msvc:<cxxflags>/wd4244
 
 ;
 

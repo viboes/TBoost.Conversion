@@ -20,7 +20,7 @@ typedef int A1;
 typedef short B1;
 
 void explicit_convert_to() {
-    B1 b1;
+    B1 b1(3);
     B1 b2(2);
     boost::rational<B1> b(1,2);
     boost::rational<A1> a1(boost::convert_to<boost::rational<A1> >(b));
@@ -28,7 +28,7 @@ void explicit_convert_to() {
 
 }
 void explicit_assign_to() {
-    B1 b1;
+    B1 b1(3);
     B1 b2(2);
     boost::rational<A1> a;
     boost::rational<B1> b(1,2);
