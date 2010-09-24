@@ -109,7 +109,7 @@ namespace boost {
         {
             time_duration const time_since_epoch=from-from_time_t(0);
             TP t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
-            long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
+            long long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
             return  t+chrono::duration_cast<typename TP::duration>(chrono::nanoseconds(nsec));
         }
 

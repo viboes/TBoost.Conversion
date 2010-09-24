@@ -21,14 +21,20 @@ namespace boost {
         class ca_wrapper {
             T& ref_;
         public:
+            ca_wrapper(ca_wrapper const& r) : ref_(r.ref_) { }
             ca_wrapper(T& r) : ref_(r) {}
             template <typename U>
             operator U() {
                 return boost::convert_to<U>(ref_);
             }
+            ca_wrapper& operator =(ca_wrapper<T> const& u) {
+                boost::assign_to(ref_, u.ref_);
+                return *this;                
+            }
             template <typename U>
-            T& operator =(U const& u) {
-                return boost::assign_to(ref_, u);
+            ca_wrapper& operator =(U const& u) {
+                boost::assign_to(ref_, u);
+                return *this;
             }
         };
     }

@@ -30,7 +30,7 @@ namespace boost {
                 rep_t d = chrono::duration_cast<duration_t>(from).count();
                 rep_t sec = d/1000000000;
                 rep_t nsec = d%1000000000;
-                return  posix_time::seconds(static_cast<long>(sec))+
+                return  posix_time::seconds(static_cast<long long>(sec))+
 #ifdef BOOST_DATE_TIME_HAS_NANOSECONDS
                         posix_time::nanoseconds(nsec);
 #else
@@ -75,7 +75,7 @@ namespace boost {
             rep_t d = chrono::duration_cast<duration_t>(from).count();
             rep_t sec = d/1000000000;
             rep_t nsec = d%1000000000;
-            return  posix_time::seconds(static_cast<long>(sec))+
+            return  posix_time::seconds(static_cast<long long>(sec))+
 #ifdef BOOST_DATE_TIME_HAS_NANOSECONDS
                     posix_time::nanoseconds(nsec);
 #else
