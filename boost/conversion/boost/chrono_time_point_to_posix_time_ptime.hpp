@@ -56,7 +56,7 @@ namespace boost {
             {
                 posix_time::time_duration const time_since_epoch=from-posix_time::from_time_t(0);
                 chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
-                long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
+                long long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
                 return  t+chrono::duration_cast<Duration>(chrono::nanoseconds(nsec));
             }
         };
