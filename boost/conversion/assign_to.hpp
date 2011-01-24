@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERSION_ASSIGN_TO__HPP
-#define BOOST_CONVERSION_ASSIGN_TO__HPP
+#ifndef BOOST_CONVERSION_ASSIGN_TO_HPP
+#define BOOST_CONVERSION_ASSIGN_TO_HPP
 
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>

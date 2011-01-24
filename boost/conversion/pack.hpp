@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERSION_PACK__HPP
-#define BOOST_CONVERSION_PACK__HPP
+#ifndef BOOST_CONVERSION_PACK_HPP
+#define BOOST_CONVERSION_PACK_HPP
 
 #include <boost/ref.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>

@@ -8,9 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//[OPTIONAL__HPP
-#ifndef BOOST_CONVERT_TO_OPTIONAL__HPP
-#define BOOST_CONVERT_TO_OPTIONAL__HPP
+//[OPTIONAL_HPP
+#ifndef BOOST_CONVERT_TO_OPTIONAL_HPP
+#define BOOST_CONVERT_TO_OPTIONAL_HPP
 
 #include <boost/optional.hpp>
 #include <boost/none.hpp>

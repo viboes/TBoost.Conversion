@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CA_WRAPPER__HPP
-#define BOOST_CA_WRAPPER__HPP
+#ifndef BOOST_CA_WRAPPER_HPP
+#define BOOST_CA_WRAPPER_HPP
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>

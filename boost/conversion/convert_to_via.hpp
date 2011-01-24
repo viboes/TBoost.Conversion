@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_VIA__HPP
-#define BOOST_CONVERT_TO_VIA__HPP
+#ifndef BOOST_CONVERT_TO_VIA_HPP
+#define BOOST_CONVERT_TO_VIA_HPP
 
 #include <boost/conversion/convert_to.hpp>
 

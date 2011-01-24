@@ -8,9 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME__HPP
-#ifndef BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME__HPP
-#define BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME__HPP
+//[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP
+#ifndef BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP
+#define BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP
 
 #include <boost/chrono/chrono.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
