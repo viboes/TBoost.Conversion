@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERSION_TEST_HELPER__HPP
-#define BOOST_CONVERSION_TEST_HELPER__HPP
+#ifndef BOOST_CONVERSION_TEST_HELPER_HPP
+#define BOOST_CONVERSION_TEST_HELPER_HPP
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>

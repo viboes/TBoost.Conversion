@@ -7,8 +7,8 @@
  /]
 
 [article Toward Boost.Conversion
-    [quickbook 1.4]
-    [version 0.5.0]
+    [quickbook 1.5]
+    [version 0.6.0]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2009-2010 Vicente J. Botet Escriba]
     [id boost.conversion]
@@ -46,36 +46,6 @@
 [/========================]
 [section Overview]
 [/========================]
-
-[/==================]
-[heading Description]
-[/==================]
-
-Generic explicit conversion between unrelated types.
-
-The template function __convert_to__ allows to convert a source type to a target type, using argument dependent lookup to select a specialized `convert_to` function if available. If no specialized `convert_to` function is available, `boost::conversion::convert_to` is used. 
-
-The generic __convert_to__ function requires that the elements to be converted are assignable and copy constructible. It is implemented using the Target copy construction from a Source or the Source conversion operator Target - this is sometimes unavailable. 
-
-For standard types, we can not add a specialized `convert_to` function on the namespace std. The alternative to using argument dependent lookup in this situation is to provide a template specialization of boost::conversion::convert_to for every pair of standard types that requires a specialized __convert_to__. 
-
-[*Boost.Conversion] provides:
-
-* a generic __convert_to__ function which can be specialized by the user to make explicit conversion between unrelated types.
-* a generic __assign_to__ function which can be specialized by the user to make explicit assignation between unrelated types.
-* a generic `mca` function returning a wrapper which replace assignments by a call to __assign_to__ and conversion operators by a call __convert_to__.
-* a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.
-* a generic `pack` function used to pack Source and target constructor arguments.
-* conversion between `std::complex` of explicitly convertible types.
-* conversion between `std::pair` of explicitly convertible types.
-* conversion between `boost::optional` of explicitly convertible types.
-* conversion between `boost::rational` of explicitly convertible types.
-* conversion between `boost::interval` of explicitly convertible types.
-* conversion between `boost::chrono::time_point` and `boost::ptime`.
-* conversion between `boost::chrono::duration` and `boost::time_duration`.
-* conversion between `boost::array` of explicitly convertible types.
-* conversion between Boost.Fusion sequences of explicitly convertible types.
-* conversion between `std::vector` of explicitly convertible types.
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -254,6 +224,39 @@ So one of the advantages of using this common functions is uniformity. The other
 
 
 [endsect]
+
+[/==================]
+[section Description]
+[/==================]
+
+Generic explicit conversion between unrelated types.
+
+The template function __convert_to__ allows to convert a source type to a target type, using argument dependent lookup to select a specialized `convert_to` function if available. If no specialized `convert_to` function is available, `boost::conversion::convert_to` is used. 
+
+The generic __convert_to__ function requires that the elements to be converted are assignable and copy constructible. It is implemented using the Target copy construction from a Source or the Source conversion operator Target - this is sometimes unavailable. 
+
+For standard types, we can not add a specialized `convert_to` function on the namespace std. The alternative to using argument dependent lookup in this situation is to provide a template specialization of boost::conversion::convert_to for every pair of standard types that requires a specialized __convert_to__. 
+
+[*Boost.Conversion] provides:
+
+* a generic __convert_to__ function which can be specialized by the user to make explicit conversion between unrelated types.
+* a generic __assign_to__ function which can be specialized by the user to make explicit assignation between unrelated types.
+* a generic `mca` function returning a wrapper which replace assignments by a call to __assign_to__ and conversion operators by a call __convert_to__.
+* a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.
+* a generic `pack` function used to pack Source and target constructor arguments.
+* conversion between `std::complex` of explicitly convertible types.
+* conversion between `std::pair` of explicitly convertible types.
+* conversion between `boost::optional` of explicitly convertible types.
+* conversion between `boost::rational` of explicitly convertible types.
+* conversion between `boost::interval` of explicitly convertible types.
+* conversion between `boost::chrono::time_point` and `boost::ptime`.
+* conversion between `boost::chrono::duration` and `boost::time_duration`.
+* conversion between `boost::array` of explicitly convertible types.
+* conversion between Boost.Fusion sequences of explicitly convertible types.
+* conversion between `std::vector` of explicitly convertible types.
+
+[endsect]
+
 [endsect]
 
 [/==============================]
@@ -291,7 +294,6 @@ compiler include path.
 
 The genric part of [*Boost.Conversion] depends only on Boost.Config. Of course it depends on the specific libraries when specific conversion are used.
 
-
 [/========================]
 [heading Exceptions safety]
 [/========================]
@@ -308,12 +310,30 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [/=======================]
 [heading Tested compilers]
 [/=======================]
+
 Currently, [*Boost.Conversion] has been tested in the following compilers/platforms:
 
-*  GCC 3.4.4 Cygwin
-*  GCC 3.4.6 Linux
-[/*  GCC 4.3.2 Cygwin]
-*  GCC 4.1.2 Linux
+Windows with
+
+* MSVC 10.0
+
+Cygwin 1.5 with
+
+* GCC 3.4.4
+
+Cygwin 1.7 with
+
+* GCC 4.3.4
+
+MinGW with
+
+* GCC 4.4.0
+* GCC 4.5.0
+* GCC 4.5.0 -std=c++0x
+* GCC 4.6.0
+* GCC 4.6.0 -std=c++0x
+
+[note Please let us know how this works on other platforms/compilers.]
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
 
@@ -417,7 +437,6 @@ The same applies to the generic __assign_to__ function.
         return partial_specialization_workaround::assign_to<Target,Source>::apply(to, from);
     }
     
-    
 [endsect]
 
 [section How to convert to types needing some constructors arguments?]
@@ -427,7 +446,6 @@ Sometimes we need the conversion construct the resulting type with some argument
 [endsect]
 
 [endsect]
-
 
 [section:ext_references External Resources]
 [variablelist
@@ -480,8 +498,19 @@ Sometimes we need the conversion construct the resulting type with some argument
 
 [section Reference]
 
+[section Core]
+
 [/==========================================================================================]
 [section:conversion_hpp Header `<boost/conversion.hpp>`]
+[/==========================================================================================]
+
+Include all the core conversion public header files. Note that you will need to include explicitly the C++ standard or Boost specific files when using specific classes.
+
+    #include <boost/conversion/include.hpp>
+
+[endsect]
+[/==========================================================================================]
+[section:conversion_include_hpp Header `<boost/conversion/include.hpp>`]
 [/==========================================================================================]
 
 Include all the core conversion public header files. Note that you will need to include explicitly the C++ standard or Boost specific files when using specific classes.
@@ -493,8 +522,6 @@ Include all the core conversion public header files. Note that you will need to 
     #include <boost/conversion/pack.hpp>
 
 [endsect]
-
-[section Core]
 
 
 [/==========================================================================================]
@@ -639,7 +666,7 @@ This the user can specialize partially this class.
 
 [variablelist
 
-[[Effects:] [Returns a implementation dependent class able to transform conversion by convert_to call and assignments by assign_to calls.]]
+[[Effects:] [Returns a implementation dependent class able to transform conversion by __convert_to__ calls and assignments by __assign_to__ calls.]]
 
 [[Throws:] [Nothing.]]
 
@@ -900,7 +927,7 @@ Include this file when using conversions between chrono and posix_time time and 
 
         template < class Clock, class Duration>
         chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from
-                        , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&);;
+                        , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&);
 
     }
     namespace posix_time {
@@ -981,7 +1008,7 @@ Include this file when using conversions between arrays of convertible types.
     namespace boost {
         template < typename T1, typename T2, std::size_t N>
         array<T1,N> convert_to(array<T2,N> const & from
-                            , boost::dummy::type_tag<array<T1,N> > const&);;
+                            , boost::dummy::type_tag<array<T1,N> > const&);
 
         template < typename T1, typename T2, std::size_t N>
         array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
@@ -1009,11 +1036,11 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
         template < class T1, class T2, class T3, class U1, class U2, class U3>
         tuple<T1,T2,T3> convert_to(tuple<U1,U2,U3> const & from
-                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);;
+                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);
 
         template < class T1, class T2, class T3, class U1, class U2, class U3>
         tuple<T1,T2,T3> assign_to(tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from
-                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);;
+                        , boost::dummy::type_tag<tuple<T1,T2,T3> > const&);
     }
     }
 
@@ -1024,15 +1051,15 @@ Include this file when using conversions between fusion::tuple of convertible ty
 [section Examples]
 [section chrono::time_point and posix_time::ptime]
 
-[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME__HPP]
+[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP]
 
 [endsect]
 [section boost::optional]
-[OPTIONAL__HPP]
+[OPTIONAL_HPP]
 
 [endsect]
 [section std::pair]
-[PAIR__HPP]
+[PAIR_HPP]
 [endsect]
 [endsect]
 
