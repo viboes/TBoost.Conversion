@@ -1,6 +1,5 @@
 [/
-[/
- / Copyright (c) 2008 Vicente J. Botet Escriba
+ / Copyright (c) 2009-2011 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,10 +9,10 @@
     [quickbook 1.5]
     [version 0.6.0]
     [authors [Botet Escriba, Vicente J.]]
-    [copyright 2009-2010 Vicente J. Botet Escriba]
+    [copyright 2009-2011 Vicente J. Botet Escriba]
     [id boost.conversion]
-    [dirname conversion]
-    [purpose Conversion utilities]
+    [/dirname conversion]
+    [/purpose Conversion utilities]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -332,6 +331,14 @@ MinGW with
 * GCC 4.5.0 -std=c++0x
 * GCC 4.6.0
 * GCC 4.6.0 -std=c++0x
+
+Ubuntu 10.10
+
+* GCC 4.4.5
+* GCC 4.4.5 -std=c++0x
+* GCC 4.5.1
+* GCC 4.5.1 -std=c++0x
+* clang 2.8
 
 [note Please let us know how this works on other platforms/compilers.]
 
