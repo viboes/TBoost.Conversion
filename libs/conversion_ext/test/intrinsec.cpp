@@ -1,20 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 using namespace boost;
-using namespace boost::unit_test;
 
 struct B{};
 struct A {
@@ -127,20 +126,19 @@ void mca_with_assignemet_operator_and_conversion_operator() {
 }
 
 
-test_suite* init_unit_test_suite(int, char*[])
+int main( )
 {
-  test_suite* test = BOOST_TEST_SUITE("intrinsec");
-  test->add(BOOST_TEST_CASE(&convert_to_with_implicit_constructor));
-  test->add(BOOST_TEST_CASE(&convert_to_with_explicit_constructor));
-  test->add(BOOST_TEST_CASE(&convert_to_with_conversion_operator));
-  test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator));
-  test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator_and_implicit_constructor));
-  test->add(BOOST_TEST_CASE(&assign_to_with_assignemet_operator_and_conversion_operator));
-  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator));
-  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_implicit_constructor));
-  test->add(BOOST_TEST_CASE(&mca_with_assignemet_operator_and_conversion_operator));
+  convert_to_with_implicit_constructor();
+  convert_to_with_explicit_constructor();
+  convert_to_with_conversion_operator();
+  assign_to_with_assignemet_operator();
+  assign_to_with_assignemet_operator_and_implicit_constructor();
+  assign_to_with_assignemet_operator_and_conversion_operator();
+  mca_with_assignemet_operator();
+  mca_with_assignemet_operator_and_implicit_constructor();
+  mca_with_assignemet_operator_and_conversion_operator();
 
-  return test;
+  return boost::report_errors();
 
 }
 

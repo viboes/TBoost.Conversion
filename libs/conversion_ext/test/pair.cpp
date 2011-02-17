@@ -12,11 +12,10 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/std/pair.hpp>
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include <boost/detail/lightweight_test.hpp>
 #include "helper.hpp"
 
 using namespace boost;
-using namespace boost::unit_test;
 
 void explicit_convert_to() {
     B1 b1;
@@ -38,11 +37,10 @@ void explicit_assign_to() {
 
 }
 
-test_suite* init_unit_test_suite(int, char*[])
+int main( )
 {
-  test_suite* test = BOOST_TEST_SUITE("pair");
-  test->add(BOOST_TEST_CASE(&explicit_convert_to));
-  test->add(BOOST_TEST_CASE(&explicit_assign_to));
-  return test;
+  explicit_convert_to();
+  explicit_assign_to();
+  return boost::report_errors();
 }
 

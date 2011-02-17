@@ -1,32 +1,31 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/std/vector.hpp>
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include <boost/detail/lightweight_test.hpp>
 #include "helper.hpp"
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 using namespace boost;
-using namespace boost::unit_test;
 
 
 BOOST_STATIC_ASSERT((
     boost::is_same<
-        boost::conversion::result_of::pack2<std::vector<B1,std::allocator<B1> > const, std::allocator<A1> const>::type, 
+        boost::conversion::result_of::pack2<std::vector<B1,std::allocator<B1> > const, std::allocator<A1> const>::type,
         std::pair<
         //~ boost::fusion::tuple<
-            boost::reference_wrapper<std::vector<B1,std::allocator<B1> > const>, 
-            boost::reference_wrapper<std::allocator<A1> const> 
+            boost::reference_wrapper<std::vector<B1,std::allocator<B1> > const>,
+            boost::reference_wrapper<std::allocator<A1> const>
         >
     >::value
     ));
@@ -52,12 +51,12 @@ void explicit_convert_to() {
     std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     std::vector<A1> va2(boost::convert_to<std::vector<A1> >(vb2));
     std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
-    
+
     std::allocator<A1> all;
     std::vector<A1,std::allocator<A1> > va3(
         boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             std::pair<
-                boost::reference_wrapper<std::vector<B1> const>, 
+                boost::reference_wrapper<std::vector<B1> const>,
                 boost::reference_wrapper<std::allocator<A1> const>
             >(boost::cref(vb2), boost::cref(all))));
     std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
@@ -66,18 +65,18 @@ void explicit_convert_to() {
         boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             std::make_pair(boost::cref(vb2), boost::cref(all))));
     std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
-    
-    boost::conversion::result_of::pack2<std::vector<B1> const, std::allocator<A1> const>::type v = 
+
+    boost::conversion::result_of::pack2<std::vector<B1> const, std::allocator<A1> const>::type v =
         boost::conversion::pack(vb2, all);
     std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
-        
+
     //~ std::vector<A1,std::allocator<A1> > va4(
         //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(v));
-        
+
     //~ std::vector<A1,std::allocator<A1> > va5(
         //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             //~ boost::conversion::pack(vb2, all)));
-        
+
     std::vector<A1,std::allocator<A1> > va6(
         boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             boost::conversion::pack(vb2, std::allocator<A1>())));
@@ -102,11 +101,10 @@ void explicit_assign_to() {
 
 }
 
-test_suite* init_unit_test_suite(int, char*[])
+int main( )
 {
-  test_suite* test = BOOST_TEST_SUITE("tuple");
-  test->add(BOOST_TEST_CASE(&explicit_convert_to));
-  test->add(BOOST_TEST_CASE(&explicit_assign_to));
-  return test;
+  explicit_convert_to();
+  explicit_assign_to();
+  return boost::report_errors();
 }
 

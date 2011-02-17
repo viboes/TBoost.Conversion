@@ -1,22 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
-#include <boost/test/unit_test.hpp>
+#include <boost/detail/lightweight_test.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convert_to.hpp>
 
 //using namespace boost;
-using namespace boost::unit_test;
-
-
 
 void convert_to_with_builtin_types() {
     char c=0;
@@ -183,14 +180,13 @@ void mca_assign_to_transitive() {
     }
 }
 
-test_suite* init_unit_test_suite(int, char*[])
+int main( )
 {
-  test_suite* test = BOOST_TEST_SUITE("builtins");
-  test->add(BOOST_TEST_CASE(&convert_to_with_builtin_types));
-  test->add(BOOST_TEST_CASE(&assign_to_with_builtin_types));
-  test->add(BOOST_TEST_CASE(&mca_assign_to_with_builtin_types));
-  test->add(BOOST_TEST_CASE(&assign_to_transitive));
-  test->add(BOOST_TEST_CASE(&mca_assign_to_transitive));
-  return test;
+  convert_to_with_builtin_types();
+  assign_to_with_builtin_types();
+  mca_assign_to_with_builtin_types();
+  assign_to_transitive();
+  mca_assign_to_transitive();
+  return boost::report_errors();
 }
 
