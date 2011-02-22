@@ -33,24 +33,14 @@ BOOST_STATIC_ASSERT((
 void explicit_convert_to() {
     std::vector<B1> vb1;
     std::vector<A1> va1(boost::convert_to<std::vector<A1> >(vb1));
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     B1 b10, b11, b12, b13;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     std::vector<B1> vb2;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     vb2.reserve(5);
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     vb2[0]=b10;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     vb2[1]=b11;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     vb2[2]=b12;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     vb2[3]=b13;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
     std::vector<A1> va2(boost::convert_to<std::vector<A1> >(vb2));
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
 
     std::allocator<A1> all;
     std::vector<A1,std::allocator<A1> > va3(
@@ -59,16 +49,13 @@ void explicit_convert_to() {
                 boost::reference_wrapper<std::vector<B1> const>,
                 boost::reference_wrapper<std::allocator<A1> const>
             >(boost::cref(vb2), boost::cref(all))));
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
 
     std::vector<A1,std::allocator<A1> > va32(
         boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             std::make_pair(boost::cref(vb2), boost::cref(all))));
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
 
     boost::conversion::result_of::pack2<std::vector<B1> const, std::allocator<A1> const>::type v =
         boost::conversion::pack(vb2, all);
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
 
     //~ std::vector<A1,std::allocator<A1> > va4(
         //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(v));
@@ -80,7 +67,6 @@ void explicit_convert_to() {
     std::vector<A1,std::allocator<A1> > va6(
         boost::convert_to<std::vector<A1,std::allocator<A1> > >(
             boost::conversion::pack(vb2, std::allocator<A1>())));
-    std::cout << __FILE__ << '['<<__LINE__<<"]" << std::endl;
 
 
 }

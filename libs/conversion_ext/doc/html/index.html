@@ -27,7 +27,7 @@
 </h3></div></div></div>
 <div><p class="copyright">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba</p></div>
 <div><div class="legalnotice">
-<a name="id2894242"></a><p>
+<a name="id2941072"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -48,6 +48,7 @@
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.getting_started">Getting
       Started</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples">Examples</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.ext_references">External
       Resources</a></span></dt>
 </dl></dd>
@@ -58,13 +59,6 @@
       Standard classes specializations</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.reference.boost_classes_specializations">Boost
       classes specializations</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="index.html#boost.conversion.examples">Examples</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.chrono__time_point_and_posix_time__ptime">chrono::time_point
-      and posix_time::ptime</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.boost__optional">boost::optional</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.std__pair">std::pair</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost.conversion.appendices">Appendices</a></span></dt>
 <dd><dl>
@@ -101,7 +95,7 @@
 <dt><span class="section"><a href="index.html#boost.conversion.overview.description">Description</a></span></dt>
 </dl></div>
 <a name="boost.conversion.overview.how_to_use_this_documentation"></a><h4>
-<a name="id2894292"></a>
+<a name="id2941120"></a>
       <a class="link" href="index.html#boost.conversion.overview.how_to_use_this_documentation">How
       to Use This Documentation</a>
     </h4>
@@ -204,9 +198,9 @@
 <span class="special">};</span>
 </pre>
 <p>
-        But as the types <code class="computeroutput"><span class="identifier">Target</span></code> and
+        As the types <code class="computeroutput"><span class="identifier">Target</span></code> and
         <code class="computeroutput"><span class="identifier">Source</span></code> are not C++ convertible
-        other than using a specific function.
+        other than using a specific function, xe need to use a workaround.
       </p>
 <p>
         Well we can again define a specific function
@@ -277,7 +271,7 @@
       </p>
 <p>
         What about converting <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">,</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span></code> to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span></code>? The issue now is that <code class="computeroutput"><span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">&lt;</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">&lt;</span><span class="identifier">to</span><span class="special">,</span><span class="identifier">to</span><span class="special">&gt;</span> <span class="special">&gt;)</span></code>
-        do not compiles because the conversion of <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>
+        does not compiles because the conversion of <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span></code>
         is named <code class="computeroutput"><span class="identifier">ConvertToPair</span></code>. So
         we need to specialize the function <code class="computeroutput"><span class="identifier">convert_to</span></code>
         for pairs.
@@ -293,7 +287,8 @@
         classes, but what about classes that already define some kind of conversion,
         using a constructor or a conversion operator. Do we need to make specialization
         for these conversion? The answer is no. We need just to define the default
-        implementation of convert_to function to just return the explicit conversion.
+        implementation of <code class="computeroutput"><span class="identifier">convert_to</span></code>
+        function to just return the explicit conversion.
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span><span class="special">&gt;</span>
 <span class="identifier">Target</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
@@ -309,7 +304,7 @@
 <pre class="programlisting"><span class="identifier">Target</span><span class="special">(</span><span class="identifier">from</span><span class="special">)</span>
 </pre>
 <p>
-        requires
+        we could require
       </p>
 <pre class="programlisting"><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">)</span>
 </pre>
@@ -320,7 +315,7 @@
 <pre class="programlisting"><span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span>
 </pre>
 <p>
-        requires
+        we could use
       </p>
 <pre class="programlisting"><span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">to</span><span class="special">,</span> <span class="identifier">from</span><span class="special">);</span>
 </pre>
@@ -365,8 +360,10 @@
 <pre class="programlisting"><span class="identifier">mca</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">mca</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">c</span><span class="special">;</span>
 </pre>
 <p>
-        The behavior of mca recall the tie function of Boost.Tuple, but instead of
-        allowing multiple assignations, allows a single assign_to call.
+        The behavior of <code class="computeroutput"><span class="identifier">mca</span></code> recall
+        the tie function of <span class="bold"><strong>Boost.Tuple</strong></span>, but instead
+        of allowing multiple assignations, allows a single <code class="computeroutput"><span class="identifier">assign_to</span></code>
+        call.
       </p>
 <p>
         We can even generalize this, so classes or algorithms relying on a member
@@ -385,12 +382,13 @@
 <a name="boost.conversion.overview.description"></a><a class="link" href="index.html#boost.conversion.overview.description" title="Description">Description</a>
 </h3></div></div></div>
 <p>
-        Generic explicit conversion between unrelated types.
+        <span class="bold"><strong>Boost.Conversion</strong></span> manages with generic explicit
+        conversion between unrelated types.
       </p>
 <p>
         The template function <code class="computeroutput"><span class="identifier">convert_to</span></code>
         allows to convert a source type to a target type, using argument dependent
-        lookup to select a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
+        lookup (ADL) to select a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
         function if available. If no specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
         function is available, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">::</span><span class="identifier">convert_to</span></code>
         is used.
@@ -398,14 +396,17 @@
 <p>
         The generic <code class="computeroutput"><span class="identifier">convert_to</span></code> function
         requires that the elements to be converted are assignable and copy constructible.
-        It is implemented using the Target copy construction from a Source or the
-        Source conversion operator Target - this is sometimes unavailable.
+        It is implemented using the <code class="computeroutput"><span class="identifier">Target</span></code>
+        copy construction from a <code class="computeroutput"><span class="identifier">Source</span></code>
+        or the <code class="computeroutput"><span class="identifier">Source</span></code> conversion
+        operator <code class="computeroutput"><span class="identifier">Target</span></code> - this is
+        sometimes unavailable.
       </p>
 <p>
         For standard types, we can not add a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>
         function on the namespace std. The alternative to using argument dependent
-        lookup in this situation is to provide a template specialization of boost::conversion::convert_to
-        for every pair of standard types that requires a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>.
+        lookup in this situation is to provide a template specialization of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">::</span><span class="identifier">convert_to</span></code> for every pair of standard types
+        that requires a specialized <code class="computeroutput"><span class="identifier">convert_to</span></code>.
       </p>
 <p>
         <span class="bold"><strong>Boost.Conversion</strong></span> provides:
@@ -497,12 +498,19 @@
         generic conversions</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.using_specific_conversions">Using
         specific conversions</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions">How
-        to specialize the conversion functions</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standadr_types_">How
-        to partially specialize the conversion functions for standadr types?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions_">How
+        to specialize the conversion functions?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standard_types_">How
+        to partially specialize the conversion functions for standard types?</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_convert_to_types_needing_some_constructors_arguments_">How
         to convert to types needing some constructors arguments?</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.chrono__time_point_and_posix_time__ptime">chrono::time_point
+        and posix_time::ptime</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.boost__optional">boost::optional</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.std__pair">std::pair</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.ext_references">External
       Resources</a></span></dt>
@@ -524,7 +532,7 @@
         Conversion</a>
 </h4></div></div></div>
 <a name="boost.conversion.users_guide.getting_started.install.getting_boost_conversion"></a><h6>
-<a name="id2907370"></a>
+<a name="id2954298"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.getting_boost_conversion">Getting
           Boost.Conversion</a>
         </h6>
@@ -538,7 +546,7 @@
           Sandbox</a>.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.building_boost_conversion"></a><h6>
-<a name="id2907421"></a>
+<a name="id2954348"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.building_boost_conversion">Building
           Boost.Conversion</a>
         </h6>
@@ -548,7 +556,7 @@
           in your compiler include path.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.requirements"></a><h6>
-<a name="id2907453"></a>
+<a name="id2954381"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.requirements">Requirements</a>
         </h6>
 <p>
@@ -557,7 +565,7 @@
           specific conversion are used.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.exceptions_safety"></a><h6>
-<a name="id2907485"></a>
+<a name="id2954412"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.exceptions_safety">Exceptions
           safety</a>
         </h6>
@@ -566,7 +574,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.thread_safety"></a><h6>
-<a name="id2907511"></a>
+<a name="id2954439"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.thread_safety">Thread
           safety</a>
         </h6>
@@ -574,7 +582,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.tested_compilers"></a><h6>
-<a name="id2907536"></a>
+<a name="id2954464"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.tested_compilers">Tested
           compilers</a>
         </h6>
@@ -674,10 +682,10 @@
         generic conversions</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.using_specific_conversions">Using
         specific conversions</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions">How
-        to specialize the conversion functions</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standadr_types_">How
-        to partially specialize the conversion functions for standadr types?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions_">How
+        to specialize the conversion functions?</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standard_types_">How
+        to partially specialize the conversion functions for standard types?</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.users_guide.tutorial.how_to_convert_to_types_needing_some_constructors_arguments_">How
         to convert to types needing some constructors arguments?</a></span></dt>
 </dl></div>
@@ -726,8 +734,8 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions"></a><a class="link" href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions" title="How to specialize the conversion functions">How
-        to specialize the conversion functions</a>
+<a name="boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions_"></a><a class="link" href="index.html#boost.conversion.users_guide.tutorial.how_to_specialize_the_conversion_functions_" title="How to specialize the conversion functions?">How
+        to specialize the conversion functions?</a>
 </h4></div></div></div>
 <p>
           You can add an overload of <code class="computeroutput"><span class="identifier">convert_to</span></code>
@@ -745,13 +753,14 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standadr_types_"></a><a class="link" href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standadr_types_" title="How to partially specialize the conversion functions for standadr types?">How
-        to partially specialize the conversion functions for standadr types?</a>
+<a name="boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standard_types_"></a><a class="link" href="index.html#boost.conversion.users_guide.tutorial.how_to_partially_specialize_the_conversion_functions_for_standard_types_" title="How to partially specialize the conversion functions for standard types?">How
+        to partially specialize the conversion functions for standard types?</a>
 </h4></div></div></div>
 <p>
           As it has been explained in the introduction, we can not use ADL for standard
           types, as we can not add new functions on the standad std namespace. For
-          these types we need to specialize the boost::conversion::convert_to function.
+          these types we need to specialize the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span><span class="special">::</span><span class="identifier">convert_to</span></code>
+          function.
         </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Source</span> <span class="special">&gt;</span>
 <span class="identifier">Target</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
@@ -829,6 +838,253 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
+<a name="boost.conversion.users_guide.examples"></a><a class="link" href="index.html#boost.conversion.users_guide.examples" title="Examples">Examples</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.chrono__time_point_and_posix_time__ptime">chrono::time_point
+        and posix_time::ptime</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.boost__optional">boost::optional</a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.users_guide.examples.std__pair">std::pair</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.examples.chrono__time_point_and_posix_time__ptime"></a><a class="link" href="index.html#boost.conversion.users_guide.examples.chrono__time_point_and_posix_time__ptime" title="chrono::time_point and posix_time::ptime">chrono::time_point
+        and posix_time::ptime</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">date_time</span><span class="special">/</span><span class="identifier">posix_time</span><span class="special">/</span><span class="identifier">posix_time_types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">date_time</span><span class="special">/</span><span class="identifier">posix_time</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_NO_FUNCTION_TEMPLATE_ORDERING</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">time_point_t</span><span class="special">;</span>
+                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">duration_t</span><span class="special">;</span>
+                <span class="keyword">typedef</span> <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">rep_t</span><span class="special">;</span>
+                <span class="identifier">rep_t</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">duration_t</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()).</span><span class="identifier">count</span><span class="special">();</span>
+                <span class="identifier">rep_t</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">/</span><span class="number">1000000000</span><span class="special">;</span>
+                <span class="identifier">rep_t</span> <span class="identifier">nsec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">%</span><span class="number">1000000000</span><span class="special">;</span>
+                <span class="keyword">return</span>  <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">)+</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">sec</span><span class="special">))+</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_DATE_TIME_HAS_NANOSECONDS</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">);</span>
+<span class="preprocessor">#else</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">((</span><span class="identifier">nsec</span><span class="special">+</span><span class="number">500</span><span class="special">)/</span><span class="number">1000</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
+                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;,</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span> <span class="identifier">time_since_epoch</span><span class="special">=</span><span class="identifier">from</span><span class="special">-</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
+                <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">t</span><span class="special">=</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">total_seconds</span><span class="special">());</span>
+                <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">nsec</span><span class="special">=</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">fractional_seconds</span><span class="special">()*(</span><span class="number">1000000000</span><span class="special">/</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">ticks_per_second</span><span class="special">());</span>
+                <span class="keyword">return</span>  <span class="identifier">t</span><span class="special">+</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">Duration</span><span class="special">&gt;(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">));</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;,</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
+                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+    <span class="special">}}</span>
+    <span class="preprocessor">#else</span>
+    <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">inline</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
+                    <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
+        <span class="special">{</span>
+                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">time_point_t</span><span class="special">;</span>
+                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">duration_t</span><span class="special">;</span>
+                <span class="keyword">typedef</span> <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">rep_t</span><span class="special">;</span>
+                <span class="identifier">rep_t</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">duration_t</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()).</span><span class="identifier">count</span><span class="special">();</span>
+                <span class="identifier">rep_t</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">/</span><span class="number">1000000000</span><span class="special">;</span>
+                <span class="identifier">rep_t</span> <span class="identifier">nsec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">%</span><span class="number">1000000000</span><span class="special">;</span>
+                <span class="keyword">return</span>  <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">)+</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">sec</span><span class="special">))+</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_DATE_TIME_HAS_NANOSECONDS</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">);</span>
+<span class="preprocessor">#else</span>
+                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">((</span><span class="identifier">nsec</span><span class="special">+</span><span class="number">500</span><span class="special">)/</span><span class="number">1000</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+        <span class="special">}</span>
+
+
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">inline</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span>
+                        <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
+        <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
+            <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+        <span class="special">}</span>
+
+    <span class="special">}</span>
+
+    <span class="keyword">namespace</span> <span class="identifier">posix_time</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">TP</span><span class="special">&gt;</span>
+        <span class="keyword">inline</span> <span class="identifier">TP</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span>
+                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">TP</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
+        <span class="special">{</span>
+            <span class="identifier">time_duration</span> <span class="keyword">const</span> <span class="identifier">time_since_epoch</span><span class="special">=</span><span class="identifier">from</span><span class="special">-</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
+            <span class="identifier">TP</span> <span class="identifier">t</span><span class="special">=</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">total_seconds</span><span class="special">());</span>
+            <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">nsec</span><span class="special">=</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">fractional_seconds</span><span class="special">()*(</span><span class="number">1000000000</span><span class="special">/</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">ticks_per_second</span><span class="special">());</span>
+            <span class="keyword">return</span>  <span class="identifier">t</span><span class="special">+</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TP</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">));</span>
+        <span class="special">}</span>
+
+
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+        <span class="keyword">inline</span> <span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
+                    <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
+        <span class="special">)</span>
+        <span class="special">{</span>
+            <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
+            <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+        <span class="special">}</span>
+
+    <span class="special">}</span>
+    <span class="preprocessor">#endif</span>
+<span class="special">}</span>
+
+<span class="preprocessor">#endif</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.examples.boost__optional"></a><a class="link" href="index.html#boost.conversion.users_guide.examples.boost__optional" title="boost::optional">boost::optional</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_OPTIONAL_HPP</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_OPTIONAL_HPP</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">none</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+
+    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_NO_FUNCTION_TEMPLATE_ORDERING</span>
+    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="keyword">return</span> <span class="special">(</span><span class="identifier">from</span><span class="special">?</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">())):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;());</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">?</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">()):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;();</span>
+                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+
+    <span class="special">}}</span>
+    <span class="preprocessor">#else</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+    <span class="keyword">inline</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span>
+                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">(</span><span class="identifier">from</span><span class="special">?</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">())):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;());</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
+    <span class="keyword">inline</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
+                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
+                <span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">?</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">()):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;();</span>
+        <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="preprocessor">#endif</span>
+<span class="special">}</span>
+
+<span class="preprocessor">#endif</span>
+
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.users_guide.examples.std__pair"></a><a class="link" href="index.html#boost.conversion.users_guide.examples.std__pair" title="std::pair">std::pair</a>
+</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_PAIR_HPP</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_PAIR_HPP</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
+<span class="comment">//#include &lt;boost/conversion/convert_to.hpp&gt;
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
+
+    <span class="comment">// std namespace can not be overloaded
+</span>    <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U2</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">first</span><span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">second</span><span class="special">));</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U2</span><span class="special">&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
+            <span class="special">{</span>
+                <span class="identifier">to</span><span class="special">.</span><span class="identifier">first</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">first</span><span class="special">);</span>
+                <span class="identifier">to</span><span class="special">.</span><span class="identifier">second</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">second</span><span class="special">);</span>
+                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">};</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+
+<span class="preprocessor">#endif</span>
+
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost.conversion.users_guide.ext_references"></a><a class="link" href="index.html#boost.conversion.users_guide.ext_references" title="External Resources">External
       Resources</a>
 </h3></div></div></div>
@@ -837,7 +1093,7 @@
 <dl>
 <dt><span class="term"><a href="http://www.boostpro.com/vault/index.php?action=downloadfile&amp;filename=boost-string-convert.zip&amp;directory=&amp;" target="_top"><span class="bold"><strong>Boost.Convert</strong></span></a></span></dt>
 <dd><p>
-              Vladimir Batov. Not yet scheduled
+              Vladimir Batov. Not yet reviewed
             </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/conversion/lexical_cast.htm" target="_top"><span class="bold"><strong>Boost.Conversion.LexicalCast</strong></span></a></span></dt>
 <dd><p>
@@ -1029,12 +1285,11 @@
           std namespace, so we need a different technique.
         </p>
 <p>
-          The technique is partially specialize on the function <code class="computeroutput"><span class="identifier">convert_to</span></code>
-          on the boost::conversion namespace. For compilers for which we can not
-          partially specialize a function a trick is used: instead of calling directly
-          to the <code class="computeroutput"><span class="identifier">convert_to</span></code> member
-          function, <code class="computeroutput"><span class="identifier">convert_to</span></code> calls
-          to the static operation <code class="computeroutput"><span class="identifier">apply</span></code>
+          The technique consists in partially specialize on the function <code class="computeroutput"><span class="identifier">convert_to</span></code> on the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span></code>
+          namespace. For compilers for which we can not partially specialize a function
+          a trick is used: instead of calling directly to the <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          member function, <code class="computeroutput"><span class="identifier">convert_to</span></code>
+          calls to the static operation <code class="computeroutput"><span class="identifier">apply</span></code>
           on a class with the same name in the namespace __partial_specialization<span class="underline">workaround</span>_. Thus the user can specialize partially
           this class.
         </p>
@@ -1111,14 +1366,13 @@
           on the std namespace, so we need a different technique.
         </p>
 <p>
-          The technique is partially specialize on the function <code class="computeroutput"><span class="identifier">assign_to</span></code>
-          on the boost::conversion namespace. For compilers for which we can not
-          partially specialize a function a trick is used: instead of calling directly
-          to the <code class="computeroutput"><span class="identifier">assign_to</span></code> member
-          function, <code class="computeroutput"><span class="identifier">assign_to</span></code> calls
-          to the static operation apply on a class with the same name in the namespace
-          __partial_specialization<span class="underline">workaround</span>_.
-          This the user can specialize partially this class.
+          The technique consists in partially specialize on the function <code class="computeroutput"><span class="identifier">assign_to</span></code> on the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">conversion</span></code>
+          namespace. For compilers for which we can not partially specialize a function
+          a trick is used: instead of calling directly to the <code class="computeroutput"><span class="identifier">assign_to</span></code>
+          member function, <code class="computeroutput"><span class="identifier">assign_to</span></code>
+          calls to the static operation apply on a class with the same name in the
+          namespace __partial_specialization<span class="underline">workaround</span>_.
+          Thus the user can specialize partially this class.
         </p>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -1233,7 +1487,9 @@
 <span class="keyword">class</span> <span class="identifier">implementation_dependent</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">implementation_dependent</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="identifier">implementation_dependent</span><span class="special">(</span><span class="identifier">implementation_dependent</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">implementation_dependent</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
     <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=(</span><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
@@ -1683,269 +1939,17 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost.conversion.examples"></a><a class="link" href="index.html#boost.conversion.examples" title="Examples">Examples</a>
-</h2></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.chrono__time_point_and_posix_time__ptime">chrono::time_point
-      and posix_time::ptime</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.boost__optional">boost::optional</a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.examples.std__pair">std::pair</a></span></dt>
-</dl></div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost.conversion.examples.chrono__time_point_and_posix_time__ptime"></a><a class="link" href="index.html#boost.conversion.examples.chrono__time_point_and_posix_time__ptime" title="chrono::time_point and posix_time::ptime">chrono::time_point
-      and posix_time::ptime</a>
-</h3></div></div></div>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP</span>
-
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">/</span><span class="identifier">chrono</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">date_time</span><span class="special">/</span><span class="identifier">posix_time</span><span class="special">/</span><span class="identifier">posix_time_types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">date_time</span><span class="special">/</span><span class="identifier">posix_time</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_NO_FUNCTION_TEMPLATE_ORDERING</span>
-    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">time_point_t</span><span class="special">;</span>
-                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">duration_t</span><span class="special">;</span>
-                <span class="keyword">typedef</span> <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">rep_t</span><span class="special">;</span>
-                <span class="identifier">rep_t</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">duration_t</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()).</span><span class="identifier">count</span><span class="special">();</span>
-                <span class="identifier">rep_t</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">/</span><span class="number">1000000000</span><span class="special">;</span>
-                <span class="identifier">rep_t</span> <span class="identifier">nsec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">%</span><span class="number">1000000000</span><span class="special">;</span>
-                <span class="keyword">return</span>  <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">)+</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">sec</span><span class="special">))+</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_DATE_TIME_HAS_NANOSECONDS</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">);</span>
-<span class="preprocessor">#else</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">((</span><span class="identifier">nsec</span><span class="special">+</span><span class="number">500</span><span class="special">)/</span><span class="number">1000</span><span class="special">);</span>
-<span class="preprocessor">#endif</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
-                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;,</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span> <span class="identifier">time_since_epoch</span><span class="special">=</span><span class="identifier">from</span><span class="special">-</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
-                <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">t</span><span class="special">=</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">total_seconds</span><span class="special">());</span>
-                <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">nsec</span><span class="special">=</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">fractional_seconds</span><span class="special">()*(</span><span class="number">1000000000</span><span class="special">/</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">ticks_per_second</span><span class="special">());</span>
-                <span class="keyword">return</span>  <span class="identifier">t</span><span class="special">+</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">Duration</span><span class="special">&gt;(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">));</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;,</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
-                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-    <span class="special">}}</span>
-    <span class="preprocessor">#else</span>
-    <span class="keyword">namespace</span> <span class="identifier">chrono</span> <span class="special">{</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">inline</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
-                    <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
-        <span class="special">{</span>
-                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="identifier">time_point_t</span><span class="special">;</span>
-                <span class="keyword">typedef</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span> <span class="identifier">duration_t</span><span class="special">;</span>
-                <span class="keyword">typedef</span> <span class="identifier">duration_t</span><span class="special">::</span><span class="identifier">rep</span> <span class="identifier">rep_t</span><span class="special">;</span>
-                <span class="identifier">rep_t</span> <span class="identifier">d</span> <span class="special">=</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="identifier">duration_t</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">time_since_epoch</span><span class="special">()).</span><span class="identifier">count</span><span class="special">();</span>
-                <span class="identifier">rep_t</span> <span class="identifier">sec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">/</span><span class="number">1000000000</span><span class="special">;</span>
-                <span class="identifier">rep_t</span> <span class="identifier">nsec</span> <span class="special">=</span> <span class="identifier">d</span><span class="special">%</span><span class="number">1000000000</span><span class="special">;</span>
-                <span class="keyword">return</span>  <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">)+</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;(</span><span class="identifier">sec</span><span class="special">))+</span>
-<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_DATE_TIME_HAS_NANOSECONDS</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">);</span>
-<span class="preprocessor">#else</span>
-                        <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">((</span><span class="identifier">nsec</span><span class="special">+</span><span class="number">500</span><span class="special">)/</span><span class="number">1000</span><span class="special">);</span>
-<span class="preprocessor">#endif</span>
-        <span class="special">}</span>
-
-
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">inline</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span>
-                        <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
-        <span class="special">)</span>
-        <span class="special">{</span>
-            <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
-            <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-        <span class="special">}</span>
-
-    <span class="special">}</span>
-
-    <span class="keyword">namespace</span> <span class="identifier">posix_time</span> <span class="special">{</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">TP</span><span class="special">&gt;</span>
-        <span class="keyword">inline</span> <span class="identifier">TP</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">from</span>
-                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">TP</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
-        <span class="special">{</span>
-            <span class="identifier">time_duration</span> <span class="keyword">const</span> <span class="identifier">time_since_epoch</span><span class="special">=</span><span class="identifier">from</span><span class="special">-</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
-            <span class="identifier">TP</span> <span class="identifier">t</span><span class="special">=</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">from_time_t</span><span class="special">(</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">total_seconds</span><span class="special">());</span>
-            <span class="keyword">long</span> <span class="keyword">long</span> <span class="identifier">nsec</span><span class="special">=</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">fractional_seconds</span><span class="special">()*(</span><span class="number">1000000000</span><span class="special">/</span><span class="identifier">time_since_epoch</span><span class="special">.</span><span class="identifier">ticks_per_second</span><span class="special">());</span>
-            <span class="keyword">return</span>  <span class="identifier">t</span><span class="special">+</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration_cast</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TP</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&gt;(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">nanoseconds</span><span class="special">(</span><span class="identifier">nsec</span><span class="special">));</span>
-        <span class="special">}</span>
-
-
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
-        <span class="keyword">inline</span> <span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">ptime</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
-                    <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
-        <span class="special">)</span>
-        <span class="special">{</span>
-            <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">);</span>
-            <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-        <span class="special">}</span>
-
-    <span class="special">}</span>
-    <span class="preprocessor">#endif</span>
-<span class="special">}</span>
-
-<span class="preprocessor">#endif</span>
-</pre>
-<p>
-      </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost.conversion.examples.boost__optional"></a><a class="link" href="index.html#boost.conversion.examples.boost__optional" title="boost::optional">boost::optional</a>
-</h3></div></div></div>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_OPTIONAL_HPP</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_OPTIONAL_HPP</span>
-
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">none</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">convert_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-
-    <span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_NO_FUNCTION_TEMPLATE_ORDERING</span>
-    <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="keyword">return</span> <span class="special">(</span><span class="identifier">from</span><span class="special">?</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">())):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;());</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">?</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">()):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;();</span>
-                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-
-    <span class="special">}}</span>
-    <span class="preprocessor">#else</span>
-    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
-    <span class="keyword">inline</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="identifier">convert_to</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span>
-                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span>
-    <span class="special">{</span>
-        <span class="keyword">return</span> <span class="special">(</span><span class="identifier">from</span><span class="special">?</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">())):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;());</span>
-    <span class="special">}</span>
-
-    <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">Target</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Source</span><span class="special">&gt;</span>
-    <span class="keyword">inline</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span>
-                <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dummy</span><span class="special">::</span><span class="identifier">type_tag</span><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>
-                <span class="special">)</span>
-    <span class="special">{</span>
-        <span class="identifier">to</span> <span class="special">=</span> <span class="identifier">from</span><span class="special">?</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">get</span><span class="special">()):</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;();</span>
-        <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-    <span class="special">}</span>
-    <span class="preprocessor">#endif</span>
-<span class="special">}</span>
-
-<span class="preprocessor">#endif</span>
-
-</pre>
-<p>
-      </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost.conversion.examples.std__pair"></a><a class="link" href="index.html#boost.conversion.examples.std__pair" title="std::pair">std::pair</a>
-</h3></div></div></div>
-<p>
-        
-</p>
-<pre class="programlisting"><span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_CONVERT_TO_PAIR_HPP</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_CONVERT_TO_PAIR_HPP</span>
-
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">utility</span><span class="special">&gt;</span>
-<span class="comment">//#include &lt;boost/conversion/convert_to.hpp&gt;
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">conversion</span><span class="special">/</span><span class="identifier">assign_to</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
-
-    <span class="comment">// std namespace can not be overloaded
-</span>    <span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U2</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">convert_to</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">first</span><span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">second</span><span class="special">));</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-        <span class="keyword">template</span> <span class="special">&lt;</span> <span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">U2</span><span class="special">&gt;</span>
-        <span class="keyword">struct</span> <span class="identifier">assign_to</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
-            <span class="keyword">inline</span> <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;&amp;</span> <span class="identifier">apply</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span><span class="identifier">T2</span><span class="special">&gt;&amp;</span> <span class="identifier">to</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">U1</span><span class="special">,</span><span class="identifier">U2</span><span class="special">&gt;&amp;</span> <span class="identifier">from</span><span class="special">)</span>
-            <span class="special">{</span>
-                <span class="identifier">to</span><span class="special">.</span><span class="identifier">first</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">first</span><span class="special">);</span>
-                <span class="identifier">to</span><span class="special">.</span><span class="identifier">second</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;(</span><span class="identifier">from</span><span class="special">.</span><span class="identifier">second</span><span class="special">);</span>
-                <span class="keyword">return</span> <span class="identifier">to</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="special">};</span>
-    <span class="special">}</span>
-<span class="special">}}</span>
-
-<span class="preprocessor">#endif</span>
-
-</pre>
-<p>
-      </p>
-</div>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost.conversion.appendices"></a><a class="link" href="index.html#boost.conversion.appendices" title="Appendices">Appendices</a>
 </h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="index.html#boost.conversion.appendices.history">Appendix A: History</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010____adding_pack_expression_"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> <span class="emphasis"><em>Adding pack
-        expression</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009____applying_the_same_technique_that_boost__swap_applies_making_use_of_adl_"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> <span class="emphasis"><em>Applying
-        the same technique that boost::swap applies making use of ADL</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009____changing_the_order_of__to__and__from__parameters_on___assign_to___function___added__mca__function_"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> <span class="emphasis"><em>Changing
-        the order of <code class="computeroutput"><span class="identifier">to</span></code> and <code class="computeroutput"><span class="identifier">from</span></code> parameters on <code class="computeroutput"><span class="identifier">assign_to</span></code>
-        function + Added <code class="computeroutput"><span class="identifier">mca</span></code> function</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009____adding_array___fusion__tuples___adaptation_to_boost_1_39_"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> <span class="emphasis"><em>Adding array
-        + fusion::tuples + Adaptation to Boost 1.39</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009____announcement_of_conversions_"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> <span class="emphasis"><em>Announcement
-        of Conversions</em></span></a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_1__fefruary_20__2011__"><span class="bold"><strong>Version 0.5.1, Fefruary 20, 2011</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010__"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009__"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009__"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009__"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009__"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> </a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index.html#boost.conversion.appendices.rationale">Appendix B: Rationale</a></span></dt>
 <dt><span class="section"><a href="index.html#boost.conversion.appendices.implementation">Appendix
@@ -1973,25 +1977,27 @@
 <a name="boost.conversion.appendices.history"></a><a class="link" href="index.html#boost.conversion.appendices.history" title="Appendix A: History">Appendix A: History</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010____adding_pack_expression_"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> <span class="emphasis"><em>Adding pack
-        expression</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009____applying_the_same_technique_that_boost__swap_applies_making_use_of_adl_"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> <span class="emphasis"><em>Applying
-        the same technique that boost::swap applies making use of ADL</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009____changing_the_order_of__to__and__from__parameters_on___assign_to___function___added__mca__function_"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> <span class="emphasis"><em>Changing
-        the order of <code class="computeroutput"><span class="identifier">to</span></code> and <code class="computeroutput"><span class="identifier">from</span></code> parameters on <code class="computeroutput"><span class="identifier">assign_to</span></code>
-        function + Added <code class="computeroutput"><span class="identifier">mca</span></code> function</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009____adding_array___fusion__tuples___adaptation_to_boost_1_39_"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> <span class="emphasis"><em>Adding array
-        + fusion::tuples + Adaptation to Boost 1.39</em></span></a></span></dt>
-<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009____announcement_of_conversions_"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> <span class="emphasis"><em>Announcement
-        of Conversions</em></span></a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_1__fefruary_20__2011__"><span class="bold"><strong>Version 0.5.1, Fefruary 20, 2011</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010__"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009__"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009__"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009__"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> </a></span></dt>
+<dt><span class="section"><a href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009__"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> </a></span></dt>
 </dl></div>
-<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-            Add conversion between std::vector of explicitly convertible types.
-          </li></ul></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.history.__version_0_5_0__may_30__2010____adding_pack_expression_"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010____adding_pack_expression_" title="Version 0.5.0, May 30, 2010 Adding pack expression"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> <span class="emphasis"><em>Adding pack
-        expression</em></span></a>
+<a name="boost.conversion.appendices.history.__version_0_5_1__fefruary_20__2011__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_5_1__fefruary_20__2011__" title="Version 0.5.1, Fefruary 20, 2011"><span class="bold"><strong>Version 0.5.1, Fefruary 20, 2011</strong></span> </a>
+</h4></div></div></div>
+<p>
+          <span class="bold"><strong>Bug</strong></span>
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+              Fix bug on chain mcs assignement.
+            </li></ul></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost.conversion.appendices.history.__version_0_5_0__may_30__2010__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_5_0__may_30__2010__" title="Version 0.5.0, May 30, 2010"><span class="bold"><strong>Version 0.5.0, May 30, 2010</strong></span> </a>
 </h4></div></div></div>
 <p>
           <span class="bold"><strong>New Features:</strong></span>
@@ -2019,9 +2025,12 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.history.__version_0_4_0__october_27__2009____applying_the_same_technique_that_boost__swap_applies_making_use_of_adl_"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009____applying_the_same_technique_that_boost__swap_applies_making_use_of_adl_" title="Version 0.4.0, October 27, 2009 Applying the same technique that boost::swap applies making use of ADL"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> <span class="emphasis"><em>Applying
-        the same technique that boost::swap applies making use of ADL</em></span></a>
+<a name="boost.conversion.appendices.history.__version_0_4_0__october_27__2009__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_4_0__october_27__2009__" title="Version 0.4.0, October 27, 2009"><span class="bold"><strong>Version 0.4.0, October 27, 2009</strong></span> </a>
 </h4></div></div></div>
+<p>
+          <span class="emphasis"><em>Applying the same technique that boost::swap applies making use
+          of ADL</em></span>
+        </p>
 <p>
           <span class="bold"><strong>New Features:</strong></span>
         </p>
@@ -2050,10 +2059,14 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.history.__version_0_3_0__october_22__2009____changing_the_order_of__to__and__from__parameters_on___assign_to___function___added__mca__function_"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009____changing_the_order_of__to__and__from__parameters_on___assign_to___function___added__mca__function_" title="Version 0.3.0, October 22, 2009 Changing the order of to and from parameters on assign_to function + Added mca function"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> <span class="emphasis"><em>Changing
-        the order of <code class="computeroutput"><span class="identifier">to</span></code> and <code class="computeroutput"><span class="identifier">from</span></code> parameters on <code class="computeroutput"><span class="identifier">assign_to</span></code>
-        function + Added <code class="computeroutput"><span class="identifier">mca</span></code> function</em></span></a>
+<a name="boost.conversion.appendices.history.__version_0_3_0__october_22__2009__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_3_0__october_22__2009__" title="Version 0.3.0, October 22, 2009"><span class="bold"><strong>Version 0.3.0, October 22, 2009</strong></span> </a>
 </h4></div></div></div>
+<p>
+          <span class="emphasis"><em>Changing the order of <code class="computeroutput"><span class="identifier">to</span></code>
+          and <code class="computeroutput"><span class="identifier">from</span></code> parameters on
+          <code class="computeroutput"><span class="identifier">assign_to</span></code> function + Added
+          <code class="computeroutput"><span class="identifier">mca</span></code> function</em></span>
+        </p>
 <p>
           <span class="bold"><strong>Incompatibility:</strong></span>
         </p>
@@ -2093,9 +2106,11 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.history.__version_0_2_0__mai_16__2009____adding_array___fusion__tuples___adaptation_to_boost_1_39_"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009____adding_array___fusion__tuples___adaptation_to_boost_1_39_" title="Version 0.2.0, Mai 16, 2009 Adding array + fusion::tuples + Adaptation to Boost 1.39"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> <span class="emphasis"><em>Adding array
-        + fusion::tuples + Adaptation to Boost 1.39</em></span></a>
+<a name="boost.conversion.appendices.history.__version_0_2_0__mai_16__2009__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_2_0__mai_16__2009__" title="Version 0.2.0, Mai 16, 2009"><span class="bold"><strong>Version 0.2.0, Mai 16, 2009</strong></span> </a>
 </h4></div></div></div>
+<p>
+          <span class="emphasis"><em>Adding array + fusion::tuples + Adaptation to Boost 1.39</em></span>
+        </p>
 <p>
           <span class="bold"><strong>New Features:</strong></span>
         </p>
@@ -2112,9 +2127,11 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost.conversion.appendices.history.__version_0_1_0__april_16__2009____announcement_of_conversions_"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009____announcement_of_conversions_" title="Version 0.1.0, April 16, 2009 Announcement of Conversions"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> <span class="emphasis"><em>Announcement
-        of Conversions</em></span></a>
+<a name="boost.conversion.appendices.history.__version_0_1_0__april_16__2009__"></a><a class="link" href="index.html#boost.conversion.appendices.history.__version_0_1_0__april_16__2009__" title="Version 0.1.0, April 16, 2009"><span class="bold"><strong>Version 0.1.0, April 16, 2009</strong></span> </a>
 </h4></div></div></div>
+<p>
+          <span class="emphasis"><em>Announcement of Conversions</em></span>
+        </p>
 <p>
           <span class="bold"><strong>Features:</strong></span>
         </p>
@@ -2172,7 +2189,7 @@
 <a name="boost.conversion.appendices.rationale"></a><a class="link" href="index.html#boost.conversion.appendices.rationale" title="Appendix B: Rationale">Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.rationale.trick_to_avoid_recursion_on_the_convert_to_calls"></a><h5>
-<a name="id2932225"></a>
+<a name="id2979393"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.trick_to_avoid_recursion_on_the_convert_to_calls">Trick
         to avoid recursion on the convert_to calls</a>
       </h5>
@@ -2228,7 +2245,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost.conversion.appendices.rationale.trick_to_avoid_the_use_of_the_tag_on_the_user_side"></a><h5>
-<a name="id2933133"></a>
+<a name="id2980301"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.trick_to_avoid_the_use_of_the_tag_on_the_user_side">Trick
         to avoid the use of the tag on the user side</a>
       </h5>
@@ -2250,7 +2267,7 @@
 <pre class="programlisting"><span class="identifier">a</span><span class="special">=</span> <span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">);</span>
 </pre>
 <a name="boost.conversion.appendices.rationale.mathematical_background"></a><h5>
-<a name="id2933481"></a>
+<a name="id2980649"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.mathematical_background">Mathematical
         background</a>
       </h5>
@@ -2304,7 +2321,7 @@
         The library provides a convert_to_via function which helps to implement that.
       </p>
 <a name="boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadins"></a><h5>
-<a name="id2934015"></a>
+<a name="id2981183"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadins">Ambiguity
         of multiple overloadins</a>
       </h5>
@@ -2324,7 +2341,7 @@
       C: Implementation Notes</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__"></a><h5>
-<a name="id2934065"></a>
+<a name="id2981233"></a>
         <a class="link" href="index.html#boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__">Why
         <code class="computeroutput"><span class="identifier">convert_to</span></code> between tuples
         is not implemented using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span></code>?</a>
@@ -3475,12 +3492,12 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.todo.tasks_to_do_before_review"></a><h5>
-<a name="id2936692"></a>
+<a name="id2983858"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h5>
 <a name="boost.conversion.appendices.todo.for_later_releases"></a><h5>
-<a name="id2936714"></a>
+<a name="id2983880"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.for_later_releases">For later
         releases</a>
       </h5>
@@ -3493,7 +3510,7 @@
           </li>
 </ul></div>
 <a name="boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard"></a><h5>
-<a name="id2936755"></a>
+<a name="id2983920"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard">Make
         a proposal to the C++ standard</a>
       </h5>
@@ -3557,7 +3574,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: February 16, 2011 at 19:29:22 GMT</small></p></td>
+<td align="left"><p><small>Last revised: February 22, 2011 at 11:48:07 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

@@ -102,7 +102,7 @@ Imagine now that you need to convert a `std::pair<Source, Source>` to a `std::pa
         ...
     };
 
-But as the types `Target` and `Source` are not C++ convertible other than using a specific function.
+As the types `Target` and `Source` are not C++ convertible other than using a specific function, xe need to use a workaround.
 
 Well we can again define a specific function
 
@@ -155,7 +155,7 @@ to
 
 using the `ConvertToPair` function.
 
-What about converting `std::pair<Source,std::pair<Source,Source> >` to `std::pair<Target,std::pair<Target,Target> >`? The issue now is that `convert_to(std::make_pair<to, std::make_pair<to,to> >)` do not compiles because the conversion of `std::pair` is named `ConvertToPair`. So we need to specialize the function `convert_to` for pairs.
+What about converting `std::pair<Source,std::pair<Source,Source> >` to `std::pair<Target,std::pair<Target,Target> >`? The issue now is that `convert_to(std::make_pair<to, std::make_pair<to,to> >)` does not compiles because the conversion of `std::pair` is named `ConvertToPair`. So we need to specialize the function `convert_to` for pairs.
 
 
     template <typename T1, typename T2, typename S1, typename S2)
@@ -164,7 +164,7 @@ What about converting `std::pair<Source,std::pair<Source,Source> >` to `std::pai
         return std::pair<T1,T2>(convert_to<T1>(from.first), convert_to<T2>(from.second));
     }
 
-There is still a last point. The preceding design works well with unrelated classes, but what about classes that already define some kind of conversion, using a constructor or a conversion operator. Do we need to make specialization for these conversion? The answer is no. We need just to define the default implementation of convert_to function to just return the explicit conversion.
+There is still a last point. The preceding design works well with unrelated classes, but what about classes that already define some kind of conversion, using a constructor or a conversion operator. Do we need to make specialization for these conversion? The answer is no. We need just to define the default implementation of `convert_to` function to just return the explicit conversion.
 
     template < typename Target, typename Source>
     Target convert_to(const Source& from)
@@ -176,7 +176,7 @@ What have we learned? Classes or algorithms relying on a conversion by copy-cons
 
     Target(from)
 
-requires
+we could require
 
     convert_to<Target>(from)
 
@@ -184,7 +184,7 @@ The same applies to classes or algorithms relying on the assignment operator. So
 
     to = from
 
-requires
+we could use
 
     assign_to(to, from);
 
@@ -215,12 +215,11 @@ and if we find this not really readable we can try with
 
     mca(a) = mca(b) = c;
 
-The behavior of mca recall the tie function of Boost.Tuple, but instead of allowing multiple assignations, allows a single assign_to call.
+The behavior of `mca` recall the tie function of [*Boost.Tuple], but instead of allowing multiple assignations, allows a single `assign_to` call.
 
 We can even generalize this, so classes or algorithms relying on a member function can be made more generic by relaying on a function. The default function implementation could just to call to the member function with the equivalent prototype, but this is out of the scope of this library.
 
 So one of the advantages of using this common functions is uniformity. The other is that now we are able to find all the explicit conversions to one type, as we can do with explicit casts.
-
 
 [endsect]
 
@@ -228,13 +227,13 @@ So one of the advantages of using this common functions is uniformity. The other
 [section Description]
 [/==================]
 
-Generic explicit conversion between unrelated types.
+[*Boost.Conversion] manages with generic explicit conversion between unrelated types.
 
-The template function __convert_to__ allows to convert a source type to a target type, using argument dependent lookup to select a specialized `convert_to` function if available. If no specialized `convert_to` function is available, `boost::conversion::convert_to` is used. 
+The template function __convert_to__ allows to convert a source type to a target type, using argument dependent lookup (ADL) to select a specialized `convert_to` function if available. If no specialized `convert_to` function is available, `boost::conversion::convert_to` is used. 
 
-The generic __convert_to__ function requires that the elements to be converted are assignable and copy constructible. It is implemented using the Target copy construction from a Source or the Source conversion operator Target - this is sometimes unavailable. 
+The generic __convert_to__ function requires that the elements to be converted are assignable and copy constructible. It is implemented using the `Target` copy construction from a `Source` or the `Source` conversion operator `Target` - this is sometimes unavailable. 
 
-For standard types, we can not add a specialized `convert_to` function on the namespace std. The alternative to using argument dependent lookup in this situation is to provide a template specialization of boost::conversion::convert_to for every pair of standard types that requires a specialized __convert_to__. 
+For standard types, we can not add a specialized `convert_to` function on the namespace std. The alternative to using argument dependent lookup in this situation is to provide a template specialization of `boost::conversion::convert_to` for every pair of standard types that requires a specialized __convert_to__. 
 
 [*Boost.Conversion] provides:
 
@@ -283,9 +282,7 @@ You can also access the latest (unstable?) state from the [@https://svn.boost.or
 [heading Building Boost.Conversion]
 [/=================================]
 
-There is no need to compile [*Boost.Conversion], since it's
-a header only library. Just include your Boost header directory in your
-compiler include path.
+There is no need to compile [*Boost.Conversion], since it's a header only library. Just include your Boost header directory in your compiler include path.
 
 [/=========================]
 [heading Requirements]
@@ -297,8 +294,7 @@ The genric part of [*Boost.Conversion] depends only on Boost.Config. Of course i
 [heading Exceptions safety]
 [/========================]
 
-All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
-the underlying parameters provide it.
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as the underlying parameters provide it.
 
 [/====================]
 [heading Thread safety]
@@ -381,7 +377,7 @@ Do not forget to include this files when you use a generic class or algorithm us
 
 [endsect]
 
-[section How to specialize the conversion functions]
+[section How to specialize the conversion functions?]
 
 You can add an overload of __convert_to__ and __assign_to__ functions as you will do for the swap function for example, but we have to use a trick to allow ADL and avoid infinite recursion and ambiguity. This trick consists in adding a unused parameter representing the target type. E.g. if you want to add an explicit conversion from a type `A` to a type `B` do the following:
 
@@ -391,9 +387,9 @@ You can add an overload of __convert_to__ and __assign_to__ functions as you wil
 
 [endsect]
 
-[section How to partially specialize the conversion functions for standadr types?]
+[section How to partially specialize the conversion functions for standard types?]
 
-As it has been explained in the introduction, we can not use ADL for standard types, as we can not add new functions on the standad std namespace. For these types we need to specialize the boost::conversion::convert_to function.
+As it has been explained in the introduction, we can not use ADL for standard types, as we can not add new functions on the standad std namespace. For these types we need to specialize the `boost::conversion::convert_to` function.
 
     template < typename Target, typename Source >
     Target convert_to(const Source& val, boost::dummy::type_tag<Target> const&)
@@ -454,12 +450,27 @@ Sometimes we need the conversion construct the resulting type with some argument
 
 [endsect]
 
+[section Examples]
+[section chrono::time_point and posix_time::ptime]
+
+[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP]
+
+[endsect]
+[section boost::optional]
+[OPTIONAL_HPP]
+
+[endsect]
+[section std::pair]
+[PAIR_HPP]
+[endsect]
+[endsect]
+
 [section:ext_references External Resources]
 [variablelist
 [
     [[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=boost-string-convert.zip&directory=&
     [*Boost.Convert]]]
-    [Vladimir Batov. Not yet scheduled]
+    [Vladimir Batov. Not yet reviewed]
 ]
 
 [
@@ -562,9 +573,7 @@ Defines a free function __convert_to__ which converts the `from` parameter to a 
 
 The user can add the __convert_to__ overloading on the namespace of a specific Source. But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace, so we need a different technique.
 
-The technique is partially specialize on the function __convert_to__ on the boost::conversion namespace. For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the __convert_to__ member function, __convert_to__ calls to the static operation `apply` on a class with the same name in the namespace __partial_specialization_workaround__. Thus the user can specialize partially this class.
-
-
+The technique consists in partially specialize on the function __convert_to__ on the `boost::conversion` namespace. For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the __convert_to__ member function, __convert_to__ calls to the static operation `apply` on a class with the same name in the namespace __partial_specialization_workaround__. Thus the user can specialize partially this class.
 
 [section Function `convert_to()`]
 
@@ -614,8 +623,8 @@ Defines a free function __assign_to__ which assigns the `from` parameter to the 
 
 The user can add the __assign_to__ overloading on the namespace of the Source or Target classes. But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace, so we need a different technique.
 
-The technique is partially specialize on the function __assign_to__ on the boost::conversion namespace. For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the __assign_to__ member function, __assign_to__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__.
-This the user can specialize partially this class.
+The technique consists in partially specialize on the function __assign_to__ on the `boost::conversion` namespace. For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the __assign_to__ member function, __assign_to__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__.
+Thus the user can specialize partially this class.
 
 [section Function `assign_to()`]
 
@@ -685,11 +694,14 @@ This the user can specialize partially this class.
         class implementation_dependent {
         public:
             implementation_dependent(T& r);
+            implementation_dependent(implementation_dependent const& r);
             template <typename U> operator U();
+            template <typename U> T& operator =(implementation_dependent<U> const& u);
             template <typename U> T& operator =(U const& u);
         };
 
 [section Constructor]
+
 
             implementation_dependent(T& r);
 
@@ -1055,20 +1067,6 @@ Include this file when using conversions between fusion::tuple of convertible ty
 [endsect]
 [endsect]
 
-[section Examples]
-[section chrono::time_point and posix_time::ptime]
-
-[CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP]
-
-[endsect]
-[section boost::optional]
-[OPTIONAL_HPP]
-
-[endsect]
-[section std::pair]
-[PAIR_HPP]
-[endsect]
-[endsect]
 
 [/=================]
 [section Appendices]
@@ -1076,9 +1074,16 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
 [section:history Appendix A: History]
 
-* Add conversion between std::vector of explicitly convertible types.
+[section [*Version 0.5.1, Fefruary 20, 2011] ]
 
-[section [*Version 0.5.0, May 30, 2010] ['Adding pack expression]]
+[*Bug]
+
+* Fix bug on chain mcs assignement.
+
+[endsect]
+
+[section [*Version 0.5.0, May 30, 2010] ]
+
 [*New Features:]
 
 * Added a pack funcrion able to pack the Source and the Target constructor arguments in one parameter.
@@ -1092,7 +1097,10 @@ Include this file when using conversions between fusion::tuple of convertible ty
 
 [endsect]
 
-[section [*Version 0.4.0, October 27, 2009] ['Applying the same technique that boost::swap applies making use of ADL]]
+[section [*Version 0.4.0, October 27, 2009] ]
+
+['Applying the same technique that boost::swap applies making use of ADL]
+
 [*New Features:]
 
 A `Source` class is convertible to a `Target` class if:
@@ -1103,7 +1111,9 @@ A `Source` class is convertible to a `Target` class if:
 
 [endsect]
 
-[section [*Version 0.3.0, October 22, 2009] ['Changing the order of `to` and `from` parameters on __assign_to__ function + Added `mca` function]]
+[section [*Version 0.3.0, October 22, 2009] ]
+
+['Changing the order of `to` and `from` parameters on __assign_to__ function + Added `mca` function]
 
 [*Incompatibility:]
 
@@ -1122,7 +1132,9 @@ A `Source` class is convertible to a `Target` class if:
 
 
 [endsect]
-[section [*Version 0.2.0, Mai 16, 2009] ['Adding array + fusion::tuples + Adaptation to Boost 1.39]]
+[section [*Version 0.2.0, Mai 16, 2009] ]
+
+['Adding array + fusion::tuples + Adaptation to Boost 1.39]
 
 [*New Features:]
 
@@ -1130,8 +1142,9 @@ A `Source` class is convertible to a `Target` class if:
 * conversion between Boost.Fusion sequences of explicitly convertible types.
 
 [endsect]
-[section [*Version 0.1.0, April 16, 2009] ['Announcement of Conversions]]
+[section [*Version 0.1.0, April 16, 2009] ]
 
+['Announcement of Conversions]
 
 [*Features:]
 

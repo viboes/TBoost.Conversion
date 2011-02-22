@@ -17,6 +17,9 @@ using namespace boost;
 
 struct A{};
 struct B{};
+struct C{};
+
+void f(B) {}
 
   A convert_to(const B&, boost::dummy::type_tag<A> const&) {
     return A();
@@ -26,6 +29,13 @@ struct B{};
     return to;
   }
 
+  B convert_to(const C&, boost::dummy::type_tag<B> const&) {
+    return B();
+  }
+
+  B& assign_to(B& to, const C&, boost::dummy::type_tag<B> const&) {
+    return to;
+  }
 
 void explicit_convert_to() {
     B b;
@@ -39,10 +49,24 @@ void explicit_assign_to() {
     boost::mca(a)= b;
 
 }
+void explicit_chain_assign_to() {
+    C c;
+    B b;
+    A a;
+    boost::assign_to(a, boost::assign_to(b,c));
+    boost::mca(a)= boost::mca(b) = c;
+
+}
+void implicit_conversion_via_mca() {
+    B b;
+    f(mca(b));
+}
 int main( )
 {
   explicit_convert_to();
   explicit_assign_to();
+  explicit_chain_assign_to();
+  implicit_conversion_via_mca();
   return boost::report_errors();
 }
 

@@ -17,22 +17,22 @@ using namespace boost;
 
 struct B{};
 struct A {
-    A(int){};
-    A(const B&){};
+    A(int){}
+    A(const B&){}
 };
 struct AE {
-    explicit AE(const B&){};
+    explicit AE(const B&){}
 };
 struct AA {
-    AA(int){};
+    AA(int){}
     AA& operator=(const A&) { return *this;}
 };
 
 struct C {
-    operator B()  const{return B();};
+    operator B()  const{return B();}
 };
 struct CC {
-    CC(int){};
+    CC(int){}
     CC& operator=(const B&) { return *this;}
 };
 
