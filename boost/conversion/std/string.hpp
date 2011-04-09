@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_PAIR_HPP
-#define BOOST_CONVERT_TO_PAIR_HPP
+#ifndef BOOST_CONVERSION_STD_STRING_HPP
+#define BOOST_CONVERSION_STD_STRING_HPP
 
 #include <string>
 #include <boost/conversion/convert_to.hpp>

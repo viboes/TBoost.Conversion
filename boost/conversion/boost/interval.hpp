@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_INTERVAL_HPP
-#define BOOST_CONVERT_TO_INTERVAL_HPP
+#ifndef BOOST_CONVERSION_INTERVAL_HPP
+#define BOOST_CONVERSION_INTERVAL_HPP
 
 #include <boost/numeric/interval.hpp>
 #include <boost/conversion/convert_to.hpp>

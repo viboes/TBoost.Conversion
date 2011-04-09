@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_CHRONO_POSIX_TIME_HPP
-#define BOOST_CONVERT_TO_CHRONO_POSIX_TIME_HPP
+#ifndef BOOST_CONVERSION_CHRONO_POSIX_TIME_HPP
+#define BOOST_CONVERSION_CHRONO_POSIX_TIME_HPP
 
 #include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
 #include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>

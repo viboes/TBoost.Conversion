@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_TUPLE_HPP
-#define BOOST_CONVERT_TO_TUPLE_HPP
+#ifndef BOOST_CONVERSION_TUPLE_HPP
+#define BOOST_CONVERSION_TUPLE_HPP
 
 #include <boost/fusion/tuple.hpp>
 #include <boost/conversion/convert_to.hpp>

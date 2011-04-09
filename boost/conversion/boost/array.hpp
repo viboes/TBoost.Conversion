@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_ARRAY_HPP
-#define BOOST_CONVERT_TO_ARRAY_HPP
+#ifndef BOOST_CONVERSION_ARRAY_HPP
+#define BOOST_CONVERSION_ARRAY_HPP
 
 #include <boost/array.hpp>
 #include <boost/conversion/convert_to.hpp>

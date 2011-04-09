@@ -4,7 +4,7 @@
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -15,13 +15,14 @@
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/include/at_c.hpp>
+#include <boost/fusion/support/pair.hpp>
 
 namespace boost { namespace conversion {
-    
+
 
 namespace result_of {
     template <typename T1, typename T2> struct pack2 {
-        typedef 
+        typedef
         std::pair<
         //~ fusion::tuple<
           boost::reference_wrapper<T1>
@@ -36,7 +37,7 @@ namespace result_of {
         > type;
     };
 }
-    
+
 template <typename T1, typename T2>
 typename boost::conversion::result_of::pack2<T1 const, T2 const>::type pack(
         T1 const& t1, T2 const& t2) {

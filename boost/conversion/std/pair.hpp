@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //[PAIR_HPP
-#ifndef BOOST_CONVERT_TO_PAIR_HPP
-#define BOOST_CONVERT_TO_PAIR_HPP
+#ifndef BOOST_CONVERSION_STD_PAIR_HPP
+#define BOOST_CONVERSION_STD_PAIR_HPP
 
 #include <utility>
 //#include <boost/conversion/convert_to.hpp>

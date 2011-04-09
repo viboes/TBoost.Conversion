@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_PAIR__HPP
-#define BOOST_CONVERT_TO_PAIR__HPP
+#ifndef BOOST_CONVERSION_PAIR__HPP
+#define BOOST_CONVERSION_PAIR__HPP
 
 #include <boost/rational.hpp>
 #include <boost/conversion/convert_to.hpp>

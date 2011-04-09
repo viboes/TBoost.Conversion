@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_CONVERT_TO_COMPLEX_HPP
-#define BOOST_CONVERT_TO_COMPLEX_HPP
+#ifndef BOOST_CONVERSION_STD_COMPLEX_HPP
+#define BOOST_CONVERSION_STD_COMPLEX_HPP
 
 #include <complex>
 #include <boost/conversion/convert_to.hpp>
