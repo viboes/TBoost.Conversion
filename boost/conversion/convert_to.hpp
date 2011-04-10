@@ -25,7 +25,7 @@ we can not add new functions on the std namespace, so we need a different techni
 
 The technique consists in partially specialize on the function @c convert_to on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the @c convert_to member function,
-@c convert_to calls to the static operation apply on a class with the same name in the namespace @c partial_specializationworkaround.
+@c convert_to calls to the static operation apply on a class with the same name in the namespace @c partial_specialization_workaround.
 Thus the user can specialize partially this class.
  */
 
@@ -53,6 +53,7 @@ namespace boost {
       return conversion::partial_specialization_workaround::convert_to<To,From>::apply(val);
     }
   }
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl {
     template <typename Target, typename Source>
     Target convert_to_impl(Source const& from) {
@@ -61,6 +62,7 @@ namespace boost {
       return convert_to(from, boost::dummy::type_tag<Target>());
     }
   }
+#endif
 
   //!
   //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.

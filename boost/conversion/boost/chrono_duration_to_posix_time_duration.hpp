@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c boost::posix_time::time_duration and @c boost::chrono::duration<>.
+ */
+
 #ifndef BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 #define BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 

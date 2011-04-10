@@ -8,6 +8,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c boost::fusion::tuple<> of convertible types.
+ */
 #ifndef BOOST_CONVERSION_TUPLE_HPP
 #define BOOST_CONVERSION_TUPLE_HPP
 

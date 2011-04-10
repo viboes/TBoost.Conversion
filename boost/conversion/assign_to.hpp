@@ -23,7 +23,8 @@ so we need a different technique.
 The technique consists in partially specialize on the function @c assign_to on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used:
 instead of calling directly to the @c assign_to member function, @c assign_to calls to the static operation apply
-on a class with the same name in the namespace @c partial_specializationworkaround. Thus the user can specialize partially this class.
+on a class with the same name in the namespace @c partial_specialization_workaround.
+Thus the user can specialize partially this class.
 
  */
 
@@ -33,7 +34,6 @@ on a class with the same name in the namespace @c partial_specializationworkarou
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 
-#define FWD2
 namespace boost {
   #ifdef FWD
   template <typename Target, typename Source>
@@ -68,6 +68,7 @@ namespace boost {
       };
     }
 
+
     template < typename To, typename From >
     To& assign_to(To& to, const From& from, dummy::type_tag<To> const&)
     {
@@ -75,6 +76,7 @@ namespace boost {
     }
   }
 
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl {
     template <typename Target, typename Source>
     Target& assign_to_impl(Target& to, const Source& from)
@@ -84,6 +86,7 @@ namespace boost {
       return assign_to(to, from, boost::dummy::type_tag<Target>());
     }
   }
+#endif
 
   //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
   //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..

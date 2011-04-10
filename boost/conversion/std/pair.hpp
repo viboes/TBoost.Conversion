@@ -7,6 +7,11 @@
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c std::pair<> of convertible types.
+ */
 
 //[PAIR_HPP
 #ifndef BOOST_CONVERSION_STD_PAIR_HPP

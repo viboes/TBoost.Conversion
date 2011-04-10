@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c boost::optional<> of convertible types.
+ */
+
 //[OPTIONAL_HPP
 #ifndef BOOST_CONVERSION_OPTIONAL_HPP
 #define BOOST_CONVERSION_OPTIONAL_HPP

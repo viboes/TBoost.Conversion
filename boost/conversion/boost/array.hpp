@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c boost::array<> of convertible types.
+ */
+
 #ifndef BOOST_CONVERSION_ARRAY_HPP
 #define BOOST_CONVERSION_ARRAY_HPP
 

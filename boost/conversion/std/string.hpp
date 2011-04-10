@@ -8,14 +8,23 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions from/to @c std::string.
+ */
+
 #ifndef BOOST_CONVERSION_STD_STRING_HPP
 #define BOOST_CONVERSION_STD_STRING_HPP
 
 #include <string>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+#include <boost/lexical_cast.hpp>
+#else
 #include <boost/convert/convert.hpp>
-
+#endif
 namespace boost {
 namespace conversion {
 
@@ -26,9 +35,13 @@ namespace conversion {
         struct convert_to< std::basic_string<CharT,Traits,Alloc>, T > {
             inline static std::basic_string<CharT,Traits,Alloc> apply(T const & from)
             {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+              return lexical_cast<std::basic_string<CharT,Traits,Alloc> >(from);
+#else
                 return convert<std::basic_string<CharT,Traits,Alloc> >::from(from);
+#endif
             }
-        }
+        };
         template<typename T, typename CharT, typename Traits, typename Alloc>
         struct assign_to< std::basic_string<CharT,Traits,Alloc>, T > {
             inline static std::basic_string<CharT,Traits,Alloc>& apply(std::basic_string<CharT,Traits,Alloc>& to, const T& from)

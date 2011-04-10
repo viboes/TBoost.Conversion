@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c std::complex<> of convertible types.
+ */
+
 #ifndef BOOST_CONVERSION_STD_COMPLEX_HPP
 #define BOOST_CONVERSION_STD_COMPLEX_HPP
 
@@ -16,7 +22,7 @@
 #include <boost/conversion/assign_to.hpp>
 
 namespace boost {
-namespace conversion {
+  namespace conversion {
 
     // std namespace can not be overloaded
     namespace partial_specialization_workaround {
@@ -38,7 +44,8 @@ namespace conversion {
         };
 
     }
-}}
+  }
+}
 
 #endif
 

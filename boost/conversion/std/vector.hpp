@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ \file
+ \brief
+ Include this file when using conversions between @c std::vector<> of convertible types.
+ */
+
 //[VECTOR_HPP
 #ifndef BOOST_CONVERSION_STD_VECTOR_HPP
 #define BOOST_CONVERSION_STD_VECTOR_HPP
