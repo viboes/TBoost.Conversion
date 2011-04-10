@@ -38,10 +38,6 @@
 
 [warning Conversion is not a part of the Boost libraries.]
 
-[/import ../../../boost/conversion/lockable_traits.hpp]
-
-[/import ../example/BankAccount.cpp]
-
 [/========================]
 [section Overview]
 [/========================]
@@ -512,9 +508,16 @@ Sometimes we need the conversion construct the resulting type with some argument
 [endsect]
 
 [endsect]
-
-
 [section Reference]
+
+[xinclude core.xml]
+[xinclude std.xml]
+[xinclude boost.xml]
+
+[endsect]
+
+[/
+[section Reference2]
 
 [section Core]
 
@@ -1066,6 +1069,7 @@ Include this file when using conversions between fusion::tuple of convertible ty
 [endsect]
 [endsect]
 [endsect]
+]
 
 
 [/=================]
