@@ -34,9 +34,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace dummy {
-    template <typename T> struct base_tag {
-      //base_tag() {}
-        };
+    template <typename T> struct base_tag {  };
     template <typename T> struct type_tag : public base_tag<T> {};
   }
   namespace conversion {
