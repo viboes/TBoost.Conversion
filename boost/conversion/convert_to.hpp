@@ -34,13 +34,19 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace dummy {
+    //! base tag used to overload a function returning T.
     template <typename T> struct base_tag {  };
+    //! base tag used to overload a function returning T that takes precedence respect to &c base_tag<T>.
     template <typename T> struct type_tag : public base_tag<T> {};
   }
   namespace conversion {
     namespace partial_specialization_workaround {
+      //! struct used when overloading can not be applied.
+      
       template < typename To, typename From >
       struct convert_to {
+        //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+        //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
         inline static To apply(const From& val)
         {
           return To((val));
@@ -48,6 +54,11 @@ namespace boost {
       };
     }
 
+    //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
+    //!
+    //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+    //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+    //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
     template < typename To, typename From >
     To convert_to(const From& val, dummy::type_tag<To> const&) {
       return conversion::partial_specialization_workaround::convert_to<To,From>::apply(val);
@@ -67,7 +78,9 @@ namespace boost {
   //!
   //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
   //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
-  //! This function can be partialy specialized on compilers supporting it. A trick is used to partialy specialize on the return type by adding a dummy parameter.
+  //!
+  //! This function can be partially specialized on compilers supporting it.
+  //! A trick is used to partially specialize on the return type by adding a dummy parameter.
   template <typename Target, typename Source>
   Target convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
     (void)p;
