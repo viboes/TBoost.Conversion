@@ -58,8 +58,8 @@ void explicit_chain_assign_to() {
 
 }
 void implicit_conversion_via_mca() {
-    B b;
-    f(mca(b));
+    C  c;
+    f(mca(c));
 }
 int main( )
 {

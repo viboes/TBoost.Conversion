@@ -12,6 +12,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/include.hpp>
 
 //using namespace boost;
 
