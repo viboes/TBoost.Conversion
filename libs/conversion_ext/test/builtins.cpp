@@ -192,7 +192,8 @@ void fp_convert_to() {
     
     using boost::phoenix::placeholders::_1;
     
-    c=boost::conversion::fp::convert_to<char>(_1)(l) ;
+    s=boost::conversion::fp::convert_to<short>(_1)(l) ;
+    BOOST_TEST(s==3);
     
   }
 }
