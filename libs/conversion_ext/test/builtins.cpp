@@ -13,6 +13,8 @@
 #include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/include.hpp>
+#include <boost/conversion/fp/convert_to.hpp>
+#include <boost/phoenix/core/argument.hpp>
 
 //using namespace boost;
 
@@ -181,6 +183,21 @@ void mca_assign_to_transitive() {
     }
 }
 
+void fp_convert_to() {
+  {
+    char c=0;
+    short s=1;
+    int i=2;
+    long l=3;
+    
+    using boost::phoenix::placeholders::_1;
+    
+    c=boost::conversion::fp::convert_to<char>(-1)(l) ;
+    
+  }
+}
+
+
 int main( )
 {
   convert_to_with_builtin_types();
@@ -188,6 +205,7 @@ int main( )
   mca_assign_to_with_builtin_types();
   assign_to_transitive();
   mca_assign_to_transitive();
+  fp_convert_to();
   return boost::report_errors();
 }
 
