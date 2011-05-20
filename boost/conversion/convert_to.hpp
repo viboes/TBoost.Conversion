@@ -82,7 +82,8 @@ namespace boost {
   //! This function can be partially specialized on compilers supporting it.
   //! A trick is used to partially specialize on the return type by adding a dummy parameter.
   template <typename Target, typename Source>
-  Target convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+  Target convert_to(Source const& from
+                    , boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
     (void)p;
     return conversion_impl::convert_to_impl<Target>(from);
   }
