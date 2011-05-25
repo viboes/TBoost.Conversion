@@ -104,7 +104,7 @@ else
 
    project : requirements
 	#doxygen common parameters
-        <doxygen:param>"PREDEFINED=\"BOOST_ENUMS_DOXYGEN_INVOKED=1\" \\
+        <doxygen:param>"PREDEFINED=\"BOOST_CONVERSION_DOXYGEN_INVOKED=1\" \\
                                    \"BOOST_STATIC_CONSTEXPR=constexpr\" \\
                                    \"BOOST_DEDUCED_TYPENAME=typename\" \\
                                    \"BOOST_EXPLICIT=explicit\" \\
@@ -167,6 +167,7 @@ doxygen core
    :
       [ glob ../../../boost/conversion.hpp ]
       [ glob ../../../boost/conversion/*.hpp ]
+      [ glob ../../../boost/conversion/fp/convert_to.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=Core"
    ;
@@ -248,7 +249,7 @@ boostbook standalone
 path-constant boost-root : [ modules.peek : BOOST ] ;
 install css-install : $(boost-root)/doc/src/boostbook.css : <location>html ;
 
-install png-install : [ glob $(boost-root)/doc/src/images/*.png $(boost-root)/boost.png ] : <location>html/images ;
+install png-install : [ glob $(boost-root)/doc/src/images/*.png ] : <location>html/images ;
 install svg-install : [ glob $(boost-root)/doc/src/images/*.svg ] : <location>html/images ;
 
 install pdf-install : standalone : <install-type>PDF <location>. <name>enums.pdf ;
