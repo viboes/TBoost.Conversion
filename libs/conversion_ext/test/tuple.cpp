@@ -20,9 +20,9 @@ void explicit_convert_to() {
     B1 b1;
     B2 b2;
     fusion::tuple<B1,B2> b;
-    fusion::tuple<A1,A2> a1(boost::convert_to<fusion::tuple<A1,A2> >(b));
-    fusion::tuple<A1,A2> a2(boost::convert_to<fusion::tuple<A1,A2> >(fusion::tuple<B1,B2>(b1,b2)));
-    fusion::tuple<A1,A2> a3(boost::convert_to<fusion::tuple<A1,A2> >(fusion::make_tuple(b1,b2)));
+    fusion::tuple<A1,A2> a1(boost::conversion::convert_to<fusion::tuple<A1,A2> >(b));
+    fusion::tuple<A1,A2> a2(boost::conversion::convert_to<fusion::tuple<A1,A2> >(fusion::tuple<B1,B2>(b1,b2)));
+    fusion::tuple<A1,A2> a3(boost::conversion::convert_to<fusion::tuple<A1,A2> >(fusion::make_tuple(b1,b2)));
 
 }
 void explicit_assign_to() {
@@ -30,9 +30,9 @@ void explicit_assign_to() {
     B2 b2;
     fusion::tuple<A1,A2> a;
     fusion::tuple<B1,B2> b;
-    boost::assign_to(a, b);
-    boost::assign_to(a, fusion::tuple<B1,B2>(b1,b2));
-    boost::assign_to(a, fusion::make_tuple(b1,b2));
+    boost::conversion::assign_to(a, b);
+    boost::conversion::assign_to(a, fusion::tuple<B1,B2>(b1,b2));
+    boost::conversion::assign_to(a, fusion::make_tuple(b1,b2));
 
 }
 

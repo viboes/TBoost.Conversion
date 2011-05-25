@@ -20,16 +20,16 @@ typedef short B1;
 
 void explicit_convert_to() {
     boost::chrono::seconds a(3);
-    boost::posix_time::time_duration b(boost::convert_to<boost::posix_time::time_duration >(a));
-    boost::chrono::seconds c(boost::convert_to<boost::chrono::seconds>(b));
+    boost::posix_time::time_duration b(boost::conversion::convert_to<boost::posix_time::time_duration >(a));
+    boost::chrono::seconds c(boost::conversion::convert_to<boost::chrono::seconds>(b));
 
 }
 void explicit_assign_to() {
     boost::chrono::seconds a(3);
     boost::posix_time::time_duration b;
-    boost::assign_to(b, a);
+    boost::conversion::assign_to(b, a);
     boost::chrono::seconds c;
-    boost::assign_to(c, b);
+    boost::conversion::assign_to(c, b);
 }
 
 int main( )

@@ -21,16 +21,16 @@ typedef short B1;
 
 void explicit_convert_to() {
   bool b1=true;
-  std::string str = boost::convert_to<std::string>(b1);
-  bool b2=boost::convert_to<bool>(str);
+  std::string str = boost::conversion::convert_to<std::string>(b1);
+  bool b2=boost::conversion::convert_to<bool>(str);
 
 }
 void explicit_assign_to() {
   bool b1=true;
   std::string str;
-  boost::assign_to(str, b1);
+  boost::conversion::assign_to(str, b1);
   bool b2;
-  boost::assign_to(b2, str);
+  boost::conversion::assign_to(b2, str);
 }
 
 int main( )

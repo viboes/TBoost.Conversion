@@ -20,16 +20,16 @@ typedef short B1;
 
 void explicit_convert_to() {
     chrono::system_clock::time_point a=chrono::system_clock::now();
-    posix_time::ptime b(boost::convert_to<posix_time::ptime >(a));
-    chrono::system_clock::time_point c(boost::convert_to<chrono::system_clock::time_point>(b));
+    posix_time::ptime b(boost::conversion::convert_to<posix_time::ptime >(a));
+    chrono::system_clock::time_point c(boost::conversion::convert_to<chrono::system_clock::time_point>(b));
 
 }
 void explicit_assign_to() {
     chrono::system_clock::time_point a=chrono::system_clock::now();
     posix_time::ptime b;
-    boost::assign_to(b, a);
+    boost::conversion::assign_to(b, a);
     chrono::system_clock::time_point c;
-    boost::assign_to(c, b);
+    boost::conversion::assign_to(c, b);
 }
 
 int main( )

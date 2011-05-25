@@ -20,8 +20,8 @@ void explicit_convert_to() {
     B1 b1;
     B1 b2;
     std::complex<B1> b;
-    std::complex<A1> a1(boost::convert_to<std::complex<A1> >(b));
-    std::complex<A1> a2(boost::convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
+    std::complex<A1> a1(boost::conversion::convert_to<std::complex<A1> >(b));
+    std::complex<A1> a2(boost::conversion::convert_to<std::complex<A1> >(std::complex<B1>(b1,b2)));
 
 }
 void explicit_assign_to() {
@@ -29,8 +29,8 @@ void explicit_assign_to() {
     B1 b2;
     std::complex<A1> a;
     std::complex<B1> b;
-    boost::assign_to(a,b);
-    boost::assign_to(a,std::complex<B1>(b1,b2));
+    boost::conversion::assign_to(a,b);
+    boost::conversion::assign_to(a,std::complex<B1>(b1,b2));
 }
 
 int main( )

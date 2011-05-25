@@ -22,7 +22,7 @@ struct B2{};
 #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 namespace boost {
-    namespace conversion { namespace partial_specialization_workaround {
+    namespace conversion { namespace overload_workaround {
         template <>
         struct convert_to< A1,B1 > {
             inline static A1 apply(B1 const &)

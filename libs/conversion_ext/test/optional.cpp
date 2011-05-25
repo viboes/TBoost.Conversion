@@ -32,11 +32,11 @@ void explicit_convert_to()
 {
   B1 b1;
   boost::optional<B1> b;
-  boost::optional<A1> a1(boost::convert_to<boost::optional<A1> >(b));
+  boost::optional<A1> a1(boost::conversion::convert_to<boost::optional<A1> >(b));
   optional<A1> a3;
-  a3=convert_to<optional<A1> >(b);
-  a3=convert_to<optional<A1> >(b1);
-  boost::optional<A1> a2(boost::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
+  a3=conversion::convert_to<optional<A1> >(b);
+  a3=conversion::convert_to<optional<A1> >(b1);
+  boost::optional<A1> a2(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
   
 }
 
@@ -46,7 +46,7 @@ void explicit_assign_to()
   boost::optional<A1> a;
   boost::optional<B1> b;
   //assign_to(b,a);
-  boost::assign_to(a, boost::optional<B1>(b1));
+  boost::conversion::assign_to(a, boost::optional<B1>(b1));
 }
 
 int main()

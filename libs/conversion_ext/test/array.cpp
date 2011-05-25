@@ -19,13 +19,13 @@ using namespace boost;
 void explicit_convert_to() {
     boost::array<B1,3> bs;
     boost::array<A1,3> as;
-    as = boost::convert_to<boost::array<A1,3> >(bs);
+    as = boost::conversion::convert_to<boost::array<A1,3> >(bs);
 
 }
 void explicit_assign_to() {
     boost::array<int,3> bs;
     boost::array<short,3> as;
-    boost::assign_to(as,bs);
+    boost::conversion::assign_to(as,bs);
 
 
 }

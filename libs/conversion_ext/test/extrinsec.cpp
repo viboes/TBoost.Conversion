@@ -39,13 +39,13 @@ void f(B) {}
 
 void explicit_convert_to() {
     B b;
-    A a(boost::convert_to<A>(b));
+    A a(boost::conversion::convert_to<A>(b));
 
 }
 void explicit_assign_to() {
     B b;
     A a;
-    boost::assign_to(a, b);
+    boost::conversion::assign_to(a, b);
     boost::mca(a)= b;
 
 }
@@ -53,7 +53,7 @@ void explicit_chain_assign_to() {
     C c;
     B b;
     A a;
-    boost::assign_to(a, boost::assign_to(b,c));
+    boost::conversion::assign_to(a, boost::conversion::assign_to(b,c));
     boost::mca(a)= boost::mca(b) = c;
 
 }

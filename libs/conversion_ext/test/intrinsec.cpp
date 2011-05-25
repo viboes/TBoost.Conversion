@@ -43,7 +43,7 @@ void convert_to_with_implicit_constructor() {
     }
     {
     B b;
-    A a(boost::convert_to<A>(b));
+    A a(boost::conversion::convert_to<A>(b));
     }
 
 }
@@ -54,7 +54,7 @@ void convert_to_with_explicit_constructor() {
     }
     {
     B b;
-    AE ae(boost::convert_to<AE>(b));
+    AE ae(boost::conversion::convert_to<AE>(b));
     }
 
 }
@@ -66,7 +66,7 @@ void convert_to_with_conversion_operator() {
     }
     {
     C c;
-    A a(boost::convert_to<A>(c));
+    A a(boost::conversion::convert_to<A>(c));
     }
 
 }
@@ -79,7 +79,7 @@ void assign_to_with_assignemet_operator() {
     {
     A a(0);
     AA aa(0);
-    boost::assign_to(aa,a);
+    boost::conversion::assign_to(aa,a);
     }
 }
 void mca_with_assignemet_operator() {
@@ -97,7 +97,7 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
-    boost::assign_to(aa,b);
+    boost::conversion::assign_to(aa,b);
     }
 }
 void mca_with_assignemet_operator_and_implicit_constructor() {
@@ -115,7 +115,7 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    boost::assign_to(cc,c);
+    boost::conversion::assign_to(cc,c);
     }
 }
 

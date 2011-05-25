@@ -32,7 +32,7 @@ BOOST_STATIC_ASSERT((
 
 void explicit_convert_to() {
     std::vector<B1> vb1;
-    std::vector<A1> va1(boost::convert_to<std::vector<A1> >(vb1));
+    std::vector<A1> va1(boost::conversion::convert_to<std::vector<A1> >(vb1));
     B1 b10, b11, b12, b13;
     std::vector<B1> vb2;
     vb2.reserve(5);
@@ -40,32 +40,32 @@ void explicit_convert_to() {
     vb2[1]=b11;
     vb2[2]=b12;
     vb2[3]=b13;
-    std::vector<A1> va2(boost::convert_to<std::vector<A1> >(vb2));
+    std::vector<A1> va2(boost::conversion::convert_to<std::vector<A1> >(vb2));
 
     std::allocator<A1> all;
     std::vector<A1,std::allocator<A1> > va3(
-        boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+        boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(
             std::pair<
                 boost::reference_wrapper<std::vector<B1> const>,
                 boost::reference_wrapper<std::allocator<A1> const>
             >(boost::cref(vb2), boost::cref(all))));
 
     std::vector<A1,std::allocator<A1> > va32(
-        boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+        boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(
             std::make_pair(boost::cref(vb2), boost::cref(all))));
 
     boost::conversion::result_of::pack2<std::vector<B1> const, std::allocator<A1> const>::type v =
         boost::conversion::pack(vb2, all);
 
     //~ std::vector<A1,std::allocator<A1> > va4(
-        //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(v));
+        //~ boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(v));
 
     //~ std::vector<A1,std::allocator<A1> > va5(
-        //~ boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+        //~ boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(
             //~ boost::conversion::pack(vb2, all)));
 
     std::vector<A1,std::allocator<A1> > va6(
-        boost::convert_to<std::vector<A1,std::allocator<A1> > >(
+        boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(
             boost::conversion::pack(vb2, std::allocator<A1>())));
 
 
@@ -73,7 +73,7 @@ void explicit_convert_to() {
 void explicit_assign_to() {
     std::vector<B1> vb1;
     std::vector<A1> va1;
-    boost::assign_to(va1,vb1);
+    boost::conversion::assign_to(va1,vb1);
 
     B1 b10, b11, b12, b13;
     std::vector<B1> vb2;
@@ -83,7 +83,7 @@ void explicit_assign_to() {
     vb2[2]=b12;
     vb2[3]=b13;
 
-    boost::assign_to(va1,vb2);
+    boost::conversion::assign_to(va1,vb2);
 
 }
 
