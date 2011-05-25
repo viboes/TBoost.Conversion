@@ -26,8 +26,8 @@
 #include <boost/config.hpp>
 
 namespace boost {
-    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    namespace conversion { namespace partial_specialization_workaround {
+    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING && ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    namespace conversion { namespace overload_workaround {
         template < class Clock, class Duration>
         struct convert_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
             inline static posix_time::ptime apply(const chrono::time_point<Clock, Duration>& from)
@@ -51,7 +51,7 @@ namespace boost {
         struct assign_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
             inline static posix_time::ptime& apply(posix_time::ptime& to, const chrono::time_point<Clock, Duration>& from)
             {
-                to = boost::convert_to<posix_time::ptime>(from);
+                to = boost::conversion::convert_to<posix_time::ptime>(from);
                 return to;
             }
         };
@@ -70,7 +70,7 @@ namespace boost {
         struct assign_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
             inline static chrono::time_point<Clock, Duration>& apply(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
             {
-                to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
+                to = boost::conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
                 return to;
             }
         };
@@ -102,7 +102,7 @@ namespace boost {
                         , boost::dummy::type_tag<chrono::time_point<Clock, Duration> > const&
         )
         {
-            to = boost::convert_to<chrono::time_point<Clock, Duration> >(from);
+            to = boost::conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
             return to;
         }
 
@@ -125,7 +125,7 @@ namespace boost {
                     , boost::dummy::type_tag<posix_time::ptime> const&
         )
         {
-            to = boost::convert_to<ptime>(from);
+            to = boost::conversion::convert_to<ptime>(from);
             return to;
         }
 

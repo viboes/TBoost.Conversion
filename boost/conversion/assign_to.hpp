@@ -23,7 +23,7 @@ so we need a different technique.
 The technique consists in partially specialize on the function @c assign_to on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used:
 instead of calling directly to the @c assign_to member function, @c assign_to calls to the static operation apply
-on a class with the same name in the namespace @c partial_specialization_workaround.
+on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
 
  */
@@ -36,7 +36,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
       //! struct used when overloading can not be applied.
       template < typename To, typename From >
       struct assign_to
@@ -58,13 +58,15 @@ namespace boost {
         {
           for (std::size_t i = 0; i < N; ++i)
           {
-            to[i] = boost::convert_to<To>(from[i]);
+            to[i] = boost::conversion::convert_to<To>(from[i]);
           }
           return to;
         }
       };
     }
+  }
 
+  namespace conversion_2 {
 
     //! @brief Default @c assign_to overload, used when ADL fails.
     //!
@@ -74,7 +76,7 @@ namespace boost {
     template < typename To, typename From >
     To& assign_to(To& to, const From& from, dummy::type_tag<To> const&)
     {
-      return conversion::partial_specialization_workaround::assign_to<To,From>::apply(to, from);
+      return conversion::overload_workaround::assign_to<To,From>::apply(to, from);
     }
   }
 
@@ -83,12 +85,14 @@ namespace boost {
     template <typename Target, typename Source>
     Target& assign_to_impl(Target& to, const Source& from)
     {
-      using namespace boost::conversion;
+      using namespace boost::conversion_2;
       //use boost::conversion::assign_to if ADL fails
       return assign_to(to, from, boost::dummy::type_tag<Target>());
     }
   }
 #endif
+
+  namespace conversion {
 
   //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
   //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
@@ -97,7 +101,8 @@ namespace boost {
   Target& assign_to(Target& to, const Source& from, boost::dummy::base_tag<Target> const& p =boost::dummy::base_tag<Target>())
   {
     (void)p;
-    return conversion_impl::assign_to_impl<Target, Source>(to, from);
+    return boost::conversion_impl::assign_to_impl<Target, Source>(to, from);
+  }
   }
 }
 

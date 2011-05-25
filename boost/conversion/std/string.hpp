@@ -29,7 +29,7 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
       
       template<typename T, typename CharT, typename Traits, typename Alloc>
       struct convert_to< std::basic_string<CharT,Traits,Alloc>, T > {
@@ -59,7 +59,7 @@ namespace boost {
         inline static std::basic_string<CharT,Traits,Alloc>& 
         apply(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
         {
-          to = boost::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
+          to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
           return to;
         }
       };
@@ -68,7 +68,7 @@ namespace boost {
         inline static T& 
         apply(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
         {
-          to = boost::convert_to<T>(from);
+          to = boost::conversion::convert_to<T>(from);
           return to;
         }
       };

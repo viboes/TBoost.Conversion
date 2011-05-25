@@ -42,7 +42,7 @@ namespace boost {
       //! @Throws Whatever @c convert_to throws.
       template <typename U>
       operator U() {
-        return boost::convert_to<U>(ref_);
+        return boost::conversion::convert_to<U>(ref_);
       }
 
       //! Assignement.
@@ -62,7 +62,7 @@ namespace boost {
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
       ca_wrapper& operator =(ca_wrapper<U> const& u) {
-        boost::assign_to(ref_, u.ref_);
+        boost::conversion::assign_to(ref_, u.ref_);
         return *this;
       }
 
@@ -73,7 +73,7 @@ namespace boost {
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
       ca_wrapper& operator =(U const& u) {
-        boost::assign_to(ref_, u);
+        boost::conversion::assign_to(ref_, u);
         return *this;
       }
     };

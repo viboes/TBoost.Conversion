@@ -23,7 +23,7 @@ so we need a different technique.
 The technique consists in partially specialize on the function @c try_assign_to on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used:
 instead of calling directly to the @c try_assign_to member function, @c try_assign_to calls to the static operation apply
-on a class with the same name in the namespace @c partial_specialization_workaround.
+on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
 
  */
@@ -37,7 +37,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
       //! <c>struct try_assign_to</c> used when overloading can not be applied.
       //! This struct can be specialized by the user.
       template < typename To, typename From >
@@ -70,18 +70,18 @@ namespace boost {
         inline static bool apply(To(&to)[N], const From(& from)[N])
         {
           To rollback[N];
-          boost::assign_to<To>(to, rollback);
+          boost::conversion::assign_to<To>(to, rollback);
           try 
           {
             for (std::size_t i = 0; i < N; ++i)
             {
-              boost::assign_to<To>(to[i] , from[i]);
+              boost::conversion::assign_to<To>(to[i] , from[i]);
             }
             return true;
           } 
           catch (...)
           {
-            boost::assign_to<To>(rollback,to);
+            boost::conversion::assign_to<To>(rollback,to);
             return false;
           }
         }
@@ -98,7 +98,7 @@ namespace boost {
     template < typename To, typename From >
     bool try_assign_to(To& to, const From& from, dummy::type_tag<To> const&)
     {
-      return conversion::partial_specialization_workaround::try_assign_to<To,From>::apply(to, from);
+      return conversion::overload_workaround::try_assign_to<To,From>::apply(to, from);
     }
   }
 

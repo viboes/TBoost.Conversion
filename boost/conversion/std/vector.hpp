@@ -27,13 +27,13 @@
 namespace boost { namespace conversion {
 
     // std namespace can not be overloaded
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
         template < class T1, class A1, class T2, class A2>
         struct convert_to< std::vector<T1,A1>, std::vector<T2,A2> > {
             inline static std::vector<T1,A1> apply(std::vector<T2,A2> const & from)
             {
                 std::vector<T1,A1> res;
-                boost::assign_to(res, from);
+                boost::conversion::assign_to(res, from);
                 return res;
             }
         };
@@ -45,7 +45,7 @@ namespace boost { namespace conversion {
             {
                 to.resize(from.size());
                 for (unsigned int i=0; i<from.size(); ++i) {
-                    boost::assign_to(to[i], from[i]);
+                    boost::conversion::assign_to(to[i], from[i]);
                 }
                 return to;
             }
@@ -65,9 +65,9 @@ namespace boost { namespace conversion {
                 const & pack)
             {
                 std::vector<T1,A1> res(fusion::at_c<1>(pack).get());
-                boost::assign_to(res, fusion::at_c<0>(pack).get());
+                boost::conversion::assign_to(res, fusion::at_c<0>(pack).get());
                 //std::vector<T1,A1> res(pack.second.get());
-                //boost::assign_to(res, pack.first.get());
+                //boost::conversion::assign_to(res, pack.first.get());
                 return res;
             }
         };

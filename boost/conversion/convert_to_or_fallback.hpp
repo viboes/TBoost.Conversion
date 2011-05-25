@@ -27,7 +27,7 @@ we can not add new functions on the std namespace, so we need a different techni
 
 The technique consists in partially specialize on the function @c convert_to_or_fallback on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the @c convert_to_or_fallback member function,
-@c convert_to_or_fallback calls to the static operation apply on a class with the same name in the namespace @c partial_specialization_workaround.
+@c convert_to_or_fallback calls to the static operation apply on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
  */
 
@@ -38,7 +38,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
       //! <c>struct convert_to_or_fallback</c> used when overloading can not be applied.
       //! This struct can be specialized by the user.
       template < typename To, typename From, typename Fallback>
@@ -51,7 +51,7 @@ namespace boost {
         {
           try
           {
-            return boost::convert_to<To>(val);
+            return boost::conversion::convert_to<To>(val);
           } 
           catch (...) 
           {
@@ -69,7 +69,7 @@ namespace boost {
     //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
     template < typename To, typename From, typename Fallback >
     To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
-      return conversion::partial_specialization_workaround::convert_to_or_fallback<To,From>::apply(val, fallback);
+      return conversion::overload_workaround::convert_to_or_fallback<To,From>::apply(val, fallback);
     }
   }
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)

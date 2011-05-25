@@ -24,31 +24,34 @@
 
 namespace boost {
 
-    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    namespace conversion { namespace partial_specialization_workaround {
+    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING && ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    namespace conversion { namespace overload_workaround {
         template < class T, class U>
         struct convert_to< rational<T>, rational<U> > {
             inline static rational<T> apply(rational<U> const & from)
             {
-                return rational<T>(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
+                return rational<T>(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
             }
         };
         template < class T, class U>
         struct assign_to< rational<T>, rational<U> > {
             inline static rational<T>& apply(rational<T>& to, const rational<U>& from)
             {
-                to.assign(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
+                to.assign(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
                 return to;
             }
         };
 
     }}
     #else
+    //! @brief @c convert_to overloading for source and target been @c boost::rational.
+    //!
+    //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
     template < class T, class U>
     inline rational<T> convert_to(rational<U> const & from
                         , boost::dummy::type_tag<rational<T> > const&)
     {
-        return rational<T>(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
+        return rational<T>(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
     }
 
     template < class T, class U>
@@ -56,7 +59,7 @@ namespace boost {
                         , boost::dummy::type_tag<rational<T> > const&
     )
     {
-        to.assign(boost::convert_to<T>(from.numerator()), boost::convert_to<T>(from.denominator()));
+        to.assign(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
         return to;
     }
     #endif

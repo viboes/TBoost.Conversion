@@ -27,7 +27,7 @@ we can not add new functions on the std namespace, so we need a different techni
 
 The technique consists in partially specialize on the function @c try_convert_to on the @c boost::conversion namespace.
 For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the @c try_convert_to member function,
-@c try_convert_to calls to the static operation apply on a class with the same name in the namespace @c partial_specialization_workaround.
+@c try_convert_to calls to the static operation apply on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
  */
 
@@ -39,7 +39,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    namespace partial_specialization_workaround {
+    namespace overload_workaround {
       //! <c>struct try_convert_to</c> used when overloading can not be applied.
       //! This struct can be specialized by the user.
       template < typename To, typename From >
@@ -51,7 +51,7 @@ namespace boost {
         {
           try 
           {
-            return make_optional(boost::convert_to<To>(val));
+            return make_optional(boost::conversion::convert_to<To>(val));
           } 
           catch (...)
           {
@@ -60,6 +60,8 @@ namespace boost {
         }
       };
     }
+  }
+  namespace conversion_2 {
 
     //! @brief Default @c try_convert_to overload, used when ADL fails.
     //!
@@ -69,19 +71,21 @@ namespace boost {
     //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
     template < typename To, typename From >
     optional<To> try_convert_to(const From& val, dummy::type_tag<To> const&) {
-      return conversion::partial_specialization_workaround::try_convert_to<To,From>::apply(val);
+      return conversion::overload_workaround::try_convert_to<To,From>::apply(val);
     }
   }
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl {   
     template <typename Target, typename Source>
     optional<Target> try_convert_to_impl(Source const& from) {
-      using namespace boost::conversion;
+      using namespace boost::conversion_2;
       //use boost::conversion::try_convert_to if ADL fails
       return try_convert_to(from, boost::dummy::type_tag<Target>());
     }
   }
 #endif
+
+  namespace conversion {
 
   //!
   //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
@@ -93,7 +97,8 @@ namespace boost {
   template <typename Target, typename Source>
   optional<Target> try_convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
     (void)p;
-    return conversion_impl::try_convert_to_impl<Target>(from);
+    return boost::conversion_impl::try_convert_to_impl<Target>(from);
+  }
   }
 
 }
