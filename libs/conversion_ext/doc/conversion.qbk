@@ -367,7 +367,7 @@ When you need to make a specific conversion you will need to include the specifi
     #include <boost/conversion/std/pair.hpp>
 
     std::pair<int,int> pint(0,1);
-    std::pair<double,double> pdouble=boost::convert_to<std::pair<double,double> >(pint);
+    std::pair<double,double> pdouble=boost::conversion::convert_to<std::pair<double,double> >(pint);
 
 Do not forget to include this files when you use a generic class or algorithm using the generic __convert_to__ or __assign_to__, otherwise your program should not compile. E.g. if you want to convert a pair of `chrono::time_point<>` to a pair of `posix_time::ptime` do not forget to include in addition to the `boost/conversion/std/pair.hpp` the file `boost/conversion/boost/chrono_posix_time.hpp`
 
@@ -1176,9 +1176,9 @@ A `Source` class is convertible to a `Target` class if:
 
 The implementation of this utility contains various workarounds:
 
-* `conversion_impl` is put outside the boost namespace, to avoid infinite recursion (causing stack overflow) when converting objects of a primitive type.
-* `conversion_impl` has a using-directive `using namespace boost::conversion;`, rather than a using-declaration, because some compilers (including MSVC 7.1, Borland 5.9.3, and Intel 8.1) don't do argument-dependent lookup when it has a using-declaration instead.
-* `boost::convert_to` has an additional template argument, a tag, to avoid ambiguity between the `boost::conversion::convert_to`  and `boost::convert_to` and the when converting from objects of a Boost type that does not have its own `boost::convert_to` overload. This additional argument is a reference to a base tag class `dummy::base_tag<Target> const&` for the `boost::convert_to` and a reference derived tag class `dummy::type_tag<To> const&` for all others. 
+* `conversion_impl` is put outside the boost::conversion namespace, to avoid infinite recursion (causing stack overflow) when converting objects of a primitive type.
+* `conversion_impl` has a using-directive `using namespace boost::conversion_2;`, rather than a using-declaration, because some compilers (including MSVC 7.1, Borland 5.9.3, and Intel 8.1) don't do argument-dependent lookup when it has a using-declaration instead.
+* `boost::conversion::convert_to` has an additional template argument, a tag, to avoid ambiguity between the `boost::conversion::convert_to`  and `boost::conversion_2::convert_to` and the when converting from objects of a Boost type that does not have its own `boost::conversion::convert_to` overload. This additional argument is a reference to a base tag class `dummy::base_tag<Target> const&` for the `boost::conversion::convert_to` and a reference derived tag class `dummy::type_tag<To> const&` for all others. 
 
     namespace dummy {
         template <typename T> struct base_tag {};
@@ -1188,18 +1188,18 @@ The implementation of this utility contains various workarounds:
 In this way 
 
     template <typename Target, typename Source>
-    Target boost::convert_to(Source const& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
+    Target boost::conversion::convert_to(Source const& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
 
 would be never chosen when called in this context
 
-    using namespace boost::conversion;
+    using namespace boost::conversion_2;
     return convert_to(from, dummy::type_tag<Target>());
 
 as the library defines
 
-    namespace conversion {
+    namespace conversion_2 {
         template < typename To, typename From >
-        To boost::convert_to(const From& val, dummy::type_tag<To> const&);
+        To boost::conversion::convert_to(const From& val, dummy::type_tag<To> const&);
     }
 
 [heading Trick to avoid the use of the tag on the user side]
@@ -1211,7 +1211,7 @@ The tag type is there to avoid infinite recursion, but it is quite cumbersome at
 To avoid to pass it as parameter the tag parameter has a default value boost::dummy::base_tag<Target>(). 
 
     template <typename Target, typename Source>
-    Target boost::convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+    Target boost::conversion::convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
 
 This default value needs however to give the Target template parameter
 
