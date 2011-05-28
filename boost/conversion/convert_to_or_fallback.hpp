@@ -31,8 +31,8 @@ For compilers for which we can not partially specialize a function a trick is us
 Thus the user can specialize partially this class.
  */
 
-#ifndef BOOST_CONVERSION_CONVERT_TO_HPP
-#define BOOST_CONVERSION_CONVERT_TO_HPP
+#ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
+#define BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
 
 #include <boost/conversion/convert_to.hpp>
 
@@ -61,41 +61,44 @@ namespace boost {
       };
     }
 
-    //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
+    #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    namespace impl_2 {
+
+      //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
+      //!
+      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Returns the converted value if the conversion suceeds or the fallback.
+      //! @NoThows
+      //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
+      template < typename To, typename From, typename Fallback >
+      To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
+        return conversion::overload_workaround::convert_to_or_fallback<To,From,Fallback>::apply(val, fallback);
+      }
+    }
+
+    namespace impl {
+      template <typename Target, typename Source, typename Fallback>
+      Target convert_to_or_fallback_impl(Source const& from, Fallback const& fallback) {
+        using namespace boost::conversion::impl_2;
+        //use boost::conversion::convert_to_or_fallback if ADL fails
+        return convert_to_or_fallback(from, fallback, boost::dummy::type_tag<Target>());
+      }
+    }
+    #endif
+
     //!
     //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
     //! @Returns the converted value if the conversion suceeds or the fallback.
     //! @NoThows
-    //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
-    template < typename To, typename From, typename Fallback >
-    To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
-      return conversion::overload_workaround::convert_to_or_fallback<To,From>::apply(val, fallback);
-    }
-  }
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-  namespace conversion_impl {
+    //!
+    //! This function can be partially specialized on compilers supporting it.
+    //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source, typename Fallback>
-    Target convert_to_or_fallback_impl(Source const& from, Fallback const& fallback) {
-      using namespace boost::conversion;
-      //use boost::conversion::convert_to_or_fallback if ADL fails
-      return convert_to_or_fallback(from, fallback, boost::dummy::type_tag<Target>());
+    Target convert_to_or_fallback(Source const& from, Fallback const& fallback, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+      (void)p;
+      return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
     }
   }
-#endif
-
-  //!
-  //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-  //! @Returns the converted value if the conversion suceeds or the fallback.
-  //! @NoThows
-  //!
-  //! This function can be partially specialized on compilers supporting it.
-  //! A trick is used to partially specialize on the return type by adding a dummy parameter.
-  template <typename Target, typename Source, typename Fallback>
-  Target convert_to_or_fallback(Source const& from, Fallback const& fallback, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
-    (void)p;
-    return conversion_impl::convert_to_or_fallback_impl<Target>(from, fallback);
-  }
-
 }
 
 #endif

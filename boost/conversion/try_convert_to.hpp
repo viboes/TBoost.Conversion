@@ -60,8 +60,9 @@ namespace boost {
         }
       };
     }
-  }
-  namespace conversion_2 {
+
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  namespace impl_2 {
 
     //! @brief Default @c try_convert_to overload, used when ADL fails.
     //!
@@ -74,18 +75,16 @@ namespace boost {
       return conversion::overload_workaround::try_convert_to<To,From>::apply(val);
     }
   }
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-  namespace conversion_impl {   
+  namespace impl {
     template <typename Target, typename Source>
     optional<Target> try_convert_to_impl(Source const& from) {
-      using namespace boost::conversion_2;
+      using namespace boost::conversion::impl_2;
       //use boost::conversion::try_convert_to if ADL fails
       return try_convert_to(from, boost::dummy::type_tag<Target>());
     }
   }
 #endif
 
-  namespace conversion {
 
   //!
   //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
@@ -97,7 +96,7 @@ namespace boost {
   template <typename Target, typename Source>
   optional<Target> try_convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
     (void)p;
-    return boost::conversion_impl::try_convert_to_impl<Target>(from);
+    return boost::conversion::impl::try_convert_to_impl<Target>(from);
   }
   }
 
