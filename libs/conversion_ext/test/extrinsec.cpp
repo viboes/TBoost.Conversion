@@ -21,19 +21,19 @@ struct C{};
 
 void f(B) {}
 
-  A convert_to(const B&, boost::dummy::type_tag<A> const&) {
+  A convert_to(const B&, boost::conversion::dummy::type_tag<A> const&) {
     return A();
   }
 
-  A& assign_to(A& to, const B&, boost::dummy::type_tag<A> const&) {
+  A& assign_to(A& to, const B&, boost::conversion::dummy::type_tag<A> const&) {
     return to;
   }
 
-  B convert_to(const C&, boost::dummy::type_tag<B> const&) {
+  B convert_to(const C&, boost::conversion::dummy::type_tag<B> const&) {
     return B();
   }
 
-  B& assign_to(B& to, const C&, boost::dummy::type_tag<B> const&) {
+  B& assign_to(B& to, const C&, boost::conversion::dummy::type_tag<B> const&) {
     return to;
   }
 

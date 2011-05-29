@@ -17,7 +17,7 @@ using namespace boost;
 
 struct A1{};
 struct B1{};
-A1 convert_to(const B1&, boost::dummy::type_tag<A1> const&) 
+A1 convert_to(const B1&, boost::conversion::dummy::type_tag<A1> const&)
 {
   return A1();
 }
