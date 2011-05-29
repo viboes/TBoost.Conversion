@@ -49,14 +49,14 @@ namespace boost {
     //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
     template < class T, class U>
     inline rational<T> convert_to(rational<U> const & from
-                        , boost::dummy::type_tag<rational<T> > const&)
+                        , conversion::dummy::type_tag<rational<T> > const&)
     {
         return rational<T>(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
     }
 
     template < class T, class U>
     inline rational<T>& assign_to(rational<T>& to, const rational<U>& from
-                        , boost::dummy::type_tag<rational<T> > const&
+                        , conversion::dummy::type_tag<rational<T> > const&
     )
     {
         to.assign(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));

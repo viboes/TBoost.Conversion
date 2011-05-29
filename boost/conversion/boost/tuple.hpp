@@ -69,15 +69,15 @@ namespace boost {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
       template < class Target..., class Source...>
       inline tuple<...Target> convert_to(tuple<...Source> const & from
-                      , boost::dummy::type_tag<tuple<...Target> > const&);
+                      , conversion::dummy::type_tag<tuple<...Target> > const&);
       template < class Target..., class Source...>
       inline tuple<...Target>& assign_to(tuple<...Target>& to, tuple<...Source> const & from
-                      , boost::dummy::type_tag<tuple<...Target> > const&
+                      , conversion::dummy::type_tag<tuple<...Target> > const&
       )
 #else
     template < class T1, class T2, class U1, class U2>
     inline tuple<T1,T2> convert_to(tuple<U1,U2> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2> > const&)
+                    , conversion::dummy::type_tag<tuple<T1,T2> > const&)
     {
         return tuple<T1,T2>(
             boost::conversion::convert_to<T1>(boost::fusion::get<0>(from))
@@ -87,7 +87,7 @@ namespace boost {
 
     template < class T1, class T2, class U1, class U2>
     inline tuple<T1,T2>& assign_to(tuple<T1,T2>& to, tuple<U1,U2> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2> > const&
+                    , conversion::dummy::type_tag<tuple<T1,T2> > const&
     )
     {
         to = boost::conversion::convert_to<boost::fusion::tuple<T1,T2> >(from);
@@ -96,7 +96,7 @@ namespace boost {
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>
     inline tuple<T1,T2,T3> convert_to(tuple<U1,U2,U3> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&
+                    , conversion::dummy::type_tag<tuple<T1,T2,T3> > const&
     )
     {
         return boost::fusion::tuple<T1,T2, T3>(
@@ -108,7 +108,7 @@ namespace boost {
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>
     inline tuple<T1,T2,T3> assign_to(tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from
-                    , boost::dummy::type_tag<tuple<T1,T2,T3> > const&
+                    , conversion::dummy::type_tag<tuple<T1,T2,T3> > const&
     )
     {
         to = boost::conversion::convert_to<boost::fusion::tuple<T1,T2> >(from);

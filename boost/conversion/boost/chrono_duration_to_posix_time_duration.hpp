@@ -72,7 +72,7 @@ namespace boost {
     }}
   template < class Rep, class Period>
   inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from
-                  , boost::dummy::type_tag<posix_time::time_duration> const&
+                  , conversion::dummy::type_tag<posix_time::time_duration> const&
   )
   {
       to = boost::conversion::convert_to<time_duration>(from);
@@ -86,7 +86,7 @@ namespace boost {
 
     template < class Rep, class Period>
     inline posix_time::time_duration convert_to(chrono::duration<Rep, Period> const & from
-                    , boost::dummy::type_tag<posix_time::time_duration> const&)
+                    , conversion::dummy::type_tag<posix_time::time_duration> const&)
     {
         typedef duration<Rep, Period> src_duration_t;
         typedef nanoseconds duration_t;
@@ -108,7 +108,7 @@ namespace boost {
 
     template < class Rep, class Period>
     inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from
-                        , boost::dummy::type_tag<chrono::duration<Rep, Period> > const&
+                        , conversion::dummy::type_tag<chrono::duration<Rep, Period> > const&
     )
 
     {
@@ -124,7 +124,7 @@ namespace boost {
 
     template < class Duration>
     inline Duration convert_to(time_duration const & from
-                        , boost::dummy::type_tag<Duration> const&)
+                        , conversion::dummy::type_tag<Duration> const&)
     {
         return  chrono::duration_cast<Duration>(chrono::nanoseconds(from.total_nanoseconds()));
     }
@@ -135,7 +135,7 @@ namespace boost {
     //! @Returns The @c to parameter reference.
     template < class Rep, class Period>
     inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from
-                    , boost::dummy::type_tag<posix_time::time_duration> const&
+                    , conversion::dummy::type_tag<posix_time::time_duration> const&
     )
     {
         to = boost::conversion::convert_to<time_duration>(from);

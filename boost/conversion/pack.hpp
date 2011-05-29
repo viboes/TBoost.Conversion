@@ -32,7 +32,7 @@ namespace boost {
   namespace conversion {
     namespace result_of {
 
-      //! metafunction getting a @c std::pair of @c boost::reference_warpper's.
+      //! meta-function getting a @c std::pair of @c boost::reference_warpper's.
       //!
       template <typename T1, typename T2> struct pack2 {
           typedef
@@ -42,7 +42,7 @@ namespace boost {
           , boost::reference_wrapper<T2>
           > type;
       };
-      //! metafunction getting a fusion sequence of @c boost::reference_warpper's.
+      //! meta-function getting a fusion sequence of @c boost::reference_warpper's.
       //!
       template <typename T1, typename T2, typename T3=fusion::void_> struct pack3 {
           typedef fusion::tuple<

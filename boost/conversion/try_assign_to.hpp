@@ -43,9 +43,9 @@ namespace boost {
       template < typename To, typename From >
       struct try_assign_to
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
         //! @NoThrows  
-        //! @Return the converted value if sucess or the fallback when conversion fails.
+        //! @Return the converted value if success or the fallback when conversion fails.
         inline static bool apply(To& to, const From& from)
         {
           To rollback = to;
@@ -64,13 +64,13 @@ namespace boost {
       template < typename To, typename From, std::size_t N  >
       struct try_assign_to<To[N],From[N]>
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator on each vector element.
+        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
         //! @NoThrows  
-        //! @Return the converted value if sucess or the fallback when conversion fails.
+        //! @Return the converted value if success or the fallback when conversion fails.
         inline static bool apply(To(&to)[N], const From(& from)[N])
         {
           To rollback[N];
-          boost::conversion::assign_to<To>(to, rollback);
+          boost::conversion::assign_to<To>(rollback, to);
           try 
           {
             for (std::size_t i = 0; i < N; ++i)
@@ -81,7 +81,7 @@ namespace boost {
           } 
           catch (...)
           {
-            boost::conversion::assign_to<To>(rollback,to);
+            boost::conversion::assign_to<To>(to, rollback);
             return false;
           }
         }
@@ -93,10 +93,10 @@ namespace boost {
     namespace impl_2 {
       //! @brief Default @c try_assign_to overload, used when ADL fails.
       //!
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
       //! @NoThrows
-      //! @Return the converted value if sucess or the fallback when conversion fails.
-      //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
+      //! @Return the converted value if success or the fallback when conversion fails.
+      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From >
       bool try_assign_to(To& to, const From& from, dummy::type_tag<To> const&)
       {
@@ -110,18 +110,18 @@ namespace boost {
       {
         using namespace boost::conversion::impl_2;
         //use boost::conversion::try_assign_to if ADL fails
-        return try_assign_to(to, from, boost::dummy::type_tag<Target>());
+        return try_assign_to(to, from, dummy::type_tag<Target>());
       }
     }
 #endif
 
-    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
     //! @NoThrows
-    //! @Return the converted value if sucess or the fallback when conversion fails.
+    //! @Return the converted value if success or the fallback when conversion fails.
     //!
     //! This function can be partially specialized on compilers supporting it.
     template <typename Target, typename Source>
-    bool try_assign_to(Target& to, const Source& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()
+    bool try_assign_to(Target& to, const Source& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()
     )
     {
       (void)p;

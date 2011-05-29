@@ -74,7 +74,7 @@ namespace boost {
   //! Uninitialized  @c boost::optional<Target otherwise.
   template < class Target, class Source>
   inline optional<Target> convert_to(optional<Source> const & from
-                                     , boost::dummy::type_tag<optional<Target> > const&)
+                                     , conversion::dummy::type_tag<optional<Target> > const&)
   {
     return (from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>());
   }
@@ -86,7 +86,7 @@ namespace boost {
   //! Uninitialized  @c boost::optional<Target otherwise.
   template < class Target, class Source>
   inline optional<Target> convert_to(Source const & from
-                                     , boost::dummy::type_tag<optional<Target> > const&)
+                                     , conversion::dummy::type_tag<optional<Target> > const&)
   {
     try
     {
@@ -104,7 +104,7 @@ namespace boost {
   //! @Returns The @c to parameter reference.
   template < class Target, class Source>
   inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
-                                     , boost::dummy::type_tag<optional<Target> > const&
+                                     , conversion::dummy::type_tag<optional<Target> > const&
                                      )
   {
     to = boost::conversion::convert_to<optional<Target> >(from);

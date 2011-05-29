@@ -22,7 +22,7 @@
 namespace boost {
   namespace conversion {
 
-    //! wrapper providing assignement and conversion operations from a reference.
+    //! wrapper providing assignment and conversion operations from a reference.
 
     template <typename T>
     class ca_wrapper {
@@ -45,19 +45,19 @@ namespace boost {
         return boost::conversion::convert_to<U>(ref_);
       }
 
-      //! Assignement.
+      //! Assignment.
       //!
-      //! @Effect Forwards the assignement to the reference.
+      //! @Effect Forwards the assignment to the reference.
       //! @Returns @c *this
-      //! @Throws Whatever @c T aasignement can throws.
+      //! @Throws Whatever @c T assignment can throws.
       ca_wrapper& operator =(ca_wrapper<T> const& u) {
         ref_ = u.ref_;
         return *this;
       }
 
-      //! Assignement from a converter assigner wrapping a type U  convertible to T.
+      //! Assignment from a converter assigner wrapping a type U  convertible to T.
       //!
-      //! @Effect Forwards the assignement to the reference using assign_to.
+      //! @Effect Forwards the assignment to the reference using assign_to.
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
@@ -66,9 +66,9 @@ namespace boost {
         return *this;
       }
 
-      //! Assignement from a type U convertible to T.
+      //! Assignment from a type U convertible to T.
       //!
-      //! @Effect Forwards the assignement to the reference using assign_to
+      //! @Effect Forwards the assignment to the reference using assign_to
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
       template <typename U>

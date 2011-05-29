@@ -7,25 +7,24 @@
 // See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-/*!
- \file
- \brief
- Defines the free function @c convert_to.
-
- The @c convert_to function converts the @c from parameter to a @c To type.
- The default implementation applies the conversion @c To operator of the @c From class or
- the copy constructor of the @c To class.
- Of course if both exist the conversion is ambiguous.
- A user adapting another type could need to overload the @c convert_to free function if the default behavior is not satisfactory.
-
-The user can add the @c convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
-A trick is used to overload on the return type by adding a dummy parameter having the Target.
-
-But sometimes, as it is the case for the standard classes,
-we can not add new functions on the @c std namespace, so we need a different technique.
-
-Instead of calling directly to the conversion operator, @c convert_to calls to the static operation apply on a class with the same name in the namespace @c boost::conversion::overload_workaround.
-Thus the user can specialize partially this class.
+/**
+ * @file
+ * @brief Defines the free function @c convert_to.
+ *
+ *  The @c convert_to function converts the @c from parameter to a @c To type.
+ *  The default implementation applies the conversion @c To operator of the @c From class or
+ *  the copy constructor of the @c To class.
+ *  Of course if both exist the conversion is ambiguous.
+ *
+ *  A user adapting another type could need to overload the @c convert_to free function
+ *  if the default behavior is not satisfactory.
+ *  The user can add the @c convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
+ *  A trick is used to overload on the return type by adding a dummy parameter having the Target.
+ *
+ *  But sometimes, as it is the case for the standard classes,
+ *  we can not add new functions on the @c std namespace, so we need a different technique.
+ *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::convert_to struct.
+ *
  */
 
 #ifndef BOOST_CONVERSION_CONVERT_TO_HPP
@@ -35,21 +34,22 @@ Thus the user can specialize partially this class.
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace dummy {
-    //! base tag used to overload a function returning T.
-    template <typename T> 
-    struct base_tag { 
-      typedef T type;
-    };
-    //! tag used to overload a function returning T that takes precedence respect to &c base_tag<T>.
-    //!
-    //! Users overloading the @c convert_to function must use this tag.
-    template <typename T> 
-    struct type_tag : public base_tag<T> {
-      typedef T type;
-    };
-  }
   namespace conversion {
+    namespace dummy {
+      //! base tag used to overload a function returning T.
+      template <typename T>
+      struct base_tag {
+        typedef T type;
+      };
+      //! tag used to overload a function returning T that takes precedence respect to &c base_tag<T>.
+      //!
+      //! Users overloading the @c convert_to function must use this tag.
+      template <typename T>
+      struct type_tag : public base_tag<T> {
+        typedef T type;
+      };
+    }
+
     //! meta-function to state if the parameter is a place_holder
     //!
     //! The nested type @c type is a mpl boolean which default to @c mpl::false_. Specific specialization would make this meta-function to be @c mpl::true_.
@@ -58,7 +58,6 @@ namespace boost {
 
     namespace overload_workaround {
       //! struct used when overloading of @c convert_to function can not be applied.
-      
       template < typename To, typename From >
       struct convert_to {
         //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
@@ -88,7 +87,7 @@ namespace boost {
       Target convert_to_impl(Source const& from) {
         using namespace boost::conversion::impl_2;
         //use boost::conversion::convert_to if ADL fails
-        return convert_to(from, boost::dummy::type_tag<Target>());
+        return convert_to(from, dummy::type_tag<Target>());
       }
     }
 #endif
@@ -108,8 +107,8 @@ namespace boost {
 #else
     Target
 #endif
-    convert_to(Source const& from, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
-      (void)p;
+    convert_to(Source const& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
+      (void)p; // warning removal
 
       return boost::conversion::impl::convert_to_impl<Target>(from);
     }

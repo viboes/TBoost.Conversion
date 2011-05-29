@@ -41,7 +41,7 @@ namespace boost {
       template < typename To, typename From >
       struct assign_to
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
         //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
         inline static To& apply(To& to, const From& from)
         {
@@ -52,7 +52,7 @@ namespace boost {
       template < typename To, typename From, std::size_t N  >
       struct assign_to<To[N],From[N]>
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator on each one of the array elements.
+        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each one of the array elements.
         //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
         inline static To*& apply(To(&to)[N], const From(& from)[N])
         {
@@ -70,9 +70,9 @@ namespace boost {
 
       //! @brief Default @c assign_to overload, used when ADL fails.
       //!
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
       //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
-      //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
+      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From >
       To& assign_to(To& to, const From& from, dummy::type_tag<To> const&)
       {
@@ -86,16 +86,16 @@ namespace boost {
       {
         using namespace boost::conversion::impl_2;
         //use boost::conversion::assign_to if ADL fails
-        return assign_to(to, from, boost::dummy::type_tag<Target>());
+        return assign_to(to, from, dummy::type_tag<Target>());
       }
     }
 #endif
 
-    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assigment operator.
+    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
     //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
     //! This function can be partially specialized on compilers supporting it.
     template <typename Target, typename Source>
-    Target& assign_to(Target& to, const Source& from, boost::dummy::base_tag<Target> const& p =boost::dummy::base_tag<Target>())
+    Target& assign_to(Target& to, const Source& from, dummy::base_tag<Target> const& p =dummy::base_tag<Target>())
     {
       (void)p;
       return boost::conversion::impl::assign_to_impl<Target, Source>(to, from);

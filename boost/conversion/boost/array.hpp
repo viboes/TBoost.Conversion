@@ -58,7 +58,7 @@ namespace boost {
   //! @Returns the array having as elements the conversion from the source array.
   template < typename T1, typename T2, std::size_t N>
   inline array<T1,N> convert_to(array<T2,N> const & from
-                      , boost::dummy::type_tag<array<T1,N> > const&
+                      , conversion::dummy::type_tag<array<T1,N> > const&
   )
   {
     array<T1,N> to;
@@ -72,7 +72,7 @@ namespace boost {
   //! @Returns The @c to parameter reference.
   template < typename T1, typename T2, std::size_t N>
   inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
-    , boost::dummy::type_tag<array<T1,N> > const&
+    , conversion::dummy::type_tag<array<T1,N> > const&
   )
   {
     for (unsigned int i =0; i<N; ++i)

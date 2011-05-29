@@ -15,7 +15,7 @@
  The @c convert_to_or_fallback function converts the @c from parameter to a @c To type. If the conversion fails the fallback value is used to construct a To @c instance. 
  
  The default implementation applies the conversion @c To operator of the @c From class or
- the copy constructor of the @c To class. When an exception is thrown the falback is returned.
+ the copy constructor of the @c To class. When an exception is thrown the fallback is returned.
  Of course if both exist the conversion is ambiguous.
  A user adapting another type could need to specialize the @c convert_to_or_fallback free function if the default behavior is not satisfactory.
 
@@ -45,7 +45,7 @@ namespace boost {
       struct convert_to_or_fallback {
         //!
         //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-        //! @Returns the converted value if the conversion suceeds or the fallback.
+        //! @Returns the converted value if the conversion succeeds or the fallback.
         //! @NoThows
         inline static To apply(const From& val, Fallback const& fallback)
         {
@@ -67,9 +67,9 @@ namespace boost {
       //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
       //!
       //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-      //! @Returns the converted value if the conversion suceeds or the fallback.
+      //! @Returns the converted value if the conversion succeeds or the fallback.
       //! @NoThows
-      //! Forwards the call to the overload workarround, which can yet be specialized by the user for standard C++ types.
+      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From, typename Fallback >
       To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
         return conversion::overload_workaround::convert_to_or_fallback<To,From,Fallback>::apply(val, fallback);
@@ -81,20 +81,20 @@ namespace boost {
       Target convert_to_or_fallback_impl(Source const& from, Fallback const& fallback) {
         using namespace boost::conversion::impl_2;
         //use boost::conversion::convert_to_or_fallback if ADL fails
-        return convert_to_or_fallback(from, fallback, boost::dummy::type_tag<Target>());
+        return convert_to_or_fallback(from, fallback, dummy::type_tag<Target>());
       }
     }
     #endif
 
     //!
     //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-    //! @Returns the converted value if the conversion suceeds or the fallback.
+    //! @Returns the converted value if the conversion succeeds or the fallback.
     //! @NoThows
     //!
     //! This function can be partially specialized on compilers supporting it.
     //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source, typename Fallback>
-    Target convert_to_or_fallback(Source const& from, Fallback const& fallback, boost::dummy::base_tag<Target> const& p=boost::dummy::base_tag<Target>()) {
+    Target convert_to_or_fallback(Source const& from, Fallback const& fallback, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
       (void)p;
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
     }
