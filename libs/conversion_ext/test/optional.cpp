@@ -9,11 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/boost/optional.hpp>
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/conversion/try_convert_to.hpp>
 
-using namespace boost;
 
 struct A1{};
 struct B1{};
@@ -33,9 +34,9 @@ void explicit_convert_to()
   B1 b1;
   boost::optional<B1> b;
   boost::optional<A1> a1(boost::conversion::convert_to<boost::optional<A1> >(b));
-  optional<A1> a3;
-  a3=conversion::convert_to<optional<A1> >(b);
-  a3=conversion::convert_to<optional<A1> >(b1);
+  boost::optional<A1> a3;
+  a3=boost::conversion::convert_to<boost::optional<A1> >(b);
+  //a3=convert_to<boost::optional<A1> >(b);
   boost::optional<A1> a2(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
   
 }
@@ -45,14 +46,23 @@ void explicit_assign_to()
   B1 b1;
   boost::optional<A1> a;
   boost::optional<B1> b;
-  //assign_to(b,a);
+  assign_to(a,b);
   boost::conversion::assign_to(a, boost::optional<B1>(b1));
 }
 
+void explicit_try_convert_to()
+{
+  B1 b1;
+  boost::optional<A1> a3;
+  a3=boost::conversion::convert_to<boost::optional<A1> >(b1);
+  a3=boost::conversion::try_convert_to<A1 >(b1);
+
+}
 int main()
 {
   explicit_convert_to();
   explicit_assign_to();
+  explicit_try_convert_to();
   return boost::report_errors();
 }
 

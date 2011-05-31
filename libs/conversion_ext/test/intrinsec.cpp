@@ -24,16 +24,18 @@ struct AE {
     explicit AE(const B&){}
 };
 struct AA {
-    AA(int){}
-    AA& operator=(const A&) { return *this;}
+  AA(int){}
+  AA(const A&){}
+  AA& operator=(const A&) { return *this;}
 };
 
 struct C {
     operator B()  const{return B();}
 };
 struct CC {
-    CC(int){}
-    CC& operator=(const B&) { return *this;}
+  CC(int){}
+  CC(const B&){}
+  CC& operator=(const B&) { return *this;}
 };
 
 void convert_to_with_implicit_constructor() {

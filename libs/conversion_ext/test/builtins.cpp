@@ -8,30 +8,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#if 0
-#include <boost/phoenix/core/limits.hpp>
-#include <boost/phoenix/core/call.hpp>
-#include <boost/phoenix/core/expression.hpp>
-#include <boost/phoenix/core/meta_grammar.hpp>
-#include <boost/phoenix/object/detail/target.hpp>
-#include <boost/proto/transform/lazy.hpp>
-#include <boost/phoenix/core/is_actor.hpp>
 
-BOOST_PHOENIX_DEFINE_EXPRESSION(
-    (boost)(convert_to)
-  , (proto::terminal<boost::phoenix::detail::target<proto::_> >)
-    (boost::phoenix::meta_grammar)
-)
-#endif
-
-#include <boost/conversion/fp/convert_to.hpp>
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/include.hpp>
-#include <boost/phoenix/core/argument.hpp>
 #include <boost/static_assert.hpp>
+
+#include <boost/conversion/try_convert_to.hpp>
+
+#include <boost/conversion/fp/convert_to.hpp>
+#include <boost/phoenix/core/argument.hpp>
 
 //using namespace boost;
 
@@ -230,7 +218,7 @@ void assert_not_enable_functor(T const&) {
 
 void fp_convert_to() {
   {
-    char c=0;
+    //char c=0;
     short s=1;
     int i=2;
     long l=3;

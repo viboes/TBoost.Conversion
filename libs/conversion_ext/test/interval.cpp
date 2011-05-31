@@ -13,7 +13,6 @@
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 
-using namespace boost;
 
 typedef int A1;
 typedef short B1;
@@ -25,6 +24,9 @@ void explicit_convert_to() {
     boost::numeric::interval<A1> a1(boost::conversion::convert_to<boost::numeric::interval<A1> >(b));
     boost::numeric::interval<A1> a2(boost::conversion::convert_to<boost::numeric::interval<A1> >(
                 boost::numeric::interval<B1>(b1,b2)));
+    boost::numeric::interval<A1> a3;
+    a3= boost::conversion::convert_to<boost::numeric::interval<A1> >(b);
+    //a3= convert_to<boost::numeric::interval<A1> >(b);
 
 }
 void explicit_assign_to() {
@@ -33,6 +35,7 @@ void explicit_assign_to() {
     boost::numeric::interval<A1> a(1,4);
     boost::numeric::interval<B1> b(1,4);
     boost::conversion::assign_to(a,b);
+    assign_to(a,b);
     boost::conversion::assign_to(a,boost::numeric::interval<B1>(b1,b2));
 }
 
