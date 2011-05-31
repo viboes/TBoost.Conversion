@@ -49,17 +49,20 @@ namespace boost {
       //! @Returns the target interval having as extremes the conversion from the source interval extremes.
         template < class T, class PT, class U, class PU>
         inline interval<T,PT> convert_to(interval<U,PU> const & from
-                        , conversion::dummy::type_tag<interval<T,PT> > const&)
+            , ::boost::conversion::dummy::type_tag<interval<T,PT> > const&p=::boost::conversion::dummy::type_tag<interval<T,PT> >()
+        )
         {
-            return interval<T,PT>(boost::conversion::convert_to<T>(from.lower()), boost::conversion::convert_to<U>(from.upper()));
+          (void)p; // warning removal
+          return interval<T,PT>(boost::conversion::convert_to<T>(from.lower()), boost::conversion::convert_to<U>(from.upper()));
         }
         template < class T, class PT, class U, class PU>
         inline interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from
-                        , conversion::dummy::type_tag<interval<T,PT> > const&
-                    )
+            , boost::conversion::dummy::type_tag<interval<T,PT> > const&p=boost::conversion::dummy::type_tag<interval<T,PT> >()
+        )
         {
-            to.assign(boost::conversion::convert_to<T>(from.lower()),boost::conversion::convert_to<U>(from.upper()));
-            return to;
+          (void)p; // warning removal
+          to.assign(boost::conversion::convert_to<T>(from.lower()),boost::conversion::convert_to<U>(from.upper()));
+          return to;
         }
     }
     #endif

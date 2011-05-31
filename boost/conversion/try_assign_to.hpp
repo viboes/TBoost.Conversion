@@ -51,7 +51,7 @@ namespace boost {
           To rollback = to;
           try 
           {
-            to = from;
+            boost::conversion::assign_to<To>(to , from);
             return true;
           } 
           catch (...)

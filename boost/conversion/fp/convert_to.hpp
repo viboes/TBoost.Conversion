@@ -79,6 +79,30 @@ namespace boost {
 
     //! @brief Lazily convert to a type @Target from an arbitrary argument.
     //!
+    //! @Returns A unary functor that will call to the convert_to function on its parameter.
+    //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+    //! @Example
+    //! @code
+    //! boost::conversion::make_converter_to<int>(_1)(v);
+    //! @endcode
+    //! Creates a functor that when applied to the parameter v, converts it to an @c int.
+    template <typename T, typename U>
+    inline
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    typename expression::convert_to<boost::phoenix::detail::target<T>, U>::type const
+#else
+    unspecified_converter_type
+#endif
+    make_converter_to(U const& u)
+    {
+      return
+      expression::
+      convert_to<boost::phoenix::detail::target<T>, U>::
+      make(boost::phoenix::detail::target<T>(), u);
+    }
+
+    //! @brief Lazily convert to a type @Target from an arbitrary argument.
+    //!
     //! This overload of @convert_to is taken in account when the parameter @c Source is a place_holder.
     //!
     //! @Returns A unary functor that will call to the convert_to function on its parameter.
@@ -95,14 +119,11 @@ namespace boost {
       typename expression::convert_to<boost::phoenix::detail::target<T>, U>::type const
     >::type
 #else
-    typename expression::convert_to<boost::phoenix::detail::target<T>, U>::type const
+    unspecified_converter_type
 #endif
     convert_to(U const& u)
     {
-      return
-      expression::
-      convert_to<boost::phoenix::detail::target<T>, U>::
-      make(boost::phoenix::detail::target<T>(), u);
+      return make_converter_to<T>(u);
     }
   }
 }

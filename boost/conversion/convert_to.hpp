@@ -37,28 +37,43 @@ namespace boost {
   namespace conversion {
     namespace dummy {
       //! base tag used to overload a function returning T.
+
+      //! @tparam T The wrapped type.
       template <typename T>
       struct base_tag {
+        //! The nested type @c type names the template parameter.
+
         typedef T type;
       };
       //! tag used to overload a function returning T that takes precedence respect to &c base_tag<T>.
       //!
+      //! @tparam T The wrapped type.
       //! Users overloading the @c convert_to function must use this tag.
       template <typename T>
       struct type_tag : public base_tag<T> {
+        //! The nested type @c type names the template parameter.
         typedef T type;
       };
     }
 
     //! meta-function to state if the parameter is a place_holder
     //!
-    //! The nested type @c type is a mpl boolean which default to @c mpl::false_. Specific specialization would make this meta-function to be @c mpl::true_.
+    //! @tparam T The type to check for.
+    //! @tparam Enable A dummy parameter that can be used for SFINAE.
+
+    //! The nested type @c type is a mpl boolean which default to @c mpl::false_.
+    //!   Specific specialization would make this meta-function to be @c mpl::true_.
     template <typename T, typename Enabled=void>
     struct enable_functor : mpl::false_ {};
 
     namespace overload_workaround {
       //! struct used when overloading of @c convert_to function can not be applied.
-      template < typename To, typename From >
+
+      //! @tparam To target type of the conversion.
+      //! @tparam From source type of the conversion.
+      //! @tparam Enable A dummy parameter that can be used for SFINAE.
+
+      template < typename To, typename From, class Enable = void >
       struct convert_to {
         //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
         //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
@@ -94,11 +109,19 @@ namespace boost {
 
     //! @brief Extrinsic conversion function.
     //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
+    //! @Params
+    //! @Param{source,source of the conversion}
+    //! @Param{p,a dummy parameter used to allow overloading on the Target type}
+    //!
     //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
     //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
     //!
     //! This function can be overloaded by the user.
-    //! A trick is used to overload on the return type by adding a defaulted dummy parameter
+    //! A trick is used to overload on the return type by adding a defaulted dummy parameter.
+    //! Specializations must overload on @c dummy::type_tag<Target>
     //!
     //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type.
     template <typename Target, typename Source>
