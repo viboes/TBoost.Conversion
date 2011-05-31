@@ -50,7 +50,7 @@ namespace boost {
 
       //! partial specialization for c-array types.
       template < typename To, typename From, std::size_t N  >
-      struct assign_to<To[N],From[N]>
+      struct assign_to<To[N],From[N],void>
       {
         //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
         //! @Throws  Whatever the underlying assignment operator of the @c To class throws.

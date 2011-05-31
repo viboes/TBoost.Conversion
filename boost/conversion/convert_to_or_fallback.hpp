@@ -46,7 +46,7 @@ namespace boost {
         //!
         //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
         //! @Returns the converted value if the conversion succeeds or the fallback.
-        //! @NoThows
+        //! @NoThrow
         inline static To apply(const From& val, Fallback const& fallback)
         {
           try
@@ -68,7 +68,7 @@ namespace boost {
       //!
       //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
       //! @Returns the converted value if the conversion succeeds or the fallback.
-      //! @NoThows
+      //! @NoThrow
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From, typename Fallback >
       To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
@@ -89,7 +89,7 @@ namespace boost {
     //!
     //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
     //! @Returns the converted value if the conversion succeeds or the fallback.
-    //! @NoThows
+    //! @NoThrow
     //!
     //! This function can be partially specialized on compilers supporting it.
     //! A trick is used to partially specialize on the return type by adding a dummy parameter.

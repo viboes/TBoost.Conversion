@@ -28,12 +28,28 @@
 
 namespace boost {
 
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING && ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  namespace conversion {
+    namespace detail {
+      template <typename T>
+      struct is_optional : mpl::false_ {};
+      template <typename T>
+      struct is_optional< ::boost::optional<T> > : mpl::true_ {};
+
+    }
+  }
+#endif
+
   namespace conversion { 
     namespace overload_workaround {
+      /**
+       * Partial specialization of @c convert_to for boost::optional
+       */
       template < class Target, class Source>
       struct convert_to< optional<Target>, optional<Source> >
       {
+        //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
+        //! Uninitialized  @c boost::optional<Target otherwise.
         inline static optional<Target> apply(optional<Source> const & from)
         {
           return (from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>());
@@ -55,70 +71,11 @@ namespace boost {
           }
         }
       };
-      
-      template < class Target, class Source>
-      struct assign_to< optional<Target>, optional<Source> >
-      {
-        inline static optional<Target>& apply(optional<Target>& to, const optional<Source>& from)
-        {
-          to = from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>();
-          return to;
-        }
-      };
-      
-    }
-  }
-#else
-  #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    namespace conversion {
-      namespace detail {
-        template <typename T>
-        struct is_optional : mpl::false_ {};
-        template <typename T>
-        struct is_optional< ::boost::optional<T> > : mpl::true_ {};
 
-      }
     }
-  #endif
-  //! @brief @c convert_to overloading for source and target been @c boost::optional.
-  //!
-  //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
-  //! Uninitialized  @c boost::optional<Target otherwise.
-  template < class Target, class Source>
-  inline
-  typename enable_if<typename conversion::detail::is_optional<Target>::type,Target>::type
-  convert_to(
-        optional<Source> const & from
-      , conversion::dummy::type_tag<Target> const&p=conversion::dummy::type_tag<Target>()
-  )
-  {
-    (void)p; // warning removal
-    return (from?Target(boost::conversion::convert_to<typename Target::value_type>(from.get())):Target());
   }
 
-#if 0
-  //! @brief @c convert_to overloading to try to convert the source to the target.
-  //!
-  //! We can see this overloading as a try_convert_to function.
-  //! @Returns If the source is convertible to the target @c value_type @c boost::optional<Target> initialized to the result of the conversion.
-  //! Uninitialized  @c boost::optional<Target otherwise.
-  template < class Target, class Source>
-  inline
-  typename enable_if<typename conversion::detail::is_optional<Target>::type,Target>::type
-  convert_to(Source const & from
-      , conversion::dummy::type_tag<Target> const&p=conversion::dummy::type_tag<Target>()
-  )
-  {
-    try
-    {
-      return Target(boost::conversion::convert_to<typename Target::value_type>(from));
-    } 
-    catch (...) 
-    {
-      return Target();
-    }
-  }
-#endif
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   //! @brief @c assign_to overloading for source and target been @c boost::optional.
   //!
   //! @Effects As if <c>to = boost::conversion::convert_to<optional<Target> >(from)</c>.
@@ -128,10 +85,10 @@ namespace boost {
   )
   {
     to = boost::conversion::convert_to<optional<Target> >(from);
-    //to = from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>();
     return to;
   }
 #endif
+
 }
 
 #endif

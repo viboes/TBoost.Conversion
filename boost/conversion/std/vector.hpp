@@ -24,7 +24,8 @@
 #include <boost/conversion/pack.hpp>
 
 
-namespace boost { namespace conversion {
+namespace boost {
+  namespace conversion {
 
     // std namespace can not be overloaded
     namespace overload_workaround {

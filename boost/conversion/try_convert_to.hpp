@@ -40,28 +40,29 @@ Thus the user can specialize partially this class.
 namespace boost {
   namespace conversion {
     namespace overload_workaround {
+#if 0
       //! @brief @c convert_to specialization to try to convert the source to @c Target::value_type when @c Target is optional.
       //!
       //! We can see this specialization as a try_convert_to function.
       template < class Target, class Source>
-      struct convert_to< Target, Source, typename enable_if<typename conversion::detail::is_optional<Target>::type>::type >
+      struct convert_to< optional<Target>, Source>
       {
         //! @Returns If the source is convertible to the target @c value_type
         //! @c Target initialized to the result of the conversion.
         //! Uninitialized  @c Target otherwise.
-        inline static Target apply(Source const & from)
+        inline static optional<Target> apply(Source const & from)
         {
           try
           {
-            return Target(boost::conversion::convert_to<typename Target::value_type>(from));
+            return optional<Target>(boost::conversion::convert_to<Target>(from));
           }
           catch (...)
           {
-            return Target();
+            return optional<Target>();
           }
         }
       };
-
+#endif
       //! <c>struct try_convert_to</c> used when overloading can not be applied.
       //! This struct can be specialized by the user.
       template < typename To, typename From >

@@ -44,8 +44,8 @@ namespace boost {
       struct try_assign_to
       {
         //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-        //! @NoThrows  
-        //! @Return the converted value if success or the fallback when conversion fails.
+        //! @NoThrow
+        //! @Returns the converted value if success or the fallback when conversion fails.
         inline static bool apply(To& to, const From& from)
         {
           To rollback = to;
@@ -65,8 +65,8 @@ namespace boost {
       struct try_assign_to<To[N],From[N]>
       {
         //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
-        //! @NoThrows  
-        //! @Return the converted value if success or the fallback when conversion fails.
+        //! @NoThrow
+        //! @Returns the converted value if success or the fallback when conversion fails.
         inline static bool apply(To(&to)[N], const From(& from)[N])
         {
           To rollback[N];
@@ -94,8 +94,8 @@ namespace boost {
       //! @brief Default @c try_assign_to overload, used when ADL fails.
       //!
       //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-      //! @NoThrows
-      //! @Return the converted value if success or the fallback when conversion fails.
+      //! @NoThrow
+      //! @Returns the converted value if success or the fallback when conversion fails.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From >
       bool try_assign_to(To& to, const From& from, dummy::type_tag<To> const&)
@@ -116,8 +116,8 @@ namespace boost {
 #endif
 
     //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-    //! @NoThrows
-    //! @Return the converted value if success or the fallback when conversion fails.
+    //! @NoThrow
+    //! @Returns the converted value if success or the fallback when conversion fails.
     //!
     //! This function can be partially specialized on compilers supporting it.
     template <typename Target, typename Source>

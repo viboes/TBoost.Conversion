@@ -72,59 +72,7 @@ namespace boost {
           return to;
         }
       };
-      
-#if 0      
-      template<typename CharT, typename Traits, typename Alloc>
-      struct convert_to< std::basic_string<CharT,Traits,Alloc>, bool > {
-        inline static std::basic_string<CharT,Traits,Alloc> 
-        apply(bool const & from)
-        {
-#if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<std::basic_string<CharT,Traits,Alloc> >(from);
-#else
-          return convert<std::basic_string<CharT,Traits,Alloc> >::from(from);
-#endif
-        }
-      };
-      
-      template<typename CharT, typename Traits, typename Alloc>
-      struct convert_to< bool, std::basic_string<CharT,Traits,Alloc> > {
-        inline static bool 
-        apply(std::basic_string<CharT,Traits,Alloc> const & from)
-        {
-#if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<bool>(from);
-#else
-          return convert<bool>::from(from);
-#endif
-        }
-      };
-#endif
-      template<>
-      struct convert_to< std::string, bool > {
-        inline static std::string 
-        apply(bool const & from)
-        {
-#if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<std::string >(from);
-#else
-          return convert<std::string>::from(from);
-#endif
-        }
-      };
-      
-      template<>
-      struct convert_to< bool, std::string > {
-        inline static bool 
-        apply(std::string const & from)
-        {
-#if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<bool>(from);
-#else
-          return convert<bool>::from(from);
-#endif
-        }
-      };
+
       
     }
   }

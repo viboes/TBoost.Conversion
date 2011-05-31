@@ -25,12 +25,16 @@
 
 namespace boost {
 
-  #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING && ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion {
     namespace overload_workaround {
+
+      /**
+       * Partial specialization of @c convert_to for @c boost::array of the same size
+       */
       template < typename T1, typename T2, std::size_t N>
       struct convert_to< array<T1,N>, array<T2,N> >
       {
+        //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
         inline static array<T1,N> apply(array<T2,N> const & from)
         {
           array<T1,N> to;
@@ -38,9 +42,13 @@ namespace boost {
           return to;
         }
       };
+      /**
+       * Partial specialization of @c assign_to for @c boost::array of the same size
+       */
       template < typename T1, typename T2, std::size_t N>
       struct assign_to< array<T1,N>, array<T2,N> >
       {
+        //! @Effects assign to each one of the target array elements the conversion of the source array element.
         inline static array<T1,N>& apply(array<T1,N>& to, array<T2,N> const & from)
         {
           for (unsigned int i =0; i<N; ++i)
@@ -52,20 +60,8 @@ namespace boost {
       };
     }
   }
-  #else
-  //! @brief @c convert_to overloading for source and target been @c boost::array of the same size.
-  //!
-  //! @Returns the array having as elements the conversion from the source array.
-  template < typename T1, typename T2, std::size_t N>
-  inline array<T1,N> convert_to(array<T2,N> const & from
-                      , conversion::dummy::type_tag<array<T1,N> > const&
-  )
-  {
-    array<T1,N> to;
-    boost::conversion::assign_to(to, from);
-    return to;
-  }
 
+  #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   //! @brief @c convert_to overloading for source and target been @c boost::array of the same size.
   //!
   //! @Effects converts each one of the source array elements and store the result in the corresponding index on the target array.
@@ -74,11 +70,7 @@ namespace boost {
   inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
   )
   {
-    for (unsigned int i =0; i<N; ++i)
-    {
-      to[i]=boost::conversion::convert_to<T1>(from[i]);
-    }
-    return to;
+    return conversion::overload_workaround::assign_to<array<T1,N>, array<T2,N> >::apply(to, from);
   }
   #endif
 }

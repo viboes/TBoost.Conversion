@@ -77,7 +77,7 @@ namespace boost {
 
   namespace conversion {
 
-    //! @brief Lazily convert to a type @Target from an arbitrary argument.
+    //! @brief Lazily convert to a type @c Target from an arbitrary argument.
     //!
     //! @Returns A unary functor that will call to the convert_to function on its parameter.
     //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
@@ -101,9 +101,9 @@ namespace boost {
       make(boost::phoenix::detail::target<T>(), u);
     }
 
-    //! @brief Lazily convert to a type @Target from an arbitrary argument.
+    //! @brief Lazily convert to a type @c Target from an arbitrary argument.
     //!
-    //! This overload of @convert_to is taken in account when the parameter @c Source is a place_holder.
+    //! This overload of @c convert_to is taken in account when the parameter @c Source is a place_holder.
     //!
     //! @Returns A unary functor that will call to the convert_to function on its parameter.
     //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.

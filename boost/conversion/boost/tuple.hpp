@@ -23,8 +23,8 @@
 
 namespace boost {
 
-    #ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING && ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    namespace conversion { namespace overload_workaround {
+  namespace conversion {
+    namespace overload_workaround {
         template < class T1, class T2, class U1, class U2>
         struct convert_to< fusion::tuple<T1,T2>, fusion::tuple<U1,U2> > {
             inline static fusion::tuple<T1,T2> apply(fusion::tuple<U1,U2> const & from)
@@ -33,14 +33,6 @@ namespace boost {
                     boost::conversion::convert_to<T1>(fusion::get<0>(from))
                     , boost::conversion::convert_to<T2>(fusion::get<1>(from))
                 );
-            }
-        };
-        template < class T1, class T2, class U1, class U2>
-        struct assign_to< fusion::tuple<T1,T2>, fusion::tuple<U1,U2> > {
-            inline static fusion::tuple<T1,T2>& apply(fusion::tuple<T1,T2>& to, fusion::tuple<U1,U2> const & from)
-            {
-                to = boost::conversion::convert_to<fusion::tuple<T1,T2> >(from);
-                return to;
             }
         };
         template < class T1, class T2, class T3, class U1, class U2, class U3>
@@ -54,36 +46,17 @@ namespace boost {
                 );
             }
         };
-        template < class T1, class T2, class T3, class U1, class U2, class U3>
-        struct assign_to< fusion::tuple<T1,T2,T3>, fusion::tuple<U1,U2,U3> > {
-            inline static fusion::tuple<T1,T2,T3> apply(fusion::tuple<T1,T2,T3>& to, fusion::tuple<U1,U2,U3> const & from)
-            {
-                to = boost::conversion::convert_to<fusion::tuple<T1,T2> >(from);
-                return to;
-            }
-        };
 
-    }}
-    #else
+    }
+  }
+
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     namespace fusion {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-      template < class Target..., class Source...>
-      inline tuple<...Target> convert_to(tuple<...Source> const & from
-                      , conversion::dummy::type_tag<tuple<...Target> > const&);
-      template < class Target..., class Source...>
-      inline tuple<...Target>& assign_to(tuple<...Target>& to, tuple<...Source> const & from
-                      , conversion::dummy::type_tag<tuple<...Target> > const&
+      template < class... Target, class... Source>
+      inline tuple<Target...>& assign_to(tuple<Target...>& to, tuple<Source...> const & from
       )
 #else
-    template < class T1, class T2, class U1, class U2>
-    inline tuple<T1,T2> convert_to(tuple<U1,U2> const & from
-                    , conversion::dummy::type_tag<tuple<T1,T2> > const&)
-    {
-        return tuple<T1,T2>(
-            boost::conversion::convert_to<T1>(boost::fusion::get<0>(from))
-            , boost::conversion::convert_to<T2>(boost::fusion::get<1>(from))
-        );
-    }
 
     template < class T1, class T2, class U1, class U2>
     inline tuple<T1,T2>& assign_to(tuple<T1,T2>& to, tuple<U1,U2> const & from
@@ -91,18 +64,6 @@ namespace boost {
     {
         to = boost::conversion::convert_to<boost::fusion::tuple<T1,T2> >(from);
         return to;
-    }
-
-    template < class T1, class T2, class T3, class U1, class U2, class U3>
-    inline tuple<T1,T2,T3> convert_to(tuple<U1,U2,U3> const & from
-                    , conversion::dummy::type_tag<tuple<T1,T2,T3> > const&
-    )
-    {
-        return boost::fusion::tuple<T1,T2, T3>(
-                boost::conversion::convert_to<T1>(boost::fusion::get<0>(from))
-            , boost::conversion::convert_to<T2>(boost::fusion::get<1>(from))
-            , boost::conversion::convert_to<T3>(boost::fusion::get<2>(from))
-        );
     }
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>

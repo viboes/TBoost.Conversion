@@ -37,7 +37,7 @@ namespace boost {
       ca_wrapper(T& r) : ref_(r) {}
 
       //! Implicit conversion to @c U.
-      //! @Effect Forwards the conversion from the reference using @c conver_to.
+      //! @Effects Forwards the conversion from the reference using @c conver_to.
       //! @Returns @c *this
       //! @Throws Whatever @c convert_to throws.
       template <typename U>
@@ -47,7 +47,7 @@ namespace boost {
 
       //! Assignment.
       //!
-      //! @Effect Forwards the assignment to the reference.
+      //! @Effects Forwards the assignment to the reference.
       //! @Returns @c *this
       //! @Throws Whatever @c T assignment can throws.
       ca_wrapper& operator =(ca_wrapper<T> const& u) {
@@ -57,7 +57,7 @@ namespace boost {
 
       //! Assignment from a converter assigner wrapping a type U  convertible to T.
       //!
-      //! @Effect Forwards the assignment to the reference using assign_to.
+      //! @Effects Forwards the assignment to the reference using assign_to.
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
@@ -68,7 +68,7 @@ namespace boost {
 
       //! Assignment from a type U convertible to T.
       //!
-      //! @Effect Forwards the assignment to the reference using assign_to
+      //! @Effects Forwards the assignment to the reference using assign_to
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
@@ -77,14 +77,14 @@ namespace boost {
         return *this;
       }
     };
-  }
-  //! makes a converter assigner wrapper of the reference parameter.
+    //! makes a converter assigner wrapper of the reference parameter.
 
-  //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
-  //! @NoThrow.
-  template <typename T>
-  conversion::ca_wrapper<T> mca(T& r) {
-    return conversion::ca_wrapper<T>(r);
+    //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
+    //! @NoThrow.
+    template <typename T>
+    ca_wrapper<T> mca(T& r) {
+      return ca_wrapper<T>(r);
+    }
   }
 }
 
