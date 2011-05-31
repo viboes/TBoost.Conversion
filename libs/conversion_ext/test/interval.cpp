@@ -26,7 +26,6 @@ void explicit_convert_to() {
                 boost::numeric::interval<B1>(b1,b2)));
     boost::numeric::interval<A1> a3;
     a3= boost::conversion::convert_to<boost::numeric::interval<A1> >(b);
-    //a3= convert_to<boost::numeric::interval<A1> >(b);
 
 }
 void explicit_assign_to() {

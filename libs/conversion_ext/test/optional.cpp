@@ -36,7 +36,6 @@ void explicit_convert_to()
   boost::optional<A1> a1(boost::conversion::convert_to<boost::optional<A1> >(b));
   boost::optional<A1> a3;
   a3=boost::conversion::convert_to<boost::optional<A1> >(b);
-  //a3=convert_to<boost::optional<A1> >(b);
   boost::optional<A1> a2(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
   
 }

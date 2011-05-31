@@ -58,14 +58,14 @@ namespace boost {
         return A1();
     }
 
-    A1& assign_to(A1& to, const B1&, boost::conversion::dummy::type_tag<A1> const&) {
+    A1& assign_to(A1& to, const B1&) {
         return to;
     }
     A2 convert_to(const B2&, boost::conversion::dummy::type_tag<A2> const&) {
         return A2();
     }
 
-    A2& assign_to(A2& to, const B2&, boost::conversion::dummy::type_tag<A2> const&) {
+    A2& assign_to(A2& to, const B2&) {
         return to;
     }
 
