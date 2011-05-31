@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*!
- \file
- \brief
+ @file
+ @brief
  Include this file when using conversions between @c std::pair<> of convertible types.
  */
 

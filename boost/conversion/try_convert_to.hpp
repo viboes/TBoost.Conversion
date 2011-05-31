@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the free function @c try_convert_to.
 
  The @c try_convert_to function converts the @c from parameter to a @c To type and returns an optional<To>, uninitialized if conversion fails.

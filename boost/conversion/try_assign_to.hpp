@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the free function @c try_assign_to.
 
 The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignation done and @c false otherwise.
@@ -87,47 +87,46 @@ namespace boost {
         }
       };
     }
-
+  }
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    namespace impl_2 {
-      //! @brief Default @c try_assign_to overload, used when ADL fails.
-      //!
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-      //! @NoThrow
-      //! @Returns the converted value if success or the fallback when conversion fails.
-      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-      template < typename To, typename From >
-      bool try_assign_to(To& to, const From& from, dummy::type_tag<To> const&)
-      {
-        return conversion::overload_workaround::try_assign_to<To,From>::apply(to, from);
-      }
-    }
-
-    namespace impl {
-      template <typename Target, typename Source>
-      bool try_assign_to_impl(Target& to, const Source& from)
-      {
-        using namespace boost::conversion::impl_2;
-        //use boost::conversion::try_assign_to if ADL fails
-        return try_assign_to(to, from, dummy::type_tag<Target>());
-      }
-    }
-#endif
-
+  namespace conversion_impl_2 {
+    //! @brief Default @c try_assign_to overload, used when ADL fails.
+    //!
     //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
     //! @NoThrow
     //! @Returns the converted value if success or the fallback when conversion fails.
-    //!
-    //! This function can be partially specialized on compilers supporting it.
-    template <typename Target, typename Source>
-    bool try_assign_to(Target& to, const Source& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()
-    )
+    //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
+    template < typename To, typename From >
+    bool try_assign_to(To& to, const From& from)
     {
-      (void)p;
-      return conversion::impl::try_assign_to_impl<Target, Source>(to, from);
+      return conversion::overload_workaround::try_assign_to<To,From>::apply(to, from);
     }
   }
+
+  namespace conversion_impl {
+    template <typename Target, typename Source>
+    bool try_assign_to_impl(Target& to, const Source& from)
+    {
+      using namespace boost::conversion_impl_2;
+      //use boost::conversion::try_assign_to if ADL fails
+      return try_assign_to(to, from);
+    }
+  }
+#endif
+  namespace conversion {
+
+  //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+  //! @NoThrow
+  //! @Returns the converted value if success or the fallback when conversion fails.
+  //!
+  //! This function can be partially specialized on compilers supporting it.
+  template <typename Target, typename Source>
+  bool try_assign_to(Target& to, const Source& from)
+  {
+    return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
+  }
+}
 }
 
 #endif

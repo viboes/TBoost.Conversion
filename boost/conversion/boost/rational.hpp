@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Include this file when using conversions between @c boost::rational<> of convertible types.
  */
 
@@ -25,18 +25,6 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    namespace conversion {
-      namespace detail {
-        template <typename T>
-        struct is_rational : mpl::false_ {};
-        template <typename T>
-        struct is_rational< ::boost::rational<T> > : mpl::true_ {};
-
-      }
-    }
-#endif
 
   namespace conversion {
     namespace overload_workaround {

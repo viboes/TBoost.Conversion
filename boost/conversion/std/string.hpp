@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Include this file when using conversions from/to @c std::string.
  */
 

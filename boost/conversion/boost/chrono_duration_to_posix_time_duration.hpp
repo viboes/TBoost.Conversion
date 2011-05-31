@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Include this file when using conversions between @c boost::posix_time::time_duration and @c boost::chrono::duration<>.
  */
 

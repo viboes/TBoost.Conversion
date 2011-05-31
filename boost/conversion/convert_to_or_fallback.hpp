@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the free function @c convert_to_or_fallback.
 
  The @c convert_to_or_fallback function converts the @c from parameter to a @c To type. If the conversion fails the fallback value is used to construct a To @c instance. 

@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Include this file when using conversions between @c boost::optional<> of convertible types.
  */
 
@@ -56,16 +56,22 @@ namespace boost {
         }
       };
       
+      //! @brief @c convert_to specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+      //!
+      //! We can see this specialization as a try_convert_to function.
       template < class Target, class Source>
-      struct convert_to< optional<Target>, Source > 
+      struct convert_to< optional<Target>, Source>
       {
+        //! @Returns If the source is convertible to the target @c value_type
+        //! @c Target initialized to the result of the conversion.
+        //! Uninitialized  @c Target otherwise.
         inline static optional<Target> apply(Source const & from)
         {
           try
           {
             return optional<Target>(boost::conversion::convert_to<Target>(from));
-          } 
-          catch (...) 
+          }
+          catch (...)
           {
             return optional<Target>();
           }

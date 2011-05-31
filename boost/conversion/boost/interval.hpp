@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @ile
+ @brief
  Include this file when using conversions between @c boost::numeric::interval<> of convertible types.
  */
 

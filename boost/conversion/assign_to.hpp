@@ -8,8 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the free function @c assign_to.
 
 The function @c assign_to assigns the @c from parameter to the @c to parameter.

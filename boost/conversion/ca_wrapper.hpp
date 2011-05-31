@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the free function @c mca.
  */
 #ifndef BOOST_CONVERSION_CA_WRAPPER_HPP

@@ -18,8 +18,8 @@
 #include <boost/fusion/support/pair.hpp>
 
 /*!
- \file
- \brief
+ @file
+ @brief
  Defines the pack function.
 
 

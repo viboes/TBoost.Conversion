@@ -8,6 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+/*!
+ @file
+ @brief
+ Defines a converter factory: @c make_converter_to.
+ */
+
 #ifndef BOOST_CONVERSION_FP_CONVERT_TO_HPP
 #define BOOST_CONVERSION_FP_CONVERT_TO_HPP
 
