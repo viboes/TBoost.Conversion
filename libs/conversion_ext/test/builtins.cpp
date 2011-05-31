@@ -133,41 +133,41 @@ void mca_assign_to_with_builtin_types() {
     unsigned int ui(i);
     unsigned long ul(l);
 
-    boost::mca(c) = c;
-    boost::mca(c) = s;
-    boost::mca(c) = i;
-    boost::mca(c) = l;
-    boost::mca(c) = uc;
-    boost::mca(c) = us;
-    boost::mca(c) = ui;
-    boost::mca(c) = ul;
+    boost::conversion::mca(c) = c;
+    boost::conversion::mca(c) = s;
+    boost::conversion::mca(c) = i;
+    boost::conversion::mca(c) = l;
+    boost::conversion::mca(c) = uc;
+    boost::conversion::mca(c) = us;
+    boost::conversion::mca(c) = ui;
+    boost::conversion::mca(c) = ul;
 
-    boost::mca(s) = c;
-    boost::mca(s) = s;
-    boost::mca(s) = i;
-    boost::mca(s) = l;
-    boost::mca(s) = uc;
-    boost::mca(s) = us;
-    boost::mca(s) = ui;
-    boost::mca(s) = ul;
+    boost::conversion::mca(s) = c;
+    boost::conversion::mca(s) = s;
+    boost::conversion::mca(s) = i;
+    boost::conversion::mca(s) = l;
+    boost::conversion::mca(s) = uc;
+    boost::conversion::mca(s) = us;
+    boost::conversion::mca(s) = ui;
+    boost::conversion::mca(s) = ul;
 
-    boost::mca(i) = c;
-    boost::mca(i) = s;
-    boost::mca(i) = i;
-    boost::mca(i) = l;
-    boost::mca(i) = uc;
-    boost::mca(i) = us;
-    boost::mca(i) = ui;
-    boost::mca(i) = ul;
+    boost::conversion::mca(i) = c;
+    boost::conversion::mca(i) = s;
+    boost::conversion::mca(i) = i;
+    boost::conversion::mca(i) = l;
+    boost::conversion::mca(i) = uc;
+    boost::conversion::mca(i) = us;
+    boost::conversion::mca(i) = ui;
+    boost::conversion::mca(i) = ul;
 
-    boost::mca(l) = c;
-    boost::mca(l) = s;
-    boost::mca(l) = i;
-    boost::mca(l) = l;
-    boost::mca(l) = uc;
-    boost::mca(l) = us;
-    boost::mca(l) = ui;
-    boost::mca(l) = ul;
+    boost::conversion::mca(l) = c;
+    boost::conversion::mca(l) = s;
+    boost::conversion::mca(l) = i;
+    boost::conversion::mca(l) = l;
+    boost::conversion::mca(l) = uc;
+    boost::conversion::mca(l) = us;
+    boost::conversion::mca(l) = ui;
+    boost::conversion::mca(l) = ul;
 
 }
 
@@ -183,7 +183,7 @@ void mca_assign_to_transitive() {
     {
     int a=0; int b=0; int c=0;
 
-    boost::mca(a) = boost::mca(b) = boost::mca(c) = 1;
+    boost::conversion::mca(a) = boost::conversion::mca(b) = boost::conversion::mca(c) = 1;
 
     }
 }

@@ -46,7 +46,7 @@ void explicit_assign_to() {
     B b;
     A a;
     boost::conversion::assign_to(a, b);
-    boost::mca(a)= b;
+    boost::conversion::mca(a)= b;
 
 }
 void explicit_chain_assign_to() {
@@ -54,12 +54,12 @@ void explicit_chain_assign_to() {
     B b;
     A a;
     boost::conversion::assign_to(a, boost::conversion::assign_to(b,c));
-    boost::mca(a)= boost::mca(b) = c;
+    boost::conversion::mca(a)= boost::conversion::mca(b) = c;
 
 }
 void implicit_conversion_via_mca() {
     C  c;
-    f(mca(c));
+    f(boost::conversion::mca(c));
 }
 int main( )
 {

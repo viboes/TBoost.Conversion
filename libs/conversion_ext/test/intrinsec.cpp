@@ -87,7 +87,7 @@ void assign_to_with_assignemet_operator() {
 void mca_with_assignemet_operator() {
     A a(0);
     AA aa(0);
-    boost::mca(aa) =a;
+    boost::conversion::mca(aa) =a;
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -105,7 +105,7 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
 void mca_with_assignemet_operator_and_implicit_constructor() {
     B b;
     AA aa(1);
-    boost::mca(aa)=b;
+    boost::conversion::mca(aa)=b;
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -124,7 +124,7 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
 void mca_with_assignemet_operator_and_conversion_operator() {
     C c;
     CC cc(1);
-    boost::mca(cc)=c;
+    boost::conversion::mca(cc)=c;
 }
 
 
