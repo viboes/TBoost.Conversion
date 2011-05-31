@@ -17,6 +17,7 @@
 #include <boost/static_assert.hpp>
 
 #include <boost/conversion/try_convert_to.hpp>
+#include <boost/conversion/try_assign_to.hpp>
 
 #include <boost/conversion/fp/convert_to.hpp>
 #include <boost/phoenix/core/argument.hpp>
