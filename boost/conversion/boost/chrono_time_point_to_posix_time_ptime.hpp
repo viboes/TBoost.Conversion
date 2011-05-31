@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -99,7 +99,6 @@ namespace boost {
 
         template < class Clock, class Duration>
         inline chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from
-                        , conversion::dummy::type_tag<chrono::time_point<Clock, Duration> > const&
         )
         {
             to = boost::conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
@@ -122,7 +121,6 @@ namespace boost {
 
         template < class Clock, class Duration>
         inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from
-                    , conversion::dummy::type_tag<posix_time::ptime> const&
         )
         {
             to = boost::conversion::convert_to<ptime>(from);

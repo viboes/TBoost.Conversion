@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -13,18 +13,13 @@
  Defines the free function @c assign_to.
 
 The function @c assign_to assigns the @c from parameter to the @c to parameter.
-The default implementation applies the the assignment operator of the @c To class.
-A user adapting another type could need to specialize the @c assign_to free function if the default behavior is not satisfactory.
+The default implementation uses the @c convert_to to convert the source to the target and use the copy assignment of the @c Target class.
 
+A user adapting another type could need to specialize the @c assign_to free function if the default behavior is not satisfactory.
 The user can add the @c assign_to overloading on the namespace of the Source or Target classes.
 But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace,
-so we need a different technique.
-
-The technique consists in partially specialize on the function @c assign_to on the @c boost::conversion namespace.
-For compilers for which we can not partially specialize a function a trick is used:
-instead of calling directly to the @c assign_to member function, @c assign_to calls to the static operation apply
-on a class with the same name in the namespace @c overload_workaround.
-Thus the user can specialize partially this class.
+so we need a different technique. The technique consists in partially specialize on the function @c assign_to on
+the @c boost::conversion::overload_workaround namespace.
 
  */
 
@@ -70,32 +65,34 @@ namespace boost {
         }
       };
     }
+  }
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    namespace impl_2 {
+  namespace conversion_impl_2 {
 
-      //! @brief Default @c assign_to overload, used when ADL fails.
-      //!
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-      //! @Throws  Whatever the underlying the assignment operator of the @c To class throws.
-      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-      template < typename To, typename From >
-      To& assign_to(To& to, const From& from, dummy::type_tag<To> const&)
-      {
-        return conversion::overload_workaround::assign_to<To,From>::apply(to, from);
-      }
+    //! @brief Default @c assign_to overload, used when ADL fails.
+    //!
+    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+    //! @Throws  Whatever the underlying the assignment operator of the @c To class throws.
+    //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
+    template < typename To, typename From >
+    To& assign_to(To& to, const From& from)
+    {
+      return conversion::overload_workaround::assign_to<To,From>::apply(to, from);
     }
+  }
 
-    namespace impl {
-      template <typename Target, typename Source>
-      Target& assign_to_impl(Target& to, const Source& from)
-      {
-        using namespace boost::conversion::impl_2;
-        //use boost::conversion::assign_to if ADL fails
-        return assign_to(to, from, dummy::type_tag<Target>());
-      }
+  namespace conversion_impl {
+    template <typename Target, typename Source>
+    Target& assign_to_impl(Target& to, const Source& from)
+    {
+      using namespace boost::conversion_impl_2;
+      //use boost::conversion::assign_to if ADL fails
+      return assign_to(to, from);
     }
+  }
 #endif
+  namespace conversion {
 
     //! @brief Extrinsic assign function.
     //! @tparam Target target type of the conversion.
@@ -104,19 +101,15 @@ namespace boost {
     //! @Params
     //! @Param{to,target of the conversion}
     //! @Param{from,source of the conversion}
-    //! @Param{p,a dummy parameter used to allow overloading on the Target type}
 
     //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
     //! @Throws  Whatever the underlying the assignment operator of the @c To class throws..
     //! This function can be overloaded by the user.
-    //! A trick is used to overload on the return type by adding a defaulted dummy parameter.
-    //! Specializations must overload on @c dummy::type_tag<Target>
 
     template <typename Target, typename Source>
-    Target& assign_to(Target& to, const Source& from, dummy::base_tag<Target> const& p =dummy::base_tag<Target>())
+    Target& assign_to(Target& to, const Source& from)
     {
-      (void)p;
-      return boost::conversion::impl::assign_to_impl<Target, Source>(to, from);
+      return boost::conversion_impl::assign_to_impl<Target, Source>(to, from);
     }
   }
 }

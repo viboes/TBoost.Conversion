@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -108,7 +108,6 @@ namespace boost {
 
     template < class Rep, class Period>
     inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from
-                        , conversion::dummy::type_tag<chrono::duration<Rep, Period> > const&
     )
 
     {
@@ -135,7 +134,6 @@ namespace boost {
     //! @Returns The @c to parameter reference.
     template < class Rep, class Period>
     inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from
-                    , conversion::dummy::type_tag<posix_time::time_duration> const&
     )
     {
         to = boost::conversion::convert_to<time_duration>(from);

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -125,10 +125,8 @@ namespace boost {
   //! @Returns The @c to parameter reference.
   template < class Target, class Source>
   inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
-      , conversion::dummy::type_tag<optional<Target> > const&p=conversion::dummy::type_tag<optional<Target> >()
   )
   {
-    (void)p; // warning removal
     to = boost::conversion::convert_to<optional<Target> >(from);
     //to = from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>();
     return to;

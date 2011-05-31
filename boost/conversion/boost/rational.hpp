@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -75,10 +75,8 @@ namespace boost {
 
     template < class T, class U>
     inline rational<T>& assign_to(rational<T>& to, const rational<U>& from
-                        , conversion::dummy::type_tag<rational<T> > const& p=conversion::dummy::type_tag<rational<T> >()
                         )
     {
-      (void)p; // warning removal
       to.assign(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
       return to;
     }

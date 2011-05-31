@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -87,7 +87,6 @@ namespace boost {
 
     template < class T1, class T2, class U1, class U2>
     inline tuple<T1,T2>& assign_to(tuple<T1,T2>& to, tuple<U1,U2> const & from
-                    , conversion::dummy::type_tag<tuple<T1,T2> > const&
     )
     {
         to = boost::conversion::convert_to<boost::fusion::tuple<T1,T2> >(from);
@@ -108,7 +107,6 @@ namespace boost {
 
     template < class T1, class T2, class T3, class U1, class U2, class U3>
     inline tuple<T1,T2,T3> assign_to(tuple<T1,T2,T3>& to, boost::fusion::tuple<U1,U2,U3> const & from
-                    , conversion::dummy::type_tag<tuple<T1,T2,T3> > const&
     )
     {
         to = boost::conversion::convert_to<boost::fusion::tuple<T1,T2> >(from);

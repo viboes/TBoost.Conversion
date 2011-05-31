@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -72,7 +72,6 @@ namespace boost {
   //! @Returns The @c to parameter reference.
   template < typename T1, typename T2, std::size_t N>
   inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
-    , conversion::dummy::type_tag<array<T1,N> > const&
   )
   {
     for (unsigned int i =0; i<N; ++i)
