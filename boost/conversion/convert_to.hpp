@@ -36,21 +36,14 @@
 namespace boost {
   namespace conversion {
     namespace dummy {
-      //! base tag used to overload a function returning T.
-
-      //! @tparam T The wrapped type.
-      template <typename T>
-      struct base_tag {
-        //! The nested type @c type names the template parameter.
-
-        typedef T type;
-      };
-      //! tag used to overload a function returning T that takes precedence respect to &c base_tag<T>.
+      //! tag used to overload a function returning T.
       //!
-      //! @tparam T The wrapped type.
+      //! @tparam T The wrapped return type.
       //! Users overloading the @c convert_to function must use this tag.
       template <typename T>
-      struct type_tag : public base_tag<T> {
+      struct type_tag
+      //: public base_tag<T>
+      {
         //! The nested type @c type names the template parameter.
         typedef T type;
       };
@@ -114,7 +107,6 @@ namespace boost {
     //!
     //! @Params
     //! @Param{source,source of the conversion}
-    //! @Param{p,a dummy parameter used to allow overloading on the Target type}
     //!
     //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
     //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
@@ -130,9 +122,7 @@ namespace boost {
 #else
     Target
 #endif
-    convert_to(Source const& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
-      (void)p; // warning removal
-
+    convert_to(Source const& from) {
       return boost::conversion::impl::convert_to_impl<Target>(from);
     }
   }

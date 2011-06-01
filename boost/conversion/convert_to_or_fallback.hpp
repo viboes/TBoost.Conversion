@@ -94,8 +94,7 @@ namespace boost {
     //! This function can be partially specialized on compilers supporting it.
     //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source, typename Fallback>
-    Target convert_to_or_fallback(Source const& from, Fallback const& fallback, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
-      (void)p;
+    Target convert_to_or_fallback(Source const& from, Fallback const& fallback) {
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
     }
   }

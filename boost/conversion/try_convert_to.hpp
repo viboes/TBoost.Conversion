@@ -117,8 +117,7 @@ namespace boost {
   //! This function can be overloaded by the user for specific types.
   //! A trick is used to partially specialize on the return type by adding a dummy parameter.
   template <typename Target, typename Source>
-  optional<Target> try_convert_to(Source const& from, dummy::base_tag<Target> const& p=dummy::base_tag<Target>()) {
-    (void)p;
+  optional<Target> try_convert_to(Source const& from) {
     return boost::conversion::impl::try_convert_to_impl<Target>(from);
   }
   }
