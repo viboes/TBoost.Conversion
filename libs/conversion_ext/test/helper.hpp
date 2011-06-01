@@ -19,41 +19,41 @@ struct A2{};
 struct B1{};
 struct B2{};
     
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 namespace boost {
-    namespace conversion { namespace overload_workaround {
+    namespace conversion {
         template <>
-        struct convert_to< A1,B1 > {
-            inline static A1 apply(B1 const &)
+        struct converter< A1,B1 > {
+            A1 operator()(B1 const &)
             {
                 return A1();
             }
         };
-        template < >
-        struct assign_to< A1,B1 > {
-            inline static A1& apply(A1& to, const B1&)
-            {
-                return to;
-            }
-        };
         template <>
-        struct convert_to< A2,B2 > {
-            inline static A2 apply(B2 const &)
+        struct converter< A2,B2 > {
+            A2 operator()(B2 const &)
             {
                 return A2();
             }
         };
-        template < >
-        struct assign_to< A2,B2 > {
-            inline static A2& apply(A2& to, const B2&)
-            {
-                return to;
-            }
-        };
+          template < >
+          struct assigner< A1,B1 > {
+              A1& operator()(A1& to, const B1&)
+              {
+                  return to;
+              }
+          };
+          template < >
+          struct assigner< A2,B2 > {
+              A2& operator()(A2& to, const B2&)
+              {
+                  return to;
+              }
+          };
+
     }
 }
-#else
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     A1 convert_to(const B1&, boost::conversion::dummy::type_tag<A1> const&) {
         return A1();
     }
