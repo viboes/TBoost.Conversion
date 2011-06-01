@@ -25,13 +25,12 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-    namespace overload_workaround {
       /**
        * Partial specialization of @c convert_to for @c std::complex of the same size
        */
       template < class T, class U>
-      struct convert_to< std::complex<T>, std::complex<U> > {
-        inline static std::complex<T> apply(std::complex<U> const & from)
+      struct converter< std::complex<T>, std::complex<U> > {
+        std::complex<T> operator()(std::complex<U> const & from)
         {
           return std::complex<T>(
               boost::conversion::convert_to<T>(from.real()),
@@ -39,8 +38,8 @@ namespace boost {
         }
       };
       template < class T, class U>
-      struct assign_to< std::complex<T>, std::complex<U> > {
-        inline static std::complex<T>& apply(std::complex<T>& to, const std::complex<U>& from)
+      struct assigner< std::complex<T>, std::complex<U> > {
+        std::complex<T>& operator()(std::complex<T>& to, const std::complex<U>& from)
         {
           to.real() = boost::conversion::convert_to<T>(from.real());
           to.imag() = boost::conversion::convert_to<T>(from.imag());
@@ -48,7 +47,6 @@ namespace boost {
         }
       };
 
-    }
   }
 }
 

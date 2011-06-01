@@ -26,10 +26,10 @@
 #include <boost/config.hpp>
 
 namespace boost {
-    namespace conversion { namespace overload_workaround {
+    namespace conversion {
         template < class Clock, class Duration>
-        struct convert_to<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-            inline static posix_time::ptime apply(const chrono::time_point<Clock, Duration>& from)
+        struct converter<posix_time::ptime, chrono::time_point<Clock, Duration> > {
+            posix_time::ptime operator()(const chrono::time_point<Clock, Duration>& from)
             {
                 typedef chrono::time_point<Clock, Duration> time_point_t;
                 typedef chrono::nanoseconds duration_t;
@@ -48,8 +48,8 @@ namespace boost {
         };
 
         template < class Clock, class Duration>
-        struct convert_to<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-            inline static chrono::time_point<Clock, Duration> apply(const posix_time::ptime& from)
+        struct converter<chrono::time_point<Clock, Duration>, posix_time::ptime> {
+            chrono::time_point<Clock, Duration> operator()(const posix_time::ptime& from)
             {
                 posix_time::time_duration const time_since_epoch=from-posix_time::from_time_t(0);
                 chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
@@ -57,7 +57,7 @@ namespace boost {
                 return  t+chrono::duration_cast<Duration>(chrono::nanoseconds(nsec));
             }
         };
-    }}
+    }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     namespace chrono {

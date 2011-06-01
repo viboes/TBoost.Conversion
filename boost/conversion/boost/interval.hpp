@@ -24,26 +24,24 @@
 namespace boost {
 
     namespace conversion {
-      namespace overload_workaround {
         //! @brief @c convert_to specialization for source and target been @c boost::numeric::interval.
         //!
         template < class T, class PT, class U, class PU>
-        struct convert_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
+        struct converter< numeric::interval<T,PT>, numeric::interval<U,PU> > {
           //! @Returns the target interval having as extremes the conversion from the source interval extremes.
-            inline static numeric::interval<T,PT> apply(numeric::interval<U,PU> const & from)
+            numeric::interval<T,PT> operator()(numeric::interval<U,PU> const & from)
             {
                 return numeric::interval<T,PT>(boost::conversion::convert_to<T>(from.lower()), boost::conversion::convert_to<U>(from.upper()));
             }
         };
         template < class T, class PT, class U, class PU>
-        struct assign_to< numeric::interval<T,PT>, numeric::interval<U,PU> > {
-            inline static numeric::interval<T,PT>& apply(numeric::interval<T,PT>& to, const numeric::interval<U,PU>& from)
+        struct assigner< numeric::interval<T,PT>, numeric::interval<U,PU> > {
+            numeric::interval<T,PT>& operator()(numeric::interval<T,PT>& to, const numeric::interval<U,PU>& from)
             {
                 to.assign(boost::conversion::convert_to<T>(from.lower()), boost::conversion::convert_to<U>(from.upper()));
                 return to;
             }
         };
-      }
     }
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     namespace numeric {
@@ -51,7 +49,7 @@ namespace boost {
         inline interval<T,PT>& assign_to(interval<T,PT>& to, const interval<U,PU>& from
         )
         {
-          return conversion::overload_workaround::assign_to<interval<T,PT>, interval<U,PU> >::apply(to, from);
+          return conversion::assigner<interval<T,PT>, interval<U,PU> >()(to, from);
         }
     }
 #endif

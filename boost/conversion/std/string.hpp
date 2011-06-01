@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -29,11 +29,10 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-    namespace overload_workaround {
       
       template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct convert_to< std::basic_string<CharT,Traits,Alloc>, T > {
-        inline static std::basic_string<CharT,Traits,Alloc> apply(T const & from)
+      struct converter< std::basic_string<CharT,Traits,Alloc>, T > {
+        std::basic_string<CharT,Traits,Alloc> operator()(T const & from)
         {
 #if !defined(BOOST_CONVERSION_USE_CONVERT)
           return lexical_cast<std::basic_string<CharT,Traits,Alloc> >(from);
@@ -43,8 +42,8 @@ namespace boost {
         }
       };
       template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct convert_to< T, std::basic_string<CharT,Traits,Alloc> > {
-        inline static T apply(std::basic_string<CharT,Traits,Alloc> const & from)
+      struct converter< T, std::basic_string<CharT,Traits,Alloc> > {
+        T operator()(std::basic_string<CharT,Traits,Alloc> const & from)
         {
 #if !defined(BOOST_CONVERSION_USE_CONVERT)
           return lexical_cast<T>(from);
@@ -55,18 +54,17 @@ namespace boost {
       };
 
       template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct assign_to< std::basic_string<CharT,Traits,Alloc>, T > {
-        inline static std::basic_string<CharT,Traits,Alloc>& 
-        apply(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
+      struct assigner< std::basic_string<CharT,Traits,Alloc>, T > {
+        std::basic_string<CharT,Traits,Alloc>&
+        operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
         {
           to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
           return to;
         }
       };
       template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct assign_to< T, std::basic_string<CharT,Traits,Alloc> > {
-        inline static T& 
-        apply(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
+      struct assigner< T, std::basic_string<CharT,Traits,Alloc> > {
+        T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
         {
           to = boost::conversion::convert_to<T>(from);
           return to;
@@ -74,7 +72,6 @@ namespace boost {
       };
 
       
-    }
   }
 }
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -28,40 +28,27 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-    namespace overload_workaround {
         template < class T1, class A1, class T2, class A2>
-        struct convert_to< std::vector<T1,A1>, std::vector<T2,A2> > {
-            inline static std::vector<T1,A1> apply(std::vector<T2,A2> const & from)
+        struct converter< std::vector<T1,A1>, std::vector<T2,A2> > {
+            std::vector<T1,A1> operator()(std::vector<T2,A2> const & from)
             {
                 std::vector<T1,A1> res;
                 boost::conversion::assign_to(res, from);
                 return res;
             }
         };
-        template < class T1, class A1, class T2, class A2>
-        struct assign_to< std::vector<T1,A1>, std::vector<T2,A2> > {
-            inline static std::vector<T1,A1>& apply(
-                std::vector<T1,A1>& to,
-                std::vector<T2,A2> const & from)
-            {
-                to.resize(from.size());
-                for (unsigned int i=0; i<from.size(); ++i) {
-                    boost::conversion::assign_to(to[i], from[i]);
-                }
-                return to;
-            }
-        };
 
         template < class T1, class A1, class T2, class A2>
-        struct convert_to< std::vector<T1,A1>,
+        struct converter< std::vector<T1,A1>,
                 //~ typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
                 //~ boost::fusion::tuple<
                 std::pair<
                     boost::reference_wrapper<std::vector<T2,A2> const>,
                     boost::reference_wrapper<A1 const>
                 >
-            > {
-            inline static std::vector<T1,A1> apply(
+            >
+        {
+            std::vector<T1,A1> operator()(
                 typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
                 const & pack)
             {
@@ -73,8 +60,21 @@ namespace boost {
             }
         };
 
+        template < class T1, class A1, class T2, class A2>
+        struct assigner< std::vector<T1,A1>, std::vector<T2,A2> > {
+            std::vector<T1,A1>& operator()(
+                std::vector<T1,A1>& to,
+                std::vector<T2,A2> const & from)
+            {
+                to.resize(from.size());
+                for (unsigned int i=0; i<from.size(); ++i) {
+                    boost::conversion::assign_to(to[i], from[i]);
+                }
+                return to;
+            }
+        };
     }
-}}
+}
 
 #endif
 

@@ -37,56 +37,54 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    namespace overload_workaround {
-      //! <c>struct try_assign_to</c> used when overloading can not be applied.
-      //! This struct can be specialized by the user.
-      template < typename To, typename From >
-      struct try_assign_to
+    //! This struct can be specialized by the user.
+    template < typename To, typename From >
+    struct try_assigner
+    {
+      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+      //! @NoThrow
+      //! @Returns the converted value if success or the fallback when conversion fails.
+      bool operator()(To& to, const From& from)
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-        //! @NoThrow
-        //! @Returns the converted value if success or the fallback when conversion fails.
-        inline static bool apply(To& to, const From& from)
+        To rollback = to;
+        try
         {
-          To rollback = to;
-          try 
-          {
-            boost::conversion::assign_to<To>(to , from);
-            return true;
-          } 
-          catch (...)
-          {
-            to = rollback; 
-            return false;
-          }
+          boost::conversion::assign_to<To>(to , from);
+          return true;
         }
-      };
-      template < typename To, typename From, std::size_t N  >
-      struct try_assign_to<To[N],From[N]>
+        catch (...)
+        {
+          to = rollback;
+          return false;
+        }
+      }
+    };
+    template < typename To, typename From, std::size_t N  >
+    struct try_assigner<To[N],From[N]>
+    {
+      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
+      //! @NoThrow
+      //! @Returns the converted value if success or the fallback when conversion fails.
+      bool operator()(To(&to)[N], const From(& from)[N])
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
-        //! @NoThrow
-        //! @Returns the converted value if success or the fallback when conversion fails.
-        inline static bool apply(To(&to)[N], const From(& from)[N])
+        To rollback[N];
+        boost::conversion::assign_to<To>(rollback, to);
+        try
         {
-          To rollback[N];
-          boost::conversion::assign_to<To>(rollback, to);
-          try 
+          for (std::size_t i = 0; i < N; ++i)
           {
-            for (std::size_t i = 0; i < N; ++i)
-            {
-              boost::conversion::assign_to<To>(to[i] , from[i]);
-            }
-            return true;
-          } 
-          catch (...)
-          {
-            boost::conversion::assign_to<To>(to, rollback);
-            return false;
+            boost::conversion::assign_to<To>(to[i] , from[i]);
           }
+          return true;
         }
-      };
-    }
+        catch (...)
+        {
+          boost::conversion::assign_to<To>(to, rollback);
+          return false;
+        }
+      }
+    };
+
   }
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -100,7 +98,7 @@ namespace boost {
     template < typename To, typename From >
     bool try_assign_to(To& to, const From& from)
     {
-      return conversion::overload_workaround::try_assign_to<To,From>::apply(to, from);
+      return conversion::try_assigner<To,From>()(to, from);
     }
   }
 

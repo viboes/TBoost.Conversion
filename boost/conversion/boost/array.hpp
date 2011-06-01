@@ -26,16 +26,15 @@
 namespace boost {
 
   namespace conversion {
-    namespace overload_workaround {
 
       /**
        * Partial specialization of @c convert_to for @c boost::array of the same size
        */
       template < typename T1, typename T2, std::size_t N>
-      struct convert_to< array<T1,N>, array<T2,N> >
+      struct converter< array<T1,N>, array<T2,N> >
       {
         //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
-        inline static array<T1,N> apply(array<T2,N> const & from)
+        inline array<T1,N> operator()(array<T2,N> const & from)
         {
           array<T1,N> to;
           boost::conversion::assign_to(to, from);
@@ -46,10 +45,10 @@ namespace boost {
        * Partial specialization of @c assign_to for @c boost::array of the same size
        */
       template < typename T1, typename T2, std::size_t N>
-      struct assign_to< array<T1,N>, array<T2,N> >
+      struct assigner< array<T1,N>, array<T2,N> >
       {
         //! @Effects assign to each one of the target array elements the conversion of the source array element.
-        inline static array<T1,N>& apply(array<T1,N>& to, array<T2,N> const & from)
+        array<T1,N>& operator()(array<T1,N>& to, array<T2,N> const & from)
         {
           for (unsigned int i =0; i<N; ++i)
           {
@@ -58,7 +57,6 @@ namespace boost {
           return to;
         }
       };
-    }
   }
 
   #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
@@ -70,7 +68,7 @@ namespace boost {
   inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
   )
   {
-    return conversion::overload_workaround::assign_to<array<T1,N>, array<T2,N> >::apply(to, from);
+    return conversion::assigner<array<T1,N>, array<T2,N> >()(to, from);
   }
   #endif
 }

@@ -58,23 +58,21 @@ namespace boost {
     template <typename T, typename Enabled=void>
     struct enable_functor : mpl::false_ {};
 
-    namespace overload_workaround {
-      //! struct used when overloading of @c convert_to function can not be applied.
+      //! customization point for @convert_to.
 
       //! @tparam To target type of the conversion.
       //! @tparam From source type of the conversion.
       //! @tparam Enable A dummy parameter that can be used for SFINAE.
 
-      template < typename To, typename From, class Enable = void >
-      struct convert_to {
-        //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-        //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
-        inline static To apply(const From& val)
-        {
-          return To((val));
-        }
-      };
-    }
+    template < typename To, typename From, class Enable = void >
+    struct converter {
+      //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+      To operator()(const From& val)
+      {
+        return To((val));
+      }
+    };
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -85,7 +83,7 @@ namespace boost {
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From >
       To convert_to(const From& from, dummy::type_tag<To> const&) {
-        return conversion::overload_workaround::convert_to<To,From>::apply(from);
+        return conversion::converter<To,From>()(from);
       }
     }
 

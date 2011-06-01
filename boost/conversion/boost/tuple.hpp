@@ -24,10 +24,9 @@
 namespace boost {
 
   namespace conversion {
-    namespace overload_workaround {
         template < class T1, class T2, class U1, class U2>
-        struct convert_to< fusion::tuple<T1,T2>, fusion::tuple<U1,U2> > {
-            inline static fusion::tuple<T1,T2> apply(fusion::tuple<U1,U2> const & from)
+        struct converter< fusion::tuple<T1,T2>, fusion::tuple<U1,U2> > {
+            fusion::tuple<T1,T2> operator()(fusion::tuple<U1,U2> const & from)
             {
                 return fusion::tuple<T1,T2>(
                     boost::conversion::convert_to<T1>(fusion::get<0>(from))
@@ -36,8 +35,8 @@ namespace boost {
             }
         };
         template < class T1, class T2, class T3, class U1, class U2, class U3>
-        struct convert_to< fusion::tuple<T1,T2,T3>, fusion::tuple<U1,U2,U3> > {
-            inline static fusion::tuple<T1,T2,T3> apply(fusion::tuple<U1,U2,U3> const & from)
+        struct converter< fusion::tuple<T1,T2,T3>, fusion::tuple<U1,U2,U3> > {
+            fusion::tuple<T1,T2,T3> operator()(fusion::tuple<U1,U2,U3> const & from)
             {
                 return fusion::tuple<T1,T2, T3>(
                       boost::conversion::convert_to<T1>(fusion::get<0>(from))
@@ -47,7 +46,6 @@ namespace boost {
             }
         };
 
-    }
   }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING

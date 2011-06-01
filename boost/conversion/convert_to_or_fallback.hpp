@@ -37,28 +37,25 @@
 
 namespace boost {
   namespace conversion {
-    namespace overload_workaround {
-      //! <c>struct convert_to_or_fallback</c> used when overloading can not be applied.
-      //! This struct can be specialized by the user.
-      template < typename To, typename From, typename Fallback>
-      struct convert_to_or_fallback {
-        //!
-        //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-        //! @Returns the converted value if the conversion succeeds or the fallback.
-        //! @NoThrow
-        inline static To apply(const From& val, Fallback const& fallback)
+    //! This struct can be specialized by the user.
+    template < typename To, typename From, typename Fallback>
+    struct converter_or_fallbacker {
+      //!
+      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Returns the converted value if the conversion succeeds or the fallback.
+      //! @NoThrow
+      To operator()(const From& val, Fallback const& fallback)
+      {
+        try
         {
-          try
-          {
-            return boost::conversion::convert_to<To>(val);
-          } 
-          catch (...) 
-          {
-            return To((fallback));
-          }
+          return boost::conversion::convert_to<To>(val);
         }
-      };
-    }
+        catch (...)
+        {
+          return To((fallback));
+        }
+      }
+    };
 
     #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
@@ -71,7 +68,7 @@ namespace boost {
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From, typename Fallback >
       To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
-        return conversion::overload_workaround::convert_to_or_fallback<To,From,Fallback>::apply(val, fallback);
+        return conversion::converter_or_fallbacker<To,From,Fallback>()(val, fallback);
       }
     }
 

@@ -38,50 +38,48 @@
 
 namespace boost {
   namespace conversion {
-    namespace overload_workaround {
-      //! <c>struct try_convert_to</c> used when overloading can not be applied.
-      //! This struct can be specialized by the user.
-      template < typename To, typename From >
-      struct try_convert_to {
-        //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-        //! @NoThrow
-        //! @Returns A optional<Ratget> uninitialized when conversion fails.
-        inline static optional<To> apply(const From& val)
+    //! This struct can be specialized by the user.
+    template < typename To, typename From >
+    struct try_converter {
+      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @NoThrow
+      //! @Returns A optional<Ratget> uninitialized when conversion fails.
+      optional<To> operator()(const From& val)
+      {
+        try
         {
-          try 
-          {
-            return make_optional(boost::conversion::convert_to<To>(val));
-          } 
-          catch (...)
-          {
-            return optional<To>();
-          }
+          return make_optional(boost::conversion::convert_to<To>(val));
         }
-      };
-    }
+        catch (...)
+        {
+          return optional<To>();
+        }
+      }
+    };
+
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-  namespace impl_2 {
+    namespace impl_2 {
 
-    //! @brief Default @c try_convert_to overload, used when ADL fails.
-    //!
-    //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-    //! @NoThrow
-    //! @Returns A optional<Target> uninitialized when conversion fails.
-    //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-    template < typename To, typename From >
-    optional<To> try_convert_to(const From& val, dummy::type_tag<To> const&) {
-      return conversion::overload_workaround::try_convert_to<To,From>::apply(val);
+      //! @brief Default @c try_convert_to overload, used when ADL fails.
+      //!
+      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @NoThrow
+      //! @Returns A optional<Target> uninitialized when conversion fails.
+      //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
+      template < typename To, typename From >
+      optional<To> try_convert_to(const From& val, dummy::type_tag<To> const&) {
+        return conversion::try_converter<To,From>()(val);
+      }
     }
-  }
-  namespace impl {
-    template <typename Target, typename Source>
-    optional<Target> try_convert_to_impl(Source const& from) {
-      using namespace boost::conversion::impl_2;
-      //use boost::conversion::try_convert_to if ADL fails
-      return try_convert_to(from, dummy::type_tag<Target>());
+    namespace impl {
+      template <typename Target, typename Source>
+      optional<Target> try_convert_to_impl(Source const& from) {
+        using namespace boost::conversion::impl_2;
+        //use boost::conversion::try_convert_to if ADL fails
+        return try_convert_to(from, dummy::type_tag<Target>());
+      }
     }
-  }
 #endif
 
 

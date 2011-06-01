@@ -41,16 +41,15 @@ namespace boost {
 #endif
 
   namespace conversion { 
-    namespace overload_workaround {
       /**
        * Partial specialization of @c convert_to for boost::optional
        */
       template < class Target, class Source>
-      struct convert_to< optional<Target>, optional<Source> >
+      struct converter< optional<Target>, optional<Source> >
       {
         //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
         //! Uninitialized  @c boost::optional<Target otherwise.
-        inline static optional<Target> apply(optional<Source> const & from)
+        optional<Target> operator()(optional<Source> const & from)
         {
           return (from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>());
         }
@@ -60,12 +59,12 @@ namespace boost {
       //!
       //! We can see this specialization as a try_convert_to function.
       template < class Target, class Source>
-      struct convert_to< optional<Target>, Source>
+      struct converter< optional<Target>, Source>
       {
         //! @Returns If the source is convertible to the target @c value_type
         //! @c Target initialized to the result of the conversion.
         //! Uninitialized  @c Target otherwise.
-        inline static optional<Target> apply(Source const & from)
+        optional<Target> operator()(Source const & from)
         {
           try
           {
@@ -78,7 +77,7 @@ namespace boost {
         }
       };
 
-    }
+
   }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING

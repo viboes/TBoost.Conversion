@@ -31,40 +31,38 @@ the @c boost::conversion::overload_workaround namespace.
 
 namespace boost {
   namespace conversion {
-    namespace overload_workaround {
-      //! struct used when overloading can not be applied.
-      //! @tparam To target type of the conversion.
-      //! @tparam From source type of the conversion.
-      //! @tparam Enable A dummy parameter that can be used for SFINAE.
-      template < typename To, typename From, class Enable = void>
-      struct assign_to
+    //! struct used when overloading can not be applied.
+    //! @tparam To target type of the conversion.
+    //! @tparam From source type of the conversion.
+    //! @tparam Enable A dummy parameter that can be used for SFINAE.
+    template < typename To, typename From, class Enable = void>
+    struct assigner
+    {
+      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+      //! @Throws  Whatever the underlying assignment operator of the @c To class throws.
+      To& operator()(To& to, const From& from)
       {
-        //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-        //! @Throws  Whatever the underlying assignment operator of the @c To class throws.
-        inline static To& apply(To& to, const From& from)
-        {
-          to = ::boost::conversion::convert_to<To>(from);
-          return to;
-        }
-      };
+        to = ::boost::conversion::convert_to<To>(from);
+        return to;
+      }
+    };
 
-      //! partial specialization for c-array types.
-      template < typename To, typename From, std::size_t N  >
-      struct assign_to<To[N],From[N],void>
+    //! partial specialization for c-array types.
+    template < typename To, typename From, std::size_t N  >
+    struct assigner<To[N],From[N],void>
+    {
+      //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
+      //! @Throws  Whatever the underlying assignment operator of the @c To class throws.
+      //! @Basic
+      To*& operator()(To(&to)[N], const From(& from)[N])
       {
-        //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
-        //! @Throws  Whatever the underlying assignment operator of the @c To class throws.
-        //! @Basic
-        inline static To*& apply(To(&to)[N], const From(& from)[N])
+        for (std::size_t i = 0; i < N; ++i)
         {
-          for (std::size_t i = 0; i < N; ++i)
-          {
-            to[i] = ::boost::conversion::convert_to<To>(from[i]);
-          }
-          return to;
+          to[i] = ::boost::conversion::convert_to<To>(from[i]);
         }
-      };
-    }
+        return to;
+      }
+    };
   }
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -78,7 +76,7 @@ namespace boost {
     template < typename To, typename From >
     To& assign_to(To& to, const From& from)
     {
-      return conversion::overload_workaround::assign_to<To,From>::apply(to, from);
+      return conversion::assigner<To,From>()(to, from);
     }
   }
 

@@ -25,13 +25,12 @@
 
 namespace boost {
   namespace conversion {
-    namespace overload_workaround {
       //! @brief @c convert_to specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
       //!
         template < class Rep, class Period>
-        struct convert_to<posix_time::time_duration, chrono::duration<Rep, Period> > {
+        struct converter<posix_time::time_duration, chrono::duration<Rep, Period> > {
           //! @Returns the duration converted to seconds+nanoseconds following the boost::posix_time::time_duration formatting.
-            inline static posix_time::time_duration apply(chrono::duration<Rep, Period> const & from)
+            posix_time::time_duration operator()(chrono::duration<Rep, Period> const & from)
             {
                 typedef chrono::duration<Rep, Period> src_duration_t;
                 typedef chrono::nanoseconds duration_t;
@@ -51,14 +50,14 @@ namespace boost {
         //!
 
         template < class Rep, class Period>
-        struct convert_to<chrono::duration<Rep, Period>, posix_time::time_duration> {
+        struct converter<chrono::duration<Rep, Period>, posix_time::time_duration> {
           //! @Returns the duration cast from a nanoseconds duration initialized to the total number of nanosecond of the @c from parameter.
-            inline static chrono::duration<Rep, Period> apply(posix_time::time_duration const & from)
+            chrono::duration<Rep, Period> operator()(posix_time::time_duration const & from)
             {
                 return  chrono::duration_cast<chrono::duration<Rep, Period> >(chrono::nanoseconds(from.total_nanoseconds()));
             }
         };
-    }
+
   }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
