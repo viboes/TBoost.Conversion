@@ -19,16 +19,15 @@
  Of course if both exist the conversion is ambiguous.
  A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
 
-The user can add the @c try_convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
-A trick is used to overload on the return type by adding a dummy parameter having the Target.
+ *  A user adapting another type could need to overload the @c try_convert_to free function
+ *  if the default behavior is not satisfactory.
+ *  The user can add the @c try_convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
+ *  A trick is used to overload on the return type by adding a dummy parameter having the Target.
+ *
+ *  But sometimes, as it is the case for the standard classes,
+ *  we can not add new functions on the @c std namespace, so we need a different technique.
+ *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::try_convert_to struct.
 
-But sometimes, as it is the case for the standard classes,
-we can not add new functions on the std namespace, so we need a different technique.
-
-The technique consists in partially specialize on the function @c try_convert_to on the @c boost::conversion namespace.
-For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the @c try_convert_to member function,
-@c try_convert_to calls to the static operation apply on a class with the same name in the namespace @c overload_workaround.
-Thus the user can specialize partially this class.
  */
 
 #ifndef BOOST_CONVERSION_TRY_CONVERT_TO_HPP
@@ -40,29 +39,6 @@ Thus the user can specialize partially this class.
 namespace boost {
   namespace conversion {
     namespace overload_workaround {
-#if 0
-      //! @brief @c convert_to specialization to try to convert the source to @c Target::value_type when @c Target is optional.
-      //!
-      //! We can see this specialization as a try_convert_to function.
-      template < class Target, class Source>
-      struct convert_to< optional<Target>, Source>
-      {
-        //! @Returns If the source is convertible to the target @c value_type
-        //! @c Target initialized to the result of the conversion.
-        //! Uninitialized  @c Target otherwise.
-        inline static optional<Target> apply(Source const & from)
-        {
-          try
-          {
-            return optional<Target>(boost::conversion::convert_to<Target>(from));
-          }
-          catch (...)
-          {
-            return optional<Target>();
-          }
-        }
-      };
-#endif
       //! <c>struct try_convert_to</c> used when overloading can not be applied.
       //! This struct can be specialized by the user.
       template < typename To, typename From >

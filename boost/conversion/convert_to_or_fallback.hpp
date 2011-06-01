@@ -19,16 +19,15 @@
  Of course if both exist the conversion is ambiguous.
  A user adapting another type could need to specialize the @c convert_to_or_fallback free function if the default behavior is not satisfactory.
 
-The user can add the @c convert_to_or_fallback overloading on any namespace found by ADL from the @c Source or the @c Target.
-A trick is used to overload on the return type by adding a dummy parameter having the Target.
+ *  A user adapting another type could need to overload the @c convert_to_or_fallback free function
+ *  if the default behavior is not satisfactory.
+ *  The user can add the @c convert_to_or_fallback overloading on any namespace found by ADL from the @c Source or the @c Target.
+ *  A trick is used to overload on the return type by adding a dummy parameter having the Target.
+ *
+ *  But sometimes, as it is the case for the standard classes,
+ *  we can not add new functions on the @c std namespace, so we need a different technique.
+ *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::convert_to_or_fallback struct.
 
-But sometimes, as it is the case for the standard classes,
-we can not add new functions on the std namespace, so we need a different technique.
-
-The technique consists in partially specialize on the function @c convert_to_or_fallback on the @c boost::conversion namespace.
-For compilers for which we can not partially specialize a function a trick is used: instead of calling directly to the @c convert_to_or_fallback member function,
-@c convert_to_or_fallback calls to the static operation apply on a class with the same name in the namespace @c overload_workaround.
-Thus the user can specialize partially this class.
  */
 
 #ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP

@@ -42,7 +42,6 @@ namespace boost {
       //! Users overloading the @c convert_to function must use this tag.
       template <typename T>
       struct type_tag
-      //: public base_tag<T>
       {
         //! The nested type @c type names the template parameter.
         typedef T type;
@@ -85,8 +84,8 @@ namespace boost {
       //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename To, typename From >
-      To convert_to(const From& val, dummy::type_tag<To> const&) {
-        return conversion::overload_workaround::convert_to<To,From>::apply(val);
+      To convert_to(const From& from, dummy::type_tag<To> const&) {
+        return conversion::overload_workaround::convert_to<To,From>::apply(from);
       }
     }
 
