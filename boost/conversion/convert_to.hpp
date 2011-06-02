@@ -11,9 +11,9 @@
  * @file
  * @brief Defines the free function @c convert_to.
  *
- *  The @c convert_to function converts the @c from parameter to a @c To type.
- *  The default implementation applies the conversion @c To operator of the @c From class or
- *  the copy constructor of the @c To class.
+ *  The @c convert_to function converts the @c from parameter to a @c Target type.
+ *  The default implementation applies the conversion @c Target operator of the @c Source class or
+ *  the copy constructor of the @c Target class.
  *  Of course if both exist the conversion is ambiguous.
  *
  *  A user adapting another type could need to overload the @c convert_to free function
@@ -58,19 +58,19 @@ namespace boost {
     template <typename T, typename Enabled=void>
     struct enable_functor : mpl::false_ {};
 
-      //! customization point for @convert_to.
+    //! Customization point for @convert_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 
-      //! @tparam To target type of the conversion.
-      //! @tparam From source type of the conversion.
-      //! @tparam Enable A dummy parameter that can be used for SFINAE.
-
-    template < typename To, typename From, class Enable = void >
+    template < typename Target, typename Source, class Enable = void >
     struct converter {
-      //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-      //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
-      To operator()(const From& val)
+      //! @Requires @c Target must be CopyConstructible from @c Source or @c Source convertible to @c Target
+      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
+      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
+      Target operator()(const Source& val)
       {
-        return To((val));
+        return Target((val));
       }
     };
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -78,12 +78,12 @@ namespace boost {
 
       //! @brief Default @c convert_to overload, used when ADL fails.
       //!
-      //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-      //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
+      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-      template < typename To, typename From >
-      To convert_to(const From& from, dummy::type_tag<To> const&) {
-        return conversion::converter<To,From>()(from);
+      template < typename Target, typename Source >
+      Target convert_to(const Source& from, dummy::type_tag<Target> const&) {
+        return conversion::converter<Target,Source>()(from);
       }
     }
 
@@ -105,14 +105,14 @@ namespace boost {
     //! @Params
     //! @Param{source,source of the conversion}
     //!
-    //! @Effects Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-    //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+    //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
+    //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
     //!
     //! This function can be overloaded by the user.
     //! A trick is used to overload on the return type by adding a defaulted dummy parameter.
     //! Specializations must overload on @c dummy::type_tag<Target>
     //!
-    //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type.
+    //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type is mpl::true_.
     template <typename Target, typename Source>
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     typename disable_if<typename conversion::enable_functor<Source>::type, Target>::type

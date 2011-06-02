@@ -26,62 +26,60 @@
 #include <boost/config.hpp>
 
 namespace boost {
-    namespace conversion {
-        template < class Clock, class Duration>
-        struct converter<posix_time::ptime, chrono::time_point<Clock, Duration> > {
-            posix_time::ptime operator()(const chrono::time_point<Clock, Duration>& from)
-            {
-                typedef chrono::time_point<Clock, Duration> time_point_t;
-                typedef chrono::nanoseconds duration_t;
-                typedef duration_t::rep rep_t;
-                rep_t d = chrono::duration_cast<duration_t>(from.time_since_epoch()).count();
-                rep_t sec = d/1000000000;
-                rep_t nsec = d%1000000000;
-                return  posix_time::from_time_t(0)+
-                        posix_time::seconds(static_cast<long>(sec))+
+  namespace conversion {
+    template < class Clock, class Duration>
+    struct converter<posix_time::ptime, chrono::time_point<Clock, Duration> >
+    {
+      posix_time::ptime operator()(const chrono::time_point<Clock, Duration>& from)
+      {
+        typedef chrono::time_point<Clock, Duration> time_point_t;
+        typedef chrono::nanoseconds duration_t;
+        typedef duration_t::rep rep_t;
+        rep_t d = chrono::duration_cast<duration_t>(from.time_since_epoch()).count();
+        rep_t sec = d/1000000000;
+        rep_t nsec = d%1000000000;
+        return  posix_time::from_time_t(0)+
+                posix_time::seconds(static_cast<long>(sec))+
 #ifdef BOOST_DATE_TIME_HAS_NANOSECONDS
-                        posix_time::nanoseconds(nsec);
+                posix_time::nanoseconds(nsec);
 #else
-                        posix_time::microseconds((nsec+500)/1000);
+                posix_time::microseconds((nsec+500)/1000);
 #endif
-            }
-        };
+      }
+    };
 
-        template < class Clock, class Duration>
-        struct converter<chrono::time_point<Clock, Duration>, posix_time::ptime> {
-            chrono::time_point<Clock, Duration> operator()(const posix_time::ptime& from)
-            {
-                posix_time::time_duration const time_since_epoch=from-posix_time::from_time_t(0);
-                chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
-                long long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
-                return  t+chrono::duration_cast<Duration>(chrono::nanoseconds(nsec));
-            }
-        };
-    }
+    template < class Clock, class Duration>
+    struct converter<chrono::time_point<Clock, Duration>, posix_time::ptime>
+    {
+      chrono::time_point<Clock, Duration> operator()(const posix_time::ptime& from)
+      {
+        posix_time::time_duration const time_since_epoch=from-posix_time::from_time_t(0);
+        chrono::time_point<Clock, Duration> t=chrono::system_clock::from_time_t(time_since_epoch.total_seconds());
+        long long nsec=time_since_epoch.fractional_seconds()*(1000000000/time_since_epoch.ticks_per_second());
+        return  t+chrono::duration_cast<Duration>(chrono::nanoseconds(nsec));
+      }
+    };
+  }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    namespace chrono {
-        template < class Clock, class Duration>
-        inline chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from
-        )
-        {
-            to = boost::conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
-            return to;
-        }
-
+  namespace chrono {
+    template < class Clock, class Duration>
+    inline chrono::time_point<Clock, Duration>& assign_to(chrono::time_point<Clock, Duration>& to, const posix_time::ptime& from)
+    {
+      to = boost::conversion::convert_to<chrono::time_point<Clock, Duration> >(from);
+      return to;
     }
+  }
 
-    namespace posix_time {
-        template < class Clock, class Duration>
-        inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from
-        )
-        {
-            to = boost::conversion::convert_to<ptime>(from);
-            return to;
-        }
-
+  namespace posix_time {
+    template < class Clock, class Duration>
+    inline ptime& assign_to(ptime& to, const chrono::time_point<Clock, Duration>& from)
+    {
+      to = boost::conversion::convert_to<ptime>(from);
+      return to;
     }
-    #endif
+  }
+#endif
 }
 
 #endif

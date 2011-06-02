@@ -12,10 +12,10 @@
  @brief
  Defines the free function @c try_convert_to.
 
- The @c try_convert_to function converts the @c from parameter to a @c To type and returns an optional<To>, uninitialized if conversion fails.
+ The @c try_convert_to function converts the @c from parameter to a @c Target type and returns an optional<Target>, uninitialized if conversion fails.
  
- The default implementation applies the conversion @c To operator of the @c From class or
- the copy constructor of the @c To class on a try-catch block and returns optional with the converted value if succeeds and an uninitialized optional otherwise.
+ The default implementation applies the conversion @c Target operator of the @c Source class or
+ the copy constructor of the @c Target class on a try-catch block and returns optional with the converted value if succeeds and an uninitialized optional otherwise.
  Of course if both exist the conversion is ambiguous.
  A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
 
@@ -38,21 +38,26 @@
 
 namespace boost {
   namespace conversion {
+    //! Customization point for @try_convert_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //! This struct can be specialized by the user.
-    template < typename To, typename From >
+    template < typename Target, typename Source, class Enable = void >
     struct try_converter {
-      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
+      //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @NoThrow
       //! @Returns A optional<Ratget> uninitialized when conversion fails.
-      optional<To> operator()(const From& val)
+      optional<Target> operator()(const Source& val)
       {
         try
         {
-          return make_optional(boost::conversion::convert_to<To>(val));
+          return make_optional(boost::conversion::convert_to<Target>(val));
         }
         catch (...)
         {
-          return optional<To>();
+          return optional<Target>();
         }
       }
     };
@@ -63,13 +68,13 @@ namespace boost {
 
       //! @brief Default @c try_convert_to overload, used when ADL fails.
       //!
-      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @NoThrow
       //! @Returns A optional<Target> uninitialized when conversion fails.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-      template < typename To, typename From >
-      optional<To> try_convert_to(const From& val, dummy::type_tag<To> const&) {
-        return conversion::try_converter<To,From>()(val);
+      template < typename Target, typename Source >
+      optional<Target> try_convert_to(const Source& val, dummy::type_tag<Target> const&) {
+        return conversion::try_converter<Target,Source>()(val);
       }
     }
     namespace impl {
@@ -83,17 +88,19 @@ namespace boost {
 #endif
 
 
-  //!
-  //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
-  //! @NoThrow
-  //! @Returns A optional<Target> uninitialized when conversion fails.
-  //!
-  //! This function can be overloaded by the user for specific types.
-  //! A trick is used to partially specialize on the return type by adding a dummy parameter.
-  template <typename Target, typename Source>
-  optional<Target> try_convert_to(Source const& from) {
-    return boost::conversion::impl::try_convert_to_impl<Target>(from);
-  }
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
+    //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
+    //! @NoThrow
+    //! @Returns A optional<Target> uninitialized when conversion fails.
+    //!
+    //! This function can be overloaded by the user for specific types.
+    //! A trick is used to partially specialize on the return type by adding a dummy parameter.
+    template <typename Target, typename Source>
+    optional<Target> try_convert_to(Source const& from) {
+      return boost::conversion::impl::try_convert_to_impl<Target>(from);
+    }
   }
 
 }

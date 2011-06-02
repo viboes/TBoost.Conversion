@@ -30,47 +30,50 @@ namespace boost {
 
     // std namespace can not be overloaded
       
-      template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct converter< std::basic_string<CharT,Traits,Alloc>, T > {
-        std::basic_string<CharT,Traits,Alloc> operator()(T const & from)
-        {
+    template<typename T, typename CharT, typename Traits, typename Alloc>
+    struct converter< std::basic_string<CharT,Traits,Alloc>, T >
+    {
+      std::basic_string<CharT,Traits,Alloc> operator()(T const & from)
+      {
 #if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<std::basic_string<CharT,Traits,Alloc> >(from);
+        return lexical_cast<std::basic_string<CharT,Traits,Alloc> >(from);
 #else
-          return convert<std::basic_string<CharT,Traits,Alloc> >::from(from);
+        return convert<std::basic_string<CharT,Traits,Alloc> >::from(from);
 #endif
-        }
-      };
-      template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct converter< T, std::basic_string<CharT,Traits,Alloc> > {
-        T operator()(std::basic_string<CharT,Traits,Alloc> const & from)
-        {
+      }
+    };
+    template<typename T, typename CharT, typename Traits, typename Alloc>
+    struct converter< T, std::basic_string<CharT,Traits,Alloc> >
+    {
+      T operator()(std::basic_string<CharT,Traits,Alloc> const & from)
+      {
 #if !defined(BOOST_CONVERSION_USE_CONVERT)
-          return lexical_cast<T>(from);
+        return lexical_cast<T>(from);
 #else
-          return convert<T>::from(from);
+        return convert<T>::from(from);
 #endif
-        }
-      };
+      }
+    };
 
-      template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct assigner< std::basic_string<CharT,Traits,Alloc>, T > {
-        std::basic_string<CharT,Traits,Alloc>&
-        operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
-        {
-          to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
-          return to;
-        }
-      };
-      template<typename T, typename CharT, typename Traits, typename Alloc>
-      struct assigner< T, std::basic_string<CharT,Traits,Alloc> > {
-        T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
-        {
-          to = boost::conversion::convert_to<T>(from);
-          return to;
-        }
-      };
-
+    template<typename T, typename CharT, typename Traits, typename Alloc>
+    struct assigner< std::basic_string<CharT,Traits,Alloc>, T >
+    {
+      std::basic_string<CharT,Traits,Alloc>&
+      operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
+      {
+        to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
+        return to;
+      }
+    };
+    template<typename T, typename CharT, typename Traits, typename Alloc>
+    struct assigner< T, std::basic_string<CharT,Traits,Alloc> >
+    {
+      T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
+      {
+        to = boost::conversion::convert_to<T>(from);
+        return to;
+      }
+    };
       
   }
 }

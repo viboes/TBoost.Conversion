@@ -25,36 +25,35 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-
   namespace conversion {
-      //! @brief @c convert_to specialization for source and target been @c boost::rational.
-      //!
-      template < class T, class U>
-      struct converter< rational<T>, rational<U> > {
-        //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
-        rational<T> operator()(rational<U> const & from)
-        {
-          return rational<T>(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
-        }
-      };
-      template < class T, class U>
-      struct assigner< rational<T>, rational<U> >
+    //! @brief @c converter specialization for source and target been @c boost::rational.
+    //!
+    template < class Target, class Source>
+    struct converter< rational<Target>, rational<Source> >
+    {
+      //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
+      rational<Target> operator()(rational<Source> const & from)
       {
-        rational<T>& operator()(rational<T>& to, const rational<U>& from)
-        {
-          to.assign(boost::conversion::convert_to<T>(from.numerator()), boost::conversion::convert_to<T>(from.denominator()));
-          return to;
-        }
-      };
-
+        return rational<Target>(boost::conversion::convert_to<Target>(from.numerator()), boost::conversion::convert_to<Target>(from.denominator()));
+      }
+    };
+    template < class Target, class Source>
+    struct assigner< rational<Target>, rational<Source> >
+    {
+      rational<Target>& operator()(rational<Target>& to, const rational<Source>& from)
+      {
+        to.assign(boost::conversion::convert_to<Target>(from.numerator()), boost::conversion::convert_to<Target>(from.denominator()));
+        return to;
+      }
+    };
   }
 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-    template < class T, class U>
-    inline rational<T>& assign_to(rational<T>& to, const rational<U>& from)
-    {
-      return conversion::assigner<rational<T>, rational<U> >()(to, from);
-    }
+  template < class Target, class Source>
+  inline rational<Target>& assign_to(rational<Target>& to, const rational<Source>& from)
+  {
+    return conversion::assigner<rational<Target>, rational<Source> >()(to, from);
+  }
 #endif
 
 }

@@ -92,19 +92,19 @@ namespace boost {
     //! boost::conversion::make_converter_to<int>(_1)(v);
     //! @endcode
     //! Creates a functor that when applied to the parameter v, converts it to an @c int.
-    template <typename T, typename U>
+    template <typename Target, typename Source>
     inline
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    typename expression::convert_to<boost::phoenix::detail::target<T>, U>::type const
+    typename expression::convert_to<boost::phoenix::detail::target<Target>, Source>::type const
 #else
     unspecified_converter_type
 #endif
-    make_converter_to(U const& u)
+    make_converter_to(Source const& u)
     {
       return
       expression::
-      convert_to<boost::phoenix::detail::target<T>, U>::
-      make(boost::phoenix::detail::target<T>(), u);
+      convert_to<boost::phoenix::detail::target<Target>, Source>::
+      make(boost::phoenix::detail::target<Target>(), u);
     }
 
     //! @brief Lazily convert to a type @c Target from an arbitrary argument.
@@ -118,18 +118,18 @@ namespace boost {
     //! boost::conversion::convert_to<int>(_1)(v);
     //! @endcode
     //! Creates a functor that when applied to the parameter v, converts it to an @c int.
-    template <typename T, typename U>
+    template <typename Target, typename Source>
     inline
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    typename enable_if<typename boost::conversion::enable_functor<U>::type,
-      typename expression::convert_to<boost::phoenix::detail::target<T>, U>::type const
+    typename enable_if<typename boost::conversion::enable_functor<Source>::type,
+      typename expression::convert_to<boost::phoenix::detail::target<Target>, Source>::type const
     >::type
 #else
     unspecified_converter_type
 #endif
-    convert_to(U const& u)
+    convert_to(Source const& u)
     {
-      return make_converter_to<T>(u);
+      return make_converter_to<Target>(u);
     }
   }
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -25,24 +25,25 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-        template < class T1, class T2, class U1, class U2>
-        struct converter< std::pair<T1,T2>, std::pair<U1,U2> > {
-            std::pair<T1,T2> operator()(std::pair<U1,U2> const & from)
-            {
-                return std::pair<T1,T2>(boost::conversion::convert_to<T1>(from.first), boost::conversion::convert_to<T2>(from.second));
-            }
-        };
-        template < class T1, class T2, class U1, class U2>
-        struct assigner< std::pair<T1,T2>, std::pair<U1,U2> >
+    template < class T1, class T2, class S1, class S2>
+    struct converter< std::pair<T1,T2>, std::pair<S1,S2> >
+    {
+        std::pair<T1,T2> operator()(std::pair<S1,S2> const & from)
         {
-            std::pair<T1,T2>& operator()(std::pair<T1,T2>& to, const std::pair<U1,U2>& from)
-            {
-                to.first = boost::conversion::convert_to<T1>(from.first);
-                to.second = boost::conversion::convert_to<T2>(from.second);
-                return to;
-            }
-        };
-    }
+            return std::pair<T1,T2>(boost::conversion::convert_to<T1>(from.first), boost::conversion::convert_to<T2>(from.second));
+        }
+    };
+    template < class T1, class T2, class S1, class S2>
+    struct assigner< std::pair<T1,T2>, std::pair<S1,S2> >
+    {
+        std::pair<T1,T2>& operator()(std::pair<T1,T2>& to, const std::pair<S1,S2>& from)
+        {
+            to.first = boost::conversion::convert_to<T1>(from.first);
+            to.second = boost::conversion::convert_to<T2>(from.second);
+            return to;
+        }
+    };
+  }
 }
 
 #endif

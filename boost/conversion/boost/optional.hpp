@@ -41,41 +41,41 @@ namespace boost {
 #endif
 
   namespace conversion { 
-      /**
-       * Partial specialization of @c convert_to for boost::optional
-       */
-      template < class Target, class Source>
-      struct converter< optional<Target>, optional<Source> >
+    /**
+     * Partial specialization of @c converter for boost::optional
+     */
+    template < class Target, class Source>
+    struct converter< optional<Target>, optional<Source> >
+    {
+      //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
+      //! Uninitialized  @c boost::optional<Target otherwise.
+      optional<Target> operator()(optional<Source> const & from)
       {
-        //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
-        //! Uninitialized  @c boost::optional<Target otherwise.
-        optional<Target> operator()(optional<Source> const & from)
-        {
-          return (from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>());
-        }
-      };
-      
-      //! @brief @c convert_to specialization to try to convert the source to @c Target::value_type when @c Target is optional.
-      //!
-      //! We can see this specialization as a try_convert_to function.
-      template < class Target, class Source>
-      struct converter< optional<Target>, Source>
+        return (from?optional<Target>(boost::conversion::convert_to<Target>(from.get())):optional<Target>());
+      }
+    };
+
+    //! @brief @c converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+    //!
+    //! We can see this specialization as a try_convert_to function.
+    template < class Target, class Source>
+    struct converter< optional<Target>, Source>
+    {
+      //! @Returns If the source is convertible to the target @c value_type
+      //! @c Target initialized to the result of the conversion.
+      //! Uninitialized  @c Target otherwise.
+      optional<Target> operator()(Source const & from)
       {
-        //! @Returns If the source is convertible to the target @c value_type
-        //! @c Target initialized to the result of the conversion.
-        //! Uninitialized  @c Target otherwise.
-        optional<Target> operator()(Source const & from)
+        try
         {
-          try
-          {
-            return optional<Target>(boost::conversion::convert_to<Target>(from));
-          }
-          catch (...)
-          {
-            return optional<Target>();
-          }
+          return optional<Target>(boost::conversion::convert_to<Target>(from));
         }
-      };
+        catch (...)
+        {
+          return optional<Target>();
+        }
+      }
+    };
 
 
   }

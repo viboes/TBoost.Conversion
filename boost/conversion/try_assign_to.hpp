@@ -13,7 +13,7 @@
  Defines the free function @c try_assign_to.
 
 The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignation done and @c false otherwise.
-The default implementation applies the the assignment operator of the @c To class.
+The default implementation applies the the assignment operator of the @c Target class.
 A user adapting another type could need to specialize the @c try_assign_to free function if the default behavior is not satisfactory ot if it can improve the performances
 
 The user can add the @c try_assign_to overloading on the namespace of the Source or Target classes.
@@ -37,19 +37,24 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
+    //! Customization point for @try_assign_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //! This struct can be specialized by the user.
-    template < typename To, typename From >
+    template < typename Target, typename Source, class Enable = void >
     struct try_assigner
     {
+      //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::assign_to(to, from) must be well formed.
       //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
       //! @NoThrow
       //! @Returns the converted value if success or the fallback when conversion fails.
-      bool operator()(To& to, const From& from)
+      bool operator()(Target& to, const Source& from)
       {
-        To rollback = to;
+        Target rollback = to;
         try
         {
-          boost::conversion::assign_to<To>(to , from);
+          boost::conversion::assign_to<Target>(to , from);
           return true;
         }
         catch (...)
@@ -59,27 +64,27 @@ namespace boost {
         }
       }
     };
-    template < typename To, typename From, std::size_t N  >
-    struct try_assigner<To[N],From[N]>
+    template < typename Target, typename Source, std::size_t N  >
+    struct try_assigner<Target[N],Source[N]>
     {
       //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
       //! @NoThrow
       //! @Returns the converted value if success or the fallback when conversion fails.
-      bool operator()(To(&to)[N], const From(& from)[N])
+      bool operator()(Target(&to)[N], const Source(& from)[N])
       {
-        To rollback[N];
-        boost::conversion::assign_to<To>(rollback, to);
+        Target rollback[N];
+        boost::conversion::assign_to<Target>(rollback, to);
         try
         {
           for (std::size_t i = 0; i < N; ++i)
           {
-            boost::conversion::assign_to<To>(to[i] , from[i]);
+            boost::conversion::assign_to<Target>(to[i] , from[i]);
           }
           return true;
         }
         catch (...)
         {
-          boost::conversion::assign_to<To>(to, rollback);
+          boost::conversion::assign_to<Target>(to, rollback);
           return false;
         }
       }
@@ -95,10 +100,10 @@ namespace boost {
     //! @NoThrow
     //! @Returns the converted value if success or the fallback when conversion fails.
     //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-    template < typename To, typename From >
-    bool try_assign_to(To& to, const From& from)
+    template < typename Target, typename Source >
+    bool try_assign_to(Target& to, const Source& from)
     {
-      return conversion::try_assigner<To,From>()(to, from);
+      return conversion::try_assigner<Target,Source>()(to, from);
     }
   }
 
@@ -114,17 +119,19 @@ namespace boost {
 #endif
   namespace conversion {
 
-  //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-  //! @NoThrow
-  //! @Returns the converted value if success or the fallback when conversion fails.
-  //!
-  //! This function can be partially specialized on compilers supporting it.
-  template <typename Target, typename Source>
-  bool try_assign_to(Target& to, const Source& from)
-  {
-    return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+    //! @NoThrow
+    //! @Returns the converted value if success or the fallback when conversion fails.
+    //!
+    //! This function can be partially specialized on compilers supporting it.
+    template <typename Target, typename Source>
+    bool try_assign_to(Target& to, const Source& from)
+    {
+      return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
+    }
   }
-}
 }
 
 #endif

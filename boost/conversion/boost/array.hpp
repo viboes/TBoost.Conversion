@@ -24,39 +24,38 @@
 #include <boost/config.hpp>
 
 namespace boost {
-
   namespace conversion {
 
-      /**
-       * Partial specialization of @c convert_to for @c boost::array of the same size
-       */
-      template < typename T1, typename T2, std::size_t N>
-      struct converter< array<T1,N>, array<T2,N> >
+    /**
+     * Partial specialization of @c converter for @c boost::array of the same size
+     */
+    template < typename Target, typename Source, std::size_t N>
+    struct converter< array<Target,N>, array<Source,N> >
+    {
+      //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
+      inline array<Target,N> operator()(array<Source,N> const & from)
       {
-        //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
-        inline array<T1,N> operator()(array<T2,N> const & from)
-        {
-          array<T1,N> to;
-          boost::conversion::assign_to(to, from);
-          return to;
-        }
-      };
-      /**
-       * Partial specialization of @c assign_to for @c boost::array of the same size
-       */
-      template < typename T1, typename T2, std::size_t N>
-      struct assigner< array<T1,N>, array<T2,N> >
+        array<Target,N> to;
+        boost::conversion::assign_to(to, from);
+        return to;
+      }
+    };
+    /**
+     * Partial specialization of @c assigner for @c boost::array of the same size
+     */
+    template < typename Target, typename Source, std::size_t N>
+    struct assigner< array<Target,N>, array<Source,N> >
+    {
+      //! @Effects assign to each one of the target array elements the conversion of the source array element.
+      array<Target,N>& operator()(array<Target,N>& to, array<Source,N> const & from)
       {
-        //! @Effects assign to each one of the target array elements the conversion of the source array element.
-        array<T1,N>& operator()(array<T1,N>& to, array<T2,N> const & from)
+        for (unsigned int i =0; i<N; ++i)
         {
-          for (unsigned int i =0; i<N; ++i)
-          {
-              to[i]=boost::conversion::convert_to<T1>(from[i]);
-          }
-          return to;
+            to[i]=boost::conversion::convert_to<Target>(from[i]);
         }
-      };
+        return to;
+      }
+    };
   }
 
   #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
@@ -64,11 +63,10 @@ namespace boost {
   //!
   //! @Effects converts each one of the source array elements and store the result in the corresponding index on the target array.
   //! @Returns The @c to parameter reference.
-  template < typename T1, typename T2, std::size_t N>
-  inline array<T1,N>& assign_to(array<T1,N>& to, array<T2,N> const & from
-  )
+  template < typename Target, typename Source, std::size_t N>
+  inline array<Target,N>& assign_to(array<Target,N>& to, array<Source,N> const & from)
   {
-    return conversion::assigner<array<T1,N>, array<T2,N> >()(to, from);
+    return conversion::assigner<array<Target,N>, array<Source,N> >()(to, from);
   }
   #endif
 }

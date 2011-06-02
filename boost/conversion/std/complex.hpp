@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2009-2011. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -24,28 +24,29 @@
 namespace boost {
   namespace conversion {
 
-    // std namespace can not be overloaded
-      /**
-       * Partial specialization of @c convert_to for @c std::complex of the same size
-       */
-      template < class T, class U>
-      struct converter< std::complex<T>, std::complex<U> > {
-        std::complex<T> operator()(std::complex<U> const & from)
-        {
-          return std::complex<T>(
-              boost::conversion::convert_to<T>(from.real()),
-              boost::conversion::convert_to<T>(from.imag()));
-        }
-      };
-      template < class T, class U>
-      struct assigner< std::complex<T>, std::complex<U> > {
-        std::complex<T>& operator()(std::complex<T>& to, const std::complex<U>& from)
-        {
-          to.real() = boost::conversion::convert_to<T>(from.real());
-          to.imag() = boost::conversion::convert_to<T>(from.imag());
-          return to;
-        }
-      };
+    /**
+     * Partial specialization of @c convert_to for @c std::complex of the same size
+     */
+    template < class Target, class Source>
+    struct converter< std::complex<Target>, std::complex<Source> >
+    {
+      std::complex<Target> operator()(std::complex<Source> const & from)
+      {
+        return std::complex<Target>(
+            boost::conversion::convert_to<Target>(from.real()),
+            boost::conversion::convert_to<Target>(from.imag()));
+      }
+    };
+    template < class Target, class Source>
+    struct assigner< std::complex<Target>, std::complex<Source> >
+    {
+      std::complex<Target>& operator()(std::complex<Target>& to, const std::complex<Source>& from)
+      {
+        to.real() = boost::conversion::convert_to<Target>(from.real());
+        to.imag() = boost::conversion::convert_to<Target>(from.imag());
+        return to;
+      }
+    };
 
   }
 }

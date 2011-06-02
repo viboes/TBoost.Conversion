@@ -12,10 +12,10 @@
  @brief
  Defines the free function @c convert_to_or_fallback.
 
- The @c convert_to_or_fallback function converts the @c from parameter to a @c To type. If the conversion fails the fallback value is used to construct a To @c instance. 
+ The @c convert_to_or_fallback function converts the @c from parameter to a @c Target type. If the conversion fails the fallback value is used to construct a Target @c instance.
  
- The default implementation applies the conversion @c To operator of the @c From class or
- the copy constructor of the @c To class. When an exception is thrown the fallback is returned.
+ The default implementation applies the conversion @c Target operator of the @c Source class or
+ the copy constructor of the @c Target class. When an exception is thrown the fallback is returned.
  Of course if both exist the conversion is ambiguous.
  A user adapting another type could need to specialize the @c convert_to_or_fallback free function if the default behavior is not satisfactory.
 
@@ -38,21 +38,26 @@
 namespace boost {
   namespace conversion {
     //! This struct can be specialized by the user.
-    template < typename To, typename From, typename Fallback>
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    template < typename Target, typename Source, typename Fallback, class Enable = void>
     struct converter_or_fallbacker {
       //!
-      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
+      //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @Returns the converted value if the conversion succeeds or the fallback.
       //! @NoThrow
-      To operator()(const From& val, Fallback const& fallback)
+      Target operator()(const Source& val, Fallback const& fallback)
       {
         try
         {
-          return boost::conversion::convert_to<To>(val);
+          return boost::conversion::convert_to<Target>(val);
         }
         catch (...)
         {
-          return To((fallback));
+          return Target((fallback));
         }
       }
     };
@@ -62,13 +67,13 @@ namespace boost {
 
       //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
       //!
-      //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+      //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @Returns the converted value if the conversion succeeds or the fallback.
       //! @NoThrow
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
-      template < typename To, typename From, typename Fallback >
-      To convert_to_or_fallback(const From& val, Fallback const& fallback, dummy::type_tag<To> const&) {
-        return conversion::converter_or_fallbacker<To,From,Fallback>()(val, fallback);
+      template < typename Target, typename Source, typename Fallback >
+      Target convert_to_or_fallback(const Source& val, Fallback const& fallback, dummy::type_tag<Target> const&) {
+        return conversion::converter_or_fallbacker<Target,Source,Fallback>()(val, fallback);
       }
     }
 
@@ -82,8 +87,11 @@ namespace boost {
     }
     #endif
 
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //!
-    //! @Effects  Converts the @c from parameter to an instance of the @c To type, using by default the conversion operator or copy constructor.
+    //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
     //! @Returns the converted value if the conversion succeeds or the fallback.
     //! @NoThrow
     //!
