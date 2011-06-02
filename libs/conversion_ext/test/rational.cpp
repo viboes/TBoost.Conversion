@@ -32,7 +32,9 @@ void explicit_assign_to() {
     boost::rational<B1> b(1,2);
     boost::conversion::assign_to(a, b);
     boost::conversion::assign_to(a, boost::rational<B1>(b1,b2));
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
     assign_to(a, b);
+#endif
 }
 
 int main( )

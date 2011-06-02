@@ -17,6 +17,7 @@
 #include <boost/conversion/try_assign_to.hpp>
 
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 struct A1{};
 struct B1{};
 struct C1{};
@@ -33,7 +34,18 @@ A1& assign_to(A1& to, const B1&)
 {
   return to;
 }
-
+#else
+struct B1{};
+struct C1{};
+struct A1{
+  A1() {}
+  A1(A1 const&) {}
+  A1(B1 const&) {}
+  A1(C1 const&) {
+    throw 1;
+  }
+};
+#endif
 
 void explicit_convert_to() 
 {
@@ -86,6 +98,7 @@ void explicit_assign_to()
     boost::conversion::assign_to(a, boost::optional<B1>(b1));
     BOOST_TEST(a);
   }
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
   { // assign_to can be used when found by ADL
     B1 b1;
     boost::optional<A1> a;
@@ -93,6 +106,7 @@ void explicit_assign_to()
     assign_to(a,b);
     BOOST_TEST(a);
   }
+#endif
 }
 
 void explicit_try_convert_to()

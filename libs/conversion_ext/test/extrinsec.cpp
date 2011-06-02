@@ -21,6 +21,7 @@ struct C{};
 
 void f(B) {}
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
   A convert_to(const B&, boost::conversion::dummy::type_tag<A> const&) {
     return A();
   }
@@ -36,7 +37,26 @@ void f(B) {}
   B& assign_to(B& to, const C&) {
     return to;
   }
-
+#else
+  namespace boost {
+      namespace conversion {
+          template <>
+          struct converter< A,B > {
+              A operator()(B const &)
+              {
+                  return A();
+              }
+          };
+          template <>
+          struct converter< B,C > {
+              B operator()(C const &)
+              {
+                  return B();
+              }
+          };
+      }
+  }
+#endif
 void explicit_convert_to() {
     B b;
     A a(boost::conversion::convert_to<A>(b));
