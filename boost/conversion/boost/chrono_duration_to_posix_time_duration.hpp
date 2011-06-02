@@ -62,6 +62,7 @@ namespace boost {
 
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   namespace chrono {
 
@@ -92,7 +93,8 @@ namespace boost {
     }
   }
 
-  #endif
+#endif
+#endif
 }
 
 #endif

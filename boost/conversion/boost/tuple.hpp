@@ -49,6 +49,7 @@ namespace boost {
 
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   namespace fusion {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -71,6 +72,7 @@ namespace boost {
       return to;
     }
   }
+#endif
 #endif
 #endif
 }

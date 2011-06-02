@@ -61,6 +61,7 @@ namespace boost {
     };
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   namespace chrono {
     template < class Clock, class Duration>
@@ -79,6 +80,7 @@ namespace boost {
       return to;
     }
   }
+#endif
 #endif
 }
 

@@ -62,7 +62,8 @@ namespace boost {
       }
     };
 
-    #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
       //! @brief Default @c convert_to_or_fallback overload, used when ADL fails.
@@ -72,8 +73,8 @@ namespace boost {
       //! @NoThrow
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename Target, typename Source, typename Fallback >
-      Target convert_to_or_fallback(const Source& val, Fallback const& fallback, dummy::type_tag<Target> const&) {
-        return conversion::converter_or_fallbacker<Target,Source,Fallback>()(val, fallback);
+      Target convert_to_or_fallback(const Source& from, Fallback const& fallback, dummy::type_tag<Target> const&) {
+        return conversion::converter_or_fallbacker<Target,Source,Fallback>()(from, fallback);
       }
     }
 
@@ -85,7 +86,8 @@ namespace boost {
         return convert_to_or_fallback(from, fallback, dummy::type_tag<Target>());
       }
     }
-    #endif
+#endif
+#endif
 
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -99,7 +101,11 @@ namespace boost {
     //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source, typename Fallback>
     Target convert_to_or_fallback(Source const& from, Fallback const& fallback) {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
+#else
+      return conversion::converter_or_fallbacker<Target,Source,Fallback>()(from, fallback);
+#endif
     }
   }
 }

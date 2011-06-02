@@ -80,6 +80,7 @@ namespace boost {
 
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   //! @brief @c assign_to overloading for source and target been @c boost::optional.
   //!
@@ -92,6 +93,7 @@ namespace boost {
     to = boost::conversion::convert_to<optional<Target> >(from);
     return to;
   }
+#endif
 #endif
 
 }

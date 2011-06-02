@@ -62,7 +62,7 @@ namespace boost {
       }
     };
 
-
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -73,8 +73,8 @@ namespace boost {
       //! @Returns A optional<Target> uninitialized when conversion fails.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename Target, typename Source >
-      optional<Target> try_convert_to(const Source& val, dummy::type_tag<Target> const&) {
-        return conversion::try_converter<Target,Source>()(val);
+      optional<Target> try_convert_to(const Source& from, dummy::type_tag<Target> const&) {
+        return conversion::try_converter<Target,Source>()(from);
       }
     }
     namespace impl {
@@ -86,7 +86,7 @@ namespace boost {
       }
     }
 #endif
-
+#endif
 
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -99,7 +99,11 @@ namespace boost {
     //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source>
     optional<Target> try_convert_to(Source const& from) {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion::impl::try_convert_to_impl<Target>(from);
+#else
+      return conversion::try_converter<Target,Source>()(from);
+#endif
     }
   }
 

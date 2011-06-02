@@ -35,6 +35,7 @@
 
 namespace boost {
   namespace conversion {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
     namespace dummy {
       //! tag used to overload a function returning T.
       //!
@@ -47,7 +48,7 @@ namespace boost {
         typedef T type;
       };
     }
-
+#endif
     //! meta-function to state if the parameter is a place_holder
     //!
     //! @tparam T The type to check for.
@@ -73,6 +74,7 @@ namespace boost {
         return Target((val));
       }
     };
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -95,6 +97,7 @@ namespace boost {
         return convert_to(from, dummy::type_tag<Target>());
       }
     }
+#endif
 #endif
 
     //! @brief Extrinsic conversion function.
@@ -120,7 +123,11 @@ namespace boost {
     Target
 #endif
     convert_to(Source const& from) {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion::impl::convert_to_impl<Target>(from);
+#else
+      return conversion::converter<Target,Source>()(from);
+#endif
     }
   }
 }

@@ -66,6 +66,7 @@ namespace boost {
     };
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl_2 {
 
@@ -91,6 +92,7 @@ namespace boost {
     }
   }
 #endif
+#endif
   namespace conversion {
 
     //! @brief Extrinsic assign function.
@@ -108,7 +110,11 @@ namespace boost {
     template <typename Target, typename Source>
     Target& assign_to(Target& to, const Source& from)
     {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion_impl::assign_to_impl<Target, Source>(to, from);
+#else
+      return conversion::assigner<Target,Source>()(to, from);
+#endif
     }
   }
 }

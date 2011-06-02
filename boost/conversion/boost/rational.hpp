@@ -48,12 +48,14 @@ namespace boost {
     };
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   template < class Target, class Source>
   inline rational<Target>& assign_to(rational<Target>& to, const rational<Source>& from)
   {
     return conversion::assigner<rational<Target>, rational<Source> >()(to, from);
   }
+#endif
 #endif
 
 }

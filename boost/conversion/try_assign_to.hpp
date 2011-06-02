@@ -92,6 +92,7 @@ namespace boost {
 
   }
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl_2 {
     //! @brief Default @c try_assign_to overload, used when ADL fails.
@@ -117,6 +118,7 @@ namespace boost {
     }
   }
 #endif
+#endif
   namespace conversion {
 
     //! @tparam Target target type of the conversion.
@@ -129,7 +131,11 @@ namespace boost {
     template <typename Target, typename Source>
     bool try_assign_to(Target& to, const Source& from)
     {
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
+#else
+      return conversion::try_assigner<Target,Source>()(to, from);
+#endif
     }
   }
 }

@@ -58,7 +58,8 @@ namespace boost {
     };
   }
 
-  #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   //! @brief @c convert_to overloading for source and target been @c boost::array of the same size.
   //!
   //! @Effects converts each one of the source array elements and store the result in the corresponding index on the target array.
@@ -68,7 +69,8 @@ namespace boost {
   {
     return conversion::assigner<array<Target,N>, array<Source,N> >()(to, from);
   }
-  #endif
+#endif
+#endif
 }
 
 #endif
