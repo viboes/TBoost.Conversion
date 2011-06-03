@@ -113,7 +113,7 @@ namespace boost {
     bool try_assign_to_impl(Target& to, const Source& from)
     {
       using namespace boost::conversion_impl_2;
-      //use boost::conversion::try_assign_to if ADL fails
+      //use boost::conversion_impl_2::try_assign_to if ADL fails
       return try_assign_to(to, from);
     }
   }
@@ -126,8 +126,6 @@ namespace boost {
     //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
     //! @NoThrow
     //! @Returns the converted value if success or the fallback when conversion fails.
-    //!
-    //! This function can be partially specialized on compilers supporting it.
     template <typename Target, typename Source>
     bool try_assign_to(Target& to, const Source& from)
     {

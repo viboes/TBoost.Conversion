@@ -9,13 +9,16 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief Defines the free function @c convert_to.
+ * @brief Defines the free function @c convert_to and its customization point @c converter.
  *
  *  The @c convert_to function converts the @c from parameter to a @c Target type.
- *  The default implementation applies the conversion @c Target operator of the @c Source class or
+ *  The default implementation of @ converter applies the conversion @c Target operator of the @c Source class or
  *  the copy constructor of the @c Target class.
  *  Of course if both exist the conversion is ambiguous.
  *
+ */
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+/**
  *  A user adapting another type could need to overload the @c convert_to free function
  *  if the default behavior is not satisfactory.
  *  The user can add the @c convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
@@ -26,14 +29,19 @@
  *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::convert_to struct.
  *
  */
+#endif
 
 #ifndef BOOST_CONVERSION_CONVERT_TO_HPP
 #define BOOST_CONVERSION_CONVERT_TO_HPP
 
-#include <boost/mpl/bool.hpp>
+//#include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+//#include <boost/conversion/tt/is_explicit_constructible.hpp>
+//#include <boost/conversion/tt/is_extrinsic_convertible.hpp>
 
 namespace boost {
+
   namespace conversion {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
     namespace dummy {
@@ -57,15 +65,28 @@ namespace boost {
     //! The nested type @c type is a mpl boolean which default to @c mpl::false_.
     //!   Specific specialization would make this meta-function to be @c mpl::true_.
     template <typename T, typename Enabled=void>
-    struct enable_functor : mpl::false_ {};
+    struct enable_functor : false_type {};
 
     //! Customization point for @convert_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
-    struct converter {
+    struct converter;
+    template < typename Target, typename Source >
+    struct converter<Target, Source
+              , typename enable_if_c<
+                      is_explicit_constructible<Target, const Source&>::value
+                  or  is_explicitly_convertible<Source,Target>::value
+                  >::type
+              >
+#else
+    template < typename Target, typename Source, class Enable = void >
+    struct converter
+#endif
+    {
       //! @Requires @c Target must be CopyConstructible from @c Source or @c Source convertible to @c Target
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
@@ -84,16 +105,18 @@ namespace boost {
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename Target, typename Source >
-      Target convert_to(const Source& from, dummy::type_tag<Target> const&) {
+      Target convert_to(const Source& from, dummy::type_tag<Target> const&)
+      {
         return conversion::converter<Target,Source>()(from);
       }
     }
 
     namespace impl {
       template <typename Target, typename Source>
-      Target convert_to_impl(Source const& from) {
+      Target convert_to_impl(Source const& from)
+      {
         using namespace boost::conversion::impl_2;
-        //use boost::conversion::convert_to if ADL fails
+        //use boost::conversion::impl_2::convert_to if ADL fails
         return convert_to(from, dummy::type_tag<Target>());
       }
     }
@@ -101,19 +124,16 @@ namespace boost {
 #endif
 
     //! @brief Extrinsic conversion function.
-    //!
+    //! Converts the @c from parameter to an instance of the @c Target type.
+    //! This function can be seen as an emulation of free function overload of the conversion operator.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
     //! @Params
     //! @Param{source,source of the conversion}
     //!
-    //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
-    //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
-    //!
-    //! This function can be overloaded by the user.
-    //! A trick is used to overload on the return type by adding a defaulted dummy parameter.
-    //! Specializations must overload on @c dummy::type_tag<Target>
+    //! @Returns The result of @c converter customization point.
+    //! @Throws  Whatever the @c converter call operator throws.
     //!
     //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type is mpl::true_.
     template <typename Target, typename Source>
@@ -122,7 +142,8 @@ namespace boost {
 #else
     Target
 #endif
-    convert_to(Source const& from) {
+    convert_to(Source const& from)
+    {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion::impl::convert_to_impl<Target>(from);
 #else

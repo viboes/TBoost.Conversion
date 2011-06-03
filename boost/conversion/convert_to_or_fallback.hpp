@@ -45,10 +45,9 @@ namespace boost {
     template < typename Target, typename Source, typename Fallback, class Enable = void>
     struct converter_or_fallbacker {
       //!
-      //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
-      //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
-      //! @Returns the converted value if the conversion succeeds or the fallback.
-      //! @NoThrow
+      //! @Requires @c Fallback must be convertible to @c Target and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
+      //! @Returns The converted value if the conversion succeeds or the fallback.
+      //! @Throws  Whatever the conversion from @c Fallback to @c Target can throws when the conversion fails.
       Target operator()(const Source& val, Fallback const& fallback)
       {
         try
@@ -82,23 +81,22 @@ namespace boost {
       template <typename Target, typename Source, typename Fallback>
       Target convert_to_or_fallback_impl(Source const& from, Fallback const& fallback) {
         using namespace boost::conversion::impl_2;
-        //use boost::conversion::convert_to_or_fallback if ADL fails
+        //use boost::conversion::impl_2::convert_to_or_fallback if ADL fails
         return convert_to_or_fallback(from, fallback, dummy::type_tag<Target>());
       }
     }
 #endif
 #endif
 
+    //! @brief Extrinsic conversion function with fallback.
+    //! Converts the @c from parameter to an instance of the @c Target type.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //!
-    //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
     //! @Returns the converted value if the conversion succeeds or the fallback.
-    //! @NoThrow
+    //! @Throws  Whatever the conversion from @c Fallback to @c Target can throws when the conversion fails.
     //!
-    //! This function can be partially specialized on compilers supporting it.
-    //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source, typename Fallback>
     Target convert_to_or_fallback(Source const& from, Fallback const& fallback) {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

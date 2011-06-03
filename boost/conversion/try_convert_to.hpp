@@ -81,7 +81,7 @@ namespace boost {
       template <typename Target, typename Source>
       optional<Target> try_convert_to_impl(Source const& from) {
         using namespace boost::conversion::impl_2;
-        //use boost::conversion::try_convert_to if ADL fails
+        //use boost::conversion::impl_2::try_convert_to if ADL fails
         return try_convert_to(from, dummy::type_tag<Target>());
       }
     }
@@ -94,9 +94,6 @@ namespace boost {
     //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
     //! @NoThrow
     //! @Returns A optional<Target> uninitialized when conversion fails.
-    //!
-    //! This function can be overloaded by the user for specific types.
-    //! A trick is used to partially specialize on the return type by adding a dummy parameter.
     template <typename Target, typename Source>
     optional<Target> try_convert_to(Source const& from) {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

@@ -10,11 +10,15 @@
 /*!
  @file
  @brief
- Defines the free function @c assign_to.
+ Defines the free function @c assign_to and its customization point @c assigner.
 
 The function @c assign_to assigns the @c from parameter to the @c to parameter.
-The default implementation uses the @c convert_to to convert the source to the target and use the copy assignment of the @c Target class.
+The default implementation of the @c assigner uses the @c convert_to to convert the source to the target and
+uses the copy assignment of the @c Target class.
+ */
 
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+/**
 A user adapting another type could need to specialize the @c assign_to free function if the default behavior is not satisfactory.
 The user can add the @c assign_to overloading on the namespace of the Source or Target classes.
 But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace,
@@ -22,12 +26,17 @@ so we need a different technique. The technique consists in partially specialize
 the @c boost::conversion::overload_workaround namespace.
 
  */
+#endif
 
 #ifndef BOOST_CONVERSION_ASSIGN_TO_HPP
 #define BOOST_CONVERSION_ASSIGN_TO_HPP
 
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
+#include <boost/utility/enable_if.hpp>
+//#include <boost/conversion/tt/is_copy_constructible.hpp>
+//#include <boost/conversion/tt/is_copy_constructible.hpp>
+//#include <boost/conversion/tt/is_extrinsic_convertible.hpp>
 
 namespace boost {
   namespace conversion {
@@ -35,19 +44,48 @@ namespace boost {
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    template < typename Target, typename Source, class Enable = void>
+    struct assigner;
+    template < typename Target, typename Source>
+    struct assigner<Target, Source
+            , typename enable_if_c<
+                    is_copy_constructible<Target>::value
+                    && is_extrinsic_convertible<Source,Target>::value
+                    && ! is_assignable<Source,Target>::value
+                >::type
+            >
+#else
     template < typename Target, typename Source, class Enable = void>
     struct assigner
+#endif
     {
       //! @Requires @c Target must be CopyAssinable and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-      //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
+      //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+      //! @Throws Whatever the underlying assignment operator of the @c Target class throws.
       Target& operator()(Target& to, const Source& from)
       {
         to = ::boost::conversion::convert_to<Target>(from);
         return to;
       }
     };
-
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    template < typename Target, typename Source>
+    struct assigner<Target,Source
+            , typename enable_if<is_assignable<Target, Source> >::type
+            >
+    {
+      //! @Requires @c Target must be Assinable from Source.
+      //! @Effects Assigns the @c from parameter to the @c to parameter.
+      //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
+      Target& operator()(Target& to, const Source& from)
+      {
+        to = from;
+        return to;
+      }
+    };
+#endif
     //! partial specialization for c-array types.
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N],void>
@@ -87,7 +125,7 @@ namespace boost {
     Target& assign_to_impl(Target& to, const Source& from)
     {
       using namespace boost::conversion_impl_2;
-      //use boost::conversion::assign_to if ADL fails
+      //use boost::conversion_impl_2::assign_to if ADL fails
       return assign_to(to, from);
     }
   }
@@ -96,6 +134,8 @@ namespace boost {
   namespace conversion {
 
     //! @brief Extrinsic assign function.
+    //! Assigns the @c Source parameter to the @c Target one.
+    //! This function can be seen as an emulation of free function overload of the assignment operator.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
@@ -103,9 +143,8 @@ namespace boost {
     //! @Param{to,target of the conversion}
     //! @Param{from,source of the conversion}
 
-    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-    //! @Throws  Whatever the underlying the assignment operator of the @c Target class throws..
-    //! This function can be overloaded by the user.
+    //! @Effects  The ones of the assigner customization point.
+    //! @Throws  Whatever the assigner customization point throws.
 
     template <typename Target, typename Source>
     Target& assign_to(Target& to, const Source& from)

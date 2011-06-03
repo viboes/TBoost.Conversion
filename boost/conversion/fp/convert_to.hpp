@@ -26,6 +26,7 @@
 #include <boost/proto/transform/lazy.hpp>
 #include <boost/phoenix/core/is_actor.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
 
@@ -44,7 +45,7 @@ namespace boost {
 
     //! The nested type @ type is @c mpl::true_.
     template <typename T>
-    struct enable_functor<T, typename enable_if<phoenix::is_actor<T> >::type>  : mpl::true_ {};
+    struct enable_functor<T, typename enable_if<phoenix::is_actor<T> >::type>  : true_type {};
 
     namespace detail {
       struct convert_to_eval
