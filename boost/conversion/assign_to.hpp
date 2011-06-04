@@ -34,13 +34,16 @@ the @c boost::conversion::overload_workaround namespace.
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
 #include <boost/conversion/type_traits/is_copy_assignable.hpp>
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#endif
 
 namespace boost {
   namespace conversion {
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
 
     template < typename Target, typename Source>
     struct assigner_specialized
@@ -49,6 +52,7 @@ namespace boost {
             &&  is_extrinsic_convertible<Source,Target>::value
             >
     {};
+#endif
 
     //! Customization point for @assign_to.
     //! @tparam Target target type of the conversion.

@@ -38,7 +38,9 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
+#endif
 
 namespace boost {
 
