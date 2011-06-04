@@ -32,6 +32,7 @@
 #include <boost/typeof/typeof.hpp>
 #endif // defined(BOOST_NO_DECLTYPE)
 #include <utility>
+#include <boost/array.hpp>
 
 namespace boost {
 
@@ -204,6 +205,11 @@ namespace boost {
   template <class A1, class A2, class B1, class B2>
   struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2>, detail::is_constructible::nat>
       : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+        {};
+
+  template <class T1, class T2, std::size_t N>
+  struct is_constructible< boost::array<T1,N>, boost::array<T2,N> , detail::is_constructible::nat>
+      : integral_constant<bool, is_constructible<T1,T2>::value  >
         {};
 
 

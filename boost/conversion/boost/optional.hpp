@@ -40,7 +40,7 @@ namespace boost {
   }
 #endif
 
-  namespace conversion { 
+  namespace conversion {
     /**
      * Partial specialization of @c converter for boost::optional
      */
@@ -49,6 +49,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
+            && ! is_explicitly_convertible<optional<Source>,optional<Target> >::value
         >::type
 #endif
     > : true_type
@@ -69,6 +70,8 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
+            && ! detail::is_optional<Source>::value
+            && ! is_explicitly_convertible<Source,optional<Target> >::value
         >::type
 #endif
     > : true_type

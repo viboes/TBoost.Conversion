@@ -23,6 +23,7 @@
 #include <boost/utility/declval.hpp>
 #include <boost/config.hpp>
 #include <utility>
+#include <boost/array.hpp>
 
 #if defined(BOOST_NO_DECLTYPE)
 #include <boost/typeof/typeof.hpp>
@@ -66,6 +67,10 @@ namespace boost {
   template <class A1, class A2, class B1, class B2>
   struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
       : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
+        {};
+  template <class T1, class T2, std::size_t N>
+  struct is_assignable< boost::array<T1,N>, boost::array<T2,N> >
+      : integral_constant<bool, is_assignable<T1,T2>::value  >
         {};
 
 #else

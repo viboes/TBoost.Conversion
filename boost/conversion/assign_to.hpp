@@ -67,7 +67,7 @@ namespace boost {
             , typename enable_if_c<
                     is_copy_assignable<Target>::value
                     && is_extrinsic_convertible<Source,Target>::value
-                    && ! is_assignable<Source,Target>::value
+                    && ! is_assignable<Target,Source>::value
                 >::type
             > : true_type
 #else

@@ -22,10 +22,13 @@
 #include <boost/conversion/assign_to.hpp>
 #include <algorithm>
 #include <boost/config.hpp>
-//#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
-//#include <boost/conversion/type_traits/is_copy_assignable.hpp>
-//#include <boost/conversion/type_traits/is_assignable.hpp>
-//#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/conversion/type_traits/is_copy_assignable.hpp>
+#include <boost/conversion/type_traits/is_assignable.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
+#endif
 
 namespace boost {
   namespace conversion {
@@ -38,6 +41,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_assignable<array<Source,N>,array<Target,N> >::value
+            && ! is_explicitly_convertible<array<Source,N>,array<Target,N> >::value
         >::type
 #endif
     > : true_type
@@ -60,6 +64,7 @@ namespace boost {
             is_copy_assignable<Target>::value
             && is_extrinsic_assignable<Source,Target>::value
             && ! is_assignable<Source&,Target const&>::value
+      && ! assigner_specialized<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
     > : true_type
