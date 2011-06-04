@@ -1,0 +1,39 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Vicente J. Botet Escriba 2011. Distributed under the Boost
+// Software License, Version 1.0. (See accompanying file
+// LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/conversion for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+#include <iostream>
+#include <boost/static_assert.hpp>
+#include <boost/conversion/type_traits/is_constructible.hpp>
+
+
+
+
+
+
+struct A
+{
+    explicit A(int);
+    A(double);
+    A(int, double);
+    A(A const&);
+};
+
+int main()
+{
+  BOOST_STATIC_ASSERT((boost::is_constructible<int>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<int, const int>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<A, int>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<A, double>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<A, int, double>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<A, A const&>::value));
+  BOOST_STATIC_ASSERT((!boost::is_constructible<void>::value));
+  //BOOST_STATIC_ASSERT((!boost::is_constructible<A>::value));
+}

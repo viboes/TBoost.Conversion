@@ -22,7 +22,6 @@
 #include <boost/conversion/fp/convert_to.hpp>
 #include <boost/phoenix/core/argument.hpp>
 
-//using namespace boost;
 
 void convert_to_with_builtin_types() {
     char c=0;

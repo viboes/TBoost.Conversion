@@ -41,14 +41,14 @@ void f(B) {}
   namespace boost {
       namespace conversion {
           template <>
-          struct converter< A,B > {
+          struct converter< A,B > : true_type {
               A operator()(B const &)
               {
                   return A();
               }
           };
           template <>
-          struct converter< B,C > {
+          struct converter< B,C > : true_type {
               B operator()(C const &)
               {
                   return B();

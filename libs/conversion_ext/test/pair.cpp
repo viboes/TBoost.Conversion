@@ -17,6 +17,9 @@
 
 using namespace boost;
 
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B1, A1>::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B2, A2>::value));
+
 void explicit_convert_to() {
     B1 b1;
     B2 b2;

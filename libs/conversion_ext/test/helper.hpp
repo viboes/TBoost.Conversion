@@ -23,28 +23,28 @@ struct B2{};
 namespace boost {
     namespace conversion {
         template <>
-        struct converter< A1,B1 > {
+        struct converter< A1,B1 > : true_type {
             A1 operator()(B1 const &)
             {
                 return A1();
             }
         };
         template <>
-        struct converter< A2,B2 > {
+        struct converter< A2,B2 > : true_type {
             A2 operator()(B2 const &)
             {
                 return A2();
             }
         };
           template < >
-          struct assigner< A1,B1 > {
+          struct assigner< A1,B1 > : true_type {
               A1& operator()(A1& to, const B1&)
               {
                   return to;
               }
           };
           template < >
-          struct assigner< A2,B2 > {
+          struct assigner< A2,B2 > : true_type {
               A2& operator()(A2& to, const B2&)
               {
                   return to;
