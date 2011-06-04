@@ -31,6 +31,7 @@
 #if defined(BOOST_NO_DECLTYPE)
 #include <boost/typeof/typeof.hpp>
 #endif // defined(BOOST_NO_DECLTYPE)
+#include <utility>
 
 namespace boost {
 
@@ -42,43 +43,67 @@ namespace boost {
         any(T);
       };
       template <class T>
+#if defined(BOOST_NO_DECLTYPE)
       BOOST_TYPEOF_TPL((T(), true_type()))
+#else
+      decltype((T(), true_type()))
+#endif
       test0(T&);
       false_type
       test0(any);
 
       template <class T, class A1>
+#if defined(BOOST_NO_DECLTYPE)
       BOOST_TYPEOF_TPL((T(declval<A1>()), true_type()))
-      test1(T&, A1&);
+#else
+      decltype((T(declval<A1>()), true_type()))
+#endif
+      test1(T&, A1);
       template <class A1>
       false_type
-      test1(any, A1&);
+      test1(any, A1);
 
       template <class T, class A1, class A2>
+#if defined(BOOST_NO_DECLTYPE)
       BOOST_TYPEOF_TPL((T(declval<A1>(),declval<A2>()), true_type()))
-      test2(T&, A1&, A2&);
+#else
+      decltype((T(declval<A1>(),declval<A2>()), true_type()))
+#endif
+      test2(T&, A1, A2);
       template <class A1, class A2>
       false_type
-      test2(any, A1&, A2&);
+      test2(any, A1, A2);
       template <bool, class T>
       struct imp0 // false, T is not a scalar
           : public common_type
                    <
-                   BOOST_TYPEOF_TPL(test1(declval<T&>()))
+#if defined(BOOST_NO_DECLTYPE)
+          BOOST_TYPEOF_TPL(test0(declval<T&>()))
+#else
+          decltype(test0(declval<T&>()))
+#endif
                    >::type
       {};
       template <bool, class T, class A1>
       struct imp1 // false, T is not a scalar
           : public common_type
                    <
-                   BOOST_TYPEOF_TPL(test1(declval<T&>(), declval<A1>()))
+#if defined(BOOST_NO_DECLTYPE)
+          BOOST_TYPEOF_TPL(test1(declval<T&>(), declval<A1>()))
+#else
+          decltype(test1(declval<T&>(), declval<A1>()))
+#endif
                    >::type
       {};
       template <bool, class T, class A1, class A2>
       struct imp2 // false, T is not a scalar
           : public common_type
                    <
-                   BOOST_TYPEOF_TPL(test2(declval<T&>(), declval<A1>(), declval<A2>()))
+#if defined(BOOST_NO_DECLTYPE)
+          BOOST_TYPEOF_TPL(test2(declval<T&>(), declval<A1>(), declval<A2>()))
+#else
+          decltype(test2(declval<T&>(), declval<A1>(), declval<A2>()))
+#endif
                    >::type
       {};
       template <class T>
@@ -175,6 +200,13 @@ namespace boost {
                                             || is_void<A1>::value,
                                                T, A1>
       {};
+
+  template <class A1, class A2, class B1, class B2>
+  struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2>, detail::is_constructible::nat>
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+        {};
+
+
   namespace detail {
     namespace is_constructible {
       template <class A, std::size_t N>

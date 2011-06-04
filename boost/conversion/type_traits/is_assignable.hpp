@@ -22,6 +22,7 @@
 #include <boost/type_traits/common_type.hpp>
 #include <boost/utility/declval.hpp>
 #include <boost/config.hpp>
+#include <utility>
 
 #if defined(BOOST_NO_DECLTYPE)
 #include <boost/typeof/typeof.hpp>
@@ -62,6 +63,10 @@ namespace boost {
   }
   BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable,To,From,(::boost::detail::is_assignable::impl<To,From>::type::value))
   BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable2,To,From,false)
+  template <class A1, class A2, class B1, class B2>
+  struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
+      : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
+        {};
 
 #else
 

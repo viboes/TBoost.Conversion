@@ -63,7 +63,7 @@ namespace boost {
             , typename enable_if_c<
                     is_copy_assignable<Target>::value
                     && is_extrinsic_convertible<Source,Target>::value
-                    && ! is_assignable<Source&,Target const&>::value
+                    && ! is_assignable<Source,Target>::value
                 >::type
             > : true_type
 #else
@@ -83,7 +83,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source>
     struct assigner<Target,Source
-            , typename enable_if<is_assignable<Target&, Source const&> >::type
+            , typename enable_if<is_assignable<Target, Source> >::type
             > : true_type
     {
       //! @Requires @c Target must be Assinable from Source.
@@ -103,7 +103,7 @@ namespace boost {
                    , typename enable_if_c<
                          is_copy_assignable<Target>::value
                          && is_extrinsic_convertible<Source,Target>::value
-                         && ! is_assignable<Source&,Target const&>::value
+                         && ! is_assignable<Target,Source>::value
                      >::type
 #endif
                    > : true_type
@@ -126,7 +126,7 @@ namespace boost {
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
                    , typename enable_if_c<
-                         is_assignable<Source&,Target const&>::value
+                         is_assignable<Target, Source>::value
                      >::type
                    > : true_type
     {
