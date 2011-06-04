@@ -34,11 +34,11 @@
 #ifndef BOOST_CONVERSION_CONVERT_TO_HPP
 #define BOOST_CONVERSION_CONVERT_TO_HPP
 
-//#include <boost/mpl/bool.hpp>
+//#define BOOST_CONVERSION_ENABLE_CND
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
-//#include <boost/conversion/tt/is_explicit_constructible.hpp>
-//#include <boost/conversion/tt/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 
 namespace boost {
 
@@ -74,17 +74,16 @@ namespace boost {
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
-    struct converter;
+    struct converter : false_type {};
     template < typename Target, typename Source >
     struct converter<Target, Source
-              , typename enable_if_c<
-                      is_explicit_constructible<Target, const Source&>::value
-                  or  is_explicitly_convertible<Source,Target>::value
-                  >::type
-              >
+              , typename enable_if<is_explicitly_convertible<Source,Target> >::type
+              > : true_type
+    //template < typename Target, typename Source, class Enable = void >
+    //struct converter  : true_type
 #else
     template < typename Target, typename Source, class Enable = void >
-    struct converter
+    struct converter  : true_type
 #endif
     {
       //! @Requires @c Target must be CopyConstructible from @c Source or @c Source convertible to @c Target

@@ -24,7 +24,7 @@
 namespace boost {
   namespace conversion {
     template < class T1, class T2, class S1, class S2>
-    struct converter< fusion::tuple<T1,T2>, fusion::tuple<S1,S2> >
+    struct converter< fusion::tuple<T1,T2>, fusion::tuple<S1,S2> > : true_type
     {
       fusion::tuple<T1,T2> operator()(fusion::tuple<S1,S2> const & from)
       {
@@ -35,7 +35,7 @@ namespace boost {
       }
     };
     template < class T1, class T2, class T3, class S1, class S2, class S3>
-    struct converter< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3> >
+    struct converter< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3> > : true_type
     {
       fusion::tuple<T1,T2,T3> operator()(fusion::tuple<S1,S2,S3> const & from)
       {

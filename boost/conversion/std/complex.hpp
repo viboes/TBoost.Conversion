@@ -28,7 +28,13 @@ namespace boost {
      * Partial specialization of @c convert_to for @c std::complex of the same size
      */
     template < class Target, class Source>
-    struct converter< std::complex<Target>, std::complex<Source> >
+    struct converter< std::complex<Target>, std::complex<Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       std::complex<Target> operator()(std::complex<Source> const & from)
       {
@@ -38,7 +44,13 @@ namespace boost {
       }
     };
     template < class Target, class Source>
-    struct assigner< std::complex<Target>, std::complex<Source> >
+    struct assigner< std::complex<Target>, std::complex<Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       std::complex<Target>& operator()(std::complex<Target>& to, const std::complex<Source>& from)
       {

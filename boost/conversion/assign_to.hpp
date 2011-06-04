@@ -34,12 +34,22 @@ the @c boost::conversion::overload_workaround namespace.
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
-//#include <boost/conversion/tt/is_copy_constructible.hpp>
-//#include <boost/conversion/tt/is_copy_constructible.hpp>
-//#include <boost/conversion/tt/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_copy_assignable.hpp>
+#include <boost/conversion/type_traits/is_assignable.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
 
 namespace boost {
   namespace conversion {
+
+
+    template < typename Target, typename Source>
+    struct assigner_specialized
+            : integral_constant<bool,
+                is_copy_assignable<Target>::value
+            &&  is_extrinsic_convertible<Source,Target>::value
+            >
+    {};
+
     //! Customization point for @assign_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -47,15 +57,15 @@ namespace boost {
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void>
-    struct assigner;
+    struct assigner : false_type {};
     template < typename Target, typename Source>
     struct assigner<Target, Source
             , typename enable_if_c<
-                    is_copy_constructible<Target>::value
+                    is_copy_assignable<Target>::value
                     && is_extrinsic_convertible<Source,Target>::value
-                    && ! is_assignable<Source,Target>::value
+                    && ! is_assignable<Source&,Target const&>::value
                 >::type
-            >
+            > : true_type
 #else
     template < typename Target, typename Source, class Enable = void>
     struct assigner
@@ -73,8 +83,8 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source>
     struct assigner<Target,Source
-            , typename enable_if<is_assignable<Target, Source> >::type
-            >
+            , typename enable_if<is_assignable<Target&, Source const&> >::type
+            > : true_type
     {
       //! @Requires @c Target must be Assinable from Source.
       //! @Effects Assigns the @c from parameter to the @c to parameter.
@@ -88,7 +98,15 @@ namespace boost {
 #endif
     //! partial specialization for c-array types.
     template < typename Target, typename Source, std::size_t N  >
-    struct assigner<Target[N],Source[N],void>
+    struct assigner<Target[N],Source[N]
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+                   , typename enable_if_c<
+                         is_copy_assignable<Target>::value
+                         && is_extrinsic_convertible<Source,Target>::value
+                         && ! is_assignable<Source&,Target const&>::value
+                     >::type
+#endif
+                   > : true_type
     {
       //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
       //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
@@ -102,6 +120,30 @@ namespace boost {
         return to;
       }
     };
+
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    //! partial specialization for c-array types.
+    template < typename Target, typename Source, std::size_t N  >
+    struct assigner<Target[N],Source[N]
+                   , typename enable_if_c<
+                         is_assignable<Source&,Target const&>::value
+                     >::type
+                   > : true_type
+    {
+      //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
+      //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
+      //! @Basic
+      Target*& operator()(Target(&to)[N], const Source(& from)[N])
+      {
+        for (std::size_t i = 0; i < N; ++i)
+        {
+          to[i] = from[i];
+        }
+        return to;
+      }
+    };
+#endif
+
   }
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

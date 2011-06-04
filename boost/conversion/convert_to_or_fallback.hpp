@@ -42,7 +42,7 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-    template < typename Target, typename Source, typename Fallback, class Enable = void>
+    template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
     struct converter_or_fallbacker {
       //!
       //! @Requires @c Fallback must be convertible to @c Target and @c ::boost::conversion::convert_to<Target>(from) must be well formed.

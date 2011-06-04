@@ -26,7 +26,13 @@ namespace boost {
     //! @brief @c converter specialization for source and target been @c boost::numeric::interval.
     //!
     template < class Target, class PTarget, class Source, class PSource>
-    struct converter< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >
+    struct converter< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Returns the target interval having as extremes the conversion from the source interval extremes.
       numeric::interval<Target,PTarget> operator()(numeric::interval<Source,PSource> const & from)
@@ -35,7 +41,13 @@ namespace boost {
       }
     };
     template < class Target, class PTarget, class Source, class PSource>
-    struct assigner< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >
+    struct assigner< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       numeric::interval<Target,PTarget>& operator()(numeric::interval<Target,PTarget>& to, const numeric::interval<Source,PSource>& from)
       {

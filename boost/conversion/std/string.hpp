@@ -31,7 +31,7 @@ namespace boost {
     // std namespace can not be overloaded
       
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct converter< std::basic_string<CharT,Traits,Alloc>, T >
+    struct converter< std::basic_string<CharT,Traits,Alloc>, T > : true_type
     {
       std::basic_string<CharT,Traits,Alloc> operator()(T const & from)
       {
@@ -43,7 +43,7 @@ namespace boost {
       }
     };
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct converter< T, std::basic_string<CharT,Traits,Alloc> >
+    struct converter< T, std::basic_string<CharT,Traits,Alloc> > : true_type
     {
       T operator()(std::basic_string<CharT,Traits,Alloc> const & from)
       {
@@ -56,7 +56,7 @@ namespace boost {
     };
 
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner< std::basic_string<CharT,Traits,Alloc>, T >
+    struct assigner< std::basic_string<CharT,Traits,Alloc>, T > : true_type
     {
       std::basic_string<CharT,Traits,Alloc>&
       operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
@@ -66,7 +66,7 @@ namespace boost {
       }
     };
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner< T, std::basic_string<CharT,Traits,Alloc> >
+    struct assigner< T, std::basic_string<CharT,Traits,Alloc> > : true_type
     {
       T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
       {

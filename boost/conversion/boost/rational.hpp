@@ -29,7 +29,13 @@ namespace boost {
     //! @brief @c converter specialization for source and target been @c boost::rational.
     //!
     template < class Target, class Source>
-    struct converter< rational<Target>, rational<Source> >
+    struct converter< rational<Target>, rational<Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
       rational<Target> operator()(rational<Source> const & from)
@@ -38,7 +44,13 @@ namespace boost {
       }
     };
     template < class Target, class Source>
-    struct assigner< rational<Target>, rational<Source> >
+    struct assigner< rational<Target>, rational<Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       rational<Target>& operator()(rational<Target>& to, const rational<Source>& from)
       {

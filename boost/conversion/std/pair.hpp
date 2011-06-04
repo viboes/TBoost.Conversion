@@ -26,7 +26,14 @@ namespace boost {
 
     // std namespace can not be overloaded
     template < class T1, class T2, class S1, class S2>
-    struct converter< std::pair<T1,T2>, std::pair<S1,S2> >
+    struct converter< std::pair<T1,T2>, std::pair<S1,S2>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
+            && ! is_explicitly_convertible<std::pair<S1,S2>,std::pair<T1,T2> >::value
+        >::type
+#endif
+    > : true_type
     {
         std::pair<T1,T2> operator()(std::pair<S1,S2> const & from)
         {
@@ -34,7 +41,14 @@ namespace boost {
         }
     };
     template < class T1, class T2, class S1, class S2>
-    struct assigner< std::pair<T1,T2>, std::pair<S1,S2> >
+    struct assigner< std::pair<T1,T2>, std::pair<S1,S2>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+      is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
+      && ! assigner_specialized<std::pair<T1,T2>,std::pair<S1,S2> >::value
+      >::type
+#endif
+    > : true_type
     {
         std::pair<T1,T2>& operator()(std::pair<T1,T2>& to, const std::pair<S1,S2>& from)
         {

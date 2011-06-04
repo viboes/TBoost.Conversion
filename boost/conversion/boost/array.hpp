@@ -22,6 +22,10 @@
 #include <boost/conversion/assign_to.hpp>
 #include <algorithm>
 #include <boost/config.hpp>
+//#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+//#include <boost/conversion/type_traits/is_copy_assignable.hpp>
+//#include <boost/conversion/type_traits/is_assignable.hpp>
+//#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
 
 namespace boost {
   namespace conversion {
@@ -30,7 +34,13 @@ namespace boost {
      * Partial specialization of @c converter for @c boost::array of the same size
      */
     template < typename Target, typename Source, std::size_t N>
-    struct converter< array<Target,N>, array<Source,N> >
+    struct converter< array<Target,N>, array<Source,N>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_assignable<array<Source,N>,array<Target,N> >::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
       inline array<Target,N> operator()(array<Source,N> const & from)
@@ -44,14 +54,22 @@ namespace boost {
      * Partial specialization of @c assigner for @c boost::array of the same size
      */
     template < typename Target, typename Source, std::size_t N>
-    struct assigner< array<Target,N>, array<Source,N> >
+    struct assigner< array<Target,N>, array<Source,N>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_copy_assignable<Target>::value
+            && is_extrinsic_assignable<Source,Target>::value
+            && ! is_assignable<Source&,Target const&>::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Effects assign to each one of the target array elements the conversion of the source array element.
       array<Target,N>& operator()(array<Target,N>& to, array<Source,N> const & from)
       {
         for (unsigned int i =0; i<N; ++i)
         {
-            to[i]=boost::conversion::convert_to<Target>(from[i]);
+            boost::conversion::assign_to(to[i], from[i]);
         }
         return to;
       }

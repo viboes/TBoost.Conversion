@@ -28,7 +28,7 @@
 namespace boost {
   namespace conversion {
     template < class Clock, class Duration>
-    struct converter<posix_time::ptime, chrono::time_point<Clock, Duration> >
+    struct converter<posix_time::ptime, chrono::time_point<Clock, Duration> > : true_type
     {
       posix_time::ptime operator()(const chrono::time_point<Clock, Duration>& from)
       {
@@ -49,7 +49,7 @@ namespace boost {
     };
 
     template < class Clock, class Duration>
-    struct converter<chrono::time_point<Clock, Duration>, posix_time::ptime>
+    struct converter<chrono::time_point<Clock, Duration>, posix_time::ptime> : true_type
     {
       chrono::time_point<Clock, Duration> operator()(const posix_time::ptime& from)
       {

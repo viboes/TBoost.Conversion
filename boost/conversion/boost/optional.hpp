@@ -45,7 +45,13 @@ namespace boost {
      * Partial specialization of @c converter for boost::optional
      */
     template < class Target, class Source>
-    struct converter< optional<Target>, optional<Source> >
+    struct converter< optional<Target>, optional<Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
       //! Uninitialized  @c boost::optional<Target otherwise.
@@ -59,7 +65,14 @@ namespace boost {
     //!
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
-    struct converter< optional<Target>, Source>
+    struct converter< optional<Target>, Source
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
+
     {
       //! @Returns If the source is convertible to the target @c value_type
       //! @c Target initialized to the result of the conversion.
@@ -87,8 +100,7 @@ namespace boost {
   //! @Effects As if <c>to = boost::conversion::convert_to<optional<Target> >(from)</c>.
   //! @Returns The @c to parameter reference.
   template < class Target, class Source>
-  inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from
-  )
+  inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from)
   {
     to = boost::conversion::convert_to<optional<Target> >(from);
     return to;

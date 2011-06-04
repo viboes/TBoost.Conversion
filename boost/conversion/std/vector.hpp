@@ -29,7 +29,13 @@ namespace boost {
 
     // std namespace can not be overloaded
     template < class T1, class A1, class T2, class A2>
-    struct converter< std::vector<T1,A1>, std::vector<T2,A2> >
+    struct converter< std::vector<T1,A1>, std::vector<T2,A2>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+    is_extrinsic_assignable<std::vector<T2,A2>,std::vector<T1,A1> >::value
+        >::type
+#endif
+    > : true_type
     {
         std::vector<T1,A1> operator()(std::vector<T2,A2> const & from)
         {
@@ -47,7 +53,15 @@ namespace boost {
                 boost::reference_wrapper<std::vector<T2,A2> const>,
                 boost::reference_wrapper<A1 const>
             >
-        >
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+    is_extrinsic_assignable<std::pair<
+    boost::reference_wrapper<std::vector<T2,A2> const>,
+    boost::reference_wrapper<A1 const>
+>, std::vector<T1,A1> >::value
+        >::type
+#endif
+        > : false_type
     {
         std::vector<T1,A1> operator()(
             typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
@@ -62,7 +76,13 @@ namespace boost {
     };
 
     template < class T1, class A1, class T2, class A2>
-    struct assigner< std::vector<T1,A1>, std::vector<T2,A2> >
+    struct assigner< std::vector<T1,A1>, std::vector<T2,A2>
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    , typename enable_if_c<
+            is_extrinsic_assignable<T2,T1>::value
+        >::type
+#endif
+    > : true_type
     {
         std::vector<T1,A1>& operator()(
             std::vector<T1,A1>& to,
