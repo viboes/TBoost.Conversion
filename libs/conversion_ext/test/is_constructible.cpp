@@ -35,5 +35,5 @@ int main()
   BOOST_STATIC_ASSERT((boost::is_constructible<A, int, double>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<A, A const&>::value));
   BOOST_STATIC_ASSERT((!boost::is_constructible<void>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_constructible<A>::value));
+  BOOST_STATIC_ASSERT((!boost::is_constructible<A>::value));
 }

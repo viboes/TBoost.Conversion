@@ -14,11 +14,19 @@
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 #include "helper.hpp"
+#include <boost/static_assert.hpp>
 
 using namespace boost;
 
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B1, A1>::value));
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B2, A2>::value));
+BOOST_STATIC_ASSERT(( !boost::is_constructible<std::pair<A1,A2>, std::pair<B1,B2> >::value));
+BOOST_STATIC_ASSERT(( !boost::is_explicitly_convertible<std::pair<B1,B2>, std::pair<A1,A2> >::value));
+
+BOOST_STATIC_ASSERT(( !boost::is_assignable<B1, A1>::value));
+BOOST_STATIC_ASSERT(( !boost::is_assignable<B2, A2>::value));
+BOOST_STATIC_ASSERT(( !boost::is_assignable<std::pair<B1,B2>, std::pair<A1,A2> >::value));
+//BOOST_STATIC_ASSERT(( !boost::is_assignable<std::pair<B1,B2>&, std::pair<A1,A2> const& >::value));
 
 void explicit_convert_to() {
     B1 b1;

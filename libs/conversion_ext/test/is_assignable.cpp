@@ -28,10 +28,10 @@ int main()
 {
   BOOST_STATIC_ASSERT(( boost::is_assignable<int&, int&>::value));
   BOOST_STATIC_ASSERT(( boost::is_assignable<int&, int>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_assignable<int, int&>::value));
+  BOOST_STATIC_ASSERT((!boost::is_assignable<int, int&>::value));
   BOOST_STATIC_ASSERT(( boost::is_assignable<int&, double>::value));
   BOOST_STATIC_ASSERT(( boost::is_assignable<B, A>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_assignable<A, B>::value));
+  BOOST_STATIC_ASSERT((!boost::is_assignable<A, B>::value));
 }
 
 

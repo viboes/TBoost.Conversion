@@ -32,5 +32,4 @@ int main()
   BOOST_STATIC_ASSERT((boost::is_explicitly_convertible<int, A>::value));
   BOOST_STATIC_ASSERT((boost::is_explicitly_convertible<double, A>::value));
   BOOST_STATIC_ASSERT((!boost::is_explicitly_convertible<void,A>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_explicitly_convertible<A>::value));
 }

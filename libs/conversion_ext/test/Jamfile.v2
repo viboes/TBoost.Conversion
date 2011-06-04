@@ -50,6 +50,7 @@ test-suite "type_traits" :
      [ compile is_copy_constructible.cpp ]
      [ compile is_explicitly_convertible.cpp ]
      [ compile is_extrinsic_assignable.cpp ]
+     [ compile is_convertible.cpp ]
      [ compile is_extrinsic_convertible.cpp ]
     ;
 
