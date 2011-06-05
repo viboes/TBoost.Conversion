@@ -17,7 +17,9 @@
 using namespace boost;
 #include <boost/static_assert.hpp>
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( !boost::conversion::default_converter_condition< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >::value));
+#endif
 
 void explicit_convert_to() {
     B1 b1;

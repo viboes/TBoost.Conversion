@@ -18,10 +18,12 @@
 
 using namespace boost;
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( !boost::conversion::default_converter_condition< std::vector<A1>, std::vector<B1> >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::default_assigner_condition< std::vector<A1>, std::vector<B1> >::value));
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< A1, B1 >::value));
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< std::vector<A1>, std::vector<B1> >::value));
+#endif
 
 #if 0
 BOOST_STATIC_ASSERT((
