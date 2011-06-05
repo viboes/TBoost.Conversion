@@ -18,7 +18,12 @@
 
 using namespace boost;
 
+BOOST_STATIC_ASSERT(( !boost::conversion::default_converter_condition< std::vector<A1>, std::vector<B1> >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::default_assigner_condition< std::vector<A1>, std::vector<B1> >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< A1, B1 >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< std::vector<A1>, std::vector<B1> >::value));
 
+#if 0
 BOOST_STATIC_ASSERT((
     boost::is_same<
         boost::conversion::result_of::pack2<std::vector<B1,std::allocator<B1> > const, std::allocator<A1> const>::type,
@@ -29,6 +34,7 @@ BOOST_STATIC_ASSERT((
         >
     >::value
     ));
+#endif
 
 void explicit_convert_to() {
     std::vector<B1> vb1;
@@ -41,6 +47,7 @@ void explicit_convert_to() {
     vb2[2]=b12;
     vb2[3]=b13;
     std::vector<A1> va2(boost::conversion::convert_to<std::vector<A1> >(vb2));
+#if 0
 
     std::allocator<A1> all;
     std::vector<A1,std::allocator<A1> > va3(
@@ -67,7 +74,7 @@ void explicit_convert_to() {
     std::vector<A1,std::allocator<A1> > va6(
         boost::conversion::convert_to<std::vector<A1,std::allocator<A1> > >(
             boost::conversion::pack(vb2, std::allocator<A1>())));
-
+#endif
 
 }
 void explicit_assign_to() {
