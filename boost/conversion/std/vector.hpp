@@ -32,7 +32,8 @@ namespace boost {
     struct converter< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-    is_extrinsic_assignable<std::vector<T2,A2>,std::vector<T1,A1> >::value
+       is_extrinsic_assignable< std::vector<T2,A2>,std::vector<T1,A1> >::value
+    && ! default_converter_condition< std::vector<T2,A2>,std::vector<T1,A1> >::value
         >::type
 #endif
     > : true_type
@@ -55,10 +56,17 @@ namespace boost {
             >
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-    is_extrinsic_assignable<std::pair<
-    boost::reference_wrapper<std::vector<T2,A2> const>,
-    boost::reference_wrapper<A1 const>
->, std::vector<T1,A1> >::value
+        is_extrinsic_assignable<std::pair<
+                                boost::reference_wrapper<std::vector<T2,A2> const>,
+                                boost::reference_wrapper<A1 const>
+                                >, std::vector<T1,A1> >::value
+
+        && ! default_converter_condition< std::vector<T1,A1>,
+                                          std::pair<
+                                            boost::reference_wrapper<std::vector<T2,A2> const>,
+                                            boost::reference_wrapper<A1 const>
+                                          > >::value
+
         >::type
 #endif
         > : false_type
@@ -80,6 +88,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_assignable<T2,T1>::value
+            && ! default_assigner_condition< std::vector<T1,A1>, std::vector<T2,A2> >::value
         >::type
 #endif
     > : true_type

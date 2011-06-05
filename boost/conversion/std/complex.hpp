@@ -32,6 +32,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
+            && ! default_converter_condition< std::complex<Target>, std::complex<Source> >::value
         >::type
 #endif
     > : true_type
@@ -48,6 +49,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
+            && ! default_assigner_condition< std::complex<Target>, std::complex<Source> >::value
         >::type
 #endif
     > : true_type

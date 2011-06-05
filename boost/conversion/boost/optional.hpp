@@ -49,7 +49,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-            && ! is_explicitly_convertible<optional<Source>,optional<Target> >::value
+            && ! default_converter_condition< optional<Target>, optional<Source> >::value
         >::type
 #endif
     > : true_type
@@ -71,7 +71,7 @@ namespace boost {
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
             && ! detail::is_optional<Source>::value
-            && ! is_explicitly_convertible<Source,optional<Target> >::value
+            && ! default_converter_condition<optional<Target>, Source >::value
         >::type
 #endif
     > : true_type

@@ -75,6 +75,16 @@ namespace boost {
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
+
+    template < typename Target, typename Source>
+    struct default_converter_condition
+            : integral_constant<bool,
+              is_explicitly_convertible<Source,Target>::value
+            >
+    {};
+#endif
+
+#if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
     struct converter : false_type {};
     template < typename Target, typename Source >

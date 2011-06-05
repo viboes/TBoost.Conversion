@@ -41,7 +41,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_assignable<array<Source,N>,array<Target,N> >::value
-            && ! is_explicitly_convertible<array<Source,N>,array<Target,N> >::value
+            && ! default_converter_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
     > : true_type
@@ -63,8 +63,8 @@ namespace boost {
     , typename enable_if_c<
             is_copy_assignable<Target>::value
             && is_extrinsic_assignable<Source,Target>::value
-            && ! is_assignable<Source&,Target const&>::value
-      && ! assigner_specialized<array<Target,N>, array<Source,N> >::value
+            && ! is_assignable<Source,Target>::value
+            && ! default_assigner_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
     > : true_type

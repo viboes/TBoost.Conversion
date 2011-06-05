@@ -46,10 +46,11 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 
     template < typename Target, typename Source>
-    struct assigner_specialized
+    struct default_assigner_condition
             : integral_constant<bool,
-                is_copy_assignable<Target>::value
-            &&  is_extrinsic_convertible<Source,Target>::value
+              is_assignable<Target,Source>::value
+              ||  (    is_copy_assignable<Target>::value
+                   &&  is_extrinsic_convertible<Source,Target>::value)
             >
     {};
 #endif

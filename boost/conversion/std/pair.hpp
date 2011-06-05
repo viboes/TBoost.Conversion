@@ -30,7 +30,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
-            && ! is_explicitly_convertible<std::pair<S1,S2>,std::pair<T1,T2> >::value
+            && ! default_converter_condition< std::pair<T1,T2>, std::pair<S1,S2> >::value
         >::type
 #endif
     > : true_type
@@ -45,7 +45,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
       is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
-      && ! assigner_specialized<std::pair<T1,T2>,std::pair<S1,S2> >::value
+      && ! default_assigner_condition<std::pair<T1,T2>,std::pair<S1,S2> >::value
       >::type
 #endif
     > : true_type
