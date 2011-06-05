@@ -21,30 +21,37 @@
 #include <vector>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/pack.hpp>
-
+//#include <boost/conversion/pack.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
 
 namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
+
     template < class T1, class A1, class T2, class A2>
     struct converter< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-       is_extrinsic_assignable< std::vector<T2,A2>,std::vector<T1,A1> >::value
-    && ! default_converter_condition< std::vector<T2,A2>,std::vector<T1,A1> >::value
+            is_extrinsic_assignable<T1,T2>::value
+          //is_extrinsic_assignable< std::vector<T1,A1>, std::vector<T2,A2> >::value
+    && ! default_converter_condition< std::vector<T1,A1>, std::vector<T2,A2>>::value
         >::type
 #endif
     > : true_type
     {
         std::vector<T1,A1> operator()(std::vector<T2,A2> const & from)
         {
-            std::vector<T1,A1> res;
-            boost::conversion::assign_to(res, from);
-            return res;
+            std::vector<T1,A1> to;
+            //boost::conversion::assign_to(to, from);
+            to.resize(from.size());
+            for (unsigned int i=0; i<from.size(); ++i) {
+                boost::conversion::assign_to(to[i], from[i]);
+            }
+            return to;
         }
     };
+#if 0
 
     template < class T1, class A1, class T2, class A2>
     struct converter< std::vector<T1,A1>,
@@ -56,10 +63,11 @@ namespace boost {
             >
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-        is_extrinsic_assignable<std::pair<
-                                boost::reference_wrapper<std::vector<T2,A2> const>,
-                                boost::reference_wrapper<A1 const>
-                                >, std::vector<T1,A1> >::value
+        is_extrinsic_assignable<std::vector<T1,A1> >::value,
+                                std::pair<
+                                  boost::reference_wrapper<std::vector<T2,A2> const>,
+                                  boost::reference_wrapper<A1 const>
+                                >
 
         && ! default_converter_condition< std::vector<T1,A1>,
                                           std::pair<
@@ -82,12 +90,13 @@ namespace boost {
             return res;
         }
     };
+#endif
 
     template < class T1, class A1, class T2, class A2>
     struct assigner< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-            is_extrinsic_assignable<T2,T1>::value
+            is_extrinsic_assignable<T1,T2>::value
             && ! default_assigner_condition< std::vector<T1,A1>, std::vector<T2,A2> >::value
         >::type
 #endif
@@ -104,6 +113,7 @@ namespace boost {
             return to;
         }
     };
+
   }
 }
 

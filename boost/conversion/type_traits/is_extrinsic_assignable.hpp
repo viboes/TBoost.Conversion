@@ -20,7 +20,7 @@
 
 namespace boost {
 
-  template <class Source, class Target>
+  template <class Target, class Source>
   struct is_extrinsic_assignable : conversion::assigner<Target, Source> {};
 
 }

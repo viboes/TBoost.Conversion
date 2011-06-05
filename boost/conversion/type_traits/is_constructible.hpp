@@ -33,6 +33,9 @@
 #endif // defined(BOOST_NO_DECLTYPE)
 #include <utility>
 #include <boost/array.hpp>
+#include <complex>
+#include <vector>
+#include <boost/fusion/tuple.hpp>
 
 namespace boost {
 
@@ -207,11 +210,31 @@ namespace boost {
       : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
         {};
 
+#if 0
   template <class T1, class T2, std::size_t N>
   struct is_constructible< boost::array<T1,N>, boost::array<T2,N> , detail::is_constructible::nat>
       : integral_constant<bool, is_constructible<T1,T2>::value  >
         {};
+#endif
+  template < class Target, class Source>
+  struct is_constructible< std::complex<Target>, std::complex<Source>, detail::is_constructible::nat >
+      : integral_constant<bool, is_constructible<Target,Source>::value  >
+        {};
 
+  template < class T1, class A1, class T2, class A2>
+  struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> , detail::is_constructible::nat>
+      : integral_constant<bool, is_constructible<T1,T2>::value  >
+        {};
+
+  template <class A1, class A2, class B1, class B2>
+  struct is_constructible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+        {};
+
+  template <class A1, class A2, class A3, class B1, class B2, class B3>
+  struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value&& is_constructible<A3,B3>::value >
+        {};
 
   namespace detail {
     namespace is_constructible {

@@ -17,11 +17,14 @@
 #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP
 
 #include <boost/conversion/convert_to.hpp>
+#include <boost/fusion/tuple.hpp>
 
 namespace boost {
 
   template <class Source, class Target>
   struct is_extrinsic_convertible : conversion::converter<Target, Source> {};
+  template <class T>
+  struct is_extrinsic_convertible<fusion::void_,T> : false_type {};
 
 }
 

@@ -40,7 +40,8 @@ namespace boost {
     struct converter< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-            is_extrinsic_assignable<array<Source,N>,array<Target,N> >::value
+            //is_extrinsic_assignable<array<Target,N>, array<Source,N> >::value
+            is_extrinsic_assignable<Target,Source>::value
             && ! default_converter_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
@@ -50,7 +51,11 @@ namespace boost {
       inline array<Target,N> operator()(array<Source,N> const & from)
       {
         array<Target,N> to;
-        boost::conversion::assign_to(to, from);
+        //boost::conversion::assign_to(to, from);
+        for (unsigned int i =0; i<N; ++i)
+        {
+            boost::conversion::assign_to(to[i], from[i]);
+        }
         return to;
       }
     };
@@ -61,9 +66,8 @@ namespace boost {
     struct assigner< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-            is_copy_assignable<Target>::value
-            && is_extrinsic_assignable<Source,Target>::value
-            && ! is_assignable<Source,Target>::value
+                  is_extrinsic_assignable<Target,Source>::value
+            && ! is_assignable<Target, Source>::value
             && ! default_assigner_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif

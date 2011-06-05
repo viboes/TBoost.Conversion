@@ -29,7 +29,7 @@ namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
-      
+
     template<typename T, typename CharT, typename Traits, typename Alloc>
     struct converter< std::basic_string<CharT,Traits,Alloc>, T
 #if defined(BOOST_CONVERSION_ENABLE_CND)
@@ -79,7 +79,11 @@ namespace boost {
       std::basic_string<CharT,Traits,Alloc>&
       operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
       {
+          std::cout << __FILE__ << from << std::endl;
+
         to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
+                  std::cout << __FILE__ << to << std::endl;
+
         return to;
       }
     };
@@ -98,7 +102,7 @@ namespace boost {
         return to;
       }
     };
-      
+
   }
 }
 

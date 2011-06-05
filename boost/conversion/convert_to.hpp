@@ -34,7 +34,9 @@
 #ifndef BOOST_CONVERSION_CONVERT_TO_HPP
 #define BOOST_CONVERSION_CONVERT_TO_HPP
 
+#if ! defined(BOOST_NO_DECLTYPE)
 #define BOOST_CONVERSION_ENABLE_CND
+#endif
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
