@@ -34,8 +34,11 @@
 #ifndef BOOST_CONVERSION_CONVERT_TO_HPP
 #define BOOST_CONVERSION_CONVERT_TO_HPP
 
+#include <boost/config.hpp>
 #if ! defined(BOOST_NO_DECLTYPE)
+#if ! defined _MSC_VER
 #define BOOST_CONVERSION_ENABLE_CND
+#endif
 #endif
 
 #include <boost/utility/enable_if.hpp>
