@@ -10,14 +10,19 @@
 /*!
  @file
  @brief
- Defines the free function @c try_convert_to.
+ Defines the free function @c try_convert_to and its customization point @c try_converter.
 
  The @c try_convert_to function converts the @c from parameter to a @c Target type and returns an optional<Target>, uninitialized if conversion fails.
  
- The default implementation applies the conversion @c Target operator of the @c Source class or
- the copy constructor of the @c Target class on a try-catch block and returns optional with the converted value if succeeds and an uninitialized optional otherwise.
- Of course if both exist the conversion is ambiguous.
- A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
+
+ */
+
+#ifndef BOOST_CONVERSION_TRY_CONVERT_TO_HPP
+#define BOOST_CONVERSION_TRY_CONVERT_TO_HPP
+
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+/**
+ *  A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
 
  *  A user adapting another type could need to overload the @c try_convert_to free function
  *  if the default behavior is not satisfactory.
@@ -27,18 +32,15 @@
  *  But sometimes, as it is the case for the standard classes,
  *  we can not add new functions on the @c std namespace, so we need a different technique.
  *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::try_convert_to struct.
-
- */
-
-#ifndef BOOST_CONVERSION_TRY_CONVERT_TO_HPP
-#define BOOST_CONVERSION_TRY_CONVERT_TO_HPP
+*/
+#endif
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/boost/optional.hpp>
 
 namespace boost {
   namespace conversion {
-    //! Customization point for @try_convert_to.
+    //! Customization point for @c try_convert_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.

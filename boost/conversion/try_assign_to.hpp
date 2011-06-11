@@ -10,12 +10,19 @@
 /*!
  @file
  @brief
- Defines the free function @c try_assign_to.
+ Defines the free function @c try_assign_to and its customization point @c try_assigner.
 
-The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignation done and @c false otherwise.
-The default implementation applies the the assignment operator of the @c Target class.
-A user adapting another type could need to specialize the @c try_assign_to free function if the default behavior is not satisfactory ot if it can improve the performances
+The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignment done and @c false otherwise.
 
+
+ */
+
+#ifndef BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
+#define BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
+
+#if defined(BOOST_CONVERSION_DOUBLE_CP)
+
+/**
 The user can add the @c try_assign_to overloading on the namespace of the Source or Target classes.
 But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace,
 so we need a different technique.
@@ -25,11 +32,8 @@ For compilers for which we can not partially specialize a function a trick is us
 instead of calling directly to the @c try_assign_to member function, @c try_assign_to calls to the static operation apply
 on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
-
- */
-
-#ifndef BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
-#define BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
+*/
+#endif
 
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
@@ -37,7 +41,7 @@ Thus the user can specialize partially this class.
 
 namespace boost {
   namespace conversion {
-    //! Customization point for @try_assign_to.
+    //! Customization point for @c try_assign_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
@@ -64,8 +68,11 @@ namespace boost {
         }
       }
     };
-    template < typename Target, typename Source, std::size_t N  >
-    struct try_assigner<Target[N],Source[N]>
+
+    //! specialization for c-arrays
+    //!
+    template < typename Target, typename Source, std::size_t N, class Enable  >
+    struct try_assigner<Target[N],Source[N],Enable>
     {
       //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
       //! @NoThrow

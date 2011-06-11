@@ -12,11 +12,10 @@
  * @brief Defines the free function @c convert_to and its customization point @c converter.
  *
  *  The @c convert_to function converts the @c from parameter to a @c Target type.
- *  The default implementation of @ converter applies the conversion @c Target operator of the @c Source class or
- *  the copy constructor of the @c Target class.
- *  Of course if both exist the conversion is ambiguous.
  *
  */
+#ifndef BOOST_CONVERSION_CONVERT_TO_HPP
+#define BOOST_CONVERSION_CONVERT_TO_HPP
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
  *  A user adapting another type could need to overload the @c convert_to free function
@@ -31,8 +30,7 @@
  */
 #endif
 
-#ifndef BOOST_CONVERSION_CONVERT_TO_HPP
-#define BOOST_CONVERSION_CONVERT_TO_HPP
+
 
 #include <boost/config.hpp>
 #if ! defined(BOOST_NO_DECLTYPE)
@@ -40,13 +38,15 @@
 #define BOOST_CONVERSION_ENABLE_CND
 #endif
 #endif
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+#define BOOST_CONVERSION_ENABLE_CND
+#endif
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #endif
-
 namespace boost {
 
   namespace conversion {
@@ -74,38 +74,42 @@ namespace boost {
     template <typename T, typename Enabled=void>
     struct enable_functor : false_type {};
 
-    //! Customization point for @convert_to.
-    //! @tparam Target target type of the conversion.
-    //! @tparam Source source type of the conversion.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 
+    /**
+     * States the default converter condition used when no constraint is associated to the @c Target and @c Source parameters.
+     */
     template < typename Target, typename Source>
     struct default_converter_condition
-            : integral_constant<bool,
-              is_explicitly_convertible<Source,Target>::value
+            : is_explicitly_convertible<Source,Target>
             >
     {};
 #endif
 
+    //! Customization point for @c convert_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
     struct converter : false_type {};
+
+    //! Specialization for @c converter when @c is_explicitly_convertible<Source,Target>.
+    //! @Requires @c is_explicitly_convertible<Source,Target>
     template < typename Target, typename Source >
     struct converter<Target, Source
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
               , typename enable_if<is_explicitly_convertible<Source,Target> >::type
+#endif
               > : true_type
-    //template < typename Target, typename Source, class Enable = void >
-    //struct converter  : true_type
 #else
     template < typename Target, typename Source, class Enable = void >
     struct converter  : true_type
 #endif
     {
-      //! @Requires @c Target must be CopyConstructible from @c Source or @c Source convertible to @c Target
-      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
-      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
+      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
+      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
       Target operator()(const Source& val)
       {
         return Target((val));

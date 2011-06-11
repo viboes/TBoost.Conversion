@@ -13,10 +13,10 @@
  Defines the free function @c assign_to and its customization point @c assigner.
 
 The function @c assign_to assigns the @c from parameter to the @c to parameter.
-The default implementation of the @c assigner uses the @c convert_to to convert the source to the target and
-uses the copy assignment of the @c Target class.
- */
 
+ */
+#ifndef BOOST_CONVERSION_ASSIGN_TO_HPP
+#define BOOST_CONVERSION_ASSIGN_TO_HPP
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
 A user adapting another type could need to specialize the @c assign_to free function if the default behavior is not satisfactory.
@@ -28,8 +28,7 @@ the @c boost::conversion::overload_workaround namespace.
  */
 #endif
 
-#ifndef BOOST_CONVERSION_ASSIGN_TO_HPP
-#define BOOST_CONVERSION_ASSIGN_TO_HPP
+
 
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
@@ -43,8 +42,11 @@ the @c boost::conversion::overload_workaround namespace.
 namespace boost {
   namespace conversion {
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
 
+    /**
+     * States the default assigner condition used when no constraint is associated to the @c Target and @c Source parameters.
+     */
     template < typename Target, typename Source>
     struct default_assigner_condition
             : integral_constant<bool,
@@ -55,14 +57,21 @@ namespace boost {
     {};
 #endif
 
-    //! Customization point for @assign_to.
+    //! Customization point for @c assign_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     template < typename Target, typename Source, class Enable = void>
     struct assigner : false_type {};
+
+
+
+    /**
+     * Specialization when @c Target is not assignable from @c Source, but @c Target is copy constructible and @c Source is extrinsic convertible to @c Target.
+     * @Requires @c Target must be CopyAssinable and @c @c Source must be extrinsic convertible to @c Target.
+     */
     template < typename Target, typename Source>
     struct assigner<Target, Source
             , typename enable_if_c<
@@ -76,7 +85,6 @@ namespace boost {
     struct assigner
 #endif
     {
-      //! @Requires @c Target must be CopyAssinable and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
       //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
       //! @Throws Whatever the underlying assignment operator of the @c Target class throws.
       Target& operator()(Target& to, const Source& from)
@@ -85,13 +93,16 @@ namespace boost {
         return to;
       }
     };
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    /**
+     * Specialization when @c Target is assignable from @c Source.
+     * @Requires @c Target must be Assinable from Source.
+     */
     template < typename Target, typename Source>
     struct assigner<Target,Source
             , typename enable_if<is_assignable<Target, Source> >::type
             > : true_type
     {
-      //! @Requires @c Target must be Assinable from Source.
       //! @Effects Assigns the @c from parameter to the @c to parameter.
       //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
       Target& operator()(Target& to, const Source& from)
@@ -101,10 +112,12 @@ namespace boost {
       }
     };
 #endif
+
     //! partial specialization for c-array types.
+    //! @Requires @c Target must be CopyAssinable and @c @c Source must be extrinsic convertible to @c Target.
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
                    , typename enable_if_c<
                          is_copy_assignable<Target>::value
                          && is_extrinsic_convertible<Source,Target>::value
@@ -126,8 +139,9 @@ namespace boost {
       }
     };
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! partial specialization for c-array types.
+    //! @Requires @c Target must be Assinable from @c Source.
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
                    , typename enable_if_c<
@@ -190,7 +204,7 @@ namespace boost {
     //! @Param{to,target of the conversion}
     //! @Param{from,source of the conversion}
 
-    //! @Effects  The ones of the assigner customization point.
+    //! @Effects The ones of the assigner customization point.
     //! @Throws  Whatever the assigner customization point throws.
 
     template <typename Target, typename Source>

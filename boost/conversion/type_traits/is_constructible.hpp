@@ -16,7 +16,80 @@
 #ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
 
+#if 0
 
+#include <boost/config.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <cstddef>
+
+#ifndef BOOST_IS_CONSTRUCTIBLE_ARITY_MAX
+#define BOOST_IS_CONSTRUCTIBLE_ARITY_MAX 5
+#endif
+
+namespace boost
+{
+    namespace type_traits_detail
+    {
+        template<class T>
+        T declval();
+
+        typedef char true_type;
+        struct false_type { char a[2]; };
+
+        template<std::size_t N>
+        struct dummy;
+    }
+
+    template<class T, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
+    struct is_constructible;
+
+#ifndef BOOST_NO_SFINAE_EXPR
+
+    #define M1(z,n,t) type_traits_detail::declval<A##n>()
+
+    #define M0(z,n,t)                                                                                   \
+    template<class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+    {                                                                                                   \
+        template<class X>                                                                               \
+        static type_traits_detail::true_type                                                            \
+        test(type_traits_detail::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);                           \
+                                                                                                        \
+        template<class X>                                                                               \
+        static type_traits_detail::false_type                                                           \
+        test(...);                                                                                      \
+                                                                                                        \
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
+        typedef boost::mpl::bool_<value> type;                                                          \
+    };
+
+    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+    #undef M1
+
+#else
+
+    #define M0(z,n,t)                                                                                   \
+    template<class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+      : boost::mpl::false_                                                                              \
+    {                                                                                                   \
+    };
+
+    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+
+#endif
+
+}
+
+#else
 #include <boost/utility/declval.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
@@ -257,5 +330,6 @@ namespace boost {
 }
 
 
+#endif
 #endif
 
