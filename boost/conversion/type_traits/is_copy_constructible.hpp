@@ -18,6 +18,7 @@
 
 #include <boost/conversion/type_traits/is_constructible.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/integral_constant.hpp>
 
 namespace boost {
 

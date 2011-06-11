@@ -19,7 +19,7 @@
 #if 0
 
 #include <boost/config.hpp>
-#include <boost/mpl/bool.hpp>
+//#include <boost/mpl/bool.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
@@ -27,9 +27,15 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <cstddef>
-
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/utility/declval.hpp>
+#include <utility>
+#include <boost/array.hpp>
+#include <complex>
+#include <vector>
+#include <boost/fusion/tuple.hpp>
 #ifndef BOOST_IS_CONSTRUCTIBLE_ARITY_MAX
-#define BOOST_IS_CONSTRUCTIBLE_ARITY_MAX 5
+#define BOOST_IS_CONSTRUCTIBLE_ARITY_MAX 3
 #endif
 
 namespace boost
@@ -66,7 +72,7 @@ namespace boost
         test(...);                                                                                      \
                                                                                                         \
         static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
-        typedef boost::mpl::bool_<value> type;                                                          \
+        typedef boost::integral_constant<bool,value> type;                                                          \
     };
 
     BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
@@ -87,6 +93,36 @@ namespace boost
 
 #endif
 
+  template <class A1, class A2, class B1, class B2>
+  struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+        {};
+
+#if 0
+  template <class T1, class T2, std::size_t N>
+  struct is_constructible< boost::array<T1,N>, boost::array<T2,N> >
+      : integral_constant<bool, is_constructible<T1,T2>::value  >
+        {};
+#endif
+  template < class Target, class Source>
+  struct is_constructible< std::complex<Target>, std::complex<Source> >
+      : integral_constant<bool, is_constructible<Target,Source>::value  >
+        {};
+
+  template < class T1, class A1, class T2, class A2>
+  struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> >
+      : integral_constant<bool, is_constructible<T1,T2>::value  >
+        {};
+
+  template <class A1, class A2, class B1, class B2>
+  struct is_constructible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+        {};
+
+  template <class A1, class A2, class A3, class B1, class B2, class B3>
+  struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
+      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value&& is_constructible<A3,B3>::value >
+        {};
 }
 
 #else

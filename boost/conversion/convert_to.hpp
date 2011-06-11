@@ -83,7 +83,6 @@ namespace boost {
     template < typename Target, typename Source>
     struct default_converter_condition
             : is_explicitly_convertible<Source,Target>
-            >
     {};
 #endif
 
