@@ -25,14 +25,14 @@ namespace boost {
   struct is_extrinsic_convertible : conversion::converter<Target, Source> {};
   template <class T>
   struct is_extrinsic_convertible<fusion::void_,T> : false_type {};
-//  template <>
-//  struct is_extrinsic_convertible<void, void> : true_type {};
-//  template <>
-//  struct is_extrinsic_convertible<const void,void> : true_type {};
-//  template <>
-//  struct is_extrinsic_convertible<void, const void> : true_type {};
-//  template <>
-//  struct is_extrinsic_convertible<const void, const void> : true_type {};
+  template <>
+  struct is_extrinsic_convertible<void, void> : true_type {};
+  template <>
+  struct is_extrinsic_convertible<const void,void> : true_type {};
+  template <>
+  struct is_extrinsic_convertible<void, const void> : true_type {};
+  template <>
+  struct is_extrinsic_convertible<const void, const void> : true_type {};
 
 }
 

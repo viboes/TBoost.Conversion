@@ -30,12 +30,11 @@ namespace boost {
     // std namespace can not be overloaded
 
     template < class T1, class A1, class T2, class A2>
-    struct converter< std::vector<T1,A1>, std::vector<T2,A2>
+    struct converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_assignable<T1,T2>::value
-          //is_extrinsic_assignable< std::vector<T1,A1>, std::vector<T2,A2> >::value
-    && ! default_converter_condition< std::vector<T1,A1>, std::vector<T2,A2>>::value
+    //&& ! default_converter_condition< std::vector<T1,A1>, std::vector<T2,A2>>::value
         >::type
 #endif
     > : true_type
@@ -54,7 +53,7 @@ namespace boost {
 #if 0
 
     template < class T1, class A1, class T2, class A2>
-    struct converter< std::vector<T1,A1>,
+    struct converter_cp< std::vector<T1,A1>,
             //~ typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
             //~ boost::fusion::tuple<
             std::pair<
@@ -69,11 +68,11 @@ namespace boost {
                                   boost::reference_wrapper<A1 const>
                                 >
 
-        && ! default_converter_condition< std::vector<T1,A1>,
-                                          std::pair<
-                                            boost::reference_wrapper<std::vector<T2,A2> const>,
-                                            boost::reference_wrapper<A1 const>
-                                          > >::value
+//        && ! default_converter_condition< std::vector<T1,A1>,
+//                                          std::pair<
+//                                            boost::reference_wrapper<std::vector<T2,A2> const>,
+//                                            boost::reference_wrapper<A1 const>
+//                                          > >::value
 
         >::type
 #endif
@@ -93,11 +92,11 @@ namespace boost {
 #endif
 
     template < class T1, class A1, class T2, class A2>
-    struct assigner< std::vector<T1,A1>, std::vector<T2,A2>
+    struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_assignable<T1,T2>::value
-            && ! default_assigner_condition< std::vector<T1,A1>, std::vector<T2,A2> >::value
+            //&& ! default_assigner_condition< std::vector<T1,A1>, std::vector<T2,A2> >::value
         >::type
 #endif
     > : true_type

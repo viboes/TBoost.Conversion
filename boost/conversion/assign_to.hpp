@@ -64,7 +64,9 @@ namespace boost {
 
 #if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     template < typename Target, typename Source, class Enable = void>
-    struct assigner : false_type {};
+    struct assigner_cp : false_type {};
+    template < typename Target, typename Source, class Enable = void>
+    struct assigner : assigner_cp<Target,Source,Enable> {};
 
 
 
@@ -82,7 +84,7 @@ namespace boost {
             > : true_type
 #else
     template < typename Target, typename Source, class Enable = void>
-    struct assigner
+    struct assigner_cp
 #endif
     {
       //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
@@ -93,6 +95,11 @@ namespace boost {
         return to;
       }
     };
+#if !defined(BOOST_CONVERSION_ENABLE_CND)
+    template < typename Target, typename Source, class Enable = void >
+    struct assigner : assigner_cp<Target,Source,Enable> {};
+#endif
+
 #if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Specialization when @c Target is assignable from @c Source.

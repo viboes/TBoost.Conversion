@@ -37,12 +37,11 @@ namespace boost {
      * Partial specialization of @c converter for @c boost::array of the same size
      */
     template < typename Target, typename Source, std::size_t N>
-    struct converter< array<Target,N>, array<Source,N>
+    struct converter_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
-            //is_extrinsic_assignable<array<Target,N>, array<Source,N> >::value
             is_extrinsic_assignable<Target,Source>::value
-            && ! default_converter_condition<array<Target,N>, array<Source,N> >::value
+            //&& ! default_converter_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
     > : true_type
@@ -63,12 +62,12 @@ namespace boost {
      * Partial specialization of @c assigner for @c boost::array of the same size
      */
     template < typename Target, typename Source, std::size_t N>
-    struct assigner< array<Target,N>, array<Source,N>
+    struct assigner_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
                   is_extrinsic_assignable<Target,Source>::value
             && ! is_assignable<Target, Source>::value
-            && ! default_assigner_condition<array<Target,N>, array<Source,N> >::value
+            //&& ! default_assigner_condition<array<Target,N>, array<Source,N> >::value
         >::type
 #endif
     > : true_type
@@ -83,6 +82,30 @@ namespace boost {
         return to;
       }
     };
+    /**
+     * Partial specialization of @c assigner for @c boost::array of the same size
+     */
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+    template < typename Target, typename Source, std::size_t N>
+    struct assigner_cp< array<Target,N>, array<Source,N>
+    , typename enable_if_c<
+                  is_extrinsic_assignable<Target,Source>::value
+            && is_assignable<Target, Source>::value
+            //&& ! default_assigner_condition<array<Target,N>, array<Source,N> >::value
+        >::type
+    > : true_type
+    {
+      //! @Effects assign to each one of the target array elements the conversion of the source array element.
+      array<Target,N>& operator()(array<Target,N>& to, array<Source,N> const & from)
+      {
+        for (unsigned int i =0; i<N; ++i)
+        {
+            to[i] = from[i];
+        }
+        return to;
+      }
+    };
+#endif
   }
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

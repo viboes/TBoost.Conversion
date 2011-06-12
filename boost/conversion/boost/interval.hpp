@@ -26,11 +26,11 @@ namespace boost {
     //! @brief @c converter specialization for source and target been @c boost::numeric::interval.
     //!
     template < class Target, class PTarget, class Source, class PSource>
-    struct converter< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
+    struct converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-            && ! default_converter_condition<  numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
+            //&& ! default_converter_condition<  numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
         >::type
 #endif
     > : true_type
@@ -42,11 +42,11 @@ namespace boost {
       }
     };
     template < class Target, class PTarget, class Source, class PSource>
-    struct assigner< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
+    struct assigner_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-      && ! default_assigner_condition<numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
+      //&& ! default_assigner_condition<numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
         >::type
 #endif
     > : true_type

@@ -92,7 +92,9 @@ namespace boost {
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
-    struct converter : false_type {};
+    struct converter_cp : false_type {};
+    template < typename Target, typename Source, class Enable = void >
+    struct converter : converter_cp<Target,Source,Enable> {};
 
     //! Specialization for @c converter when @c is_explicitly_convertible<Source,Target>.
     //! @Requires @c is_explicitly_convertible<Source,Target>
@@ -104,7 +106,7 @@ namespace boost {
               > : true_type
 #else
     template < typename Target, typename Source, class Enable = void >
-    struct converter  : true_type
+    struct converter_cp  : true_type
 #endif
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
@@ -112,8 +114,14 @@ namespace boost {
       Target operator()(const Source& val)
       {
         return Target((val));
+        //return val;
       }
     };
+#if !defined(BOOST_CONVERSION_ENABLE_CND)
+    template < typename Target, typename Source, class Enable = void >
+    struct converter : converter_cp<Target,Source,Enable> {};
+#endif
+
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {

@@ -29,11 +29,11 @@ namespace boost {
     //! @brief @c converter specialization for source and target been @c boost::rational.
     //!
     template < class Target, class Source>
-    struct converter< rational<Target>, rational<Source>
+    struct converter_cp< rational<Target>, rational<Source>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-            && ! default_converter_condition< rational<Target>, rational<Source> >::value
+            //&& ! default_converter_condition< rational<Target>, rational<Source> >::value
         >::type
 #endif
     > : true_type
@@ -45,11 +45,11 @@ namespace boost {
       }
     };
     template < class Target, class Source>
-    struct assigner< rational<Target>, rational<Source>
+    struct assigner_cp< rational<Target>, rational<Source>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-      && ! default_assigner_condition<rational<Target>, rational<Source> >::value
+      //&& ! default_assigner_condition<rational<Target>, rational<Source> >::value
         >::type
 #endif
     > : true_type

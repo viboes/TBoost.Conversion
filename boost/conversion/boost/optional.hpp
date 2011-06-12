@@ -45,11 +45,11 @@ namespace boost {
      * Partial specialization of @c converter for boost::optional
      */
     template < class Target, class Source>
-    struct converter< optional<Target>, optional<Source>
+    struct converter_cp< optional<Target>, optional<Source>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
-            && ! default_converter_condition< optional<Target>, optional<Source> >::value
+            //&& ! default_converter_condition< optional<Target>, optional<Source> >::value
         >::type
 #endif
     > : true_type
@@ -66,12 +66,12 @@ namespace boost {
     //!
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
-    struct converter< optional<Target>, Source
+    struct converter_cp< optional<Target>, Source
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
             is_extrinsic_convertible<Source,Target>::value
             && ! detail::is_optional<Source>::value
-            && ! default_converter_condition<optional<Target>, Source >::value
+            //&& ! default_converter_condition<optional<Target>, Source >::value
         >::type
 #endif
     > : true_type

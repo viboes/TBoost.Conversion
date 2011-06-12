@@ -31,12 +31,12 @@ namespace boost {
     // std namespace can not be overloaded
 
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct converter< std::basic_string<CharT,Traits,Alloc>, T
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            ! default_converter_condition< std::basic_string<CharT,Traits,Alloc>, T  >::value
-        >::type
-#endif
+    struct converter_cp< std::basic_string<CharT,Traits,Alloc>, T
+//#if defined(BOOST_CONVERSION_ENABLE_CND)
+//    , typename enable_if_c<
+//            ! default_converter_condition< std::basic_string<CharT,Traits,Alloc>, T  >::value
+//        >::type
+//#endif
     > : true_type
     {
       std::basic_string<CharT,Traits,Alloc> operator()(T const & from)
@@ -49,12 +49,12 @@ namespace boost {
       }
     };
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct converter< T, std::basic_string<CharT,Traits,Alloc>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            ! default_converter_condition< T, std::basic_string<CharT,Traits,Alloc>  >::value
-        >::type
-#endif
+    struct converter_cp< T, std::basic_string<CharT,Traits,Alloc>
+//#if defined(BOOST_CONVERSION_ENABLE_CND)
+//    , typename enable_if_c<
+//            ! default_converter_condition< T, std::basic_string<CharT,Traits,Alloc>  >::value
+//        >::type
+//#endif
         > : true_type
     {
       T operator()(std::basic_string<CharT,Traits,Alloc> const & from)
@@ -68,12 +68,12 @@ namespace boost {
     };
 
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner< std::basic_string<CharT,Traits,Alloc>, T
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            ! default_assigner_condition< std::basic_string<CharT,Traits,Alloc>, T  >::value
-        >::type
-#endif
+    struct assigner_cp< std::basic_string<CharT,Traits,Alloc>, T
+//#if defined(BOOST_CONVERSION_ENABLE_CND)
+//    , typename enable_if_c<
+//            ! default_assigner_condition< std::basic_string<CharT,Traits,Alloc>, T  >::value
+//        >::type
+//#endif
     > : true_type
     {
       std::basic_string<CharT,Traits,Alloc>&
@@ -88,12 +88,12 @@ namespace boost {
       }
     };
     template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner< T, std::basic_string<CharT,Traits,Alloc>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            ! default_assigner_condition< T, std::basic_string<CharT,Traits,Alloc>  >::value
-        >::type
-#endif
+    struct assigner_cp< T, std::basic_string<CharT,Traits,Alloc>
+//#if defined(BOOST_CONVERSION_ENABLE_CND)
+//    , typename enable_if_c<
+//            ! default_assigner_condition< T, std::basic_string<CharT,Traits,Alloc>  >::value
+//        >::type
+//#endif
     > : true_type
     {
       T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)

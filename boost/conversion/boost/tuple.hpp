@@ -24,12 +24,12 @@
 namespace boost {
   namespace conversion {
     template < class T1, class T2, class S1, class S2>
-    struct converter< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
+    struct converter_cp< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
               is_extrinsic_convertible<S1,T1>::value
             && is_extrinsic_convertible<S2,T2>::value
-            && ! default_converter_condition< fusion::tuple<T1,T2>, fusion::tuple<S1,S2> >::value
+            //&& ! default_converter_condition< fusion::tuple<T1,T2>, fusion::tuple<S1,S2> >::value
         >::type
 #endif
         > : true_type
@@ -43,13 +43,13 @@ namespace boost {
       }
     };
     template < class T1, class T2, class T3, class S1, class S2, class S3>
-    struct converter< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
+    struct converter_cp< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     , typename enable_if_c<
               is_extrinsic_convertible<S1,T1>::value
               && is_extrinsic_convertible<S2,T2>::value
               && is_extrinsic_convertible<S3,T3>::value
-            && ! default_converter_condition< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3> >::value
+            //&& ! default_converter_condition< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3> >::value
         >::type
 #endif
     > : true_type
