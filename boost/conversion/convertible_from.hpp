@@ -18,6 +18,8 @@
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
   namespace conversion {
@@ -37,7 +39,13 @@ namespace boost {
       //! @Effects Forwards the conversion from the reference using @c conver_to.
       //! @Returns the conversion using @c conver_to
       //! @Throws Whatever extrinsic conversion from @c Source to @c Target could throw.
-      template <typename Target>
+      //! @Remark On compilers that supports C++0x default arguments for function template parameters,
+      //!   this constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
+      template <typename Target
+#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+      , typename boost::enable_if< boost::is_extrinsic_convertible<Source,Target>, int >::type = 0
+#endif
+      >
       operator Target() const
       {
         return conversion::convert_to<Target>(val_);

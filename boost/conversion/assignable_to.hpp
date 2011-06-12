@@ -18,6 +18,9 @@
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
   namespace conversion {
@@ -37,15 +40,19 @@ namespace boost {
       //! @NoThrow.
       assignable_to(Target& r) : ref_(r) {}
 
-      //! Implicit conversion to @c U.
-      //! @Effects Forwards the conversion from the reference using @c conver_to.
-      //! @Returns @c *this
-      //! @Throws Whatever @c convert_to throws.
-      template <typename U>
-      operator U()
-      {
-        return boost::conversion::convert_to<U>(ref_);
-      }
+//      //! Implicit conversion to @c U.
+//      //! @Effects Forwards the conversion from the reference using @c conver_to.
+//      //! @Returns @c *this
+//      //! @Throws Whatever @c convert_to throws.
+//      template <typename U
+//#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+//      , typename boost::enable_if< boost::is_extrinsic_convertible<Target,U>, int >::type = 0
+//#endif
+//      >
+//      operator U()
+//      {
+//        return boost::conversion::convert_to<U>(ref_);
+//      }
 
       //! Assignment.
       //!
@@ -58,25 +65,37 @@ namespace boost {
         return *this;
       }
 
-      //! Assignment from a converter assigner wrapping a type U  convertible to Target.
+      //! Assignment from a assignable_to wrapping a type @c Source convertible to Target.
       //!
-      //! @Effects Forwards the assignment to the reference using assign_to.
+      //! @Effects Forwards the assignment to the reference using @c assign_to.
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
-      template <typename U>
-      assignable_to& operator =(assignable_to<U> const& u)
+      //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
+      template <typename Source>
+#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+      typename boost::enable_if< boost::is_extrinsic_assignable<Target,Source>, assignable_to& >::type
+#else
+      assignable_to&
+#endif
+      operator =(assignable_to<Source> const& s)
       {
-        boost::conversion::assign_to(ref_, u.ref_);
+        boost::conversion::assign_to(ref_, s.ref_);
         return *this;
       }
 
-      //! Assignment from a type Source assignable to Target.
+      //! Assignment from a type @c Source assignable to @c Target.
       //!
-      //! @Effects Forwards the assignment to the reference using assign_to
+      //! @Effects Forwards the assignment to the reference using @c assign_to
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
+      //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
       template <typename Source>
-      assignable_to& operator =(Source const& u)
+#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+      typename boost::enable_if< boost::is_extrinsic_assignable<Target,Source>, assignable_to& >::type
+#else
+      assignable_to&
+#endif
+      operator =(Source const& u)
       {
         boost::conversion::assign_to(ref_, u);
         return *this;

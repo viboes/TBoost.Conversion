@@ -18,6 +18,8 @@
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
   namespace conversion {
@@ -32,8 +34,13 @@ namespace boost {
       //! constructor from a extrinsic implicitly convertible to @c Target.
       //! @Effects Store the extrinsic conversion from @c source to @ Target.
       //! @Throws Whatever extrinsic implicit conversion from @c source to @c Target could throw.
+      //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template  <typename Source>
-      convertible_to(Source const& source)
+      convertible_to(Source const& source
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+          , typename enable_if<boost::is_extrinsic_convertible<Source,Target> >::type* dummy = 0
+#endif
+          )
         : val_(boost::conversion::convert_to<Target>(source))
       {}
 
