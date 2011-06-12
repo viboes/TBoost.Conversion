@@ -21,7 +21,9 @@ Include all the core conversion public header files. Note that you will need to 
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/convert_to_via.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
-#include <boost/conversion/pack.hpp>
+#include <boost/conversion/convertible_to.hpp>
+#include <boost/conversion/convertible_from.hpp>
+#include <boost/conversion/assignable_to.hpp>
 #include <boost/conversion/try_convert_to.hpp>
 #include <boost/conversion/convert_to_or_fallback.hpp>
 #include <boost/conversion/try_assign_to.hpp>

@@ -13,8 +13,8 @@
  @brief
  Defines the free function @c mca.
  */
-#ifndef BOOST_CONVERSION_CA_WRAPPER_HPP
-#define BOOST_CONVERSION_CA_WRAPPER_HPP
+#ifndef BOOST_CONVERSION_ASSIGNABLE_TO_HPP
+#define BOOST_CONVERSION_ASSIGNABLE_TO_HPP
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
@@ -22,27 +22,28 @@
 namespace boost {
   namespace conversion {
 
-    //! wrapper providing assignment and conversion operations from a reference.
+    //! wrapper providing assignment from extrinsic assignable to @c Target.
 
-    template <typename T>
-    class ca_wrapper {
+    template <typename Target>
+    class assignable_to {
     public:
-      T& ref_;
+      Target& ref_;
 
-      //! copy constructor
+      //! default copy constructor
       //! @NoThrow.
-      ca_wrapper(ca_wrapper const& r) : ref_(r.ref_) { }
+      //assignable_to(assignable_to const& r) : ref_(r.ref_) { }
 
       //! constructor from a reference
       //! @NoThrow.
-      ca_wrapper(T& r) : ref_(r) {}
+      assignable_to(Target& r) : ref_(r) {}
 
       //! Implicit conversion to @c U.
       //! @Effects Forwards the conversion from the reference using @c conver_to.
       //! @Returns @c *this
       //! @Throws Whatever @c convert_to throws.
       template <typename U>
-      operator U() const {
+      operator U()
+      {
         return boost::conversion::convert_to<U>(ref_);
       }
 
@@ -50,41 +51,45 @@ namespace boost {
       //!
       //! @Effects Forwards the assignment to the reference.
       //! @Returns @c *this
-      //! @Throws Whatever @c T assignment can throws.
-      ca_wrapper& operator =(ca_wrapper<T> const& u) {
+      //! @Throws Whatever @c Target assignment can throws.
+      assignable_to& operator =(assignable_to<Target> const& u)
+      {
         ref_ = u.ref_;
         return *this;
       }
 
-      //! Assignment from a converter assigner wrapping a type U  convertible to T.
+      //! Assignment from a converter assigner wrapping a type U  convertible to Target.
       //!
       //! @Effects Forwards the assignment to the reference using assign_to.
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
       template <typename U>
-      ca_wrapper& operator =(ca_wrapper<U> const& u) {
+      assignable_to& operator =(assignable_to<U> const& u)
+      {
         boost::conversion::assign_to(ref_, u.ref_);
         return *this;
       }
 
-      //! Assignment from a type U convertible to T.
+      //! Assignment from a type Source assignable to Target.
       //!
       //! @Effects Forwards the assignment to the reference using assign_to
       //! @Returns @c *this
       //! @Throws Whatever @c assign_to throws.
-      template <typename U>
-      ca_wrapper& operator =(U const& u) {
+      template <typename Source>
+      assignable_to& operator =(Source const& u)
+      {
         boost::conversion::assign_to(ref_, u);
         return *this;
       }
     };
-    //! makes a converter assigner wrapper of the reference parameter.
+    //! makes an assignable to @c Target.
 
     //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
     //! @NoThrow.
-    template <typename T>
-    ca_wrapper<T> mca(T& r) {
-      return ca_wrapper<T>(r);
+    template <typename Target>
+    assignable_to<Target> mat(Target& r)
+    {
+      return assignable_to<Target>(r);
     }
   }
 }
