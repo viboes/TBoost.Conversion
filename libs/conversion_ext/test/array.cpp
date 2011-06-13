@@ -8,9 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/boost/array.hpp>
-#include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 #include "helper.hpp"
 #include <boost/static_assert.hpp>

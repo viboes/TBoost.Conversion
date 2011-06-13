@@ -8,7 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convertible_to.hpp>
 #include <boost/conversion/convertible_from.hpp>
@@ -20,6 +22,7 @@
 
 
 using namespace boost;
+using namespace boost::conversion;
 
 struct A{};
 struct B{
@@ -27,19 +30,9 @@ struct B{
 };
 struct C{};
 
-void f(B) {}
-
-void g(boost::conversion::convertible_to<B> cb)
-{
-  cb.get().k();
-  return f(cb);
-}
-
-
-
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
-  A convert_to(const B&, boost::conversion::dummy::type_tag<A> const&) {
+  A convert_to(const B&, dummy::type_tag<A> const&) {
     return A();
   }
 
@@ -47,7 +40,7 @@ void g(boost::conversion::convertible_to<B> cb)
     return to;
   }
 
-  B convert_to(const C&, boost::conversion::dummy::type_tag<B> const&) {
+  B convert_to(const C&, dummy::type_tag<B> const&) {
     return B();
   }
 
@@ -81,12 +74,163 @@ void g(boost::conversion::convertible_to<B> cb)
 #endif
 
 
+  void f(B) {}
+
+  void g(convertible_to<B> cb)
+  {
+    cb.get().k(); // need for get()
+    return f(cb); // implicit conversion from cb to B applies
+  }
+
   template <typename T>
   typename boost::enable_if<boost::is_extrinsic_convertible<T,B>, void >::type
   h(T v)
   {
-    return f(boost::conversion::convert_to<B>(v));
+    return f(convert_to<B>(v));
   }
+
+//////////
+struct X{};
+
+struct ICF_X {
+};
+
+namespace boost {
+  namespace conversion {
+    template <>
+    struct converter_cp< ICF_X, X > : true_type {
+      ICF_X operator()(X const &)
+      {
+        return ICF_X();
+      }
+    };
+  }
+}
+
+struct ECF_X {
+};
+
+namespace boost {
+  namespace conversion {
+    template <>
+    struct explicit_converter_cp< ECF_X, X > : true_type {
+      ECF_X operator()(X const &)
+      {
+        return ECF_X();
+      }
+    };
+  }
+}
+
+struct ICT_X {
+};
+
+namespace boost {
+  namespace conversion {
+    template <>
+    struct converter_cp< X, ICT_X > : true_type {
+      X operator()(ICT_X const &)
+      {
+        return X();
+      }
+    };
+  }
+}
+
+struct ECT_X {
+};
+
+namespace boost {
+  namespace conversion {
+    template <>
+    struct explicit_converter_cp< X, ECT_X > : true_type {
+      X operator()(ECT_X const &)
+      {
+        return X();
+      }
+    };
+  }
+}
+
+
+struct AF_X {
+};
+
+namespace boost {
+  namespace conversion {
+    template <>
+    struct assigner_cp< AF_X, X > : true_type {
+      AF_X& operator()(AF_X &lhs, X const&)
+      {
+        return lhs;
+      }
+    };
+  }
+}
+
+//////////////////////////
+
+  void xconvert_to_with_implicit_constructor()
+  {
+    {
+      X x;
+      ICF_X y1(convert_to<ICF_X>(x));
+      ICF_X y2(mcf(x));
+      mat(y2) = x;
+    }
+  }
+
+  #define BOOST_CONVERSION_CONSTRUCT(T, VAR, EXPR) \
+    T VAR(boost::conversion::explicit_convert_to<T>(EXPR))
+
+  void xconvert_to_with_explicit_constructor()
+  {
+    {
+      X x;
+      //ECF_X y(convert_to<ECF_X>(x)); // compile must fail
+      BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
+      ECF_X y1_1(explicit_convert_to<ECF_X>(x));
+      //ECF_X y1_2(mcf(x)); // fail as there is no implicit conversion.
+      ECF_X y2 = explicit_convert_to<ECF_X>(x);
+      //mat(y2) = x; // fails as no implicit conversion
+    }
+
+  }
+
+  void xconvert_to_with_implicit_conversion_operator()
+  {
+    {
+      ICT_X y;
+      X x1(convert_to<X>(y));
+      X x2(mcf(y));
+      X x3=convert_to<X>(y);
+      X x4=mcf(y);
+      mat(x4) = y;
+    }
+
+  }
+  void xconvert_to_with_explicit_conversion_operator()
+  {
+    {
+      ECT_X y;
+      X x1(explicit_convert_to<X>(y));
+      X x2=explicit_convert_to<X>(y);
+    }
+  }
+  void xassign_to_with_assignemet_operator()
+  {
+    {
+      X x;
+      //AF_X y1(x);  // compile fails
+      AF_X y2;
+      //y2=x;  // compile fails
+      assign_to(y2,x);
+      mat(y2)=x;
+    }
+  }
+////
+
+
 
 void explicit_convert_to() {
   using namespace boost::conversion;
@@ -119,7 +263,7 @@ void explicit_chain_assign_to() {
 
 void implicit_conversion_via_mca() {
   C c;
-  f(boost::conversion::mca(c));
+  f(mca(c));
 }
 
 void implicit_conversion_via_mcf() {
@@ -141,6 +285,11 @@ void implicit_conversion_via_sfinae() {
 
 int main( )
 {
+  xconvert_to_with_implicit_constructor();
+  xconvert_to_with_explicit_constructor();
+  xconvert_to_with_implicit_conversion_operator();
+  xconvert_to_with_explicit_conversion_operator();
+  xassign_to_with_assignemet_operator();
   explicit_convert_to();
   explicit_assign_to();
   explicit_chain_assign_to();

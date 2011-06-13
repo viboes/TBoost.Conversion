@@ -8,12 +8,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+#include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/ca_wrapper.hpp>
+#include <boost/conversion/assignable_to.hpp>
+#include <boost/conversion/convertible_from.hpp>
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 
 using namespace boost;
+using namespace boost::conversion;
 
 struct B{};
 struct A {
@@ -21,16 +26,17 @@ struct A {
     A(const B&){}
 };
 struct AE {
-    explicit AE(const B&){}
+    explicit AE(B){}
 };
 struct AA {
   AA(int){}
   AA(const A&){}
   AA& operator=(const A&) { return *this;}
+  //AA& operator=(const B&) { return *this;}
 };
 
 struct C {
-    operator B()  const{return B();}
+    operator B()  const{ return B(); }
 };
 struct CC {
   CC(int){}
@@ -38,42 +44,104 @@ struct CC {
   CC& operator=(const B&) { return *this;}
 };
 
-void convert_to_with_implicit_constructor() {
-    {
-    B b;
-    A a(b);
-    }
-    {
-    B b;
-    A a(boost::conversion::convert_to<A>(b));
-    }
+//////////
+struct X{};
+
+struct ICF_X {
+  ICF_X(X const&) {}
+};
+struct ECF_X {
+  explicit ECF_X(X const&) {}
+};
+
+struct ICT_X {
+    operator X()  const{ return X(); }
+};
+
+#ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
+struct ECT_X {
+    explicit operator X() const { return X(); }
+};
+#endif
+
+struct AF_X {
+  AF_X& operator=(X) { return *this; }
+};
+
+//////////////////////////
+
+void convert_to_with_implicit_constructor()
+{
+  {
+    X x;
+    ICF_X y1(x);
+    ICF_X y2 = x;
+  }
+  {
+    X x;
+    ICF_X y(convert_to<ICF_X>(x));
+  }
+}
+
+#define BOOST_CONVERSION_CONSTRUCT(T, VAR, EXPR) \
+  T VAR(boost::conversion::explicit_convert_to<T>(EXPR))
+
+void explicit_convert_to_with_explicit_constructor() {
+  {
+    X x;
+    ECF_X y1(x);
+    //ECF_X y2=x; // compile fails
+    ECF_X y2=ECF_X(x);
+  }
+  {
+    X x;
+    //ECF_X y(convert_to<ECF_X>(x)); // compile must fail
+    BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
+    ECF_X y1_1(explicit_convert_to<ECF_X>(x));
+    ECF_X y1_2(mcf(x)); // doesn't fail as there is the constructor from X, but will fails for extrinsic conversion.
+    ECF_X y2 = explicit_convert_to<ECF_X>(x);
+  }
 
 }
-void convert_to_with_explicit_constructor() {
-    {
-    B b;
-    AE ae(b);
-    }
-    {
-    B b;
-    AE ae(boost::conversion::convert_to<AE>(b));
-    }
 
+void convert_to_with_implicit_conversion_operator() {
+  {
+    ICT_X y;
+    X x1(y);
+    X x2=y;
+  }
+  {
+    ICT_X y;
+    X x1(convert_to<X>(y));
+    X x2=convert_to<X>(y);
+  }
 }
-
-void convert_to_with_conversion_operator() {
-    {
-    C c;
-    A a(c);
-    }
-    {
-    C c;
-    A a(boost::conversion::convert_to<A>(c));
-    }
+void explicit_convert_to_with_explicit_conversion_operator() {
+#ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
+#error
+  {
+    ECT_X y;
+    X x1(y);
+    X x2=X(y);
+  }
+  {
+    ECT_X y;
+    X x1(explicit_convert_to<X>(y));
+    X x2=explicit_convert_to<X>(y);
+  }
+#endif
 
 }
 void assign_to_with_assignemet_operator() {
-    {
+  {
+    X x;
+    //AF_X y1(x);  // compile fails
+    AF_X y2;
+    y2=x;
+    assign_to(y2,x);
+    mat(y2)=x;
+  }
+  {
     A a(0);
     AA aa(0);
     aa=a;
@@ -81,13 +149,14 @@ void assign_to_with_assignemet_operator() {
     {
     A a(0);
     AA aa(0);
-    boost::conversion::assign_to(aa,a);
+    assign_to(aa,a);
     }
+
 }
 void mca_with_assignemet_operator() {
     A a(0);
     AA aa(0);
-    boost::conversion::mca(aa) =a;
+    mca(aa) =a;
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -99,13 +168,13 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
-    boost::conversion::assign_to(aa,b);
+    assign_to(aa,b);
     }
 }
 void mca_with_assignemet_operator_and_implicit_constructor() {
     B b;
     AA aa(1);
-    boost::conversion::mca(aa)=b;
+    mca(aa)=b;
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -117,22 +186,23 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    boost::conversion::assign_to(cc,c);
+    assign_to(cc,c);
     }
 }
 
 void mca_with_assignemet_operator_and_conversion_operator() {
     C c;
     CC cc(1);
-    boost::conversion::mca(cc)=c;
+    mca(cc)=c;
 }
 
 
 int main( )
 {
   convert_to_with_implicit_constructor();
-  convert_to_with_explicit_constructor();
-  convert_to_with_conversion_operator();
+  explicit_convert_to_with_explicit_constructor();
+  convert_to_with_implicit_conversion_operator();
+  explicit_convert_to_with_explicit_conversion_operator();
   assign_to_with_assignemet_operator();
   assign_to_with_assignemet_operator_and_implicit_constructor();
   assign_to_with_assignemet_operator_and_conversion_operator();
