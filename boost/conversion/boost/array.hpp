@@ -58,6 +58,7 @@ namespace boost {
         return to;
       }
     };
+
     /**
      * Partial specialization of @c assigner for @c boost::array of the same size
      */
