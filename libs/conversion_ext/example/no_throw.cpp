@@ -20,48 +20,51 @@ using namespace boost::conversion;
 void try_catch_way()
 {
   //[NO_THROW_CPP_TRY_CATCH_WAY
+  std::string str="not an int";
   int t;
-  try
-  {
-    std::string str="not an int";
+  try {
     t = convert_to<int>(str);
-  } catch(...)
-  {
+  } catch(...)   {
     std::cout << " Not an integer" << std::endl;
   }
   //]
 }
 void try_convert_to_way()
 {
-  int t;
   std::string str="not an int";
+  int t;
+  //[NO_THROW_CPP_TRY_CONVERT_WAY
   optional<int> optt =  try_convert_to<int>(str);
   if (!optt)
   {
     std::cout << " Not an integer" << std::endl;
   }
+  //]
 }
 
 void convert_to_optional_way()
 {
-  int t;
   std::string str="not an int";
+  int t;
+  //[NO_THROW_CPP_TRY_CONVERT_TO_OPT_WAY
   optional<int> optt =  convert_to<optional<int> >(str);
   if (!optt)
   {
     std::cout << " Not an integer" << std::endl;
   }
+  //]
 }
 
 void try_assign_to_way()
 {
-  int t;
   std::string str="not an int";
-
+  int t;
+  //[NO_THROW_CPP_TRY_ASSIGN_WAY
   if (!try_assign_to(t,str))
   {
     std::cout << " Not an integer" << std::endl;
   }
+  //]
 }
 
 int main()
