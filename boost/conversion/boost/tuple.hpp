@@ -17,41 +17,42 @@
 #define BOOST_CONVERSION_TUPLE_HPP
 
 #include <boost/fusion/tuple.hpp>
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
 
+
 namespace boost {
   namespace conversion {
-    template < class T1, class T2, class S1, class S2>
-    struct converter_cp< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-              is_extrinsic_convertible<S1,T1>::value
-            && is_extrinsic_convertible<S2,T2>::value
-            //&& ! default_converter_condition< fusion::tuple<T1,T2>, fusion::tuple<S1,S2> >::value
-        >::type
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
+    /** @brief Added here only to favor generation of specializations with doxygen */
+    template < class Target, class Source, class Enable=void>
+    struct explicit_converter_cp{};
 #endif
-        > : true_type
+
+    template < class T1, class T2, class S1, class S2>
+    struct explicit_converter_cp< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
+      BOOST_CONVERSION_REQUIRES((
+           is_extrinsic_convertible<S1,T1>::value
+        && is_extrinsic_convertible<S2,T2>::value
+      ))
+    > : true_type
     {
       fusion::tuple<T1,T2> operator()(fusion::tuple<S1,S2> const & from)
       {
         return fusion::tuple<T1,T2>(
-            boost::conversion::convert_to<T1>(fusion::get<0>(from))
-            , boost::conversion::convert_to<T2>(fusion::get<1>(from))
+            boost::conversion::implicit_convert_to<T1>(fusion::get<0>(from))
+            , boost::conversion::implicit_convert_to<T2>(fusion::get<1>(from))
         );
       }
     };
     template < class T1, class T2, class T3, class S1, class S2, class S3>
-    struct converter_cp< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-              is_extrinsic_convertible<S1,T1>::value
-              && is_extrinsic_convertible<S2,T2>::value
-              && is_extrinsic_convertible<S3,T3>::value
-            //&& ! default_converter_condition< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3> >::value
-        >::type
-#endif
+    struct explicit_converter_cp< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
+    BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<S1,T1>::value
+        && is_extrinsic_convertible<S2,T2>::value
+        && is_extrinsic_convertible<S3,T3>::value
+    ))
     > : true_type
     {
       fusion::tuple<T1,T2,T3> operator()(fusion::tuple<S1,S2,S3> const & from)

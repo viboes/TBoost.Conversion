@@ -16,24 +16,26 @@
 #ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
 
-#if 0
+#if 1
 
 #include <boost/config.hpp>
-//#include <boost/mpl/bool.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
-#include <cstddef>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/declval.hpp>
+#include <cstddef>
+
+// For specializations as there is a bug
 #include <utility>
 #include <boost/array.hpp>
 #include <complex>
 #include <vector>
 #include <boost/fusion/tuple.hpp>
+
 #ifndef BOOST_IS_CONSTRUCTIBLE_ARITY_MAX
 #define BOOST_IS_CONSTRUCTIBLE_ARITY_MAX 3
 #endif
@@ -72,7 +74,7 @@ namespace boost
         test(...);                                                                                      \
                                                                                                         \
         static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
-        typedef boost::integral_constant<bool,value> type;                                                          \
+        typedef boost::integral_constant<bool,value> type;                                              \
     };
 
     BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
@@ -84,7 +86,7 @@ namespace boost
     #define M0(z,n,t)                                                                                   \
     template<class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
     struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
-      : boost::mpl::false_                                                                              \
+      : boost::false_type                                                                               \
     {                                                                                                   \
     };
 
@@ -92,6 +94,10 @@ namespace boost
     #undef M0
 
 #endif
+    template <>
+    struct is_constructible< void>  : false_type {};
+    //template <typename A1, typename A2, typename A3>
+    //struct is_constructible< void, A1, A2,A3>  : false_type {};
 
   template <class A1, class A2, class B1, class B2>
   struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >

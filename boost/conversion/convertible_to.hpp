@@ -8,15 +8,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
- Defines the free function @c mca.
+ Defines the @c convertible_to wrapper.
  */
 #ifndef BOOST_CONVERSION_CONVERTIBLE_TO_HPP
 #define BOOST_CONVERSION_CONVERTIBLE_TO_HPP
 
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -41,7 +42,7 @@ namespace boost {
           , typename enable_if<boost::is_extrinsic_convertible<Source,Target> >::type* dummy = 0
 #endif
           )
-        : val_(boost::conversion::convert_to<Target>(source))
+        : val_(boost::conversion::implicit_convert_to<Target>(source))
       {}
 
       //! Implicit conversion to @c Target.
@@ -51,7 +52,7 @@ namespace boost {
       {
         return val_;
       }
-      //! explicit conversion to @c Target.
+      //! Explicit conversion to @c Target.
       //! @Returns @c val_
       //! @Throws Whatever @c target copy constructor could throw.
       Target get() const

@@ -8,6 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
@@ -27,13 +28,14 @@
 
 namespace boost {
   namespace conversion {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
+    /** @brief Added here only to favor generation of specializations with doxygen */
+    template < class Target, class Source, class Enable=void>
+    struct converter_cp{};
+#endif
+
     template < class Clock, class Duration>
     struct converter_cp<posix_time::ptime, chrono::time_point<Clock, Duration>
-//#if defined(BOOST_CONVERSION_ENABLE_CND)
-//    , typename enable_if_c<
-//            ! default_converter_condition< posix_time::ptime, chrono::time_point<Clock, Duration> >::value
-//        >::type
-//#endif
         > : true_type
     {
       posix_time::ptime operator()(const chrono::time_point<Clock, Duration>& from)
@@ -56,11 +58,6 @@ namespace boost {
 
     template < class Clock, class Duration>
     struct converter_cp<chrono::time_point<Clock, Duration>, posix_time::ptime
-//#if defined(BOOST_CONVERSION_ENABLE_CND)
-//    , typename enable_if_c<
-//            ! default_converter_condition< chrono::time_point<Clock, Duration>, posix_time::ptime >::value
-//        >::type
-//#endif
     > : true_type
     {
       chrono::time_point<Clock, Duration> operator()(const posix_time::ptime& from)

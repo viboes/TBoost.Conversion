@@ -12,7 +12,6 @@
  * @brief
  */
 
-
 #ifndef BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 #define BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 
@@ -27,12 +26,12 @@
 #include <complex>
 #include <string>
 #include <boost/fusion/tuple.hpp>
-
 #if defined(BOOST_NO_DECLTYPE)
 #include <boost/typeof/typeof.hpp>
 #endif // defined(BOOST_NO_DECLTYPE)
-
 #endif // !defined(BOOST_IS_ASSIGNABLE)
+
+
 
 // should be always the last #include directive
 #include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -43,6 +42,36 @@ namespace boost {
   namespace detail {
 
     namespace is_assignable {
+#if 0
+#ifdef BOOST_NO_SFINAE_EXPR
+      typedef char yes_type;
+      struct no_type { char a[2]; };
+
+      template<std::size_t N>
+      struct dummy;
+
+      template <class Target, class Source>
+      struct impl
+      {
+        Target t;
+        template <typename X>
+        static yes_type
+        test(dummy<sizeof(declval<X>() = declval<Source>())>*);
+
+        template <typename X>
+        static no_type
+        test(...);
+        static const bool value = sizeof(test<Target>(0)) == sizeof(yes_type);
+
+        typedef boost::integral_constant<bool,value> type;
+      };
+#else // BOOST_NO_SFINAE_EXPR
+      template <class Target, class Source>
+      struct impl : false_type {};
+#endif // BOOST_NO_SFINAE_EXPR
+
+#else // 0
+
       template <class Target, class Source>
 #if !defined(BOOST_NO_DECLTYPE)
       decltype((declval<Target>() = declval<Source>(), true_type()))
@@ -62,11 +91,17 @@ namespace boost {
     typedef BOOST_TYPEOF_TPL((test<T, U>(0))) type;
 #endif
     };
+#endif //0
 
     }
   }
   BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable,To,From,(::boost::detail::is_assignable::impl<To,From>::type::value))
-  BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable2,To,From,false)
+#else
+
+  BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable,To,From,BOOST_IS_ASSIGNABLE(To,From))
+
+#endif
+
   template <class A1, class A2, class B1, class B2>
   struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
       : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
@@ -97,11 +132,7 @@ namespace boost {
   struct is_assignable< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
       : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value&& is_assignable<A3,B3>::value >
         {};
-#else
 
-  BOOST_TT_AUX_BOOL_TRAIT_DEF2(is_assignable,To,From,BOOST_IS_ASSIGNABLE(To,From))
-
-#endif
 }
 
 #include <boost/type_traits/detail/bool_trait_undef.hpp>

@@ -18,42 +18,43 @@
 #define BOOST_CONVERSION_INTERVAL_HPP
 
 #include <boost/numeric/interval.hpp>
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 
 namespace boost {
   namespace conversion {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
+    /** @brief Added here only to favor generation of specializations with doxygen */
+    template < class Target, class Source, class Enable=void>
+    struct implicit_converter_cp{};
+#endif
+
+
     //! @brief @c converter specialization for source and target been @c boost::numeric::interval.
     //!
     template < class Target, class PTarget, class Source, class PSource>
     struct converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-            //&& ! default_converter_condition<  numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+          is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       //! @Returns the target interval having as extremes the conversion from the source interval extremes.
       numeric::interval<Target,PTarget> operator()(numeric::interval<Source,PSource> const & from)
       {
-        return numeric::interval<Target,PTarget>(boost::conversion::convert_to<Target>(from.lower()), boost::conversion::convert_to<Source>(from.upper()));
+        return numeric::interval<Target,PTarget>(boost::conversion::implicit_convert_to<Target>(from.lower()), boost::conversion::implicit_convert_to<Source>(from.upper()));
       }
     };
     template < class Target, class PTarget, class Source, class PSource>
     struct assigner_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-      //&& ! default_assigner_condition<numeric::interval<Target,PTarget>, numeric::interval<Source,PSource> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       numeric::interval<Target,PTarget>& operator()(numeric::interval<Target,PTarget>& to, const numeric::interval<Source,PSource>& from)
       {
-        to.assign(boost::conversion::convert_to<Target>(from.lower()), boost::conversion::convert_to<Source>(from.upper()));
+        to.assign(boost::conversion::implicit_convert_to<Target>(from.lower()), boost::conversion::implicit_convert_to<Source>(from.upper()));
         return to;
       }
     };

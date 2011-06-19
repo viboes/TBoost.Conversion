@@ -8,10 +8,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
- Defines the free function @c mca.
+ Defines the free function @c mat.
  */
 #ifndef BOOST_CONVERSION_ASSIGNABLE_TO_HPP
 #define BOOST_CONVERSION_ASSIGNABLE_TO_HPP
@@ -101,7 +102,7 @@ namespace boost {
         return *this;
       }
     };
-    //! makes an assignable to @c Target.
+    //! makes an assignable to @c Target which accepts assignment from any type that is extrinsic assignable to @c Target.
 
     //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
     //! @NoThrow.

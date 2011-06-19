@@ -12,11 +12,10 @@
  * @brief
  */
 
-
 #ifndef BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP
 
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/fusion/tuple.hpp>
 
 namespace boost {

@@ -35,6 +35,7 @@ Thus the user can specialize partially this class.
 */
 #endif
 
+
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
@@ -55,7 +56,7 @@ namespace boost {
       //! @Returns the converted value if success or the fallback when conversion fails.
       bool operator()(Target& to, const Source& from)
       {
-        Target rollback = to;
+        Target rollback((to));
         try
         {
           boost::conversion::assign_to<Target>(to , from);

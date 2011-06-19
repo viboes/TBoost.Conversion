@@ -14,6 +14,7 @@
  Include this file when using conversions between @c boost::rational<> of convertible types.
  */
 
+
 #ifndef BOOST_CONVERSION_PAIR__HPP
 #define BOOST_CONVERSION_PAIR__HPP
 
@@ -26,16 +27,19 @@
 
 namespace boost {
   namespace conversion {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
+    /** @brief Added here only to favor generation of specializations with doxygen */
+    template < class Target, class Source, class Enable=void>
+    struct converter_cp{};
+#endif
+
     //! @brief @c converter specialization for source and target been @c boost::rational.
     //!
     template < class Target, class Source>
     struct converter_cp< rational<Target>, rational<Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-            //&& ! default_converter_condition< rational<Target>, rational<Source> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       //! @Returns the target rational having as numerator and denominator the conversion from the numerator and denominator of the source rational.
@@ -46,12 +50,9 @@ namespace boost {
     };
     template < class Target, class Source>
     struct assigner_cp< rational<Target>, rational<Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-      //&& ! default_assigner_condition<rational<Target>, rational<Source> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       rational<Target>& operator()(rational<Target>& to, const rational<Source>& from)

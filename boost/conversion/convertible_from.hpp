@@ -8,15 +8,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
- Defines the free function @c mca.
+ Defines the free function @c mcf.
  */
 #ifndef BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 #define BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -48,11 +49,11 @@ namespace boost {
       >
       operator Target() const
       {
-        return conversion::convert_to<Target>(val_);
+        return conversion::implicit_convert_to<Target>(val_);
       }
 
     };
-    //! @brief makes a convertible from @c Source.
+    //! @brief makes a wrapper implicitly convertible from @c Source.
     //! The result provides implicitly conversion to any type which is extrinsic convertible from @c Source.
     //! @NoThrow.
     template <typename Source>

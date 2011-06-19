@@ -8,6 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
@@ -31,12 +32,9 @@ namespace boost {
 
     template < class T1, class A1, class T2, class A2>
     struct converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_assignable<T1,T2>::value
-    //&& ! default_converter_condition< std::vector<T1,A1>, std::vector<T2,A2>>::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_assignable<T1,T2>::value
+      ))
     > : true_type
     {
         std::vector<T1,A1> operator()(std::vector<T2,A2> const & from)
@@ -60,23 +58,14 @@ namespace boost {
                 boost::reference_wrapper<std::vector<T2,A2> const>,
                 boost::reference_wrapper<A1 const>
             >
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
+    BOOST_CONVERSION_REQUIRES((
         is_extrinsic_assignable<std::vector<T1,A1> >::value,
                                 std::pair<
                                   boost::reference_wrapper<std::vector<T2,A2> const>,
                                   boost::reference_wrapper<A1 const>
                                 >
-
-//        && ! default_converter_condition< std::vector<T1,A1>,
-//                                          std::pair<
-//                                            boost::reference_wrapper<std::vector<T2,A2> const>,
-//                                            boost::reference_wrapper<A1 const>
-//                                          > >::value
-
-        >::type
-#endif
-        > : false_type
+    ))
+    > : false_type
     {
         std::vector<T1,A1> operator()(
             typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
@@ -93,12 +82,9 @@ namespace boost {
 
     template < class T1, class A1, class T2, class A2>
     struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_assignable<T1,T2>::value
-            //&& ! default_assigner_condition< std::vector<T1,A1>, std::vector<T2,A2> >::value
-        >::type
-#endif
+    BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_assignable<T1,T2>::value
+    ))
     > : true_type
     {
         std::vector<T1,A1>& operator()(

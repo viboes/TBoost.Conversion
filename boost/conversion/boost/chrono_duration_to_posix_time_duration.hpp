@@ -8,6 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 /*!
  @file
  @brief
@@ -25,15 +26,16 @@
 
 namespace boost {
   namespace conversion {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
+    /** @brief Added here only to favor generation of specializations with doxygen */
+    template < class Target, class Source, class Enable=void>
+    struct converter_cp{};
+#endif
+
     //! @brief @c converter specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
     //!
     template < class Rep, class Period>
     struct converter_cp<posix_time::time_duration, chrono::duration<Rep, Period>
-//#if defined(BOOST_CONVERSION_ENABLE_CND)
-//    , typename enable_if_c<
-//            ! default_converter_condition<posix_time::time_duration, chrono::duration<Rep, Period> >::value
-//        >::type
-//#endif
      > : true_type
     {
       //! @Returns the duration converted to seconds+nanoseconds following the boost::posix_time::time_duration formatting.
@@ -58,11 +60,6 @@ namespace boost {
 
     template < class Rep, class Period>
     struct converter_cp<chrono::duration<Rep, Period>, posix_time::time_duration
-//#if defined(BOOST_CONVERSION_ENABLE_CND)
-//    , typename enable_if_c<
-//            ! default_converter_condition<chrono::duration<Rep, Period>, posix_time::time_duration >::value
-//        >::type
-//#endif
         > : true_type
     {
       //! @Returns the duration cast from a nanoseconds duration initialized to the total number of nanosecond of the @c from parameter.

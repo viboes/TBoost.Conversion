@@ -8,6 +8,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
+
 /*!
  @file
  @brief
@@ -29,12 +31,9 @@ namespace boost {
      */
     template < class Target, class Source>
     struct converter_cp< std::complex<Target>, std::complex<Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-            //&& ! default_converter_condition< std::complex<Target>, std::complex<Source> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       std::complex<Target> operator()(std::complex<Source> const & from)
@@ -46,12 +45,9 @@ namespace boost {
     };
     template < class Target, class Source>
     struct assigner_cp< std::complex<Target>, std::complex<Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<Source,Target>::value
-            //&& ! default_assigner_condition< std::complex<Target>, std::complex<Source> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_extrinsic_convertible<Source,Target>::value
+      ))
     > : true_type
     {
       std::complex<Target>& operator()(std::complex<Target>& to, const std::complex<Source>& from)

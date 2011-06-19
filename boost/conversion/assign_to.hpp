@@ -7,6 +7,7 @@
 // See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
+
 /*!
  @file
  @brief
@@ -28,34 +29,20 @@ the @c boost::conversion::overload_workaround namespace.
  */
 #endif
 
+#include <boost/conversion/config.hpp>
 
 
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 #include <boost/conversion/type_traits/is_copy_assignable.hpp>
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
-#endif
+#include <boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp>
 
 namespace boost {
   namespace conversion {
 
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-
-    /**
-     * States the default assigner condition used when no constraint is associated to the @c Target and @c Source parameters.
-     */
-    template < typename Target, typename Source>
-    struct default_assigner_condition
-            : integral_constant<bool,
-              is_assignable<Target,Source>::value
-              ||  (    is_copy_assignable<Target>::value
-                   &&  is_extrinsic_convertible<Source,Target>::value)
-            >
-    {};
-#endif
 
     //! Customization point for @c assign_to.
     //! @tparam Target target type of the conversion.
@@ -68,46 +55,34 @@ namespace boost {
     template < typename Target, typename Source, class Enable = void>
     struct assigner : assigner_cp<Target,Source,Enable> {};
 
-
-
     /**
      * Specialization when @c Target is not assignable from @c Source, but @c Target is copy constructible and @c Source is extrinsic convertible to @c Target.
      * @Requires @c Target must be CopyAssinable and @c @c Source must be extrinsic convertible to @c Target.
      */
     template < typename Target, typename Source>
     struct assigner<Target, Source
-            , typename enable_if_c<
-                    is_copy_assignable<Target>::value
-                    && is_extrinsic_convertible<Source,Target>::value
-                    && ! is_assignable<Target,Source>::value
-                >::type
-            > : true_type
-#else
-    template < typename Target, typename Source, class Enable = void>
-    struct assigner_cp
-#endif
+      BOOST_CONVERSION_REQUIRES((
+          is_copy_assignable<Target>::value
+          && is_extrinsic_explicit_convertible<Source,Target>::value
+          && ! is_assignable<Target,Source>::value
+      ))
+    > : true_type
     {
       //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
       //! @Throws Whatever the underlying assignment operator of the @c Target class throws.
       Target& operator()(Target& to, const Source& from)
       {
-        to = ::boost::conversion::convert_to<Target>(from);
+        to = ::boost::conversion::explicit_convert_to<Target>(from);
         return to;
       }
     };
-#if !defined(BOOST_CONVERSION_ENABLE_CND)
-    template < typename Target, typename Source, class Enable = void >
-    struct assigner : assigner_cp<Target,Source,Enable> {};
-#endif
-
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Specialization when @c Target is assignable from @c Source.
      * @Requires @c Target must be Assinable from Source.
      */
     template < typename Target, typename Source>
     struct assigner<Target,Source
-            , typename enable_if<is_assignable<Target, Source> >::type
+      BOOST_CONVERSION_REQUIRES((is_assignable<Target, Source>::value))
             > : true_type
     {
       //! @Effects Assigns the @c from parameter to the @c to parameter.
@@ -118,20 +93,33 @@ namespace boost {
         return to;
       }
     };
+
+#else
+    template < typename Target, typename Source, class Enable = void>
+    struct assigner_cp :  true_type
+    {
+      //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+      //! @Throws Whatever the underlying assignment operator of the @c Target class throws.
+      Target& operator()(Target& to, const Source& from)
+      {
+        to = ::boost::conversion::implicit_convert_to<Target>(from);
+        return to;
+      }
+    };
+    template < typename Target, typename Source, class Enable = void>
+    struct assigner : assigner_cp<Target,Source,Enable> {};
 #endif
 
     //! partial specialization for c-array types.
     //! @Requires @c Target must be CopyAssinable and @c @c Source must be extrinsic convertible to @c Target.
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-                   , typename enable_if_c<
-                         is_copy_assignable<Target>::value
-                         && is_extrinsic_convertible<Source,Target>::value
-                         && ! is_assignable<Target,Source>::value
-                     >::type
-#endif
-                   > : true_type
+                                     BOOST_CONVERSION_REQUIRES((
+                                         is_copy_assignable<Target>::value
+                                         && is_extrinsic_convertible<Source,Target>::value
+                                         && ! is_assignable<Target,Source>::value
+                                     ))
+    > : true_type
     {
       //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
       //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
@@ -140,7 +128,7 @@ namespace boost {
       {
         for (std::size_t i = 0; i < N; ++i)
         {
-          to[i] = ::boost::conversion::convert_to<Target>(from[i]);
+          to[i] = ::boost::conversion::implicit_convert_to<Target>(from[i]);
         }
         return to;
       }
@@ -151,10 +139,10 @@ namespace boost {
     //! @Requires @c Target must be Assinable from @c Source.
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
-                   , typename enable_if_c<
-                         is_assignable<Target, Source>::value
-                     >::type
-                   > : true_type
+                                     BOOST_CONVERSION_REQUIRES((
+                                         is_assignable<Target, Source>::value
+                                     ))
+    > : true_type
     {
       //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
       //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.

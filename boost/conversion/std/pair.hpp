@@ -13,6 +13,7 @@
  Include this file when using conversions between @c std::pair<> of convertible types.
  */
 
+
 //[PAIR_HPP
 #ifndef BOOST_CONVERSION_STD_PAIR_HPP
 #define BOOST_CONVERSION_STD_PAIR_HPP
@@ -27,33 +28,29 @@ namespace boost {
     // std namespace can not be overloaded
     template < class T1, class T2, class S1, class S2>
     struct converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-            is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
-            //&& ! default_converter_condition< std::pair<T1,T2>, std::pair<S1,S2> >::value
-        >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+          is_extrinsic_convertible<S1,T1>::value
+       && is_extrinsic_convertible<S2,T2>::value
+      ))
     > : true_type
     {
         std::pair<T1,T2> operator()(std::pair<S1,S2> const & from)
         {
-            return std::pair<T1,T2>(boost::conversion::convert_to<T1>(from.first), boost::conversion::convert_to<T2>(from.second));
+            return std::pair<T1,T2>(boost::conversion::implicit_convert_to<T1>(from.first), boost::conversion::implicit_convert_to<T2>(from.second));
         }
     };
     template < class T1, class T2, class S1, class S2>
     struct assigner_cp< std::pair<T1,T2>, std::pair<S1,S2>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    , typename enable_if_c<
-      is_extrinsic_convertible<S1,T1>::value && is_extrinsic_convertible<S2,T2>::value
-      //&& ! default_assigner_condition<std::pair<T1,T2>,std::pair<S1,S2> >::value
-      >::type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+           is_extrinsic_convertible<S1,T1>::value
+        && is_extrinsic_convertible<S2,T2>::value
+      ))
     > : true_type
     {
         std::pair<T1,T2>& operator()(std::pair<T1,T2>& to, const std::pair<S1,S2>& from)
         {
-            to.first = boost::conversion::convert_to<T1>(from.first);
-            to.second = boost::conversion::convert_to<T2>(from.second);
+            to.first = boost::conversion::implicit_convert_to<T1>(from.first);
+            to.second = boost::conversion::implicit_convert_to<T2>(from.second);
             return to;
         }
     };

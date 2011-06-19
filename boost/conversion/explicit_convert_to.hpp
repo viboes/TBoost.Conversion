@@ -31,33 +31,27 @@
 #endif
 
 
-#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
-#endif
+#include <boost/conversion/detail/is_optional.hpp>
+#include <boost/optional.hpp>
 
 namespace boost {
   namespace conversion {
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
+    template <typename Target, typename Source>
+    Target
+    explicit_convert_to(Source const& from);
 
-    /**
-     * States the default explicit_converter condition used when no constraint is associated to the @c Target and @c Source parameters.
-     */
-    template < typename Target, typename Source>
-    struct default_explicit_converter_condition
-            : is_explicitly_convertible<Source,Target>
-    {};
-#endif
 
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     //! Customization point for @c explicit_convert_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     template < typename Target, typename Source, class Enable = void >
     struct explicit_converter_cp : false_type {};
 
@@ -69,14 +63,11 @@ namespace boost {
     //! @Requires @c is_explicitly_convertible<Source,Target>
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-              , typename enable_if<is_explicitly_convertible<Source,Target> >::type
-#endif
-              > : true_type
-#else
-    template < typename Target, typename Source, class Enable = void >
-    struct explicit_converter_cp  : true_type
-#endif
+      BOOST_CONVERSION_REQUIRES((
+        is_explicitly_convertible<Source,Target>::value
+        && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
+      ))
+    > : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
@@ -85,31 +76,104 @@ namespace boost {
         return Target((val));
       }
     };
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! Specialization for @c explicit_converter when @c is_explicitly_convertible<Source,Target>.
     //! @Requires @c is_explicitly_convertible<Source,Target>
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
               , typename enable_if_c<
                       is_extrinsic_convertible<Source,Target>::value
                   && !is_explicitly_convertible<Source,Target>::value
+                  && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
                 >::type
-#endif
               > : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
       Target operator()(const Source& val)
       {
-        return convert_to<Target>(val);
+        return implicit_convert_to<Target>(val);
       }
     };
-#endif
-#if !defined(BOOST_CONVERSION_ENABLE_CND)
+
+    //! @brief @c explicit converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+    //!
+    //! We can see this specialization as a try_convert_to function.
+    template < class Target, class Source>
+    struct explicit_converter< optional<Target>, Source
+    , typename enable_if_c<
+//      BOOST_CONVERSION_REQUIRES((
+        explicit_converter<Target,Source>::value
+        && ! detail::is_optional<Source>::value
+//      ))
+      >::type
+    > : true_type
+
+    {
+      //! @Returns If the source is convertible to the target @c value_type
+      //! @c Target initialized to the result of the conversion.
+      //! Uninitialized  @c Target otherwise.
+      optional<Target> operator()(Source const & from)
+      {
+        try
+        {
+          return optional<Target>(explicit_convert_to<Target>(from));
+        }
+        catch (...)
+        {
+          return optional<Target>();
+        }
+      }
+    };
+#else
+    //! Customization point for @c explicit_convert_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     template < typename Target, typename Source, class Enable = void >
-    struct explicit_converter : explicit_converter_cp<Target,Source,Enable> {};
+    struct explicit_converter_cp : false_type
+    {
+      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
+      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
+      Target operator()(const Source& val)
+      {
+        return Target((val));
+      }
+    };
+
+    template < typename Target, typename Source, bool TargetIsOptional, bool SourceIsOptional>
+    struct explicit_converter_aux : explicit_converter_cp<Target, Source>
+    {};
+    //! @brief @c explicit converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+    //!
+    //! We can see this specialization as a try_convert_to function.
+    template < class Target, class Source>
+    struct explicit_converter_aux< optional<Target>, Source, true, false> : true_type
+
+    {
+      //! @Returns If the source is convertible to the target @c value_type
+      //! @c Target initialized to the result of the conversion.
+      //! Uninitialized  @c Target otherwise.
+      optional<Target> operator()(Source const & from)
+      {
+        try
+        {
+          return optional<Target>(explicit_convert_to<Target>(from));
+        }
+        catch (...)
+        {
+          return optional<Target>();
+        }
+      }
+    };
+
+    //! Default @c explicit_converter.
+    template < typename Target, typename Source, class Enable = void >
+    struct explicit_converter : explicit_converter_aux<Target,Source,detail::is_optional<Target>::value, detail::is_optional<Source>::value> {};
+
+
+
 #endif
+
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -151,13 +215,8 @@ namespace boost {
     //! @Returns The result of @c explicit_converter customization point.
     //! @Throws  Whatever the @c explicit_converter call operator throws.
     //!
-    //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type is mpl::true_.
     template <typename Target, typename Source>
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    typename disable_if<typename conversion::enable_functor<Source>::type, Target>::type
-#else
     Target
-#endif
     explicit_convert_to(Source const& from)
     {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
@@ -166,6 +225,9 @@ namespace boost {
       return conversion::explicit_converter<Target,Source>()(from);
 #endif
     }
+
+
+
   }
 }
 
