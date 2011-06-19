@@ -52,27 +52,51 @@ void explicit_convert_to()
   {
     B1 b1;
     boost::optional<B1> b=b1;
-    boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(b));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(b));
+      BOOST_TEST(a);
+    }
+#endif
+    boost::optional<A1> a(boost::conversion::implicit_convert_to<boost::optional<A1> >(b));
     BOOST_TEST(a);
   }
 
   {
     B1 b1;
-    boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
+      BOOST_TEST(a);
+    }
+#endif
+    boost::optional<A1> a(boost::conversion::implicit_convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
     BOOST_TEST(a);
   }
 
   { // target is not assigned when the source is not initialized
     boost::optional<B1> b;
     boost::optional<A1> a;
-    a=boost::conversion::convert_to<boost::optional<A1> >(b);
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      a=boost::conversion::convert_to<boost::optional<A1> >(b);
+      BOOST_TEST(!a);
+    }
+#endif
+    a=boost::conversion::implicit_convert_to<boost::optional<A1> >(b);
     BOOST_TEST(!a);
   }
 
   { // target is not assigned when the source is not initialized
     boost::optional<C1> c;
     boost::optional<A1> a;
-    a=boost::conversion::convert_to<boost::optional<A1> >(c);
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      a=boost::conversion::convert_to<boost::optional<A1> >(c);
+      BOOST_TEST(!a);
+    }
+#endif
+    a=boost::conversion::implicit_convert_to<boost::optional<A1> >(c);
     BOOST_TEST(!a);
   }
 
@@ -81,7 +105,13 @@ void explicit_convert_to()
     boost::optional<C1> c=c1;
     boost::optional<A1> a;
     try {
-      a=boost::conversion::convert_to<boost::optional<A1> >(c);
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+      {
+        a=boost::conversion::convert_to<boost::optional<A1> >(c);
+        BOOST_TEST(false);
+      }
+#endif
+      a=boost::conversion::implicit_convert_to<boost::optional<A1> >(c);
       BOOST_TEST(false);
     } catch (...) {  }
   }
@@ -111,7 +141,7 @@ void explicit_assign_to()
 
 void explicit_try_convert_to()
 {
-  { // when the target is optional and the source isn't it, the target is assigned
+  { // when the target is optional and the source isn't, the target is assigned
     B1 b1;
     boost::optional<A1> a;
     a=boost::conversion::convert_to<boost::optional<A1> >(b1);

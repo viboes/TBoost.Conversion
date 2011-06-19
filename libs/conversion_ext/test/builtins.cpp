@@ -71,8 +71,58 @@ void convert_to_with_builtin_types() {
     ul=boost::conversion::convert_to<unsigned long>(l);
 }
 
+void implicit_convert_to_with_builtin_types() {
+    char c=0;
+    short s=1;
+    int i=2;
+    long l=3;
+    unsigned char uc(c);
+    unsigned short us(s);
+    unsigned int ui(i);
+    unsigned long ul(l);
+
+    c=boost::conversion::implicit_convert_to<char>(c);
+    s=boost::conversion::implicit_convert_to<short>(c);
+    i=boost::conversion::implicit_convert_to<int>(c);
+    l=boost::conversion::implicit_convert_to<long>(c);
+    uc=boost::conversion::implicit_convert_to<unsigned char>(c);
+    us=boost::conversion::implicit_convert_to<unsigned short>(c);
+    ui=boost::conversion::implicit_convert_to<unsigned int>(c);
+    ul=boost::conversion::implicit_convert_to<unsigned long>(c);
+
+
+    c=boost::conversion::implicit_convert_to<char>(s);
+    s=boost::conversion::implicit_convert_to<short>(s);
+    i=boost::conversion::implicit_convert_to<int>(s);
+    l=boost::conversion::implicit_convert_to<long>(s);
+    uc=boost::conversion::implicit_convert_to<unsigned char>(s);
+    us=boost::conversion::implicit_convert_to<unsigned short>(s);
+    ui=boost::conversion::implicit_convert_to<unsigned int>(s);
+    ul=boost::conversion::implicit_convert_to<unsigned long>(s);
+
+    c=boost::conversion::implicit_convert_to<char>(i);
+    s=boost::conversion::implicit_convert_to<short>(i);
+    i=boost::conversion::implicit_convert_to<int>(i);
+    l=boost::conversion::implicit_convert_to<long>(i);
+    uc=boost::conversion::implicit_convert_to<unsigned char>(i);
+    us=boost::conversion::implicit_convert_to<unsigned short>(i);
+    ui=boost::conversion::implicit_convert_to<unsigned int>(i);
+    ul=boost::conversion::implicit_convert_to<unsigned long>(i);
+
+    c=boost::conversion::implicit_convert_to<char>(l);
+    s=boost::conversion::implicit_convert_to<short>(l);
+    i=boost::conversion::implicit_convert_to<int>(l);
+    l=boost::conversion::implicit_convert_to<long>(l);
+    uc=boost::conversion::implicit_convert_to<unsigned char>(l);
+    us=boost::conversion::implicit_convert_to<unsigned short>(l);
+    ui=boost::conversion::implicit_convert_to<unsigned int>(l);
+    ul=boost::conversion::implicit_convert_to<unsigned long>(l);
+}
+
+
 
 void assign_to_with_builtin_types() {
+
     char c=0;
     short s=1;
     int i=2;
@@ -168,7 +218,6 @@ void mca_assign_to_with_builtin_types() {
     boost::conversion::mca(l) = us;
     boost::conversion::mca(l) = ui;
     boost::conversion::mca(l) = ul;
-
 }
 
 void assign_to_transitive() {
@@ -238,6 +287,7 @@ void fp_convert_to() {
 int main( )
 {
   convert_to_with_builtin_types();
+  implicit_convert_to_with_builtin_types();
   assign_to_with_builtin_types();
   mca_assign_to_with_builtin_types();
   assign_to_transitive();

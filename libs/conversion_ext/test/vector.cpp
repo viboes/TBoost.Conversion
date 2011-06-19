@@ -19,8 +19,6 @@
 using namespace boost;
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
-BOOST_STATIC_ASSERT(( !boost::conversion::default_converter_condition< std::vector<A1>, std::vector<B1> >::value));
-BOOST_STATIC_ASSERT(( boost::conversion::default_assigner_condition< std::vector<A1>, std::vector<B1> >::value));
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< A1, B1 >::value));
 BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< std::vector<A1>, std::vector<B1> >::value));
 #endif
@@ -40,7 +38,12 @@ BOOST_STATIC_ASSERT((
 
 void explicit_convert_to() {
     std::vector<B1> vb1;
-    std::vector<A1> va1(boost::conversion::convert_to<std::vector<A1> >(vb1));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      std::vector<A1> va1(boost::conversion::convert_to<std::vector<A1> >(vb1));
+    }
+#endif
+    std::vector<A1> va1(boost::conversion::implicit_convert_to<std::vector<A1> >(vb1));
     B1 b10, b11, b12, b13;
     std::vector<B1> vb2;
     vb2.reserve(5);
@@ -48,7 +51,12 @@ void explicit_convert_to() {
     vb2[1]=b11;
     vb2[2]=b12;
     vb2[3]=b13;
-    std::vector<A1> va2(boost::conversion::convert_to<std::vector<A1> >(vb2));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+    {
+      std::vector<A1> va2(boost::conversion::convert_to<std::vector<A1> >(vb2));
+    }
+#endif
+    std::vector<A1> va2(boost::conversion::implicit_convert_to<std::vector<A1> >(vb2));
 #if 0
 
     std::allocator<A1> all;

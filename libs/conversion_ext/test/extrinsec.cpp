@@ -8,6 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+
 #include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
@@ -51,14 +52,14 @@ struct C{};
   namespace boost {
       namespace conversion {
           template <>
-          struct converter< A,B > : true_type {
+          struct converter_cp< A,B > : true_type {
               A operator()(B const &)
               {
                   return A();
               }
           };
           template <>
-          struct converter< B,C > : true_type {
+          struct converter_cp< B,C > : true_type {
               B operator()(C const &)
               {
                   return B();
@@ -68,10 +69,8 @@ struct C{};
   }
 #endif
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
   BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< B,A >::value));
   BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< C,B >::value));
-#endif
 
 
   void f(B) {}
@@ -106,6 +105,12 @@ namespace boost {
     };
   }
 }
+
+BOOST_STATIC_ASSERT(( !boost::is_convertible< X,ICF_X >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< X,ICF_X >::value));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ICF_X >::value));
+#endif
 
 struct ECF_X {
 };
@@ -168,13 +173,19 @@ namespace boost {
   }
 }
 
+  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< X,AF_X >::value));
+  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_explicit_convertible< X,AF_X >::value));
+
 //////////////////////////
 
   void xconvert_to_with_implicit_constructor()
   {
     {
       X x;
-      ICF_X y1(convert_to<ICF_X>(x));
+      ICF_X y1(implicit_convert_to<ICF_X>(x));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+      ICF_X y1_1(convert_to<ICF_X>(x));
+#endif
       ICF_X y2(mcf(x));
       mat(y2) = x;
     }
@@ -201,9 +212,15 @@ namespace boost {
   {
     {
       ICT_X y;
-      X x1(convert_to<X>(y));
+      X x1(implicit_convert_to<X>(y));
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+      X x1_1(convert_to<X>(y));
+#endif
       X x2(mcf(y));
-      X x3=convert_to<X>(y);
+      X x3=implicit_convert_to<X>(y);
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+      X x3_1=convert_to<X>(y);
+#endif
       X x4=mcf(y);
       mat(x4) = y;
     }
@@ -230,6 +247,7 @@ namespace boost {
   }
 ////
 
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
 
 
 void explicit_convert_to() {
@@ -282,6 +300,7 @@ void implicit_conversion_via_sfinae() {
   C c;
   h(c);
 }
+#endif
 
 int main( )
 {
@@ -290,6 +309,7 @@ int main( )
   xconvert_to_with_implicit_conversion_operator();
   xconvert_to_with_explicit_conversion_operator();
   xassign_to_with_assignemet_operator();
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
   explicit_convert_to();
   explicit_assign_to();
   explicit_chain_assign_to();
@@ -297,6 +317,7 @@ int main( )
   implicit_conversion_via_mcf();
   implicit_conversion_via_convertible_to();
   implicit_conversion_via_sfinae();
+#endif
   return boost::report_errors();
 }
 
