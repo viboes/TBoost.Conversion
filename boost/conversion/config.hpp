@@ -22,11 +22,29 @@
                 , typename enable_if_c< CND >::type
 
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-#define BOOST_CONVERSION_ENABLE_CND
+  #define BOOST_CONVERSION_ENABLE_CND
 #else
   #if ! defined(BOOST_NO_DECLTYPE)
-    #if ! defined _MSC_VER
-      #define BOOST_CONVERSION_ENABLE_CND
+    #if defined _MSC_VER
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #elif defined __GNUC__
+       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+       #else
+         #define BOOST_CONVERSION_ENABLE_CND
+       #endif
+    #else
+     #define BOOST_CONVERSION_ENABLE_CND
+    #endif
+  #else
+    #if defined _MSC_VER
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #elif defined __GNUC__
+       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+       #endif
+    #else
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
     #endif
   #endif
 #endif

@@ -65,11 +65,7 @@ namespace boost {
       std::basic_string<CharT,Traits,Alloc>&
       operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
       {
-          std::cout << __FILE__ << from << std::endl;
-
         to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
-                  std::cout << __FILE__ << to << std::endl;
-
         return to;
       }
     };

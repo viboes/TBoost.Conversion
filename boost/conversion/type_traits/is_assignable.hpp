@@ -14,6 +14,9 @@
 
 #ifndef BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 #define BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
+#include <boost/conversion/config.hpp>
+
+#if !defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
 
 #include <boost/type_traits/intrinsics.hpp>
 #if !defined(BOOST_IS_ASSIGNABLE)
@@ -136,6 +139,15 @@ namespace boost {
 }
 
 #include <boost/type_traits/detail/bool_trait_undef.hpp>
+#else
+#include <boost/type_traits/integral_constant.hpp>
 
+namespace boost {
+
+  template < class Target, class Source>
+  struct is_assignable  : false_type
+  {};
+}
+#endif
 #endif
 
