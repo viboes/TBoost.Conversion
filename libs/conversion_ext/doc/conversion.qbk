@@ -319,9 +319,9 @@ There is no need to compile [*Boost.Conversion], since it's a header only librar
 [heading Requirements]
 [/=========================]
 
-The generic part of [*Boost.Conversion] depends on Boost.Config, Boost.TypeTraits, Boost.Optional and Boost.Fusion. Of course it depends on the specific libraries when specific conversion are used.
+The generic part of [*Boost.Conversion] depends on *Boost.Config*, *Boost.TypeTraits*, *Boost.Optional* and *Boost.Fusion*. Of course it depends on the specific libraries when specific conversion are used from the directories `boost/conversion/boost`, in particular *Boost.Chrono* and *Boost.DateTime*, which need to link with.
 
-The library works well only on compilers that are able to define the traits is_constructible and is_assignable, that is compilers supporting decltype and SFINAE for expressions. For the other compilers the library has much more limitations. 
+The library works well only on compilers that are able to define the traits `is_constructible` and `is_assignable`, that is compilers supporting `decltype` and SFINAE for expressions. For the other compilers the library has much more limitations. 
 
 [/========================]
 [heading Exceptions safety]
@@ -339,15 +339,15 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers]
 [/=======================]
 
-Currently, [*Boost.Conversion] has been tested in the following compilers/platforms:
+Currently, [*Boost.Conversion] has been tested in the following compilers/platforms using the trunk (Boost 1.47):
 
 Windows with
 
-* MSVC 10.0
+* MSVC 10.0 (has some problems as `is_constructible` and `is_assignable` can not be defined)
 
 Cygwin 1.7 with
 
-* GCC 4.3.4
+* GCC 4.3.4 (has some problems as `is_constructible` and `is_assignable` can not be defined)
 
 MinGW with
 
@@ -368,8 +368,8 @@ Ubuntu 10.10
 
 Darwin 10
 
-* GCC 4.1.2
-* clang 1.6
+* GCC 4.1.2 (has some problems as `is_constructible` and `is_assignable` can not be defined)
+* clang 1.6 (has some problems as `is_constructible` and `is_assignable` can not be defined)
 * clang 2.9
 * clang 2.9 -std=c++0x
 
@@ -723,6 +723,7 @@ Sometimes we need the conversion construct the resulting type with some argument
 [endsect]
 
 [section Examples]
+[/
 [section chrono::time_point and posix_time::ptime]
 
 [CHRONO_TIME_POINT_TO_POSIX_TIME_PTIME_HPP]
@@ -735,6 +736,8 @@ Sometimes we need the conversion construct the resulting type with some argument
 [section std::pair]
 [PAIR_HPP]
 [endsect]
+
+]
 [endsect]
 
 [section:ext_references External Resources]
@@ -913,7 +916,7 @@ A `Source` class is convertible to a `Target` class if:
 [endsect]
 [endsect]
 
-[section:rationale Appendix B: Rationale]
+[section:rationale Appendix B: Design Rationale]
 
 [/
 [heading Trick to avoid recursion on the convert_to calls]
@@ -960,7 +963,7 @@ To avoid to pass it as parameter the tag parameter has a default value boost::du
 This default value needs however to give the Target template parameter
 
     a= convert_to<A>(b);
-]
+
 
 [heading Mathematical background]
 
@@ -1003,7 +1006,7 @@ The library provides a convert_to_via function which helps to implement that.
 [heading Ambiguity of multiple overloadings]
 
 [warning Ambiguity of multiple overloadings]
-
+]
 
 [endsect]
 
@@ -1019,13 +1022,13 @@ This can not be applied to heterogeneous containers as tuples because the functi
 [endsect]
 [section:acknowledgements Appendix D: Acknowledgements]
 
-Thanks to Vladimir Batov for proposing Boost.StringConversion which was the source of inspiration of this generic library. Boost.Conversion has inherited from some of the needs of  Boost.StringConversion.
+Thanks to Vladimir Batov for proposing Boost.StringConversion. The discussions on the Boost ML of his library were the source of inspiration of this generic library. Boost.Conversion has inherited from some of the needs of  Boost.StringConversion.
 Thanks to Edward Diener for showing me indirectly that multiple assignments should be taken in account.
 Thanks to Jeffrey Lee Hellrung for showing me that Boost.Conversion should use also ADL as customization point, even if I have decided to disable it so simplify the library.
 Thanks to Robert Stewart for suggesting the use of a functor as customization point and for all the constructive comments he made on the Boost ML.  
 Thanks to Tomas Heller to showing me how to cut the dependency on Boost.Phoenix while introducing the overload of convert_to on Phoenix actors.
 
-And last thanks to Gordon Woodhull for proposing himself as review manager of the library pushing me to make the library ready for review. 
+And last thanks to Gordon Woodhull for proposing himself as review manager of the library. 
 
 [endsect]
 [section  Appendix E: Tests]

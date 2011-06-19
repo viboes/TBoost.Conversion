@@ -39,18 +39,18 @@
          <span class="special">&gt;</span> 
 <span class="keyword">struct</span> <a class="link" href="converter_or_fallbacker.html" title="Struct template converter_or_fallbacker">converter_or_fallbacker</a> <span class="special">{</span>
 
-  <span class="comment">// <a class="link" href="converter_or_fallbacker.html#id35977640-bb">public member functions</a></span>
-  <span class="identifier">Target</span> <a class="link" href="converter_or_fallbacker.html#id35977644-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">Fallback</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="converter_or_fallbacker.html#id35971714-bb">public member functions</a></span>
+  <span class="identifier">Target</span> <a class="link" href="converter_or_fallbacker.html#id35971717-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">Fallback</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="id36360197"></a><h2>Description</h2>
+<a name="id36354781"></a><h2>Description</h2>
 <p>This struct can be specialized by the user. 
 </p>
 <div class="refsect2">
-<a name="id36360203"></a><h3>
-<a name="id35977640-bb"></a><code class="computeroutput">converter_or_fallbacker</code> public member functions</h3>
+<a name="id36354786"></a><h3>
+<a name="id35971714-bb"></a><code class="computeroutput">converter_or_fallbacker</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><span class="identifier">Target</span> <a name="id35977644-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> val<span class="special">,</span> <span class="identifier">Fallback</span> <span class="keyword">const</span> <span class="special">&amp;</span> fallback<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">Target</span> <a name="id35971717-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> val<span class="special">,</span> <span class="identifier">Fallback</span> <span class="keyword">const</span> <span class="special">&amp;</span> fallback<span class="special">)</span><span class="special">;</span></pre>
 <p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Fallback</code> must be convertible to <code class="computeroutput">Target</code> and <code class="computeroutput">::boost::conversion::convert_to&lt;Target&gt;(from)</code> must be well formed. </p>
 <p><span class="bold"><strong>Returns:</strong></span> The converted value if the conversion succeeds or the fallback. </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever the conversion from <code class="computeroutput">Fallback</code> to <code class="computeroutput">Target</code> can throws when the conversion fails. </p>
