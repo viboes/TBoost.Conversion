@@ -13,17 +13,16 @@
 #include <boost/static_assert.hpp>
 #include <boost/conversion/type_traits/is_constructible.hpp>
 
-
-
-
-
-
 struct A
 {
     explicit A(int);
     A(double);
     A(int, double);
     A(A const&);
+};
+
+struct B
+{
 };
 
 int main()
@@ -39,4 +38,5 @@ int main()
   BOOST_STATIC_ASSERT((!boost::is_constructible<void>::value));
   // BUG: We need to add specializations for void
   //BOOST_STATIC_ASSERT((!boost::is_constructible<void,A>::value));
+  //BOOST_STATIC_ASSERT((boost::is_constructible<B>::value));
 }

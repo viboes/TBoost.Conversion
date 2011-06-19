@@ -126,7 +126,6 @@ void convert_to_with_implicit_conversion_operator() {
 }
 void explicit_convert_to_with_explicit_conversion_operator() {
 #ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
-#error
   {
     ECT_X y;
     X x1(y);
