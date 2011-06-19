@@ -392,18 +392,18 @@
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-            a generic __implicit_convert<span class="underline">to</span>_
+            a generic <code class="computeroutput"><span class="identifier">implicit_convert_to</span></code>
             function which can be customized by the user to make implicit conversion
             between unrelated types.
           </li>
 <li class="listitem">
-            a generic __explicit_convert<span class="underline">to</span>_
+            a generic <code class="computeroutput"><span class="identifier">explicit_convert_to</span></code>
             function which can be customized by the user to make explicit conversion
             between unrelated types.
           </li>
 <li class="listitem">
             a generic <code class="computeroutput"><span class="identifier">convert_to</span></code>
-            function which is equivalent __explicit_convert<span class="underline">to</span>_
+            function which is equivalent <code class="computeroutput"><span class="identifier">explicit_convert_to</span></code>
             or that behaves as a functor factory if its argument is a fusion actor.
           </li>
 <li class="listitem">
@@ -435,7 +435,7 @@
             a generic <code class="computeroutput"><span class="identifier">mcf</span></code> function
             returning a <code class="computeroutput"><span class="identifier">convertible_from</span></code>
             wrapper which replace the implicit conversion operators by a calls to
-            __implicit_convert<span class="underline">to</span>_.
+            <code class="computeroutput"><span class="identifier">implicit_convert_to</span></code>.
           </li>
 <li class="listitem">
             a <code class="computeroutput"><span class="identifier">convertible_to</span></code> wrapper
@@ -545,7 +545,7 @@
         Conversion</a>
 </h4></div></div></div>
 <a name="boost.conversion.users_guide.getting_started.install.getting_boost_conversion"></a><h6>
-<a name="id36342814"></a>
+<a name="id36342825"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.getting_boost_conversion">Getting
           Boost.Conversion</a>
         </h6>
@@ -559,7 +559,7 @@
           Sandbox</a>.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.building_boost_conversion"></a><h6>
-<a name="id36342856"></a>
+<a name="id36342866"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.building_boost_conversion">Building
           Boost.Conversion</a>
         </h6>
@@ -569,7 +569,7 @@
           in your compiler include path.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.requirements"></a><h6>
-<a name="id36342881"></a>
+<a name="id36342892"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.requirements">Requirements</a>
         </h6>
 <p>
@@ -585,7 +585,7 @@
           more limitations.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.exceptions_safety"></a><h6>
-<a name="id36342914"></a>
+<a name="id36342924"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.exceptions_safety">Exceptions
           safety</a>
         </h6>
@@ -594,7 +594,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.thread_safety"></a><h6>
-<a name="id36342935"></a>
+<a name="id36342946"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.thread_safety">Thread
           safety</a>
         </h6>
@@ -602,7 +602,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="boost.conversion.users_guide.getting_started.install.tested_compilers"></a><h6>
-<a name="id36342956"></a>
+<a name="id36342967"></a>
           <a class="link" href="index.html#boost.conversion.users_guide.getting_started.install.tested_compilers">Tested
           compilers</a>
         </h6>
@@ -1196,10 +1196,9 @@
         to specialize extrinsic conversions?</a>
 </h4></div></div></div>
 <p>
-          __Boost<span class="underline">Conversion</span>_ has a customization
-          point for each on of the provided functions. For example, to customize
-          the __implicit_convert_to function you should partially specialize the
-          functor <code class="computeroutput"><span class="identifier">converter_cp</span></code>.
+          <span class="bold"><strong>Boost.Conversion</strong></span> has a customization point
+          for each on of the provided functions. For example, to customize the <code class="computeroutput"><span class="identifier">implicit_convert_to</span></code> function you should
+          partially specialize the functor <code class="computeroutput"><span class="identifier">converter_cp</span></code>.
         </p>
 <pre class="programlisting"><span class="keyword">namespace</span>  <span class="identifier">boost</span> <span class="special">{</span> 
   <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
@@ -1226,7 +1225,7 @@
 <p>
           Note that the <code class="computeroutput"><span class="identifier">converter_cp</span></code>
           specialization inherits from <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span></code>.
-          This is needed as used by the __is_extrinsic<span class="underline">convertible</span>_
+          This is needed as used by the <code class="computeroutput"><span class="identifier">is_extrinsic_convertible</span></code>
           type trait.
         </p>
 <p>
@@ -1687,8 +1686,8 @@
       <span class="keyword">struct</span> <a class="link" href="boost/conversion/assigner.html" title="Struct template assigner">assigner</a><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/assigner_Target__Source_id35975317.html" title="Struct template assigner&lt;Target, SourceBOOST_CONVERSION_REQUIRES((is_copy_assignable&lt; Target &gt;::value &amp;&amp;is_extrinsic_explicit_convertible&lt; Source, Target &gt;::value &amp;&amp;!is_assignable&lt; Target, Source &gt;::value))&gt;">assigner</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">SourceBOOST_CONVERSION_REQUIRES</span><span class="special">(</span><span class="special">(</span><span class="identifier">is_copy_assignable</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="identifier">is_extrinsic_explicit_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">is_assignable</span><span class="special">&lt;</span> <span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span><span class="special">)</span><span class="special">&gt;</span><span class="special">;</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/conversion/assigner_Target__Source_id35975430.html" title="Struct template assigner&lt;Target, Source&gt;">assigner</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/assigner_Target__Source_id35975329.html" title="Struct template assigner&lt;Target, SourceBOOST_CONVERSION_REQUIRES((is_copy_assignable&lt; Target &gt;::value &amp;&amp;is_extrinsic_explicit_convertible&lt; Source, Target &gt;::value &amp;&amp;!is_assignable&lt; Target, Source &gt;::value))&gt;">assigner</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">SourceBOOST_CONVERSION_REQUIRES</span><span class="special">(</span><span class="special">(</span><span class="identifier">is_copy_assignable</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="identifier">is_extrinsic_explicit_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">is_assignable</span><span class="special">&lt;</span> <span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span><span class="special">)</span><span class="special">&gt;</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/conversion/assigner_Target__Source_id35975442.html" title="Struct template assigner&lt;Target, Source&gt;">assigner</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
       <span class="identifier">Target</span> <span class="special">&amp;</span> <a class="link" href="boost/conversion/assign_to.html" title="Function template assign_to"><span class="identifier">assign_to</span></a><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
@@ -1725,7 +1724,7 @@
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">conversion</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/enable_functor_T__typen_id35976101.html" title="Struct template enable_functor&lt;T, typename enable_if&lt; phoenix::is_actor&lt; T &gt; &gt;::type&gt;">enable_functor</a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">is_actor</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/enable_functor_T__typen_id35976113.html" title="Struct template enable_functor&lt;T, typename enable_if&lt; phoenix::is_actor&lt; T &gt; &gt;::type&gt;">enable_functor</a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span> <span class="identifier">phoenix</span><span class="special">::</span><span class="identifier">is_actor</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
       <span class="identifier">unspecified_converter_type</span> <a class="link" href="boost/conversion/make_converter_to.html" title="Function template make_converter_to"><span class="identifier">make_converter_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
@@ -1783,11 +1782,11 @@
       <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter.html" title="Struct template explicit_converter">explicit_converter</a><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_Targ_id35976913.html" title="Struct template explicit_converter&lt;Target, SourceBOOST_CONVERSION_REQUIRES((is_explicitly_convertible&lt; Source, Target &gt;::value &amp;&amp;!(detail::is_optional&lt; Target &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value)))&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">SourceBOOST_CONVERSION_REQUIRES</span><span class="special">(</span><span class="special">(</span><span class="identifier">is_explicitly_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span><span class="special">)</span><span class="special">)</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_Targ_id35976925.html" title="Struct template explicit_converter&lt;Target, SourceBOOST_CONVERSION_REQUIRES((is_explicitly_convertible&lt; Source, Target &gt;::value &amp;&amp;!(detail::is_optional&lt; Target &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value)))&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">SourceBOOST_CONVERSION_REQUIRES</span><span class="special">(</span><span class="special">(</span><span class="identifier">is_explicitly_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span><span class="special">)</span><span class="special">)</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_Targ_id35977006.html" title="Struct template explicit_converter&lt;Target, Source, typename enable_if_c&lt; is_extrinsic_convertible&lt; Source, Target &gt;::value &amp;&amp;!is_explicitly_convertible&lt; Source, Target &gt;::value &amp;&amp;!(detail::is_optional&lt; Target &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value) &gt;::type&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">is_extrinsic_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">is_explicitly_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_Targ_id35977018.html" title="Struct template explicit_converter&lt;Target, Source, typename enable_if_c&lt; is_extrinsic_convertible&lt; Source, Target &gt;::value &amp;&amp;!is_explicitly_convertible&lt; Source, Target &gt;::value &amp;&amp;!(detail::is_optional&lt; Target &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value) &gt;::type&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">is_extrinsic_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">is_explicitly_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span><span class="special">)</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_opti_id35977103.html" title="Struct template explicit_converter&lt;optional&lt; Target &gt;, Source, typename enable_if_c&lt; explicit_converter&lt; Target, Source &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value &gt;::type&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">explicit_converter</span><span class="special">&lt;</span> <span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/explicit_converter_opti_id35977115.html" title="Struct template explicit_converter&lt;optional&lt; Target &gt;, Source, typename enable_if_c&lt; explicit_converter&lt; Target, Source &gt;::value &amp;&amp;!detail::is_optional&lt; Source &gt;::value &gt;::type&gt;">explicit_converter</a><span class="special">&lt;</span><span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">explicit_converter</span><span class="special">&lt;</span> <span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">is_optional</span><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
       <span class="identifier">Target</span> <a class="link" href="boost/conversion/explicit_convert_to.html" title="Function template explicit_convert_to"><span class="identifier">explicit_convert_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
@@ -1806,7 +1805,7 @@
       <span class="keyword">struct</span> <a class="link" href="boost/conversion/converter.html" title="Struct template converter">converter</a><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-      <span class="keyword">struct</span> <a class="link" href="boost/conversion/converter_Target__Sourc_id35977381.html" title="Struct template converter&lt;Target, Source, typename enable_if_c&lt; is_convertible&lt; Source, Target &gt;::value &gt;::type&gt;">converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">is_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
+      <span class="keyword">struct</span> <a class="link" href="boost/conversion/converter_Target__Sourc_id35977393.html" title="Struct template converter&lt;Target, Source, typename enable_if_c&lt; is_convertible&lt; Source, Target &gt;::value &gt;::type&gt;">converter</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span> <span class="identifier">is_convertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">value</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
       <span class="identifier">Target</span> <a class="link" href="boost/conversion/implicit_convert_to.html" title="Function template implicit_convert_to"><span class="identifier">implicit_convert_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
@@ -1851,11 +1850,11 @@
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">,</span> <span class="keyword">typename</span> Target<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertible.html" title="Struct template is_extrinsic_convertible">is_extrinsic_convertible</a><span class="special">;</span>
 
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35977976.html" title="Struct template is_extrinsic_convertible&lt;fusion::void_, T&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35977996.html" title="Struct is_extrinsic_convertible&lt;void, void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978007.html" title="Struct is_extrinsic_convertible&lt;const void, void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978018.html" title="Struct is_extrinsic_convertible&lt;void, const void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978029.html" title="Struct is_extrinsic_convertible&lt;const void, const void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35977988.html" title="Struct template is_extrinsic_convertible&lt;fusion::void_, T&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978008.html" title="Struct is_extrinsic_convertible&lt;void, void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978019.html" title="Struct is_extrinsic_convertible&lt;const void, void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978030.html" title="Struct is_extrinsic_convertible&lt;void, const void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_convertibl_id35978041.html" title="Struct is_extrinsic_convertible&lt;const void, const void&gt;">is_extrinsic_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
 <span class="special">}</span></pre>
 </div>
 <div class="section">
@@ -1866,14 +1865,14 @@
 <a class="link" href="BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP.html" title="Macro BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP">BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP</a></pre>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">,</span> <span class="keyword">typename</span> Target<span class="special">&gt;</span> 
-    <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978047.html" title="Struct template is_extrinsic_explicit_convertible">is_extrinsic_explicit_convertible</a><span class="special">;</span>
+    <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978059.html" title="Struct template is_extrinsic_explicit_convertible">is_extrinsic_explicit_convertible</a><span class="special">;</span>
 
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-    <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978066.html" title="Struct template is_extrinsic_explicit_convertible&lt;fusion::void_, T&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978085.html" title="Struct is_extrinsic_explicit_convertible&lt;void, void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978097.html" title="Struct is_extrinsic_explicit_convertible&lt;const void, void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978108.html" title="Struct is_extrinsic_explicit_convertible&lt;void, const void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978119.html" title="Struct is_extrinsic_explicit_convertible&lt;const void, const void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+    <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978077.html" title="Struct template is_extrinsic_explicit_convertible&lt;fusion::void_, T&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">void_</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978097.html" title="Struct is_extrinsic_explicit_convertible&lt;void, void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978108.html" title="Struct is_extrinsic_explicit_convertible&lt;const void, void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978120.html" title="Struct is_extrinsic_explicit_convertible&lt;void, const void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="special">&gt;</span> <span class="keyword">struct</span> <a class="link" href="boost/is_extrinsic_explicit_c_id35978131.html" title="Struct is_extrinsic_explicit_convertible&lt;const void, const void&gt;">is_extrinsic_explicit_convertible</a><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">void</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">void</span><span class="special">&gt;</span><span class="special">;</span>
 <span class="special">}</span></pre>
 </div>
 </div>
@@ -2277,7 +2276,7 @@
 <a name="boost.conversion.appendices.rationale"></a><a class="link" href="index.html#boost.conversion.appendices.rationale" title="Appendix B: Rationale">Appendix B: Rationale</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.rationale.mathematical_background"></a><h5>
-<a name="id36382508"></a>
+<a name="id36382533"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.mathematical_background">Mathematical
         background</a>
       </h5>
@@ -2331,7 +2330,7 @@
         The library provides a convert_to_via function which helps to implement that.
       </p>
 <a name="boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadings"></a><h5>
-<a name="id36382996"></a>
+<a name="id36383022"></a>
         <a class="link" href="index.html#boost.conversion.appendices.rationale.ambiguity_of_multiple_overloadings">Ambiguity
         of multiple overloadings</a>
       </h5>
@@ -2351,7 +2350,7 @@
       C: Implementation Notes</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__"></a><h5>
-<a name="id36383039"></a>
+<a name="id36383064"></a>
         <a class="link" href="index.html#boost.conversion.appendices.implementation.why__code__phrase_role__identifier__convert_to__phrase___code__between_tuples_is_not_implemented_using__code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__fusion__phrase__phrase_role__special______phrase__phrase_role__identifier__transform__phrase___code__">Why
         <code class="computeroutput"><span class="identifier">convert_to</span></code> between tuples
         is not implemented using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">transform</span></code>?</a>
@@ -3484,12 +3483,12 @@
       plans</a>
 </h3></div></div></div>
 <a name="boost.conversion.appendices.todo.tasks_to_do_before_review"></a><h5>
-<a name="id36385371"></a>
+<a name="id36385397"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.tasks_to_do_before_review">Tasks
         to do before review</a>
       </h5>
 <a name="boost.conversion.appendices.todo.for_later_releases"></a><h5>
-<a name="id36385390"></a>
+<a name="id36385416"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.for_later_releases">For later
         releases</a>
       </h5>
@@ -3502,7 +3501,7 @@
           </li>
 </ul></div>
 <a name="boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard"></a><h5>
-<a name="id36385428"></a>
+<a name="id36385589"></a>
         <a class="link" href="index.html#boost.conversion.appendices.todo.make_a_proposal_to_the_c___standard">Make
         a proposal to the C++ standard</a>
       </h5>
@@ -3566,7 +3565,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 19, 2011 at 04:52:57 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 19, 2011 at 08:07:52 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

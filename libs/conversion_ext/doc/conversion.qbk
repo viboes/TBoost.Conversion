@@ -20,6 +20,10 @@
     ]
 ]
 
+[def __Boost_Conversion__  *Boost.Conversion*]
+
+[def __explicit_convert_to  `explicit_convert_to`]
+[def __implicit_convert_to  `implicit_convert_to`]
 [def __convert_to  `convert_to`]
 [def __convertible_to  `convertible_to`]
 [def __mcf  `mcf`]
@@ -33,6 +37,9 @@
 [def __mat  `mat`]
 [def __assigner_cp  `assigner_cp`]
 [def __try_assign_to  `try_assign_to`]
+
+[def __is_extrinsic_convertible  `is_extrinsic_convertible`]
+[def __is_extrinsic_explicit_convertible  `is_extrinsic_explicit_convertible`]
 
 
 [import ../../../boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp]
@@ -246,16 +253,16 @@ So one of the advantages of using this common functions is uniformity. The other
 
 [*Boost.Conversion] provides:
 
-* a generic __implicit_convert_to__ function which can be customized by the user to make implicit conversion between unrelated types.
-* a generic __explicit_convert_to__ function which can be customized by the user to make explicit conversion between unrelated types.
-* a generic __convert_to function which is equivalent __explicit_convert_to__ or that behaves as a functor factory if its argument is a fusion actor.
+* a generic __implicit_convert_to function which can be customized by the user to make implicit conversion between unrelated types.
+* a generic __explicit_convert_to function which can be customized by the user to make explicit conversion between unrelated types.
+* a generic __convert_to function which is equivalent __explicit_convert_to or that behaves as a functor factory if its argument is a fusion actor.
 * a generic __assign_to function which can be customized by the user to make explicit assignments between unrelated types.
 * a generic __try_convert_to function which can be customized by the user to make explicit optional conversion between unrelated types.
 * a generic __try_assign_to function which can be customized by the user to make explicit optional assignments between unrelated types.
 * a generic __convert_to_or_fallback function which can be customized by the user to make explicit conversion between unrelated types relying on a fallback when the conversion fails.
 
 * a generic __mat function returning a `assignable_to` wrapper which replace assignments by a calls to __assign_to. 
-* a generic __mcf function returning a `convertible_from` wrapper which replace the implicit conversion operators by a calls to __implicit_convert_to__.
+* a generic __mcf function returning a `convertible_from` wrapper which replace the implicit conversion operators by a calls to __implicit_convert_to.
 * a __convertible_to wrapper that acts as a implicit converter when passing parameters to a function.
 
 [/* a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.]
@@ -378,9 +385,12 @@ Darwin 10
 
 [endsect]
 
+[/====================================]
 [section Tutorial]
+[/====================================]
 
 [section Using extrinsic conversions and assignements]
+[/====================================]
 
 When you need to make a extrinsic explicit conversion you need to include the file `boost/conversion/convert_to.hpp` and just use the __convert_to function.
 
@@ -421,6 +431,7 @@ Note: The name __convert_to could also be convert and __assign_to be assign, but
 [endsect]
 
 [section Chaining assignments]
+[/====================================]
 
 When doing multiple assignments we use to do
 
@@ -445,8 +456,8 @@ The name __mat could be replaced by lvalue as it builds a lvalue that is able to
 
 [endsect]
 
-
 [section Using specific conversions]
+[/====================================]
 
 When you need to make a specific conversion you will need to include the specific conversion file. E.g.
 
@@ -462,6 +473,7 @@ Do not forget to include these files when you use a generic class or algorithm u
 [endsect]
 
 [section Handling with invalid conversions]
+[/====================================]
 
 The expected behavior of __convert_to is to throw an exception when the conversion is not possible. If an action must be taken on failure we need to use a try-catch
 
@@ -501,6 +513,7 @@ Last the user can get the same behavior using the __try_assign_to function, whic
 [endsect]
 
 [section Handling with invalid conversions via a fallback]
+[/====================================]
 
 In some cases the conversion failure can be ignored and the result replaced with a fallback value. There are some ways to manage with that
 
@@ -520,6 +533,7 @@ The name of this function could be also __convert_to as we can overload it, but 
 [endsect]
 
 [section Can extrinsic conversions be applied implicitly?]
+[/====================================]
 
 The advertised reader will be asking himself if the library provide implicit conversions as the language makes the difference between implicit and explicit conversions. The idea is to maintain the extrinsic functions semantics as close as possible to the semantics of intrinsic ones. Implicit conversion are applied whenever the compiler find that this implicit conversion makes the program well formed.
 
@@ -574,6 +588,7 @@ Note that extrinsic implicit convertible implies extrinsic explicit convertible 
 [endsect]
 
 [section How to write a function that accepts a parameter that is extrinsic convertible to a given type?]
+[/====================================]
 
 The use of the helper function __mcf is a little bit intrusive in some cases. It would be great if we could define a function accepting a type that is extrinsic convertible,so the user will not be forced to use it. There are two alternatives:
 
@@ -623,6 +638,7 @@ While this alternative doesn't seems completely necessary, I wanted to add them 
 [endsect]
 
 [section How to specialize extrinsic conversions?]
+[/====================================]
 
 __Boost_Conversion__ has a customization point for each on of the provided functions. For example, to customize the __implicit_convert_to function you should partially specialize the functor __converter_cp.
  
@@ -647,7 +663,7 @@ A possible specialization for `std::pair` follows:
         };
 
 
-Note that the __converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsic_convertible__ type trait.
+Note that the __converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsic_convertible type trait.
 
 The same applies to the generic __assign_to function and its __assigner_cp.
 
