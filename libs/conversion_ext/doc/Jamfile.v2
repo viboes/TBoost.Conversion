@@ -110,7 +110,10 @@ else
                                    \"BOOST_EXPLICIT=explicit\" \\
                                    \"BOOST_STATIC_CONSTANT(x,y)=static x const y\" \\
                                    \"BOOST_STATIC_ASSERT(cnd)=\" \\
-                                   \"BOOST_CONSTEXPR=constexpr\""
+                                   \"BOOST_CONVERSION_REQUIRES(CND) \" \\
+                                  \"BOOST_CONSTEXPR=constexpr\""
+
+#                                   \"BOOST_CONVERSION_REQUIRES(CND) , typename enable_if_c< CND >::type\" \\
 
         <doxygen:param>ALIASES=" Effects=\"<p><b>Effects:</b>\" \\ 
                                  Example=\"<p><b>Example:</b>\" \\ 
@@ -140,9 +143,9 @@ else
         <doxygen:param>SHOW_USED_FILES=YES
 
         <doxygen:param>SHOW_INCLUDE_FILES=YES
-        <doxygen:param>WARNINGS=YES # Default NO, but useful to see warnings, especially in a logfile.
-        # It is also wise to to set a warnings logfile like this:
-        <doxygen:param>WARN_LOGFILE=AutoDoxywarnings.log # This may not be empty (usually not a good sign!), depending on options chosen.
+        #<doxygen:param>WARNINGS=YES # Default NO, but useful to see warnings, especially in a logfile.
+        # It is also wise to set a warnings logfile like this:
+        #<doxygen:param>WARN_LOGFILE=AutoDoxywarnings.log # This may not be empty (usually not a good sign!), depending on options chosen.
         # Much better to send message to a logfile than the default stderr.
         # and make sure that there are no Doxygen errors or significant warnings in the log file.
         <doxygen:param>RECURSIVE=NO # Search recursively down subdirectories.
@@ -166,15 +169,31 @@ using quickbook ;
 doxygen core
    :
       [ glob ../../../boost/conversion.hpp ]
-      [ glob ../../../boost/conversion/*.hpp ]
+      [ glob ../../../boost/conversion/include.hpp ]
+      [ glob ../../../boost/conversion/assign_to.hpp ]
+      [ glob ../../../boost/conversion/assignable_to.hpp ]
+      [ glob ../../../boost/conversion/convert_to_or_fallback.hpp ]
+      [ glob ../../../boost/conversion/convert_to.hpp ]
+      [ glob ../../../boost/conversion/convertible_from.hpp ]
+      [ glob ../../../boost/conversion/convertible_to.hpp ]
+      [ glob ../../../boost/conversion/explicit_convert_to.hpp ]
+      [ glob ../../../boost/conversion/implicit_convert_to.hpp ]
+      [ glob ../../../boost/conversion/try_assign_to.hpp ]
+      [ glob ../../../boost/conversion/try_convert_to.hpp ]
       [ glob ../../../boost/conversion/fp/convert_to.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_extrinsic_assignble.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_extrinsic_convertible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=Core"
    ;
 
 doxygen std
    :
-      [ glob ../../../boost/conversion/std/*.hpp ]
+      #[ glob ../../../boost/conversion/std/complex.hpp ]
+      [ glob ../../../boost/conversion/std/pair.hpp ]
+      [ glob ../../../boost/conversion/std/string.hpp ]
+      [ glob ../../../boost/conversion/std/vector.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=C++ Standard classes specializations"
    ;
@@ -184,6 +203,7 @@ doxygen boost
       [ glob ../../../boost/conversion/boost/*.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=Boost classes specializations"
+        <xsl:param>boost.doxygen.header.prefix=boost/conversion 
    ;
 
 
