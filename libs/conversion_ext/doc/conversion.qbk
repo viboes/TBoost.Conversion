@@ -47,6 +47,9 @@
 [import ../../../boost/conversion/boost/optional.hpp]
 [import ../example/even.cpp]
 [import ../example/swap.cpp]
+[import ../example/no_throw.cpp]
+[import ../example/overload.cpp]
+[import ../example/fallback.cpp]
 
 [/
 [section Preface]
@@ -477,38 +480,19 @@ Do not forget to include these files when you use a generic class or algorithm u
 
 The expected behavior of __convert_to is to throw an exception when the conversion is not possible. If an action must be taken on failure we need to use a try-catch
 
-  Target t;
-  try 
-  {
-    t = convert_to<Target>(s);
-  } catch(...) 
-  {
-    // log some message
-  }
+[NO_THROW_CPP_TRY_CATCH_WAY]
 
 Sometimes the user could prefer a no-throw behavior. The library provides another way to get the same with the __try_convert_to function which returns an optional initialized when the conversion succeeds. 
 
-  optional<Target> optt =  try_convert_to<Target>(s);
-  if (!optt)  
-  {
-    // log some message
-  }
+[NO_THROW_CPP_TRY_CONVERT_WAY]
 
 which is equivalent to 
 
-  optional<Target> optt =  convert_to<optional<Target> >(s);
-  if (!optt)  
-  {
-    // log some message
-  }
+[NO_THROW_CPP_TRY_CONVERT_TO_OPT_WAY]
 
 Last the user can get the same behavior using the __try_assign_to function, which returns if the assignment succeeded or not
 
-  Target t;
-  if (!try_assign_to(t,s))  
-  {
-    // log some message
-  }
+[NO_THROW_CPP_TRY_ASSIGN_WAY]
 
 [endsect]
 
@@ -517,14 +501,13 @@ Last the user can get the same behavior using the __try_assign_to function, whic
 
 In some cases the conversion failure can be ignored and the result replaced with a fallback value. There are some ways to manage with that
 
-  Target t=fallback;
-  try_assign_to(t,s);
+[FALLBACK_CPP_TRY_ASSIGN_WAY]
 
-Note that we use __try_assign_to instead of __assign_to, as we don't want to have an exception if the conversion fails,as we have a fallback value already.
+Note that we use __try_assign_to instead of __assign_to, as we don't want to have an exception if the conversion fails, as we have a fallback value already.
 
 The library provides a specific function __convert_to_or_fallback that does that exactly
 
-  Target t=convert_to_or_fallback<Target>(s, fallback);
+[FALLBACK_CPP_CONVERT_TO_OR_FALLBACK]
 
 [note 
 The name of this function could be also __convert_to as we can overload it, but I find it more explicit this way. If the Boost community agree on a better name I will adopt it. 
@@ -551,24 +534,35 @@ With extrinsic conversion we want to preserve as much as possible this behavior.
   T v;
   f(convert_to<int>(v));
 
-Imagine now that `f` is overloaded and that `T` is either implicitly convertible to int or std::string. Then the following program will be well formed.
+Imagine now that `f` is overloaded 
 
-  void f(int);
-  void f(std::string);
+[OVERLOAD_CPP_FCTS]
 
-  T v;
-  f(v);
+and that we have a function that should work when `T` is either implicitly convertible to int or std::string. 
+
+[OVERLOAD_CPP_IMPL]
+
+Then the following program will be well formed.
+
+[OVERLOAD_CPP_IMPL_INTRINSIC]
+
+and will result in
+
+  1 called
+  2 called
 
 But if T is *extrinsic* convertible to `int` or `std::string` we can not write a simple program that works as we don't know to which `Target` the type `T` must be converted to.
 
   T v;
   f(convert_to<???>(v));
 
+So the following fails to compile
+
+[OVERLOAD_CPP_IMPL_EXTRINSIC]
 
 It would be great if we could state explicitly that the parameter we are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __mcf that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
 
-  T v;
-  f(mcf(v));
+[OVERLOAD_CPP_MCF_LIKE]
 
 [note 
 The name __mcf (*m*ake *c*onvertible *f*rom) could be changed to `implicitly` if this considered better by  the Boost community.
@@ -579,11 +573,33 @@ The name __mcf (*m*ake *c*onvertible *f*rom) could be changed to `implicitly` if
 ```
 ] 
 
+So the following will do as expected
+
+[OVERLOAD_CPP_MCF]
+
+and prints
+
+  1 called
+  2 called
+  1 called
+  2 called
+
 Note that extrinsic implicit convertible implies extrinsic explicit convertible but the opposite is not true. That means that if `T` is extrinsic explicit convertible to `int`, the following program will be ill formed
 
-  void f(int);
-  T v;
-  f(mcf(v));
+[OVERLOAD_CPP_MCF_EXPLICIT]
+
+having as result, for example
+
+  ../example/overload.cpp:102:18: error: no matching function for call to 'f'
+      std::cout << f(mcf(v)) << " called" << std::endl;
+                 ^
+  ../example/overload.cpp:134:34: note: in instantiation of member function 'McfTest<ExtrExplicitCvtToInt>::whichOverload' requested here
+    McfTest<ExtrExplicitCvtToInt>::whichOverload();
+                                 ^
+  ../example/overload.cpp:21:5: note: candidate function not viable: no known conversion from 'convertible_from<ExtrExplicitCvtToInt>' to 'int' for 1st argument
+  int f(int) { return 1; }
+
+
 
 [endsect]
 
