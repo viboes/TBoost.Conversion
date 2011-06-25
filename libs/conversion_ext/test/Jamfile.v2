@@ -77,6 +77,8 @@ test-suite "example" :
      [ run ../example/even.cpp ]
      [ run ../example/swap.cpp ]
      [ run ../example/no_throw.cpp ]
+     [ run ../example/overload.cpp ]
+     [ run ../example/fallback.cpp ]
     ;
 
 

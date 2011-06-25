@@ -127,9 +127,11 @@ void mcf_extrinsic_test()
   McfTest<ExtrCvtToString>::whichOverload();
   //McfTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
+  #if 0
   //[OVERLOAD_CPP_MCF_EXPLICIT
   McfTest<ExtrExplicitCvtToInt>::whichOverload();
   //]
+  #endif
 }
 
 int main()
@@ -138,7 +140,7 @@ int main()
   impl_intrinsic_test();
   mcf_extrinsic_test();
 
-  return 1;
+  return 0;
 }
 
 //]
