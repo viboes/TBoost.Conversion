@@ -32,7 +32,6 @@ void try_catch_way()
 void try_convert_to_way()
 {
   std::string str="not an int";
-  int t;
   //[NO_THROW_CPP_TRY_CONVERT_WAY
   optional<int> optt =  try_convert_to<int>(str);
   if (!optt)
@@ -45,7 +44,6 @@ void try_convert_to_way()
 void convert_to_optional_way()
 {
   std::string str="not an int";
-  int t;
   //[NO_THROW_CPP_TRY_CONVERT_TO_OPT_WAY
   optional<int> optt =  convert_to<optional<int> >(str);
   if (!optt)

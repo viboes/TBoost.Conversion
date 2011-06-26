@@ -30,6 +30,7 @@ void convert_to_or_fallback_way()
   //[FALLBACK_CPP_CONVERT_TO_OR_FALLBACK
   int t = convert_to_or_fallback<int>(str,-1);
   //]
+  (void)t;// remove warning: unused variable
 }
 
 int main()
