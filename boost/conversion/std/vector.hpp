@@ -30,6 +30,9 @@ namespace boost {
 
     // std namespace can not be overloaded
 
+    /**
+     * Partial specialization of @c converter_cp for @c std::vector of extrinsic convertibles.
+     */
     template < class T1, class A1, class T2, class A2>
     struct converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
       BOOST_CONVERSION_REQUIRES((
@@ -48,38 +51,11 @@ namespace boost {
             return to;
         }
     };
-#if 0
 
-    template < class T1, class A1, class T2, class A2>
-    struct converter_cp< std::vector<T1,A1>,
-            //~ typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
-            //~ boost::fusion::tuple<
-            std::pair<
-                boost::reference_wrapper<std::vector<T2,A2> const>,
-                boost::reference_wrapper<A1 const>
-            >
-    BOOST_CONVERSION_REQUIRES((
-        is_extrinsic_assignable<std::vector<T1,A1> >::value,
-                                std::pair<
-                                  boost::reference_wrapper<std::vector<T2,A2> const>,
-                                  boost::reference_wrapper<A1 const>
-                                >
-    ))
-    > : false_type
-    {
-        std::vector<T1,A1> operator()(
-            typename boost::conversion::result_of::pack2<std::vector<T2,A2> const, A1 const>::type
-            const & pack)
-        {
-            std::vector<T1,A1> res(fusion::at_c<1>(pack).get());
-            boost::conversion::assign_to(res, fusion::at_c<0>(pack).get());
-            //std::vector<T1,A1> res(pack.second.get());
-            //boost::conversion::assign_to(res, pack.first.get());
-            return res;
-        }
-    };
-#endif
-
+#if !defined(BOOST_CONVERSION_ENABLE_CND)
+    /**
+     * Partial specialization of @c assigner_cp for @c std::vector of extrinsic convertibles.
+     */
     template < class T1, class A1, class T2, class A2>
     struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
     BOOST_CONVERSION_REQUIRES((
@@ -98,6 +74,7 @@ namespace boost {
             return to;
         }
     };
+#endif
 
   }
 }

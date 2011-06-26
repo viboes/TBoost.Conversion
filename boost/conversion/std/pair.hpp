@@ -18,20 +18,32 @@
 #ifndef BOOST_CONVERSION_STD_PAIR_HPP
 #define BOOST_CONVERSION_STD_PAIR_HPP
 
-#include <utility>
-//#include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/config.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/conversion/convert_to.hpp>
+#include <utility>
 
 namespace boost {
   namespace conversion {
 
     // std namespace can not be overloaded
+
+    /**
+     * Partial specialization of @c converter_cp for @c std::pair of extrinsic convertibles.
+     */
     template < class T1, class T2, class S1, class S2>
     struct converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , typename enable_if_c<
           is_extrinsic_convertible<S1,T1>::value
-       && is_extrinsic_convertible<S2,T2>::value
-      ))
+          && is_extrinsic_convertible<S2,T2>::value
+        >::type
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
+          is_extrinsic_convertible<S1,T1>::value
+          && is_extrinsic_convertible<S2,T2>::value
+        >::type
+#endif
     > : true_type
     {
         std::pair<T1,T2> operator()(std::pair<S1,S2> const & from)
@@ -39,6 +51,11 @@ namespace boost {
             return std::pair<T1,T2>(boost::conversion::implicit_convert_to<T1>(from.first), boost::conversion::implicit_convert_to<T2>(from.second));
         }
     };
+
+#if !defined(BOOST_CONVERSION_ENABLE_CND)
+    /**
+     * Partial specialization of @c assigner_cp for @c std::pair of extrinsic convertibles.
+     */
     template < class T1, class T2, class S1, class S2>
     struct assigner_cp< std::pair<T1,T2>, std::pair<S1,S2>
       BOOST_CONVERSION_REQUIRES((
@@ -54,6 +71,7 @@ namespace boost {
             return to;
         }
     };
+#endif
   }
 }
 

@@ -42,9 +42,11 @@
 namespace boost {
   namespace conversion {
     //! Customization point for @c try_convert_to.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
     //! This struct can be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
     struct try_converter {

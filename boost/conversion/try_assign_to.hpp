@@ -43,17 +43,20 @@ Thus the user can specialize partially this class.
 namespace boost {
   namespace conversion {
     //! Customization point for @c try_assign_to.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
     //! This struct can be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
     struct try_assigner
     {
       //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::assign_to(to, from) must be well formed.
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+      //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator.
       //! @NoThrow
-      //! @Returns the converted value if success or the fallback when conversion fails.
+      //! @Returns whether the assignment succeeded.
+      //! @Remarks The parameter to is not updated if the conversion fails.
       bool operator()(Target& to, const Source& from)
       {
         Target rollback((to));

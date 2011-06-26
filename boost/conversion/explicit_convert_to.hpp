@@ -47,19 +47,32 @@ namespace boost {
     explicit_convert_to(Source const& from);
 
 
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! Customization point for @c explicit_convert_to.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! This class must be specialized by the user when the default behavior of @c explicit_converter is not satisfying.
     template < typename Target, typename Source, class Enable = void >
     struct explicit_converter_cp : false_type {};
 
     //! Default @c explicit_converter.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! The default implementation relies on the @c explicit_converter_cp which must be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
     struct explicit_converter : explicit_converter_cp<Target,Source,Enable> {};
 
     //! Specialization for @c explicit_converter when @c is_explicitly_convertible<Source,Target>.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
     //! @Requires @c is_explicitly_convertible<Source,Target>
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source,
@@ -81,6 +94,10 @@ namespace boost {
       }
     };
     //! Specialization for @c explicit_converter when @c is_explicitly_convertible<Source,Target>.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
     //! @Requires @c is_extrinsic_convertible<Source,Target>
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source,
@@ -104,6 +121,10 @@ namespace boost {
     };
 
     //! @brief @c explicit converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
     //! @Requires @c is_extrinsic_explicit_convertible<Source,Target>
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
@@ -140,7 +161,7 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     template < typename Target, typename Source, class Enable = void >
-    struct explicit_converter_cp : false_type
+    struct explicit_converter_cp : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.

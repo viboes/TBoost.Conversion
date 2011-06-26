@@ -20,6 +20,9 @@
 
 namespace boost {
 
+  /**
+   * trait-type that is @c true_type when @c Target is extrinsic assignable from @c Source.
+   */
   template <class Target, class Source>
   struct is_extrinsic_assignable : conversion::assigner<Target, Source> {};
 

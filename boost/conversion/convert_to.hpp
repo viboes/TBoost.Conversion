@@ -10,7 +10,7 @@
 
 /**
  * @file
- * @brief Defines the free function @c convert_to and its customization point @c converter.
+ * @brief Defines the free function @c convert_to.
  *
  *  The @c convert_to function converts the @c from parameter to a @c Target type.
  *
@@ -29,23 +29,23 @@ namespace boost {
     //! @tparam T The type to check for.
     //! @tparam Enable A dummy parameter that can be used for SFINAE.
 
-    //! The nested type @c type is a mpl boolean which default to @c mpl::false_.
-    //!   Specific specialization would make this meta-function to be @c mpl::true_.
+    //! The nested type @c type is @c false_type or @c true_type which default to @c false_type.
+    //!   Specific specialization would make this meta-function to be @c true_type.
     template <typename T, typename Enabled=void>
     struct enable_functor : false_type {};
 
 
     //! @brief Extrinsic conversion function.
     //! Converts the @c from parameter to an instance of the @c Target type.
-    //! This function can be seen as an emulation of free function overload of the conversion operator.
+    //! This function can be seen as an emulation of free function overload of the explicit conversion operator.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
     //! @Params
     //! @Param{source,source of the conversion}
     //!
-    //! @Returns The result of @c converter customization point.
-    //! @Throws  Whatever the @c converter call operator throws.
+    //! @Returns The result of @c explicit_convert_to<Target>(from).
+    //! @Throws  Whatever the @c explicit_convert_to<Target>(from) throws.
     //!
     //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type is mpl::true_.
     template <typename Target, typename Source>

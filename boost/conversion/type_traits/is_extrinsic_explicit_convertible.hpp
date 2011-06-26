@@ -20,8 +20,12 @@
 
 namespace boost {
 
+  /**
+   * trait-type that is @c true_type when @c Source is extrinsic explicit convertible to @c Target.
+   */
   template <class Source, class Target>
   struct is_extrinsic_explicit_convertible : conversion::explicit_converter<Target, Source> {};
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   template <class T>
   struct is_extrinsic_explicit_convertible<fusion::void_,T> : false_type {};
   template <>
@@ -32,6 +36,7 @@ namespace boost {
   struct is_extrinsic_explicit_convertible<void, const void> : true_type {};
   template <>
   struct is_extrinsic_explicit_convertible<const void, const void> : true_type {};
+#endif
 
 }
 

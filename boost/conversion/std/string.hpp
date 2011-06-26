@@ -31,6 +31,9 @@ namespace boost {
 
     // std namespace can not be overloaded
 
+    /**
+     * Partial specialization of @c explicit_converter_cp for convertibles to std::string.
+     */
     template<typename T, typename CharT, typename Traits, typename Alloc>
     struct explicit_converter_cp< std::basic_string<CharT,Traits,Alloc>, T
     > : true_type
@@ -44,6 +47,10 @@ namespace boost {
 #endif
       }
     };
+
+    /**
+     * Partial specialization of @c explicit_converter_cp for convertibles from std::string.
+     */
     template<typename T, typename CharT, typename Traits, typename Alloc>
     struct explicit_converter_cp< T, std::basic_string<CharT,Traits,Alloc>
         > : true_type
@@ -58,6 +65,10 @@ namespace boost {
       }
     };
 
+#if !defined(BOOST_CONVERSION_ENABLE_CND)
+    /**
+     * Partial specialization of @c assigner_cp for convertibles to std::string.
+     */
     template<typename T, typename CharT, typename Traits, typename Alloc>
     struct assigner_cp< std::basic_string<CharT,Traits,Alloc>, T
     > : true_type
@@ -69,6 +80,9 @@ namespace boost {
         return to;
       }
     };
+    /**
+     * Partial specialization of @c assigner_cp for convertibles from std::string.
+     */
     template<typename T, typename CharT, typename Traits, typename Alloc>
     struct assigner_cp< T, std::basic_string<CharT,Traits,Alloc>
     > : true_type
@@ -79,6 +93,7 @@ namespace boost {
         return to;
       }
     };
+#endif
 
   }
 }

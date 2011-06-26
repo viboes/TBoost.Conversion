@@ -56,21 +56,31 @@ namespace boost {
 
 
     //! Customization point for @c implicit_convert_to.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! This class must be specialized by the user when the default behavior of @c explicit_converter is not satisfying.
     template < typename Target, typename Source, class Enable = void >
     struct converter_cp : false_type {};
 
     //! Default customization point for @c implicit_convert_to.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! The default implementation relies on the @c converter_cp which must be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
     struct converter : converter_cp<Target,Source,Enable> {};
 
 
     //! Specialization for @c converter when @c is_convertible<Source,Target>.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
     //! @Requires @c is_convertible<Source,Target>
     template < typename Target, typename Source >
     struct converter<Target, Source

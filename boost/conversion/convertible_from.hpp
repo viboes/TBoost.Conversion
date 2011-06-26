@@ -43,7 +43,7 @@ namespace boost {
       //! @Remark On compilers that supports C++0x default arguments for function template parameters,
       //!   this constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template <typename Target
-#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+#if (defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS))
       , typename boost::enable_if< boost::is_extrinsic_convertible<Source,Target>, int >::type = 0
 #endif
       >
@@ -55,6 +55,7 @@ namespace boost {
     };
     //! @brief makes a wrapper implicitly convertible from @c Source.
     //! The result provides implicitly conversion to any type which is extrinsic convertible from @c Source.
+    //! @Returns convertible_from<Source>(s).
     //! @NoThrow.
     template <typename Source>
     convertible_from<Source> mcf(Source s)

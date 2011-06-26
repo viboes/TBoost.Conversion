@@ -11,11 +11,15 @@
 /*!
  @file
  @brief
- Defines the free function @c convert_to_or_fallback.
+ Defines the free function @c convert_to_or_fallback and its customization point @c converter_or_fallbacker_cp.
 
  The @c convert_to_or_fallback function converts the @c from parameter to a @c Target type. If the conversion fails the fallback value is used to construct a Target @c instance.
 
  */
+
+#ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
+#define BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
+
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
  The default implementation applies the conversion @c Target operator of the @c Source class or
@@ -33,38 +37,44 @@
  */
 #endif
 
-#ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
-#define BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
-
+#include <boost/conversion/config.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
   namespace conversion {
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
+#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)  || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    //! Customization point for @c convert_to_or_fallback.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! This class must be specialized by the user.
     template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
-    struct converter_or_fallbacker_cp;
+    struct converter_or_fallbacker_cp {};
 
-    //! Default @c explicit_converter.
+    //! Default @c converter_or_fallbacker.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! The default implementation relies on the @c converter_or_fallbacker_cp which must be specialized by the user.
     template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
     struct converter_or_fallbacker : converter_or_fallbacker_cp<Target,Source,Fallback,Enable> {};
 
     //! Specialization for @c converter_or_fallbacker when
     //! @c is_extrinsic_explicitly_convertible<Source,Target>
     //! @c && is_extrinsic_explicitly_convertible<Fallback,Target>.
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
     //! @Requires @c is_extrinsic_explicitly_convertible<Source,Target> && @c is_extrinsic_explicitly_convertible<Fallback,Target>.
     template < typename Target, typename Source, typename Fallback>
     struct converter_or_fallbacker<Target, Source, Fallback,
@@ -98,7 +108,7 @@ namespace boost {
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
-    struct converter_or_fallbacker_cp;
+    struct converter_or_fallbacker_cp {};
 
     //! Default @c converter_or_fallbacker.
     //! @tparam Target target type of the conversion.
