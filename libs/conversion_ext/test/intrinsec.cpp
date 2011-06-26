@@ -116,12 +116,16 @@ void convert_to_with_implicit_conversion_operator() {
   {
     ICT_X y;
     X x1(y);
+    (void)x1;// remove warning: unused variable
     X x2=y;
+    (void)x2;// remove warning: unused variable
   }
   {
     ICT_X y;
     X x1(convert_to<X>(y));
+    (void)x1;// remove warning: unused variable
     X x2=convert_to<X>(y);
+    (void)x2;// remove warning: unused variable
   }
 }
 void explicit_convert_to_with_explicit_conversion_operator() {

@@ -183,8 +183,11 @@ namespace boost {
     {
       X x;
       ICF_X y1(implicit_convert_to<ICF_X>(x));
+      (void)y1;// remove warning: unused variable
+
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       ICF_X y1_1(convert_to<ICF_X>(x));
+      (void)y1_1;// remove warning: unused variable
 #endif
       ICF_X y2(mcf(x));
       mat(y2) = x;
@@ -200,9 +203,12 @@ namespace boost {
       X x;
       //ECF_X y(convert_to<ECF_X>(x)); // compile must fail
       BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
+      (void)y;// remove warning: unused variable
       ECF_X y1_1(explicit_convert_to<ECF_X>(x));
+      (void)y1_1;// remove warning: unused variable
       //ECF_X y1_2(mcf(x)); // fail as there is no implicit conversion.
       ECF_X y2 = explicit_convert_to<ECF_X>(x);
+      (void)y2;// remove warning: unused variable
       //mat(y2) = x; // fails as no implicit conversion
     }
 
@@ -213,13 +219,18 @@ namespace boost {
     {
       ICT_X y;
       X x1(implicit_convert_to<X>(y));
+      (void)x1;// remove warning: unused variable
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       X x1_1(convert_to<X>(y));
+      (void)x1_1;// remove warning: unused variable
 #endif
       X x2(mcf(y));
+      (void)x2;// remove warning: unused variable
       X x3=implicit_convert_to<X>(y);
+      (void)x3;// remove warning: unused variable
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       X x3_1=convert_to<X>(y);
+      (void)x3_1;// remove warning: unused variable
 #endif
       X x4=mcf(y);
       mat(x4) = y;
@@ -231,7 +242,9 @@ namespace boost {
     {
       ECT_X y;
       X x1(explicit_convert_to<X>(y));
+      (void)x1;// remove warning: unused variable
       X x2=explicit_convert_to<X>(y);
+      (void)x2;// remove warning: unused variable
     }
   }
   void xassign_to_with_assignemet_operator()
