@@ -1112,6 +1112,7 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 * conversion between types for which lexical_cast works.
 * conversion between types for which numeric_cast works.
 
+[/
 [heading Make a proposal to the C++ standard]
 
 C++1x has explicit conversion operators, but they must always be defined in the source class. The same applies to the assignment operator, it must be defined on the Target class.
@@ -1154,7 +1155,7 @@ With this explicit conversion and the equivalent for duration, the actual defini
     std::pair<chrono::time_point<Clock, Duration>, boost::chrono::duration<Rep, Period> > tp_dur_pair;
     std::pair<boost::posix_time::ptime, boost::posix_time::time_duration> ppt;
     ppt = tp_dur_pair;
-
+]
 
 [endsect]
 [endsect]

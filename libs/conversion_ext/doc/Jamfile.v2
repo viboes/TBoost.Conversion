@@ -49,6 +49,7 @@ if --enable-index in  [ modules.peek : ARGV ]
                                    \"BOOST_EXPLICIT=explicit\" \\
                                    \"BOOST_STATIC_CONSTANT(x,y)=static x const y\" \\
                                    \"BOOST_STATIC_ASSERT(cnd)=\" \\
+                                   \"BOOST_CONVERSION_REQUIRES(CND) \" \\
                                    \"BOOST_CONSTEXPR=constexpr\""
 
         <doxygen:param>ALIASES=" Effects=\"<p><b>Effects:</b>\" \\ 
