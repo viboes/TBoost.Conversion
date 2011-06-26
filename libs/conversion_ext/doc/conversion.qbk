@@ -239,7 +239,7 @@ and if we find this not really readable we can try with the make assigner to `ma
 
     mat(a) = mat(b) = c;
 
-The behavior of `mat` recall the tie function of [*Boost.Tuple], but instead of allowing multiple assignations, allows a single `assign_to` call.
+The behavior of `mat` recall the `tie` function of [*Boost.Tuple], but instead of allowing multiple assignments, allows a single `assign_to` call.
 
 So one of the advantages of using this common functions is uniformity. The other is that now we are able to find all the explicit conversions to one type, as we can do with explicit casts.
 
@@ -407,12 +407,12 @@ The __convert_to function returns the explicit conversion to the target type.
 
   return Target(source);
 
-When the extrinsic conversion must be stored in a variable you could use need __assign_to instead. 
-By default __assign_to(target,source) calls to the assignment operator if is_assignable<Target,Source>, 
+When the extrinsic conversion must be stored in a variable you could use __assign_to instead. 
+By default __assign_to(target,source) calls to the assignment operator if `is_assignable<Target,Source>`, 
 
   target=source;
 
-otherwise it do
+otherwise it do 
 
   target=convert_to<Target>(source);
 
@@ -429,7 +429,9 @@ The result of this program will be
   i= 2
   x= 3
 
-Note: The name __convert_to could also be convert and __assign_to be assign, but I find them more coherent with the other names used by the library. If the Boost community agree on better names globally I will adopt them. 
+[note 
+The name __convert_to could also be convert and __assign_to be assign, but I find them more coherent with the other names used by the library. If the Boost community agree on better names globally I will adopt them. 
+]
 
 [endsect]
 
@@ -899,7 +901,7 @@ A `Source` class is convertible to a `Target` class if:
 [*Features:]
 
 * a generic __convert_to function which can be specialized by the user to make explicit conversion between unrelated types.
-* a generic __assign_to function which can be specialized by the user to make explicit assignation between unrelated types.
+* a generic __assign_to function which can be specialized by the user to make explicit assignment between unrelated types.
 * conversion between C-arrays of explicitly convertible types.
 
 * conversion between `std::complex` of explicitly convertible types.
