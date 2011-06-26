@@ -43,7 +43,11 @@ namespace boost {
 #endif
           )
         : val_(boost::conversion::implicit_convert_to<Target>(source))
-      {}
+      {
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+        (void)dummy; // remove warning dummy not used
+#endif
+      }
 
       //! Implicit conversion to @c Target.
       //! @Returns @c val_

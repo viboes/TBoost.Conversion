@@ -62,11 +62,15 @@ namespace boost {
     //! Specialization for @c explicit_converter when @c is_explicitly_convertible<Source,Target>.
     //! @Requires @c is_explicitly_convertible<Source,Target>
     template < typename Target, typename Source >
-    struct explicit_converter<Target, Source
-      BOOST_CONVERSION_REQUIRES((
-        is_explicitly_convertible<Source,Target>::value
-        && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
-      ))
+    struct explicit_converter<Target, Source,
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(ExplicitConvertible<Source,Target>)
+#else
+        typename enable_if_c<
+          is_explicitly_convertible<Source,Target>::value
+          && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
+        >::type
+#endif
     > : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
@@ -77,14 +81,18 @@ namespace boost {
       }
     };
     //! Specialization for @c explicit_converter when @c is_explicitly_convertible<Source,Target>.
-    //! @Requires @c is_explicitly_convertible<Source,Target>
+    //! @Requires @c is_extrinsic_convertible<Source,Target>
     template < typename Target, typename Source >
-    struct explicit_converter<Target, Source
-              , typename enable_if_c<
-                      is_extrinsic_convertible<Source,Target>::value
-                  && !is_explicitly_convertible<Source,Target>::value
-                  && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
-                >::type
+    struct explicit_converter<Target, Source,
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(ExtrinsicConvertible<Source,Target>)
+#else
+        typename enable_if_c<
+                is_extrinsic_convertible<Source,Target>::value
+            && !is_explicitly_convertible<Source,Target>::value
+            && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
+        >::type
+#endif
               > : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
@@ -96,16 +104,18 @@ namespace boost {
     };
 
     //! @brief @c explicit converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
-    //!
+    //! @Requires @c is_extrinsic_explicit_convertible<Source,Target>
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
-    struct explicit_converter< optional<Target>, Source
-    , typename enable_if_c<
-//      BOOST_CONVERSION_REQUIRES((
+    struct explicit_converter< optional<Target>, Source,
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(ExtrinsicExplicitConvertible<Source,Target>)
+#else
+     typename enable_if_c<
         explicit_converter<Target,Source>::value
         && ! detail::is_optional<Source>::value
-//      ))
       >::type
+#endif
     > : true_type
 
     {
@@ -140,6 +150,7 @@ namespace boost {
       }
     };
 
+    namespace detail {
     template < typename Target, typename Source, bool TargetIsOptional, bool SourceIsOptional>
     struct explicit_converter_aux : explicit_converter_cp<Target, Source>
     {};
@@ -165,10 +176,10 @@ namespace boost {
         }
       }
     };
-
+    }
     //! Default @c explicit_converter.
     template < typename Target, typename Source, class Enable = void >
-    struct explicit_converter : explicit_converter_aux<Target,Source,detail::is_optional<Target>::value, detail::is_optional<Source>::value> {};
+    struct explicit_converter : detail::explicit_converter_aux<Target,Source,detail::is_optional<Target>::value, detail::is_optional<Source>::value> {};
 
 
 

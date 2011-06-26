@@ -61,6 +61,7 @@ namespace boost {
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     template < typename Target, typename Source, class Enable = void >
     struct converter_cp : false_type {};
+
     //! Default customization point for @c implicit_convert_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -73,7 +74,11 @@ namespace boost {
     //! @Requires @c is_convertible<Source,Target>
     template < typename Target, typename Source >
     struct converter<Target, Source
-      , typename enable_if_c< is_convertible<Source,Target>::value >::type
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(Convertible<Source,Target>)
+#else
+        , typename enable_if_c< is_convertible<Source,Target>::value >::type
+#endif
     > : true_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.

@@ -13,7 +13,7 @@
  */
 
 #ifndef BOOST_CONVERSION_TT_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_HPP
-#define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP
+#define BOOST_CONVERSION_TT_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_HPP
 
 #include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/fusion/tuple.hpp>

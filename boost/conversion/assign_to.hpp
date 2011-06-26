@@ -44,14 +44,19 @@ namespace boost {
   namespace conversion {
 
 
+#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! Customization point for @c assign_to.
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     template < typename Target, typename Source, class Enable = void>
     struct assigner_cp : false_type {};
+
+    //! Default customization point for @c assign_to.
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //! By default it delegates to the user @c assigner_cp.
     template < typename Target, typename Source, class Enable = void>
     struct assigner : assigner_cp<Target,Source,Enable> {};
 
@@ -61,11 +66,15 @@ namespace boost {
      */
     template < typename Target, typename Source>
     struct assigner<Target, Source
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(CopyAssignable<Target>&&ExtrinsicExplicitConvertible<Source,Target>)
+#else
+        , typename enable_if_c<
           is_copy_assignable<Target>::value
           && is_extrinsic_explicit_convertible<Source,Target>::value
           && ! is_assignable<Target,Source>::value
-      ))
+          >::type
+#endif
     > : true_type
     {
       //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
@@ -82,7 +91,13 @@ namespace boost {
      */
     template < typename Target, typename Source>
     struct assigner<Target,Source
-      BOOST_CONVERSION_REQUIRES((is_assignable<Target, Source>::value))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    , requires(Assignable<Target,Source>)
+#else
+        , typename enable_if_c<
+          is_assignable<Target, Source>::value
+          >::type
+#endif
             > : true_type
     {
       //! @Effects Assigns the @c from parameter to the @c to parameter.

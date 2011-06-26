@@ -43,7 +43,7 @@ namespace boost {
 
     //! @c enable_functor meta-function specialization for types @c T satisfying @c phoenix::is_actor<T>.
 
-    //! The nested type @ type is @c mpl::true_.
+    //! The nested type @ type is @c true_type.
     template <typename T>
     struct enable_functor<T, typename enable_if<phoenix::is_actor<T> >::type>  : true_type {};
 
