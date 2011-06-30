@@ -37,6 +37,19 @@ struct A
     A();
 };
 
+#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+
+namespace boost {
+  // these specialization are needed because the compiler doesn't support SFINAE on expression
+  template <> struct is_assignable< Empty&, Empty const& > : true_type  {};
+  template <> struct is_assignable< NotEmpty&, NotEmpty const& > : true_type  {};
+  template <> struct is_assignable< Union&, Union const& > : true_type  {};
+  template <> struct is_assignable< bit_zero&, bit_zero const& > : true_type  {};
+  template <> struct is_assignable< A&, A const& > : true_type  {};
+}
+
+#endif
+
 int main()
 {
   BOOST_STATIC_ASSERT(( boost::is_copy_assignable<int>::value));

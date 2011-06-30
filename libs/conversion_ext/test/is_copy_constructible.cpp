@@ -44,6 +44,17 @@ struct A
     A(const A&);
 };
 
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< A, A const& >  : true_type {};
+  template <> struct is_constructible< Empty, Empty const& >  : true_type {};
+  template <> struct is_constructible< NotEmpty, NotEmpty const& >  : true_type {};
+  template <> struct is_constructible< Union, Union const& >  : true_type {};
+  template <> struct is_constructible< bit_zero, bit_zero const& >  : true_type {};
+}
+#endif
+
 int main()
 {
   //BOOST_STATIC_ASSERT((!boost::is_copy_constructible<Abstract>::value));

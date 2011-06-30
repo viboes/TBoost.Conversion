@@ -55,6 +55,13 @@ struct ECF_X {
   explicit ECF_X(X const&) {}
 };
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+BOOST_STATIC_ASSERT(( ! boost::is_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( ! boost::is_extrinsic_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ECF_X >::value));
+#endif
+
 struct ICT_X {
     operator X()  const{ return X(); }
 };
@@ -89,6 +96,9 @@ void convert_to_with_implicit_constructor()
   }
 }
 
+
+void impl_cnv(ECF_X) {}
+
 #define BOOST_CONVERSION_CONSTRUCT(T, VAR, EXPR) \
   T VAR(boost::conversion::explicit_convert_to<T>(EXPR))
 
@@ -104,8 +114,9 @@ void explicit_convert_to_with_explicit_constructor() {
     //ECF_X y(convert_to<ECF_X>(x)); // compile must fail
     BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
     ECF_X y1_1(explicit_convert_to<ECF_X>(x));
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-    ECF_X y1_2(mcf(x)); // doesn't fail as there is the constructor from X, but will fails for extrinsic conversion.
+    //impl_cnv(mcf(x)); // fail as x is not implicit convertible to ECF_X.
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
+    ECF_X y1_2(mcf(x)); // should not fail as we are requesting an explicit conversionis ambiguous: ECF_X(X) and there are two possible the constructor from X, but will fail for extrinsic conversion.
 #endif
     ECF_X y2 = explicit_convert_to<ECF_X>(x);
   }

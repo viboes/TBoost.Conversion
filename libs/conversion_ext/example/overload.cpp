@@ -90,6 +90,7 @@ namespace boost {
     };
   }
 }
+
 //[OVERLOAD_CPP_MCF_LIKE
 template <typename T>
 struct McfTest {
@@ -121,10 +122,12 @@ void impl_extrinsic_test()
 void mcf_extrinsic_test()
 {
   //[OVERLOAD_CPP_MCF
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
   McfTest<IntrCvtToInt>::whichOverload();
   McfTest<IntrCvtToString>::whichOverload();
   McfTest<ExtrCvtToInt>::whichOverload();
   McfTest<ExtrCvtToString>::whichOverload();
+#endif
   //McfTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
   #if 0

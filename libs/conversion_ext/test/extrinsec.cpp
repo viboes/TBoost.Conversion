@@ -173,8 +173,10 @@ namespace boost {
   }
 }
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
   BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< X,AF_X >::value));
   BOOST_STATIC_ASSERT(( !boost::is_extrinsic_explicit_convertible< X,AF_X >::value));
+#endif
 
 //////////////////////////
 
@@ -189,8 +191,11 @@ namespace boost {
       ICF_X y1_1(convert_to<ICF_X>(x));
       (void)y1_1;// remove warning: unused variable
 #endif
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
       ICF_X y2(mcf(x));
-      mat(y2) = x;
+      (void)y2;// remove warning: unused variable
+#endif
+      mat(y1) = x;
     }
   }
 
@@ -224,16 +229,21 @@ namespace boost {
       X x1_1(convert_to<X>(y));
       (void)x1_1;// remove warning: unused variable
 #endif
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
       X x2(mcf(y));
       (void)x2;// remove warning: unused variable
+#endif
       X x3=implicit_convert_to<X>(y);
       (void)x3;// remove warning: unused variable
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       X x3_1=convert_to<X>(y);
       (void)x3_1;// remove warning: unused variable
 #endif
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
       X x4=mcf(y);
-      mat(x4) = y;
+      (void)x4;// remove warning: unused variable
+#endif
+      mat(x1) = y;
     }
 
   }
@@ -300,7 +310,9 @@ void implicit_conversion_via_mca() {
 void implicit_conversion_via_mcf() {
   using namespace boost::conversion;
   C c;
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
   f(mcf(c));
+#endif
   f(convertible_to<B>(c));
 }
 

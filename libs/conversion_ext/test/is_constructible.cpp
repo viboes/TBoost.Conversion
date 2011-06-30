@@ -25,11 +25,27 @@ struct B
 {
 };
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< B>  : true_type {};
+}
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< A, int >  : true_type {};
+  template <> struct is_constructible< A, double >  : true_type {};
+  template <> struct is_constructible< A, int, double >  : true_type {};
+  template <> struct is_constructible< A, A const& >  : true_type {};
+}
+#endif
+
 int main()
 {
   // BUG: Default constructible doesn't works yet
-  //BOOST_STATIC_ASSERT((boost::is_constructible<int>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_constructible<A>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<int>::value));
+  BOOST_STATIC_ASSERT((!boost::is_constructible<A>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<int, const int>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<A, int>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<A, double>::value));
@@ -37,6 +53,6 @@ int main()
   BOOST_STATIC_ASSERT((boost::is_constructible<A, A const&>::value));
   BOOST_STATIC_ASSERT((!boost::is_constructible<void>::value));
   // BUG: We need to add specializations for void
-  //BOOST_STATIC_ASSERT((!boost::is_constructible<void,A>::value));
-  //BOOST_STATIC_ASSERT((boost::is_constructible<B>::value));
+  BOOST_STATIC_ASSERT((!boost::is_constructible<void,A>::value));
+  BOOST_STATIC_ASSERT((boost::is_constructible<B>::value));
 }

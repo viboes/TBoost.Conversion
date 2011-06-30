@@ -13,11 +13,6 @@
 #include <boost/static_assert.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 
-
-
-
-
-
 struct A
 {
     explicit A(int);
@@ -26,10 +21,20 @@ struct A
     A(A const&);
 };
 
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< A, int >  : true_type {};
+  template <> struct is_constructible< A, double >  : true_type {};
+  template <> struct is_constructible< A, int, double >  : true_type {};
+  template <> struct is_constructible< A, A const& >  : true_type {};
+}
+#endif
+
 int main()
 {
   BOOST_STATIC_ASSERT((boost::is_explicitly_convertible<const int, int>::value));
   BOOST_STATIC_ASSERT((boost::is_explicitly_convertible<int, A>::value));
   BOOST_STATIC_ASSERT((boost::is_explicitly_convertible<double, A>::value));
-  //BOOST_STATIC_ASSERT((!boost::is_explicitly_convertible<void,A>::value));
+  BOOST_STATIC_ASSERT((!boost::is_explicitly_convertible<void,A>::value));
 }
