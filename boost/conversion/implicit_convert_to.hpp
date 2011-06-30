@@ -35,6 +35,7 @@
 #include <boost/conversion/config.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/conversion/type_traits/is_convertible.hpp>
+#include <boost/type_traits/add_reference.hpp>
 
 namespace boost {
   namespace conversion {
@@ -93,7 +94,7 @@ namespace boost {
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
-      Target operator()(const Source& val)
+      Target operator()(typename add_reference<const Source>::type val)
       {
         return val;
       }

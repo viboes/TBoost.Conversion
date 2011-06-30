@@ -14,7 +14,13 @@
 
 #ifndef BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 #define BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
+
 #include <boost/conversion/config.hpp>
+#include <utility>
+#include <boost/array.hpp>
+#include <complex>
+#include <string>
+#include <boost/fusion/tuple.hpp>
 
 #if !defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
 
@@ -23,12 +29,6 @@
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/utility/declval.hpp>
-#include <boost/config.hpp>
-#include <utility>
-#include <boost/array.hpp>
-#include <complex>
-#include <string>
-#include <boost/fusion/tuple.hpp>
 #if defined(BOOST_NO_DECLTYPE)
 #include <boost/typeof/typeof.hpp>
 #endif // defined(BOOST_NO_DECLTYPE)
@@ -105,36 +105,6 @@ namespace boost {
 
 #endif
 
-  template <class A1, class A2, class B1, class B2>
-  struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
-      : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
-        {};
-  template <class T1, class T2, std::size_t N>
-  struct is_assignable< boost::array<T1,N>, boost::array<T2,N> >
-      : integral_constant<bool, is_assignable<T1,T2>::value  >
-        {};
-  template < class Target, class Source>
-  struct is_assignable< std::complex<Target>, std::complex<Source> >
-      : integral_constant<bool, is_assignable<Target,Source>::value  >
-        {};
-  template<typename T, typename CharT, typename Traits, typename Alloc>
-  struct is_assignable< std::basic_string<CharT,Traits,Alloc>, T >
-      : false_type
-        {};
-
-  template < class T1, class A1, class T2, class A2>
-  struct is_assignable< std::vector<T1,A1>, std::vector<T2,A2> >
-      : integral_constant<bool, is_assignable<T1,T2>::value  >
-        {};
-  template <class A1, class A2, class B1, class B2>
-  struct is_assignable< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
-      : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
-        {};
-
-  template <class A1, class A2, class A3, class B1, class B2, class B3>
-  struct is_assignable< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
-      : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value&& is_assignable<A3,B3>::value >
-        {};
 
 }
 
@@ -147,7 +117,51 @@ namespace boost {
   template < class Target, class Source>
   struct is_assignable  : false_type
   {};
+
+  // these specialization are needed because the compiler doesn't support SFINAE on expression
+
+  template <> struct is_assignable< int&, int > : true_type  {};
+  template <> struct is_assignable< int&, int& > : true_type  {};
+  template <> struct is_assignable< int&, int const& > : true_type  {};
+  template <> struct is_assignable< int&, double > : true_type  {};
 }
+
 #endif
+
+
+// These specializations are needed because the std library implementation is not using SFINAE
+namespace boost {
+template <class A1, class A2, class B1, class B2>
+struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
+    : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
+      {};
+template <class T1, class T2, std::size_t N>
+struct is_assignable< boost::array<T1,N>, boost::array<T2,N> >
+    : integral_constant<bool, is_assignable<T1,T2>::value  >
+      {};
+template < class Target, class Source>
+struct is_assignable< std::complex<Target>, std::complex<Source> >
+    : integral_constant<bool, is_assignable<Target,Source>::value  >
+      {};
+template<typename T, typename CharT, typename Traits, typename Alloc>
+struct is_assignable< std::basic_string<CharT,Traits,Alloc>, T >
+    : false_type
+      {};
+
+template < class T1, class A1, class T2, class A2>
+struct is_assignable< std::vector<T1,A1>, std::vector<T2,A2> >
+    : integral_constant<bool, is_assignable<T1,T2>::value  >
+      {};
+template <class A1, class A2, class B1, class B2>
+struct is_assignable< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
+    : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
+      {};
+
+template <class A1, class A2, class A3, class B1, class B2, class B3>
+struct is_assignable< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
+    : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value&& is_assignable<A3,B3>::value >
+      {};
+}
+
 #endif
 

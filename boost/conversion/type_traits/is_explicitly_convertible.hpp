@@ -22,9 +22,9 @@ namespace boost {
 
   template <class Source, class Target>
   struct is_explicitly_convertible : is_constructible<Target, Source> {};
+  template <class Target>
+  struct is_explicitly_convertible<void,Target> : false_type {};
 
-  template <class Source, class Target>
-  struct is_explicitly_convertible2 : true_type {};
 
 }
 

@@ -54,7 +54,7 @@ namespace boost
         struct dummy;
     }
 
-    template<class T, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
+    template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
     struct is_constructible;
 
 #ifndef BOOST_NO_SFINAE_EXPR
@@ -62,13 +62,13 @@ namespace boost
     #define M1(z,n,t) type_traits_detail::declval<A##n>()
 
     #define M0(z,n,t)                                                                                   \
-    template<class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-    struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
     {                                                                                                   \
         template<class X>                                                                               \
         static type_traits_detail::true_type                                                            \
-        test(type_traits_detail::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);                           \
-                                                                                                        \
+        test(type_traits_detail::dummy<sizeof(X(type_traits_detail::declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
+                                                                                                           \
         template<class X>                                                                               \
         static type_traits_detail::false_type                                                           \
         test(...);                                                                                      \
@@ -81,11 +81,9 @@ namespace boost
     #undef M0
     #undef M1
 
-#else
-
     #define M0(z,n,t)                                                                                   \
-    template<class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-    struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+    template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
       : boost::false_type                                                                               \
     {                                                                                                   \
     };
@@ -93,40 +91,63 @@ namespace boost
     BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
     #undef M0
 
-#endif
-    template <>
-    struct is_constructible< void>  : false_type {};
-    //template <typename A1, typename A2, typename A3>
-    //struct is_constructible< void, A1, A2,A3>  : false_type {};
 
-  template <class A1, class A2, class B1, class B2>
-  struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >
+    #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+
+#else
+
+    #define M0(z,n,t)                                                                                   \
+    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+      : boost::false_type                                                                               \
+    {                                                                                                   \
+    };
+
+    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+
+    #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+    #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    // these specializations are needed when BOOST_NO_SFINAE_EXPR is defined
+
+
+#endif
+
+#ifdef  BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    // default constructor
+    template <> struct is_constructible< int  >  : true_type {};
+#endif
+#ifdef  BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+    template <class T> struct is_constructible< T*, T* const &  >  : true_type {};
+    template <> struct is_constructible< int, const int  >  : true_type {};
+    template <> struct is_constructible< int, int const& >  : true_type {};
+    template <> struct is_constructible< double, const double  >  : true_type {};
+    template <> struct is_constructible< double, double const& >  : true_type {};
+#endif
+
+    // these specializations are needed because the libraries define the assignment operator without using SFINAE
+    template <class A1, class A2, class B1, class B2>
+    struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >
       : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
         {};
 
-#if 0
-  template <class T1, class T2, std::size_t N>
-  struct is_constructible< boost::array<T1,N>, boost::array<T2,N> >
-      : integral_constant<bool, is_constructible<T1,T2>::value  >
-        {};
-#endif
-  template < class Target, class Source>
-  struct is_constructible< std::complex<Target>, std::complex<Source> >
+    template < class Target, class Source>
+    struct is_constructible< std::complex<Target>, std::complex<Source> >
       : integral_constant<bool, is_constructible<Target,Source>::value  >
         {};
 
-  template < class T1, class A1, class T2, class A2>
-  struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> >
+    template < class T1, class A1, class T2, class A2>
+    struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> >
       : integral_constant<bool, is_constructible<T1,T2>::value  >
         {};
 
-  template <class A1, class A2, class B1, class B2>
-  struct is_constructible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
+    template <class A1, class A2, class B1, class B2>
+    struct is_constructible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
       : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
         {};
 
-  template <class A1, class A2, class A3, class B1, class B2, class B3>
-  struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
+    template <class A1, class A2, class A3, class B1, class B2, class B3>
+    struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
       : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value&& is_constructible<A3,B3>::value >
         {};
 }

@@ -17,6 +17,9 @@
 #ifndef BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 #define BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 
+#include <boost/conversion/config.hpp>
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
+
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
@@ -43,9 +46,7 @@ namespace boost {
       //! @Remark On compilers that supports C++0x default arguments for function template parameters,
       //!   this constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template <typename Target
-#if (defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS))
       , typename boost::enable_if< boost::is_extrinsic_convertible<Source,Target>, int >::type = 0
-#endif
       >
       operator Target() const
       {
@@ -64,6 +65,7 @@ namespace boost {
     }
   }
 }
+#endif
 
 #endif
 
