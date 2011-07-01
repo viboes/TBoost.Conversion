@@ -161,7 +161,7 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     template < typename Target, typename Source, class Enable = void >
-    struct explicit_converter_cp : true_type
+    struct explicit_converter_cp : false_type
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.

@@ -26,6 +26,18 @@
 
 namespace boost
 {
+
+  template < >
+  struct is_convertible< const void,  void>  : true_type  {};
+  template < >
+  struct is_convertible<  void,  const void>  : true_type  {};
+
+  template < class Target, class Source, std::size_t N>
+  struct is_convertible< Target[N], Source[N] >: false_type  {};
+  template < class Target, class Source, std::size_t N>
+  struct is_convertible< const Target[N], const Source[N] >: false_type  {};
+
+
   template <class A1, class A2, class B1, class B2>
   struct is_convertible< std::pair<A1,A2>, std::pair<B1,B2> >
       : integral_constant<bool, is_convertible<A1,B1>::value && is_convertible<A2,B2>::value >
