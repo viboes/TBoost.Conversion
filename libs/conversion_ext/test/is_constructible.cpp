@@ -29,6 +29,7 @@ struct B
 namespace boost
 {
   template <> struct is_constructible< B>  : true_type {};
+  template <> struct is_constructible< A>  : false_type {};
 }
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)

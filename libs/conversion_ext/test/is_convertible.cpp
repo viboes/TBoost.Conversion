@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_convertible.hpp>
+#include <boost/conversion/type_traits/is_convertible.hpp>
 
 
 typedef void Function();
