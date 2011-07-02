@@ -27,19 +27,24 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-namespace boost
-{
-  template < class T>
-  struct is_constructible< optional<T> >  : true_type {};
-  template < class T>
-  struct is_constructible< optional<T>, optional<T> > : true_type {};
-  template < class T>
-  struct is_assignable< optional<T>&, optional<T> const& >  : true_type {};
-}
-#endif
 
 namespace boost {
+
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+    template < class T >
+    struct is_constructible< optional<T> >  : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+    template < class T >
+    struct is_constructible< optional<T>, optional<T> > : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+    template < class T >
+    struct is_assignable< optional<T>, optional<T> >  : true_type {};
+    template < class T >
+    struct is_assignable< optional<T>&, optional<T> const& >  : true_type {};
+#endif
+  
   namespace conversion {
 
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)

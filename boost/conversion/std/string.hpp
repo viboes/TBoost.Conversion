@@ -27,19 +27,24 @@
 #include <boost/convert/convert.hpp>
 #endif
 
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-namespace boost
-{
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_constructible< std::basic_string<CharT,Traits,Alloc> >  : true_type {};
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_constructible< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_assignable< std::basic_string<CharT,Traits,Alloc>&, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
-}
-#endif
 
 namespace boost {
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+  template<typename CharT, typename Traits, typename Alloc>
+  struct is_constructible< std::basic_string<CharT,Traits,Alloc> >  : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+  template<typename CharT, typename Traits, typename Alloc>
+  struct is_constructible< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+  template<typename CharT, typename Traits, typename Alloc>
+  struct is_assignable< std::basic_string<CharT,Traits,Alloc>&, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
+  template<typename CharT, typename Traits, typename Alloc>
+  struct is_assignable< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc>  >  : true_type {};
+#endif
+  
+  
   namespace conversion {
 
     // std namespace can not be overloaded

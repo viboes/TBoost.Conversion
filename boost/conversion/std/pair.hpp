@@ -23,19 +23,28 @@
 #include <boost/conversion/convert_to.hpp>
 #include <utility>
 
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-namespace boost
-{
-//  template < class T, class U>
-//  struct is_constructible< std::pair<T,U> >  : true_type {};
-  template < class T, class U>
-  struct is_constructible< std::pair<T,U>, std::pair<T,U> const& >  : true_type {};
-  template < class T, class U>
-  struct is_assignable< std::pair<T,U>&, std::pair<T,U> const& >  : true_type {};
-}
-#endif
 
 namespace boost {
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+  //! Specialization for std::pair<T,U> default constructor
+  template < class T, class U>
+  struct is_constructible< std::pair<T,U> >  : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+  //! Specialization for std::pair<T,U> default copy constructor
+  template < class T, class U>
+  struct is_constructible< std::pair<T,U>, std::pair<T,U> const& >  : true_type {};
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+  //! Specialization for std::pair<T,U> assignment operator
+  template < class T, class U>
+  struct is_assignable< std::pair<T,U>, std::pair<T,U> >  : true_type {};
+  //! Specialization for std::pair<T,U> assignment operator
+  template < class T, class U>
+  struct is_assignable< std::pair<T,U>&, std::pair<T,U> const& >  : true_type {};
+#endif
+  
+  
   namespace conversion {
 
     // std namespace can not be overloaded
