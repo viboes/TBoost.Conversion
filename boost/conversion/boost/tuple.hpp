@@ -21,6 +21,22 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
 
+//#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) 
+namespace boost
+{
+  template < class T1, class T2, class T3 >
+  struct is_constructible< fusion::tuple<T1,T2,T3> >  : true_type {};
+}
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) 
+namespace boost
+{
+  template < class T1, class T2, class T3 >
+  struct is_constructible< fusion::tuple<T1,T2,T3>, fusion::tuple<T1,T2,T3> > : true_type {};
+}
+#endif
+
 
 namespace boost {
   namespace conversion {

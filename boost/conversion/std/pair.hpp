@@ -23,6 +23,18 @@
 #include <boost/conversion/convert_to.hpp>
 #include <utility>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+//  template < class T, class U>
+//  struct is_constructible< std::pair<T,U> >  : true_type {};
+  template < class T, class U>
+  struct is_constructible< std::pair<T,U>, std::pair<T,U> const& >  : true_type {};
+  template < class T, class U>
+  struct is_assignable< std::pair<T,U>&, std::pair<T,U> const& >  : true_type {};
+}
+#endif
+
 namespace boost {
   namespace conversion {
 

@@ -28,6 +28,18 @@
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+  template < class T, std::size_t N>
+  struct is_constructible< array<T,N> >  : true_type {};
+  template < class T, std::size_t N>
+  struct is_constructible< array<T,N>, array<T,N> > : true_type {};
+  template < class T, std::size_t N>
+  struct is_assignable< array<T,N>&, array<T,N> const& >  : true_type {};
+}
+#endif
+
 namespace boost {
   namespace conversion {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)

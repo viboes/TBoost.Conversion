@@ -33,6 +33,7 @@ the @c boost::conversion::overload_workaround namespace.
 
 
 #include <cstddef> //for std::size_t
+#include <boost/conversion/config.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/conversion/type_traits/is_copy_assignable.hpp>
@@ -102,16 +103,17 @@ namespace boost {
      *
      * @Requires @c Target must be Assinable from Source.
      */
+
     template < typename Target, typename Source>
     struct assigner<Target,Source
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     , requires(Assignable<Target,Source>)
 #else
-        , typename enable_if_c<
-          is_assignable<Target, Source>::value
-          >::type
+    , typename enable_if_c<
+    is_assignable<Target, Source>::value
+    >::type
 #endif
-            > : true_type
+    > : true_type
     {
       //! @Effects Assigns the @c from parameter to the @c to parameter.
       //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
@@ -121,7 +123,8 @@ namespace boost {
         return to;
       }
     };
-
+    
+    
     /**
      * Partial specialization for c-array types.
      *

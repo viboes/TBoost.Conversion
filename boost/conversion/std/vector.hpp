@@ -25,6 +25,19 @@
 //#include <boost/conversion/pack.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+  template < class T, class A>
+  struct is_constructible< std::vector<T,A> >  : true_type {};
+  template < class T, class A>
+  struct is_constructible< std::vector<T,A>, std::vector<T,A> > : true_type {};
+  template < class T, class A>
+  struct is_assignable< std::vector<T,A>&, std::vector<T,A> const& >  : true_type {};
+}
+#endif
+
+
 namespace boost {
   namespace conversion {
 

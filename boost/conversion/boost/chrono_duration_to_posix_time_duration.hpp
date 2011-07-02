@@ -24,6 +24,37 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#define BOOST_CONVERSION_DCL_DEFAULTS3(X)                              \
+namespace boost                                                       \
+{                                                                     \
+template <> struct is_constructible< X >  : true_type {};           \
+template <> struct is_constructible< X, X const& >  : true_type {}; \
+template <> struct is_assignable< X&, X const& >  : true_type {};   \
+template <> struct is_assignable< X, X >  : true_type {};   \
+}
+#else
+#define BOOST_CONVERSION_DCL_DEFAULTS3(X)
+#endif
+
+BOOST_CONVERSION_DCL_DEFAULTS3(boost::posix_time::time_duration)
+
+
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+  template < class Rep, class Period>
+  struct is_constructible< chrono::duration<Rep, Period> >  : true_type {};
+  template < class Rep, class Period>
+  struct is_constructible< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> > : true_type {};
+  template < class Rep, class Period>
+  struct is_assignable< chrono::duration<Rep, Period>&, chrono::duration<Rep, Period> const& >  : true_type {};
+  template < class Rep, class Period>
+  struct is_assignable< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> >  : true_type {};
+}
+#endif
+
+
 namespace boost {
   namespace conversion {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)

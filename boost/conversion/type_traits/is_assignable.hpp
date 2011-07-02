@@ -120,10 +120,89 @@ namespace boost {
 
   // these specialization are needed because the compiler doesn't support SFINAE on expression
 
+  template <> struct is_assignable< bool&, bool const& > : true_type  {};
+  
   template <> struct is_assignable< int&, int > : true_type  {};
   template <> struct is_assignable< int&, int& > : true_type  {};
   template <> struct is_assignable< int&, int const& > : true_type  {};
   template <> struct is_assignable< int&, double > : true_type  {};
+  template <> struct is_assignable< int&, short const& > : true_type {}; 
+  template <> struct is_assignable< short&, int const& > : true_type  {};
+  template <> struct is_assignable< float, int > : true_type  {};
+  template <> struct is_assignable< int, float > : true_type  {};
+  
+  template <> struct is_assignable< char, char > : true_type  {};
+  template <> struct is_assignable< char, unsigned char > : true_type  {};
+  template <> struct is_assignable< char, short > : true_type  {};
+  template <> struct is_assignable< char, unsigned short > : true_type  {};
+  template <> struct is_assignable< char, int > : true_type  {};
+  template <> struct is_assignable< char, unsigned int > : true_type  {};
+  template <> struct is_assignable< char, long > : true_type  {};
+  template <> struct is_assignable< char, unsigned long > : true_type  {};
+  
+  template <> struct is_assignable< char, char const& > : true_type  {};
+  template <> struct is_assignable< char, short const& > : true_type  {};
+  template <> struct is_assignable< char, int const& > : true_type  {};
+  template <> struct is_assignable< char, long const& > : true_type  {};
+  template <> struct is_assignable< char, unsigned char const& > : true_type  {};
+  template <> struct is_assignable< char, unsigned short const& > : true_type  {};
+  template <> struct is_assignable< char, unsigned int const& > : true_type  {};
+  template <> struct is_assignable< char, unsigned long const& > : true_type  {};
+  
+  template <> struct is_assignable< short, char > : true_type  {};
+  template <> struct is_assignable< short, unsigned char > : true_type  {};
+  template <> struct is_assignable< short, short > : true_type  {};
+  template <> struct is_assignable< short, unsigned short > : true_type  {};
+  template <> struct is_assignable< short, int > : true_type  {};
+  template <> struct is_assignable< short, unsigned int > : true_type  {};
+  template <> struct is_assignable< short, long > : true_type  {};
+  template <> struct is_assignable< short, unsigned long > : true_type  {};
+
+  template <> struct is_assignable< short, char const& > : true_type  {};
+  template <> struct is_assignable< short, short const& > : true_type  {};
+  template <> struct is_assignable< short, int const& > : true_type  {};
+  template <> struct is_assignable< short, long const& > : true_type  {};
+  template <> struct is_assignable< short, unsigned char const& > : true_type  {};
+  template <> struct is_assignable< short, unsigned short const& > : true_type  {};
+  template <> struct is_assignable< short, unsigned int const& > : true_type  {};
+  template <> struct is_assignable< short, unsigned long const& > : true_type  {};
+
+  template <> struct is_assignable< int, char > : true_type  {};
+  template <> struct is_assignable< int, unsigned char > : true_type  {};
+  template <> struct is_assignable< int, short > : true_type  {};
+  template <> struct is_assignable< int, unsigned short > : true_type  {};
+  template <> struct is_assignable< int, int > : true_type  {};
+  template <> struct is_assignable< int, unsigned int > : true_type  {};
+  template <> struct is_assignable< int, long > : true_type  {};
+  template <> struct is_assignable< int, unsigned long > : true_type  {};
+  
+  template <> struct is_assignable< int, char const& > : true_type  {};
+  template <> struct is_assignable< int, short const& > : true_type  {};
+  template <> struct is_assignable< int, int const& > : true_type  {};
+  template <> struct is_assignable< int, long const& > : true_type  {};
+  template <> struct is_assignable< int, unsigned char const& > : true_type  {};
+  template <> struct is_assignable< int, unsigned short const& > : true_type  {};
+  template <> struct is_assignable< int, unsigned int const& > : true_type  {};
+  template <> struct is_assignable< int, unsigned long const& > : true_type  {};
+  
+  template <> struct is_assignable< long, char > : true_type  {};
+  template <> struct is_assignable< long, unsigned char > : true_type  {};
+  template <> struct is_assignable< long, short > : true_type  {};
+  template <> struct is_assignable< long, unsigned short > : true_type  {};
+  template <> struct is_assignable< long, int > : true_type  {};
+  template <> struct is_assignable< long, unsigned int > : true_type  {};
+  template <> struct is_assignable< long, long > : true_type  {};
+  template <> struct is_assignable< long, unsigned long > : true_type  {};
+  
+  template <> struct is_assignable< long, char const& > : true_type  {};
+  template <> struct is_assignable< long, short const& > : true_type  {};
+  template <> struct is_assignable< long, int const& > : true_type  {};
+  template <> struct is_assignable< long, long const& > : true_type  {};
+  template <> struct is_assignable< long, unsigned char const& > : true_type  {};
+  template <> struct is_assignable< long, unsigned short const& > : true_type  {};
+  template <> struct is_assignable< long, unsigned int const& > : true_type  {};
+  template <> struct is_assignable< long, unsigned long const& > : true_type  {};
+  
 }
 
 #endif
@@ -157,7 +236,12 @@ struct is_assignable< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
     : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
       {};
 
-template <class A1, class A2, class A3, class B1, class B2, class B3>
+  template <class A1, class A2, class B1, class B2>
+  struct is_assignable< fusion::tuple<A1,A2>&, fusion::tuple<B1,B2> const&>
+  : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
+  {};
+  
+  template <class A1, class A2, class A3, class B1, class B2, class B3>
 struct is_assignable< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
     : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value&& is_assignable<A3,B3>::value >
       {};

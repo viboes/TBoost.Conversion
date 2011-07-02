@@ -16,6 +16,8 @@
 #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP
 
 #include <boost/conversion/implicit_convert_to.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/fusion/tuple.hpp>
 
 namespace boost {
@@ -24,7 +26,11 @@ namespace boost {
    * trait-type that is @c true_type when @c Source is extrinsic implicit convertible to @c Target.
    */
   template <class Source, class Target>
-  struct is_extrinsic_convertible : conversion::converter<Target, Source> {};
+  struct is_extrinsic_convertible : conversion::converter<
+    Target, Source
+    //typename remove_reference<typename remove_cv<Target>::type>::type,
+    //typename remove_reference<typename remove_cv<Source>::type>::type
+    > {};
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   template <class T>
   struct is_extrinsic_convertible<fusion::void_,T> : false_type {};

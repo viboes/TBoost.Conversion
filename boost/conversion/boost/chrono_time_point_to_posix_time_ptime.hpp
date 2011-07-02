@@ -26,6 +26,37 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#define BOOST_CONVERSION_DCL_DEFAULTS2(X)                              \
+namespace boost                                                       \
+{                                                                     \
+template <> struct is_constructible< X >  : true_type {};           \
+template <> struct is_constructible< X, X const& >  : true_type {}; \
+template <> struct is_assignable< X&, X const& >  : true_type {};   \
+template <> struct is_assignable< X, X >  : true_type {};   \
+}
+#else
+#define BOOST_CONVERSION_DCL_DEFAULTS2(X)
+#endif
+
+BOOST_CONVERSION_DCL_DEFAULTS2(boost::posix_time::ptime)
+
+
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+  template < class Clock, class Duration>
+  struct is_constructible< chrono::time_point<Clock, Duration> >  : true_type {};
+  template < class Clock, class Duration>
+  struct is_constructible< chrono::time_point<Clock, Duration>, chrono::time_point<Clock, Duration> > : true_type {};
+  template < class Clock, class Duration>
+  struct is_assignable< chrono::time_point<Clock, Duration>&, chrono::time_point<Clock, Duration> const& >  : true_type {};
+  template < class Clock, class Duration>
+  struct is_assignable< chrono::time_point<Clock, Duration>, chrono::time_point<Clock, Duration> >  : true_type {};
+}
+#endif
+
+
 namespace boost {
   namespace conversion {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
