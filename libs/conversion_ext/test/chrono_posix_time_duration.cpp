@@ -15,6 +15,7 @@
 
 using namespace boost;
 
+
 typedef int A1;
 typedef short B1;
 

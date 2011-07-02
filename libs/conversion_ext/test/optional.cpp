@@ -16,6 +16,18 @@
 #include <boost/conversion/try_convert_to.hpp>
 #include <boost/conversion/try_assign_to.hpp>
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)                              \
+namespace boost                                                       \
+{                                                                     \
+template <> struct is_constructible< X >  : true_type {};           \
+template <> struct is_constructible< X, X const& >  : true_type {}; \
+template <> struct is_assignable< X&, X const& >  : true_type {};   \
+}
+#else
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)
+#endif
+
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 struct A1{};
@@ -36,7 +48,9 @@ A1& assign_to(A1& to, const B1&)
 }
 #else
 struct B1{};
+BOOST_CONVERSION_DCL_DEFAULTS(B1)
 struct C1{};
+BOOST_CONVERSION_DCL_DEFAULTS(C1)
 struct A1{
   A1() {}
   A1(A1 const&) {}
@@ -45,6 +59,8 @@ struct A1{
     throw 1;
   }
 };
+BOOST_CONVERSION_DCL_DEFAULTS(A1)
+
 #endif
 
 void explicit_convert_to() 

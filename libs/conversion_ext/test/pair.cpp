@@ -20,11 +20,9 @@
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
 
 using namespace boost;
-
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B1, A1>::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B2, A2>::value));
 
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
 BOOST_STATIC_ASSERT(( !boost::is_constructible<std::pair<A1,A2>, std::pair<B1,B2> >::value));
@@ -33,9 +31,10 @@ BOOST_STATIC_ASSERT(( !boost::is_convertible<std::pair<B1,B2>, std::pair<A1,A2> 
 #endif
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
-BOOST_STATIC_ASSERT(( !boost::is_assignable<B1, A1>::value));
-BOOST_STATIC_ASSERT(( !boost::is_assignable<B2, A2>::value));
-BOOST_STATIC_ASSERT(( !boost::is_assignable<std::pair<B1,B2>, std::pair<A1,A2> >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<std::pair<B1,B2>, std::pair<A1,A2> >::value));
+BOOST_STATIC_ASSERT(( !boost::is_assignable<std::pair<A1,A2>, std::pair<B1,B2> >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::assigner<std::pair<A1,A2>, std::pair<B1,B2> >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<std::pair<A1,A2>, std::pair<B1,B2> >::value));
 #endif
 
 void explicit_convert_to() {

@@ -17,6 +17,16 @@
 using namespace boost;
 #include <boost/static_assert.hpp>
 
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+BOOST_STATIC_ASSERT(( boost::is_assignable<A1, A1 >::value));
+BOOST_STATIC_ASSERT(( boost::is_assignable<A2, A2 >::value));
+BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>, fusion::tuple<A1,A2> >::value));
+BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>&, fusion::tuple<A1,A2> const&>::value));
+BOOST_STATIC_ASSERT(( boost::is_copy_assignable<boost::fusion::tuple<A1,A2> >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible<fusion::tuple<B1,B2>, fusion::tuple<A1,A2> >::value));
+#endif
+
 
 void explicit_convert_to() {
     B1 b1;

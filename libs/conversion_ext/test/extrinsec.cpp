@@ -22,14 +22,30 @@
 #include <boost/static_assert.hpp>
 
 
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)                              \
+namespace boost                                                       \
+{                                                                     \
+  template <> struct is_constructible< X >  : true_type {};           \
+  template <> struct is_constructible< X, X const& >  : true_type {}; \
+  template <> struct is_assignable< X&, X const& >  : true_type {};   \
+}
+#else
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)
+#endif
+
+
 using namespace boost;
 using namespace boost::conversion;
 
 struct A{};
+BOOST_CONVERSION_DCL_DEFAULTS(A)
 struct B{
   void k(){}
 };
+BOOST_CONVERSION_DCL_DEFAULTS(B)
 struct C{};
+BOOST_CONVERSION_DCL_DEFAULTS(C)
 
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
@@ -90,9 +106,10 @@ struct C{};
 
 //////////
 struct X{};
+BOOST_CONVERSION_DCL_DEFAULTS(X)
 
-struct ICF_X {
-};
+struct ICF_X {};
+BOOST_CONVERSION_DCL_DEFAULTS(ICF_X)
 
 namespace boost {
   namespace conversion {
@@ -112,8 +129,8 @@ BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< X,ICF_X >::value));
   BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ICF_X >::value));
 #endif
 
-struct ECF_X {
-};
+struct ECF_X {};
+BOOST_CONVERSION_DCL_DEFAULTS(ECF_X)
 
 namespace boost {
   namespace conversion {
@@ -173,9 +190,15 @@ namespace boost {
   }
 }
 
+
 #if defined(BOOST_CONVERSION_ENABLE_CND)
   BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< X,AF_X >::value));
   BOOST_STATIC_ASSERT(( !boost::is_extrinsic_explicit_convertible< X,AF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< X , ICF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X , ICF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::is_copy_assignable< ICF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< ICF_X, X >::value));
+
 #endif
 
 //////////////////////////
@@ -195,6 +218,7 @@ namespace boost {
       ICF_X y2(mcf(x));
       (void)y2;// remove warning: unused variable
 #endif
+      assign_to(y1,x);
       mat(y1) = x;
     }
   }
@@ -243,6 +267,7 @@ namespace boost {
       X x4=mcf(y);
       (void)x4;// remove warning: unused variable
 #endif
+      assign_to(x1,y);
       mat(x1) = y;
     }
 
@@ -287,7 +312,7 @@ void explicit_assign_to() {
   using namespace boost::conversion;
   B b;
   A a;
-  assign_to(a, b);
+  //assign_to(a, b);
   mca(a)= b;
   mat(a)= b;
 }

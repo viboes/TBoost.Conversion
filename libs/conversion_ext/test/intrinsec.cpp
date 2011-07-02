@@ -54,14 +54,6 @@ struct ICF_X {
 struct ECF_X {
   explicit ECF_X(X const&) {}
 };
-
-#if defined(BOOST_CONVERSION_ENABLE_CND)
-BOOST_STATIC_ASSERT(( ! boost::is_convertible< X,ECF_X >::value));
-BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible< X,ECF_X >::value));
-BOOST_STATIC_ASSERT(( ! boost::is_extrinsic_convertible< X,ECF_X >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ECF_X >::value));
-#endif
-
 struct ICT_X {
     operator X()  const{ return X(); }
 };
@@ -75,6 +67,55 @@ struct ECT_X {
 struct AF_X {
   AF_X& operator=(X) { return *this; }
 };
+
+
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< B >  : true_type {};
+  template <> struct is_constructible< X >  : true_type {};
+}
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+namespace boost
+{
+  template <> struct is_constructible< B, B const& >  : true_type {};
+  template <> struct is_constructible< X, X const& >  : true_type {};
+  template <> struct is_constructible< ICF_X, X const& >  : true_type {};
+  template <> struct is_constructible< ECF_X, X const& >  : true_type {};
+  template <> struct is_constructible< ECF_X, X >  : true_type {};
+  template <> struct is_constructible< A, int >  : true_type {};
+  template <> struct is_constructible< A, B >  : true_type {};
+  template <> struct is_constructible< CC, int >  : true_type {};
+  template <> struct is_constructible< AA, int >  : true_type {};
+  template <> struct is_constructible< AA, A const& >  : true_type {};
+  template <> struct is_constructible< CC, B const& >  : true_type {};
+  template <> struct is_constructible< AE, B >  : true_type {};
+}
+#endif
+#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+namespace boost
+{
+  template <> struct is_assignable< X&, X const& >  : true_type {};
+  template <> struct is_assignable< B&, B const& >  : true_type {};
+  template <> struct is_assignable< A, B >  : true_type {};
+  template <> struct is_assignable< CC, B >  : true_type {};
+  template <> struct is_assignable< CC, C >  : true_type {};
+  template <> struct is_assignable< AA, A >  : true_type {};
+  template <> struct is_assignable< AA&, A const& >  : true_type {};
+  template <> struct is_assignable< AF_X, X >  : true_type {};
+  template <> struct is_assignable< AA, B >  : true_type {};
+}
+#endif
+
+
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+BOOST_STATIC_ASSERT(( ! boost::is_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( ! boost::is_extrinsic_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ECF_X >::value));
+#endif
+
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( ! boost::is_explicitly_convertible< X,AF_X >::value));
@@ -196,6 +237,7 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
+    mca(aa)=b;
     assign_to(aa,b);
     }
 #endif
@@ -218,7 +260,8 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    assign_to(cc,c);
+    mca(cc)=c;
+    //assign_to(cc,c);
     }
 #endif
 }

@@ -13,18 +13,32 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/std/string.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+
 
 using namespace boost;
 
 typedef int A1;
 typedef short B1;
 
+
+#if defined(BOOST_CONVERSION_ENABLE_CND)
+BOOST_STATIC_ASSERT(( boost::is_copy_assignable<bool >::value));
+BOOST_STATIC_ASSERT(( boost::is_copy_assignable<std::string >::value));
+BOOST_STATIC_ASSERT(( !boost::is_assignable<std::string, bool >::value));
+BOOST_STATIC_ASSERT(( !boost::is_assignable<bool, std::string >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible<std::string, bool >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible<bool, std::string>::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<std::string, bool >::value));
+BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<bool, std::string >::value));
+#endif
+
 void explicit_convert_to() {
   bool b1=true;
   std::string str = boost::conversion::convert_to<std::string>(b1);
   bool b2=boost::conversion::convert_to<bool>(str);
   BOOST_TEST(b2);
-
 }
 void explicit_assign_to() {
   bool b1=true;
