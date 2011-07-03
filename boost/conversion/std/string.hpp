@@ -43,8 +43,8 @@ namespace boost {
   template<typename CharT, typename Traits, typename Alloc>
   struct is_assignable< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc>  >  : true_type {};
 #endif
-  
-  
+
+
   namespace conversion {
 
     // std namespace can not be overloaded
@@ -84,7 +84,6 @@ namespace boost {
     };
 
 #if !defined(BOOST_CONVERSION_ENABLE_CND)
-#error
     /**
      * Partial specialization of @c assigner_cp for convertibles to std::string.
      */
