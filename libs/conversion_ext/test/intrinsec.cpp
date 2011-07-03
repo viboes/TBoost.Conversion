@@ -129,11 +129,14 @@ void convert_to_with_implicit_constructor()
   {
     X x;
     ICF_X y1(x);
+    (void)y1; // WARNING removal
     ICF_X y2 = x;
+    (void)y2; // WARNING removal
   }
   {
     X x;
     ICF_X y(convert_to<ICF_X>(x));
+    (void)y; // WARNING removal
   }
 }
 
@@ -147,19 +150,29 @@ void explicit_convert_to_with_explicit_constructor() {
   {
     X x;
     ECF_X y1(x);
+    (void)y1; // WARNING removal
+
     //ECF_X y2=x; // compile fails
-    ECF_X y2=ECF_X(x);
+    //(void)y2; // WARNING removal
+    //impl_cnv(x); // fail as x is not implicit convertible to ECF_X.
+
+    ECF_X y3=ECF_X(x);
+    (void)y3; // WARNING removal
   }
   {
     X x;
-    //ECF_X y(convert_to<ECF_X>(x)); // compile must fail
     BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
     ECF_X y1_1(explicit_convert_to<ECF_X>(x));
-    //impl_cnv(mcf(x)); // fail as x is not implicit convertible to ECF_X.
+    (void)y1_1; // WARNING removal
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-    ECF_X y1_2(mcf(x)); // should not fail as we are requesting an explicit conversionis ambiguous: ECF_X(X) and there are two possible the constructor from X, but will fail for extrinsic conversion.
+    //ECF_X y1_2(mcf(x)); // should fail as ambiguous: ECF_X(X) and ECF_X(ECF_X&const). fails only with gcc4.3. 0x
 #endif
-    ECF_X y2 = explicit_convert_to<ECF_X>(x);
+
+#if defined(BOOST_CONVERSION_MCF_ENABLED)
+    //impl_cnv(mcf(x)); // fail as x is not implicit convertible to ECF_X.
+#endif
+    ECF_X y3 = explicit_convert_to<ECF_X>(x);
+    (void)y3; // WARNING removal
   }
 
 }
@@ -186,11 +199,13 @@ void explicit_convert_to_with_explicit_conversion_operator() {
     ECT_X y;
     X x1(y);
     X x2=X(y);
+    (void)x2; // WARNING removal
   }
   {
     ECT_X y;
     X x1(explicit_convert_to<X>(y));
     X x2=explicit_convert_to<X>(y);
+    (void)x2; // WARNING removal
   }
 #endif
 

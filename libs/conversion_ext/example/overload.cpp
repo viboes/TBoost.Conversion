@@ -14,6 +14,21 @@
 //#include <boost/conversion/std/string.hpp>
 #include <string>
 #include <iostream>
+
+
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)                              \
+namespace boost                                                       \
+{                                                                     \
+  template <> struct is_constructible< X >  : true_type {};           \
+  template <> struct is_constructible< X, X const& >  : true_type {}; \
+  template <> struct is_assignable< X&, X const& >  : true_type {};   \
+  template <> struct is_assignable< X, X >  : true_type {};   \
+}
+#else
+#define BOOST_CONVERSION_DCL_DEFAULTS(X)
+#endif
+
 using namespace boost::conversion;
 
 
@@ -36,20 +51,27 @@ struct ImplTest {
 struct IntrCvtToInt {
   operator int() const {return 0;}
 };
+BOOST_CONVERSION_DCL_DEFAULTS(IntrCvtToInt)
 
 struct IntrCvtToString {
   operator std::string() const {return "";}
 };
+BOOST_CONVERSION_DCL_DEFAULTS(IntrCvtToString)
 
 struct IntrCvtINtAndString {
   operator int() const {return 0;}
   operator std::string() const {return "";}
 };
+BOOST_CONVERSION_DCL_DEFAULTS(IntrCvtINtAndString)
 
 struct ExtrCvtToInt {};
+BOOST_CONVERSION_DCL_DEFAULTS(ExtrCvtToInt)
 struct ExtrCvtToString {};
+BOOST_CONVERSION_DCL_DEFAULTS(ExtrCvtToString)
 struct ExtrCvtINtAndString {};
+BOOST_CONVERSION_DCL_DEFAULTS(ExtrCvtINtAndString)
 struct ExtrExplicitCvtToInt {};
+BOOST_CONVERSION_DCL_DEFAULTS(ExtrExplicitCvtToInt)
 
 namespace boost {
   namespace conversion {
@@ -101,6 +123,11 @@ struct McfTest {
   }
 };
 //]
+
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< IntrCvtToInt,int >::value));
+  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< IntrCvtToInt,std::string >::value));
+  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< IntrCvtToString,int >::value));
+  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< IntrCvtToString,std::string >::value));
 
 void impl_intrinsic_test()
 {

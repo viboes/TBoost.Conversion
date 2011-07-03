@@ -32,6 +32,10 @@ void convert_to_with_builtin_types() {
     unsigned short us(s);
     unsigned int ui(i);
     unsigned long ul(l);
+    (void)uc; // WARNING removal
+    (void)us; // WARNING removal
+    (void)ui; // WARNING removal
+    (void)ul; // WARNING removal
 
     c=boost::conversion::convert_to<char>(c);
     s=boost::conversion::convert_to<short>(c);
@@ -80,6 +84,10 @@ void implicit_convert_to_with_builtin_types() {
     unsigned short us(s);
     unsigned int ui(i);
     unsigned long ul(l);
+    (void)uc; // WARNING removal
+    (void)us; // WARNING removal
+    (void)ui; // WARNING removal
+    (void)ul; // WARNING removal
 
     c=boost::conversion::implicit_convert_to<char>(c);
     s=boost::conversion::implicit_convert_to<short>(c);
