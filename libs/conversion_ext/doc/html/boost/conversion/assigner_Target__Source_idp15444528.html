@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Struct template assigner&lt;Target, Source, requires(CopyAssignable&lt; Target &gt; &amp;&amp;ExtrinsicExplicitConvertible&lt; Source, Target &gt; &amp;&amp;!Assignable&lt; Target, Source &gt;)&gt;</title>
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
+<link rel="home" href="../../index.html" title="Toward Boost.Conversion 0.6.0">
+<link rel="up" href="../../index.html#header.boost.conversion.assign_to_hpp" title="Header &lt;boost/conversion/assign_to.hpp&gt;">
+<link rel="prev" href="assigner.html" title="Struct template assigner">
+<link rel="next" href="assigner_Target__Source_idp15457872.html" title="Struct template assigner&lt;Target, Source, requires(Assignable&lt; Target, Source &gt;)&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="assigner.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assigner_Target__Source_idp15457872.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.conversion.assigner_Target,_Source_idp15444528"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Struct template assigner&lt;Target, Source, requires(CopyAssignable&lt; Target &gt; &amp;&amp;ExtrinsicExplicitConvertible&lt; Source, Target &gt; &amp;&amp;!Assignable&lt; Target, Source &gt;)&gt;</span></h2>
+<p>boost::conversion::assigner&lt;Target, Source, requires(CopyAssignable&lt; Target &gt; &amp;&amp;ExtrinsicExplicitConvertible&lt; Source, Target &gt; &amp;&amp;!Assignable&lt; Target, Source &gt;)&gt;</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../index.html#header.boost.conversion.assign_to_hpp" title="Header &lt;boost/conversion/assign_to.hpp&gt;">boost/conversion/assign_to.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="comment">  // target type of the conversion. !</span>
+         <span class="keyword">typename</span> Source<span class="comment">  // source type of the conversion. !</span>
+         <span class="special">&gt;</span> 
+<span class="keyword">struct</span> <a class="link" href="assigner_Target__Source_idp15444528.html" title="Struct template assigner&lt;Target, Source, requires(CopyAssignable&lt; Target &gt; &amp;&amp;ExtrinsicExplicitConvertible&lt; Source, Target &gt; &amp;&amp;!Assignable&lt; Target, Source &gt;)&gt;">assigner</a><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">requires</span><span class="special">(</span><span class="identifier">CopyAssignable</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="special">&amp;&amp;</span><span class="identifier">ExtrinsicExplicitConvertible</span><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="special">&amp;&amp;</span><span class="special">!</span><span class="identifier">Assignable</span><span class="special">&lt;</span> <span class="identifier">Target</span><span class="special">,</span> <span class="identifier">Source</span> <span class="special">&gt;</span><span class="special">)</span><span class="special">&gt;</span> <span class="special">{</span>
+
+  <span class="comment">// <a class="link" href="assigner_Target__Source_idp15444528.html#idp15452592-bb">public member functions</a></span>
+  <span class="identifier">Target</span> <span class="special">&amp;</span> <a class="link" href="assigner_Target__Source_idp15444528.html#idp15452944-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp14959984"></a><h2>Description</h2>
+<p>Specialization when <code class="computeroutput">Target</code> is not assignable from <code class="computeroutput">Source</code>, but <code class="computeroutput">Target</code> is copy constructible and <code class="computeroutput">Source</code> is extrinsic convertible to <code class="computeroutput">Target</code>. ! ! 
+<span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Target</code> must be CopyAssinable and <code class="computeroutput"><code class="computeroutput">Source</code> must</code> be extrinsic convertible to <code class="computeroutput">Target</code>. </p>
+<div class="refsect2">
+<a name="idp14967136"></a><h3>
+<a name="idp15452592-bb"></a><code class="computeroutput">assigner</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="identifier">Target</span> <span class="special">&amp;</span> <a name="idp15452944-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span> to<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> from<span class="special">)</span><span class="special">;</span></pre>
+<p><span class="bold"><strong>Effects:</strong></span> Converts the <code class="computeroutput">from</code> parameter to the <code class="computeroutput">to</code> parameter, using by default the assignment operator. </p>
+<p><span class="bold"><strong>Throws:</strong></span> Whatever the underlying assignment operator of the <code class="computeroutput">Target</code> class throws. </p>
+</li></ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="assigner.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assigner_Target__Source_idp15457872.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
