@@ -45,7 +45,13 @@ namespace boost {
 
     //! The nested type @ type is @c true_type.
     template <typename T>
-    struct enable_functor<T, typename enable_if<phoenix::is_actor<T> >::type>  : true_type {};
+    struct enable_functor<T
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    , requires(PhoenixActor<T>)
+#else
+    , typename enable_if<phoenix::is_actor<T> >::type
+#endif
+    >  : true_type {};
 
     namespace detail {
       struct convert_to_eval

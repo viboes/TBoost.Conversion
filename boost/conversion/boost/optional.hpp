@@ -29,7 +29,10 @@
 
 
 namespace boost {
-
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_optional{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
     template < class T >
     struct is_constructible< optional<T> >  : true_type {};
@@ -47,20 +50,21 @@ namespace boost {
   
   namespace conversion {
 
-#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
-    /** @brief Added here only to favor generation of specializations with doxygen */
-    template < class Target, class Source, class Enable>
-    struct converter_cp{};
-#endif
     /**
      * Partial specialization of @c converter for boost::optional
      */
     template < class Target, class Source>
     struct converter_cp
     < optional<Target>, optional<Source>
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicConvertible<Source,Target>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
         is_extrinsic_convertible<Source,Target>::value
-      ))
+        >::type
+#endif
     > : true_type
     {
       //! @Returns If the optional source is initialized @c boost::optional<Target> initialized to the conversion of the optional value.
@@ -77,10 +81,17 @@ namespace boost {
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
     struct converter_cp< optional<Target>, Source
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicConvertible<Source,Target>
+        && ! Optional<Source>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
         is_extrinsic_convertible<Source,Target>::value
         && ! detail::is_optional<Source>::value
-      ))
+        >::type
+#endif
     > : true_type
 
     {
@@ -105,10 +116,17 @@ namespace boost {
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
     struct explicit_converter_cp< optional<Target>, Source
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicExplicit_convertible<Source,Target>
+        && ! Optional<Source>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
         is_extrinsic_explicit_convertible<Source,Target>::value
         && ! detail::is_optional<Source>::value
-      ))
+        >::type
+#endif
     > : true_type
 
     {

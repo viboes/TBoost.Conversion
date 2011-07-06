@@ -28,7 +28,10 @@
 
 
 namespace boost {
-  
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_vector{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template < class T, class A>
   struct is_constructible< std::vector<T,A> >  : true_type {};
@@ -53,9 +56,15 @@ namespace boost {
      */
     template < class T1, class A1, class T2, class A2>
     struct converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires
+        ExtrinsicAssignable<T1,T2>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
         is_extrinsic_assignable<T1,T2>::value
-      ))
+        >::type
+#endif
     > : true_type
     {
         std::vector<T1,A1> operator()(std::vector<T2,A2> const & from)
@@ -70,7 +79,7 @@ namespace boost {
         }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND)
+#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Partial specialization of @c assigner_cp for @c std::vector of extrinsic convertibles.
      */

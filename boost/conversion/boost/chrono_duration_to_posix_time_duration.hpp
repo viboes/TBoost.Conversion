@@ -25,7 +25,10 @@
 #include <boost/config.hpp>
 
 namespace boost {
-
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_chrono_duration{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template <> struct is_constructible< posix_time::time_duration >  : true_type {};           
 #endif
@@ -55,12 +58,6 @@ namespace boost {
   
   
   namespace conversion {
-#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
-    /** @brief Added here only to favor generation of specializations with doxygen */
-    template < class Target, class Source, class Enable=void>
-    struct converter_cp{};
-#endif
-
     //! @brief @c converter specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
     //!
     template < class Rep, class Period>

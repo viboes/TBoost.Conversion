@@ -32,7 +32,7 @@ namespace boost {
       Target val_;
     public:
 
-      //! constructor from a extrinsic implicitly convertible to @c Target.
+      //! Constructor from a extrinsic implicitly convertible to @c Target.
       //! @Effects Store the extrinsic conversion from @c source to @ Target.
       //! @Throws Whatever extrinsic implicit conversion from @c source to @c Target could throw.
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.

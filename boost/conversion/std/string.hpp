@@ -29,6 +29,10 @@
 
 
 namespace boost {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_string{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template<typename CharT, typename Traits, typename Alloc>
   struct is_constructible< std::basic_string<CharT,Traits,Alloc> >  : true_type {};
@@ -83,7 +87,7 @@ namespace boost {
       }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND)
+#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Partial specialization of @c assigner_cp for convertibles to std::string.
      */

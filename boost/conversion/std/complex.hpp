@@ -26,7 +26,10 @@
 
 
 namespace boost {
-  
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_complex{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template < class T >
   struct is_constructible< std::complex<T> >  : true_type {};

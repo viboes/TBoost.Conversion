@@ -30,6 +30,10 @@
 
 
 namespace boost {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_array{};
+#endif
   
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template < class T, std::size_t N>
@@ -47,11 +51,6 @@ namespace boost {
 #endif
   
   namespace conversion {
-#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
-    /** @brief Added here only to favor generation of specializations with doxygen */
-    template < class Target, class Source, class Enable=void>
-    struct converter_cp{};
-#endif
 
     /**
      * Partial specialization of @c converter for @c boost::array of the same size
@@ -81,10 +80,17 @@ namespace boost {
      */
     template < typename Target, typename Source, std::size_t N>
     struct assigner_cp< array<Target,N>, array<Source,N>
-      BOOST_CONVERSION_REQUIRES((
-                  is_extrinsic_assignable<Target,Source>::value
-            && ! is_assignable<Target, Source>::value
-      ))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicAssignable<Target,Source>
+  && ! Assignable<Target, Source>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
+        is_extrinsic_assignable<Target,Source>::value
+  && ! is_assignable<Target, Source>::value
+        >::type
+#endif
     > : true_type
     {
       //! @Effects assign to each one of the target array elements the conversion of the source array element.
@@ -103,10 +109,17 @@ namespace boost {
 #if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     template < typename Target, typename Source, std::size_t N>
     struct assigner_cp< array<Target,N>, array<Source,N>
-      BOOST_CONVERSION_REQUIRES((
-               is_extrinsic_assignable<Target,Source>::value
-            && is_assignable<Target, Source>::value
-      ))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requites()
+        ExtrinsicAssignable<Target,Source>
+     && Assignable<Target, Source>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
+        is_extrinsic_assignable<Target,Source>::value
+     && is_assignable<Target, Source>::value
+        >::type
+#endif
     > : true_type
     {
       //! @Effects assign to each one of the target array elements the conversion of the source array element.

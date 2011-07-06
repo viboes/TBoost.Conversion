@@ -24,7 +24,12 @@
 #include <utility>
 
 
+
 namespace boost {
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! trick to generate the doc. Don't take care of it
+  struct trick_pair{};
+#endif
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   //! Specialization for std::pair<T,U> default constructor
   template < class T, class U>
@@ -55,10 +60,10 @@ namespace boost {
     template < class T1, class T2, class S1, class S2>
     struct converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-        , typename enable_if_c<
-          is_extrinsic_convertible<S1,T1>::value
-          && is_extrinsic_convertible<S2,T2>::value
-        >::type
+        , requires(
+          ExtrinsicConvertible<S1,T1>
+          && ExtrinsicConvertible<S2,T2>
+        )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
           is_extrinsic_convertible<S1,T1>::value
@@ -73,7 +78,7 @@ namespace boost {
         }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND)
+#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Partial specialization of @c assigner_cp for @c std::pair of extrinsic convertibles.
      */

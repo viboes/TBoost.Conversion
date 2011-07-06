@@ -22,6 +22,10 @@
 #include <boost/conversion/assign_to.hpp>
 
 namespace boost {
+  #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    //! trick to generate the doc. Don't take care of it
+    struct trick_numeric_interval{};
+  #endif
   
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   template < class T, class P>
@@ -40,20 +44,20 @@ namespace boost {
   
   
   namespace conversion {
-#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED2)
-    /** @brief Added here only to favor generation of specializations with doxygen */
-    template < class Target, class Source, class Enable=void>
-    struct implicit_converter_cp{};
-#endif
-
 
     //! @brief @c converter specialization for source and target been @c boost::numeric::interval.
     //!
     template < class Target, class PTarget, class Source, class PSource>
     struct converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
-      BOOST_CONVERSION_REQUIRES((
-          is_extrinsic_convertible<Source,Target>::value
-      ))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicConvertible<Source,Target>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
+        is_extrinsic_convertible<Source,Target>::value
+        >::type
+#endif
     > : true_type
     {
       //! @Returns the target interval having as extremes the conversion from the source interval extremes.
@@ -64,9 +68,15 @@ namespace boost {
     };
     template < class Target, class PTarget, class Source, class PSource>
     struct assigner_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
-      BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicConvertible<Source,Target>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
         is_extrinsic_convertible<Source,Target>::value
-      ))
+        >::type
+#endif
     > : true_type
     {
       numeric::interval<Target,PTarget>& operator()(numeric::interval<Target,PTarget>& to, const numeric::interval<Source,PSource>& from)
