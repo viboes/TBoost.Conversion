@@ -90,6 +90,33 @@ Finally, you can mentally add the following to any code fragments in this docume
 
     using namespace boost::conversion;
 
+[/==================]
+[section Scope]
+[/==================]
+
+[*Boost.Conversion] manages with generic extrinsic conversion between unrelated types. These conversion can be seen as implicit or explicit conversions.
+
+The conversion operator can not be overloaded with a free function on C++. In the past, there were some request to been able to overload the @c static_cast operator []. The author thinks that the language would be more uniform if this extrinsic overload would be possible. The new operators could take the following form 
+
+  operator Target(const Source& val);
+
+  explicit operator Target(const Source& val);
+
+The assignment operator could also be overloaded by a free function with some limitations as described in []
+
+  Target& operator=(Target&, Source const&);
+
+[*Boost.Conversion] tries to provide a library emulation for this missing feature and shows some needed workarounds that are needed to take care of the current C++ semantics. 
+
+In order to provide the needed functionality, two type traits are mandatory @c is_constructible and @c is_assignable. The library provide a first implementation of these type traits that works on compilers providing some specific features. The idea is that these type traits should be added to [*Boost.TypeTraits].
+
+When we don't have an automatic way to detect these traits, the library provide specialization for some std and boost types. If accepted the library should provide the specializations for all the standard types and optionally for all the Boost types.
+
+User working with compilers not supporting the definition of these traits, or users that need to make their code portable, will need to specialize these traits by hand.  
+
+[endsect]
+
+
 [section Motivation]
 
 I've needed recently to convert from `boost::chrono::time_point<Clock, Duration>` to `boost::posix_time::ptime` and from  `boost::chrono::duration<Rep, Period>` to `boost::posix_time::time_duration`. This kind of conversions are needed quite often when you use code from two different libraries that have implemented the same concept using of course different representations and have hard coded the library interface to its own implementation. Well this is a normal situation we can't avoid. Life is life.
@@ -243,15 +270,13 @@ The behavior of `mat` recall the `tie` function of [*Boost.Tuple], but instead o
 
 So one of the advantages of using this common functions is uniformity. The other is that now we are able to find all the explicit conversions to one type, as we can do with explicit casts.
 
-
+The library takes in account some of the features provided by the [*Boost.Convert] library, as no-throw conversions, conversions with fallback, ...
 
 [endsect]
 
 [/==================]
 [section Description]
 [/==================]
-
-[*Boost.Conversion] manages with generic extrinsic conversion between unrelated types.
 
 
 [*Boost.Conversion] provides:
@@ -339,11 +364,17 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers]
 [/=======================]
 
+[*Boost.Conversion] works well on compilers that are able to define the type traits @c is_constructible and @c is_assignable and that allows to define functions with default template parameters.
+
+On compilers that @c is_constructible and @c is_assignable can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros allowing to make the specialization only when needed.
+
+The @c mcf function is not provided on compilers for which @c BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS is defined.
+
 Currently, [*Boost.Conversion] has been tested in the following compilers/platforms using the trunk (Boost 1.47):
 
 Windows with
 
-* MSVC 10.0 (has some problems as `is_constructible` and `is_assignable` can not be defined)
+* MSVC 10.0 (needs to specialize `is_constructible` and `is_assignable` can not be defined)
 
 Cygwin 1.7 with
 
@@ -802,9 +833,9 @@ Sometimes we need the conversion construct the resulting type with some argument
 [section Appendices]
 [/=================]
 
-[section:history Appendix A: History]
+[section:history Appendix: History]
 
-[section [*Version 0.6.0, June 20, 2011] ]
+[section [*Version 0.6.0, July 10, 2011] ]
 
 This is a major evolution of the library.
 
@@ -918,7 +949,7 @@ A `Source` class is convertible to a `Target` class if:
 [endsect]
 [endsect]
 
-[section:rationale Appendix B: Design Rationale]
+[section:rationale Appendix: Design Rationale]
 
 [/
 [heading Trick to avoid recursion on the convert_to calls]
@@ -1012,7 +1043,7 @@ The library provides a convert_to_via function which helps to implement that.
 
 [endsect]
 
-[section:implementation Appendix C: Implementation Notes]
+[section:implementation Appendix: Implementation Notes]
 
 
 [heading Why `convert_to` between tuples is not implemented using `boost::fusion::transform`?]
@@ -1022,7 +1053,7 @@ The library provides a convert_to_via function which helps to implement that.
 This can not be applied to heterogeneous containers as tuples because the function change with the type.
 
 [endsect]
-[section:acknowledgements Appendix D: Acknowledgements]
+[section:acknowledgements Appendix: Acknowledgements]
 
 Thanks to Vladimir Batov for proposing Boost.StringConversion. The discussions on the Boost ML of his library were the source of inspiration of this generic library. Boost.Conversion has inherited from some of the needs of  Boost.StringConversion.
 Thanks to Edward Diener for showing me indirectly that multiple assignments should be taken in account.
@@ -1033,6 +1064,7 @@ Thanks to Tomas Heller to showing me how to cut the dependency on Boost.Phoenix 
 And last thanks to Gordon Woodhull for proposing himself as review manager of the library. 
 
 [endsect]
+[/
 [section  Appendix E: Tests]
 
 [section Builtins]
@@ -1101,18 +1133,19 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 [section  Appendix F: Tickets]
 
 [endsect]
-
+]
 [/=====================================]
-[section:todo  Appendix F: Future plans]
+[section:todo  Appendix : Future plans]
 [/=====================================]
 
 [heading Tasks to do before review]
 
+* Document type traits specialization.
+* 
 
 [heading For later releases]
 
-* conversion between types for which lexical_cast works.
-* conversion between types for which numeric_cast works.
+* Conversion between types for which numeric_cast works.
 
 [/
 [heading Make a proposal to the C++ standard]
