@@ -99,6 +99,12 @@ namespace boost {
     //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
     //! @NoThrow
     //! @Returns A optional<Target> uninitialized when conversion fails.
+    //! @Example
+    //! @code
+    //! optional<Target> t;
+    //! Source s;
+    //! res=boost::conversion::try_convert_to(s);
+    //! @endcode
     template <typename Target, typename Source>
     optional<Target> try_convert_to(Source const& from) {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

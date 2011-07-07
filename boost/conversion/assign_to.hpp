@@ -279,6 +279,13 @@ namespace boost {
 
     //! @Effects The ones of the assigner customization point.
     //! @Throws  Whatever the assigner customization point throws.
+    //! @Example
+    //! @code
+    //! Target t;
+    //! Source s;
+    //! boost::conversion::assign_to(t,s);
+    //! @endcode
+
 
     template <typename Target, typename Source>
     Target& assign_to(Target& to, const Source& from)

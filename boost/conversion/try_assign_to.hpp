@@ -53,7 +53,7 @@ namespace boost {
     struct try_assigner
     {
       //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::assign_to(to, from) must be well formed.
-      //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator.
+      //! @Effects  Converts the @c from parameter to the @c to parameter, using @c assign_to.
       //! @NoThrow
       //! @Returns whether the assignment succeeded.
       //! @Remarks The parameter to is not updated if the conversion fails.
@@ -134,9 +134,14 @@ namespace boost {
 
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
-    //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
+    //! @Effects  Converts the @c from parameter to  the @c to parameter, using the @c try_assigner customization point.
     //! @NoThrow
-    //! @Returns the converted value if success or the fallback when conversion fails.
+    //! @Returns true if the conversion succeeds.
+    //! @Example
+    //! @code
+    //! Target t;
+    //! Source s;
+    //! bool b = boost::conversion::try_assign_to(t,s);
     template <typename Target, typename Source>
     bool try_assign_to(Target& to, const Source& from)
     {

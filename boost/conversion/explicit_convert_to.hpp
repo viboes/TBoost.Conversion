@@ -247,6 +247,12 @@ namespace boost {
     //! @Returns The result of @c explicit_converter customization point.
     //! @Throws  Whatever the @c explicit_converter call operator throws.
     //!
+    //! @Example
+    //! @code
+    //! Target t;
+    //! Source s;
+    //! t=boost::conversion::explicit_convert_to(s);
+    //! @endcode
     template <typename Target, typename Source>
     Target
     explicit_convert_to(Source const& from)

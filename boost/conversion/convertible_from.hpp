@@ -64,6 +64,17 @@ namespace boost {
     //! The result provides implicitly conversion to any type which is extrinsic implicit convertible from @c Source.  
     //! @Returns convertible_from<Source>(s).
     //! @NoThrow.
+    //! @Example
+    //! @code
+    //! template <typename T>
+    //! struct test {
+    //!   static void fct()
+    //!   {
+    //!     T v;
+    //!     std::cout << f(mcf(v)) << " called" << std::endl;
+    //!   }
+    //! };
+    //! @endcode
     template <typename Source>
     convertible_from<Source> mcf(Source s)
     {

@@ -140,6 +140,12 @@ namespace boost {
     //! @Returns The result of @c converter customization point.
     //! @Throws  Whatever the @c converter call operator throws.
     //!
+    //! @Example
+    //! @code
+    //! Target t;
+    //! Source s;
+    //! t=boost::conversion::implicit_convert_to(s);
+    //! @endcode
     template <typename Target, typename Source>
     Target
     implicit_convert_to(Source const& from)

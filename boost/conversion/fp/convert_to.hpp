@@ -92,8 +92,8 @@ namespace boost {
 
     //! @brief Lazily convert to a type @c Target from an arbitrary argument.
     //!
-    //! @Returns A unary functor that will call to the convert_to function on its parameter.
-    //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+    //! @Returns A unary functor that will call to the @c convert_to<Target> function on its parameter.
+    //! @Throws  Whatever the construction of the functor can throw.
     //! @Example
     //! @code
     //! boost::conversion::make_converter_to<int>(_1)(v);
@@ -116,10 +116,10 @@ namespace boost {
 
     //! @brief Lazily convert to a type @c Target from an arbitrary argument.
     //!
-    //! This overload of @c convert_to is taken in account when the parameter @c Source is a place_holder.
+    //! This overload of @c convert_to is taken in account when the parameter @c Source is a Boost.Phoenix Actor.
     //!
-    //! @Returns A unary functor that will call to the convert_to function on its parameter.
-    //! @Throws  Whatever the underlying conversion @c To operator of the @c From class or the copy constructor of the @c To class throws.
+    //! @Returns A unary functor that will call to the @c convert_to<Target> function on its parameter.
+    //! @Throws  Whatever the construction of the functor can throw.
     //! @Example
     //! @code
     //! boost::conversion::convert_to<int>(_1)(v);
@@ -132,7 +132,10 @@ namespace boost {
       typename expression::convert_to<boost::phoenix::detail::target<Target>, Source>::type const
     >::type
 #else
-    unspecified_converter_type
+    typename enable_if<typename boost::conversion::enable_functor<Source>::type,
+      typename expression::convert_to<boost::phoenix::detail::target<Target>, Source>::type const
+    >::type
+    //unspecified_converter_type
 #endif
     convert_to(Source const& u)
     {
