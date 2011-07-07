@@ -182,9 +182,10 @@ doxygen core
       [ glob ../../../boost/conversion/try_assign_to.hpp ]
       [ glob ../../../boost/conversion/try_convert_to.hpp ]
       [ glob ../../../boost/conversion/fp/convert_to.hpp ]
-      [ glob ../../../boost/conversion/type_traits/is_extrinsic_assignble.hpp ]
-      [ glob ../../../boost/conversion/type_traits/is_extrinsic_convertible.hpp ]
-      [ glob ../../../boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/*.hpp ]
+      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_assignble.hpp ]
+      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_convertible.hpp ]
+      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=Core"
    ;
