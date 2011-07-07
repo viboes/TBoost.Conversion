@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
 <link rel="home" href="../../index.html" title="Toward Boost.Conversion 0.6.0">
 <link rel="up" href="../../index.html#header.boost.conversion.assign_to_hpp" title="Header &lt;boost/conversion/assign_to.hpp&gt;">
-<link rel="prev" href="assigner_Target__Source_idp15467552.html" title="Struct template assigner&lt;Target, Source, requires(Assignable&lt; Target, Source &gt;)&gt;">
+<link rel="prev" href="assigner_Target__Source_idp15452528.html" title="Struct template assigner&lt;Target, Source, requires(Assignable&lt; Target, Source &gt;)&gt;">
 <link rel="next" href="assignable_to.html" title="Class template assignable_to">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="assigner_Target__Source_idp15467552.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assignable_to.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="assigner_Target__Source_idp15452528.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assignable_to.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
 <a name="boost.conversion.assign_to"></a><div class="titlepage"></div>
@@ -35,7 +35,7 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
   <span class="identifier">Target</span> <span class="special">&amp;</span> <span class="identifier">assign_to</span><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span> to<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> from<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp15060720"></a><h2>Description</h2>
+<a name="idp15060608"></a><h2>Description</h2>
 <p>
 </p>
 <p><span class="bold"><strong>Parameters:</strong></span> </p>
@@ -43,6 +43,12 @@
 <p>- <span class="bold"><strong><code class="computeroutput">from</code></strong></span>: source of the conversion. </p>
 <p><span class="bold"><strong>Effects:</strong></span> The ones of the assigner customization point. </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever the assigner customization point throws. </p>
+<p><span class="bold"><strong>Example:</strong></span> </p>
+<pre class="programlisting"> Target t;
+ Source s;
+ boost::conversion::assign_to(t,s);
+</pre>
+<p> </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -55,7 +61,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="assigner_Target__Source_idp15467552.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assignable_to.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="assigner_Target__Source_idp15452528.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.assign_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="assignable_to.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

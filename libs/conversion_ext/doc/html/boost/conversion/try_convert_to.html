@@ -35,12 +35,18 @@
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> <span class="keyword">typename</span> Source<span class="special">&gt;</span> 
   <span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="identifier">try_convert_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> from<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp16340000"></a><h2>Description</h2>
+<a name="idp16259024"></a><h2>Description</h2>
 <p>
 </p>
 <p><span class="bold"><strong>Effects:</strong></span> Converts the <code class="computeroutput">from</code> parameter to an instance of the <code class="computeroutput">Target</code> type, using by default the conversion operator or copy constructor. </p>
 <p><span class="bold"><strong>Exception Safety:</strong></span> no-throw guarantee </p>
 <p><span class="bold"><strong>Returns:</strong></span> A optional&lt;Target&gt; uninitialized when conversion fails. </p>
+<p><span class="bold"><strong>Example:</strong></span> </p>
+<pre class="programlisting"> optional&lt;Target&gt; t;
+ Source s;
+ res=boost::conversion::try_convert_to(s);
+</pre>
+<p> </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
