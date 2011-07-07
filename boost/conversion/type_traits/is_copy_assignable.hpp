@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_copy_assignable.
  */
 
 
@@ -18,12 +18,34 @@
 
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/add_lvalue_reference.hpp>
 
 namespace boost {
 
+  /**
+   * States if @c T is copy assignable.
+   *
+   * Condition: <c>is_assignable<T&, T const&>::value</c> is @c true.
+   *
+   * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
+   */
   template <class T>
-  struct is_copy_assignable : is_assignable<typename remove_reference<T>::type&, typename remove_reference<T>::type const&> {};
+  struct is_copy_assignable : is_assignable<
+    T&,
+    T const&
+    > {};
 
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+
+  /**
+   * @c is_copy_assignable specialization for reference types.
+   *
+   * Condition: references are always copy assignable.
+   */
+  template <typename T>
+  struct is_copy_assignable<T&> : true_type {};
+
+#endif
 }
 
 

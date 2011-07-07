@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_explicitly_convertible.
  */
 
 

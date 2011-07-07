@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Include this file to workaround some failures on the Boost.TypeTraits @c is_convertible.
  */
 
 
@@ -27,6 +27,7 @@
 namespace boost
 {
 
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   template < >
   struct is_convertible< const void,  void>  : true_type  {};
   template < >
@@ -69,6 +70,7 @@ namespace boost
       : integral_constant<bool, is_convertible<A1,B1>::value && is_convertible<A2,B2>::value&& is_convertible<A3,B3>::value >
         {};
 
+#endif
 }
 
 #endif

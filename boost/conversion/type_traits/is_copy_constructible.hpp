@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_copy_constructible.
  */
 
 
@@ -18,20 +18,35 @@
 
 #include <boost/conversion/type_traits/is_constructible.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/add_lvalue_reference.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
 namespace boost {
 
+  /**
+   * States if @c T is copy constructible.
+   *
+   * Condition: <c>is_constructible<T, T const&>::value</c> is @c true.
+   *
+   * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
+   */
   template <class T>
   struct is_copy_constructible : is_constructible<
-    typename remove_reference<T>::type,
-    typename remove_reference<T>::type const&
+    T,
+    T const&
+//    const typename add_lvalue_reference<T>::type
     > {};
 
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   template <>
   struct is_copy_constructible<void> : false_type {};
   template <typename T>
+  struct is_copy_constructible<T&> : true_type {};
+  template <typename T>
   struct is_copy_constructible<T[]> : false_type {};
+  template <typename T, std::size_t N>
+  struct is_copy_constructible<T[N]> : false_type {};
+#endif
 
 }
 

@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_extrinsic_convertible.
  */
 
 #ifndef BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_HPP

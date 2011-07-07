@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_explicitly_convertible.
  */
 
 
@@ -20,10 +20,21 @@
 
 namespace boost {
 
-  template <class Source, class Target>
+  /**
+   * States if @c Source is explicitly convertible to @c Target.
+   *
+   * Condition: @c is_constructible<Target, Source>::value is @c true.
+   *
+   */  template <class Source, class Target>
   struct is_explicitly_convertible : is_constructible<Target, Source> {};
+
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  /**
+   * Specialization for void source
+   */
   template <class Target>
   struct is_explicitly_convertible<void,Target> : false_type {};
+#endif
 
 
 }

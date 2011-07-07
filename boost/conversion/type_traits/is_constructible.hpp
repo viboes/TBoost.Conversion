@@ -9,12 +9,31 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief
+ * @brief Defines the type trait @c is_constructible.
  */
 
 
 #ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_HPP
+
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+namespace boost {
+
+  /**
+   * States if @c T is constructible from @c Args.
+   *
+   * Condition: @c true_type if and only if the following variable definition would be well-formed for
+   * some invented variable t:
+   *
+   *   T t(decval<Args>()...);
+   *
+   * @Requires @c T and all types in the parameter pack @c Args must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   */
+  template < class T, class... Args>
+  struct is_constructible
+  {};
+}
+#else
 
 #if 1
 
@@ -393,6 +412,7 @@ namespace boost {
 }
 
 
+#endif
 #endif
 #endif
 
