@@ -14,6 +14,7 @@
 //#include <boost/conversion/std/string.hpp>
 #include <string>
 #include <iostream>
+#include <boost/assert.hpp>
 
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
@@ -148,15 +149,15 @@ void impl_extrinsic_test()
 
 void mcf_extrinsic_test()
 {
-  //[OVERLOAD_CPP_MCF
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
+  //[OVERLOAD_CPP_MCF
   McfTest<IntrCvtToInt>::whichOverload();
   McfTest<IntrCvtToString>::whichOverload();
   McfTest<ExtrCvtToInt>::whichOverload();
   McfTest<ExtrCvtToString>::whichOverload();
-#endif
   //McfTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
+#endif
   #if 0
   //[OVERLOAD_CPP_MCF_EXPLICIT
   McfTest<ExtrExplicitCvtToInt>::whichOverload();

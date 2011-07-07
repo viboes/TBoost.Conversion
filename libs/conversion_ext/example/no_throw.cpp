@@ -13,6 +13,7 @@
 #include <boost/conversion/include.hpp>
 #include <boost/conversion/std/string.hpp>
 #include <iostream>
+#include <boost/assert.hpp>
 
 using boost::optional;
 using namespace boost::conversion;
@@ -24,6 +25,7 @@ void try_catch_way()
   int t;
   try {
     t = convert_to<int>(str);
+    BOOST_ASSERT(false);
   } catch(...)   {
     std::cout << " Not an integer" << std::endl;
   }
@@ -37,6 +39,7 @@ void try_convert_to_way()
   if (!optt)
   {
     std::cout << " Not an integer" << std::endl;
+    BOOST_ASSERT(true);
   }
   //]
 }
@@ -49,6 +52,7 @@ void convert_to_optional_way()
   if (!optt)
   {
     std::cout << " Not an integer" << std::endl;
+    BOOST_ASSERT(true);
   }
   //]
 }
@@ -61,6 +65,7 @@ void try_assign_to_way()
   if (!try_assign_to(t,str))
   {
     std::cout << " Not an integer" << std::endl;
+    BOOST_ASSERT(true);
   }
   //]
 }
