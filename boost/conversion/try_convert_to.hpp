@@ -96,7 +96,7 @@ namespace boost {
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
-    //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
+    //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using the @c tyr_converter customization point.
     //! @NoThrow
     //! @Returns A optional<Target> uninitialized when conversion fails.
     //! @Example

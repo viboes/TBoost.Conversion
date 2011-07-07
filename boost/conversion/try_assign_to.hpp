@@ -75,8 +75,8 @@ namespace boost {
 
     //! specialization for c-arrays
     //!
-    template < typename Target, typename Source, std::size_t N, class Enable  >
-    struct try_assigner<Target[N],Source[N],Enable>
+    template < typename Target, typename Source, std::size_t N  >
+    struct try_assigner<Target[N],Source[N]>
     {
       //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
       //! @NoThrow
@@ -132,6 +132,8 @@ namespace boost {
 #endif
   namespace conversion {
 
+    //! @brief try to assign a target from a source
+    //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @Effects  Converts the @c from parameter to  the @c to parameter, using the @c try_assigner customization point.
@@ -142,6 +144,7 @@ namespace boost {
     //! Target t;
     //! Source s;
     //! bool b = boost::conversion::try_assign_to(t,s);
+    //! @endcode
     template <typename Target, typename Source>
     bool try_assign_to(Target& to, const Source& from)
     {
