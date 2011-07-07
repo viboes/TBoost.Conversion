@@ -179,7 +179,7 @@ namespace boost {
     //!
     //! @Returns the converted value if the conversion succeeds or the fallback.
     //! @Throws  Whatever the conversion from @c Fallback to @c Target can throws when the conversion fails.
-    //! @Remarks This function doesn't participate in function overload when the @c Fallback is the same as the @c Target.
+    //! @Remark This function doesn't participate in function overload when the @c Fallback is the same as the @c Target.
     //! @Example
     //! @code
     //! std::string s="not an int";
