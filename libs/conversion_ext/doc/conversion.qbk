@@ -94,21 +94,21 @@ Finally, you can mentally add the following to any code fragments in this docume
 [section Scope]
 [/==================]
 
-[*Boost.Conversion] manages with generic extrinsic conversion between unrelated types. These conversion can be seen as implicit or explicit conversions.
+[*Boost.Conversion] manages with generic extrinsic conversion between unrelated types. These conversion can be seen as implicit or explicit conversions ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2380.pdf [*N2380 - Explicit Conversion Operator Draft Working Paper (revision 2)]]).
 
-The conversion operator can not be overloaded with a free function on C++. In the past, there were some request to been able to overload the @c static_cast operator []. The author thinks that the language would be more uniform if this extrinsic overload would be possible. The new operators could take the following form 
+The conversion operator can not be overloaded with a free function on C++. In the past, there were some request to been able to overload the `static_cast` operator [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2200.pdf [*N2200 - Operator Overloading]]. The author of this library thinks that the language would be more uniform if this extrinsic overload would be possible. The new extrinsic conversion operators could take the following form 
 
   operator Target(const Source& val);
 
   explicit operator Target(const Source& val);
 
-The assignment operator could also be overloaded by a free function with some limitations as described in []
+The assignment operator could also be overloaded by a free function with some limitations as described in [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1676.htm [*N1676 - Non-member overloaded copy assignment operator]].
 
   Target& operator=(Target&, Source const&);
 
 [*Boost.Conversion] tries to provide a library emulation for this missing feature and shows some needed workarounds that are needed to take care of the current C++ semantics. 
 
-In order to provide the needed functionality, two type traits are mandatory @c is_constructible and @c is_assignable. The library provide a first implementation of these type traits that works on compilers providing some specific features. The idea is that these type traits should be added to [*Boost.TypeTraits].
+In order to provide the needed functionality, two type traits are mandatory `is_constructible` and `is_assignable`. The library provide a first implementation of these type traits that works on compilers providing some specific features. The idea is that these type traits should be added to [*Boost.TypeTraits].
 
 When we don't have an automatic way to detect these traits, the library provide specialization for some std and boost types. If accepted the library should provide the specializations for all the standard types and optionally for all the Boost types.
 
@@ -364,11 +364,11 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers]
 [/=======================]
 
-[*Boost.Conversion] works well on compilers that are able to define the type traits @c is_constructible and @c is_assignable and that allows to define functions with default template parameters.
+[*Boost.Conversion] works well on compilers that are able to define the type traits `is_constructible` and `is_assignable` and that allows to define functions with default template parameters.
 
-On compilers that @c is_constructible and @c is_assignable can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros allowing to make the specialization only when needed.
+On compilers that `is_constructible` and `is_assignable` can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros allowing to make the specialization only when needed.
 
-The @c mcf function is not provided on compilers for which @c BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS is defined.
+The  `mcf` function is not provided on compilers for which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
 
 Currently, [*Boost.Conversion] has been tested in the following compilers/platforms using the trunk (Boost 1.47):
 

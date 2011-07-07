@@ -35,33 +35,33 @@
 <span class="keyword">class</span> <a class="link" href="convertible_from.html" title="Class template convertible_from">convertible_from</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="convertible_from.html#boost.conversion.convertible_fromconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="convertible_from.html#idp15601312-bb"><span class="identifier">convertible_from</span></a><span class="special">(</span><span class="identifier">Source</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="convertible_from.html#idp15610992-bb"><span class="identifier">convertible_from</span></a><span class="special">(</span><span class="identifier">Source</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="convertible_from.html#idp15591936-bb">public member functions</a></span>
+  <span class="comment">// <a class="link" href="convertible_from.html#idp15601616-bb">public member functions</a></span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> 
            <span class="keyword">typename</span> boost::enable_if&lt; boost::is_extrinsic_convertible&lt; Source, Target &gt;, int &gt;::type <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span> 
-    <a class="link" href="convertible_from.html#idp15592288-bb"><span class="keyword">operator</span> <span class="identifier">Target</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <a class="link" href="convertible_from.html#idp15601968-bb"><span class="keyword">operator</span> <span class="identifier">Target</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp15557248"></a><h2>Description</h2>
+<a name="idp15570704"></a><h2>Description</h2>
 <p>This wrapper is used indirectly through the  function to pass a <code class="computeroutput">Source</code> parameter to a function waiting a parameter <code class="computeroutput">Target</code> extrinsicaly convertible from it.</p>
 <p>Requires <code class="computeroutput">Source</code> must be CopyConstructible </p>
 <div class="refsect2">
-<a name="idp15560304"></a><h3>
+<a name="idp15573760"></a><h3>
 <a name="boost.conversion.convertible_fromconstruct-copy-destruct"></a><code class="computeroutput">convertible_from</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><a name="idp15601312-bb"></a><span class="identifier">convertible_from</span><span class="special">(</span><span class="identifier">Source</span> source<span class="special">)</span><span class="special">;</span></pre>constructor from a <code class="computeroutput">Source</code>. <p><span class="bold"><strong>Throws:</strong></span> Whatever the <code class="computeroutput">Source</code> copy constructor could throw. </p>
+<pre class="literallayout"><a name="idp15610992-bb"></a><span class="identifier">convertible_from</span><span class="special">(</span><span class="identifier">Source</span> source<span class="special">)</span><span class="special">;</span></pre>constructor from a <code class="computeroutput">Source</code>. <p><span class="bold"><strong>Throws:</strong></span> Whatever the <code class="computeroutput">Source</code> copy constructor could throw. </p>
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp15568672"></a><h3>
-<a name="idp15591936-bb"></a><code class="computeroutput">convertible_from</code> public member functions</h3>
+<a name="idp15582080"></a><h3>
+<a name="idp15601616-bb"></a><code class="computeroutput">convertible_from</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">,</span> 
          <span class="keyword">typename</span> boost::enable_if&lt; boost::is_extrinsic_convertible&lt; Source, Target &gt;, int &gt;::type <span class="special">=</span> <span class="number">0</span><span class="special">&gt;</span> 
-  <a name="idp15592288-bb"></a><span class="keyword">operator</span> <span class="identifier">Target</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Implicit conversion to a <code class="computeroutput">Target</code> extrinsicaly convertible from <code class="computeroutput">Source</code>. <p><span class="bold"><strong>Effects:</strong></span> Forwards the conversion from the reference using <code class="computeroutput">conver_to</code>. </p>
+  <a name="idp15601968-bb"></a><span class="keyword">operator</span> <span class="identifier">Target</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>Implicit conversion to a <code class="computeroutput">Target</code> extrinsicaly convertible from <code class="computeroutput">Source</code>. <p><span class="bold"><strong>Effects:</strong></span> Forwards the conversion from the reference using <code class="computeroutput">conver_to</code>. </p>
 <p><span class="bold"><strong>Returns:</strong></span> the conversion using <code class="computeroutput">conver_to</code> </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever extrinsic conversion from <code class="computeroutput">Source</code> to <code class="computeroutput">Target</code> could throw. </p>
 <p><span class="bold"><strong>Remark(s):</strong></span> On compilers that supports C++0x default arguments for function template parameters, this conversion operator doesn't participates on overload resolution if <code class="computeroutput">Source</code> is not extrinsic convertible to <code class="computeroutput">Target</code>. </p>

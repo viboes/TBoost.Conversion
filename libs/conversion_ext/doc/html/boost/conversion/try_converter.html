@@ -38,19 +38,19 @@
          <span class="special">&gt;</span> 
 <span class="keyword">struct</span> <a class="link" href="try_converter.html" title="Struct template try_converter">try_converter</a> <span class="special">{</span>
 
-  <span class="comment">// <a class="link" href="try_converter.html#idp15752128-bb">public member functions</a></span>
-  <span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <a class="link" href="try_converter.html#idp15752480-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="try_converter.html#idp15761808-bb">public member functions</a></span>
+  <span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <a class="link" href="try_converter.html#idp15762192-bb"><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp16294096"></a><h2>Description</h2>
+<a name="idp16307840"></a><h2>Description</h2>
 <p>Customization point for <code class="computeroutput">try_convert_to</code>.</p>
 <p>
 This struct can be specialized by the user. </p>
 <div class="refsect2">
-<a name="idp16295728"></a><h3>
-<a name="idp15752128-bb"></a><code class="computeroutput">try_converter</code> public member functions</h3>
+<a name="idp16309472"></a><h3>
+<a name="idp15761808-bb"></a><code class="computeroutput">try_converter</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <a name="idp15752480-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> val<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">optional</span><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <a name="idp15762192-bb"></a><span class="keyword">operator</span><span class="special">(</span><span class="special">)</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Source</span> <span class="special">&amp;</span> val<span class="special">)</span><span class="special">;</span></pre>
 <p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Target</code> must be CopyConstructible and <code class="computeroutput">::boost::conversion::convert_to&lt;Target&gt;(from)</code> must be well formed. </p>
 <p><span class="bold"><strong>Effects:</strong></span> Converts the <code class="computeroutput">from</code> parameter to an instance of the <code class="computeroutput">Target</code> type, using by default the conversion operator or copy constructor. </p>
 <p><span class="bold"><strong>Exception Safety:</strong></span> no-throw guarantee </p>
