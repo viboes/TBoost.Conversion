@@ -103,7 +103,7 @@ namespace boost {
     //! @code
     //! optional<Target> t;
     //! Source s;
-    //! res=boost::conversion::try_convert_to(s);
+    //! res=boost::conversion::try_convert_to<Target>(s);
     //! @endcode
     template <typename Target, typename Source>
     optional<Target> try_convert_to(Source const& from) {

@@ -144,7 +144,7 @@ namespace boost {
     //! @code
     //! Target t;
     //! Source s;
-    //! t=boost::conversion::implicit_convert_to(s);
+    //! t=boost::conversion::implicit_convert_to<Target>(s);
     //! @endcode
     template <typename Target, typename Source>
     Target
