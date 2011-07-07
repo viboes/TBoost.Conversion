@@ -477,7 +477,7 @@ With __assign_to we could do
 
     assign_to(a, assign_to(b, c));
 
-and if we find this not really readable we can try with the *m*ake *a*ssigner *t*o `mat' free function.
+and if we find this not really readable we can try with the [*m]ake [*a]ssigner [*t]o `mat' free function.
 
     mat(a) = mat(b) = c;
 
@@ -542,9 +542,14 @@ The library provides a specific function __convert_to_or_fallback that does that
 
 [FALLBACK_CPP_CONVERT_TO_OR_FALLBACK]
 
+If the Fallback type is the same as the Target, the template parameter Target can be deduced and then omitted as in
+
+[FALLBACK_CPP_CONVERT_TO_OR_FALLBACK_DEDUCED]
+
 [note 
 The name of this function could be also __convert_to as we can overload it, but I find it more explicit this way. If the Boost community agree on a better name I will adopt it. 
 ]
+
 
 [endsect]
 
@@ -575,7 +580,7 @@ and that we have a function that should work when `T` is either implicitly conve
 
 [OVERLOAD_CPP_IMPL]
 
-Then the following program will be well formed.
+If `IntrCvtToInt` is convertible to `int` and `IntrCvtToString` is convertible to `std::string`, then the following program will be well formed.
 
 [OVERLOAD_CPP_IMPL_INTRINSIC]
 
@@ -589,7 +594,7 @@ But if T is *extrinsic* convertible to `int` or `std::string` we can not write a
   T v;
   f(convert_to<???>(v));
 
-So the following fails to compile
+So the following fails to compile if `ExtrCvtToInt` is extrinsic convertible to `int` and `ExtrCvtToString` is extrinsic convertible to `std::string`.
 
 [OVERLOAD_CPP_IMPL_EXTRINSIC]
 
@@ -598,7 +603,7 @@ It would be great if we could state explicitly that the parameter we are passing
 [OVERLOAD_CPP_MCF_LIKE]
 
 [note 
-The name __mcf (*m*ake *c*onvertible *f*rom) could be changed to `implicitly` if this considered better by  the Boost community.
+The name __mcf ([*m]ake [*c]onvertible [*f]rom) could be changed to `implicitly` if this considered better by  the Boost community.
 
 ```
   T v;
