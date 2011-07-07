@@ -35,21 +35,21 @@
 <span class="keyword">class</span> <a class="link" href="convertible_to.html" title="Class template convertible_to">convertible_to</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="convertible_to.html#boost.conversion.convertible_toconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> <a class="link" href="convertible_to.html#idp15700240-bb"><span class="identifier">convertible_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> <a class="link" href="convertible_to.html#idp15712800-bb"><span class="identifier">convertible_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="convertible_to.html#idp15692208-bb">public member functions</a></span>
-  <a class="link" href="convertible_to.html#idp15692560-bb"><span class="keyword">operator</span> <span class="identifier">Target</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="identifier">Target</span> <a class="link" href="convertible_to.html#idp15696400-bb"><span class="identifier">get</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="convertible_to.html#idp15704768-bb">public member functions</a></span>
+  <a class="link" href="convertible_to.html#idp15705120-bb"><span class="keyword">operator</span> <span class="identifier">Target</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">Target</span> <a class="link" href="convertible_to.html#idp15708960-bb"><span class="identifier">get</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp15754832"></a><h2>Description</h2>
+<a name="idp15768640"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="idp15755232"></a><h3>
+<a name="idp15769040"></a><h3>
 <a name="boost.conversion.convertible_toconstruct-copy-destruct"></a><code class="computeroutput">convertible_to</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> <a name="idp15700240-bb"></a><span class="identifier">convertible_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> <a name="idp15712800-bb"></a><span class="identifier">convertible_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">)</span><span class="special">;</span></pre>
 <p>Constructor from a extrinsic implicitly convertible to <code class="computeroutput">Target</code>. </p>
 <p><span class="bold"><strong>Effects:</strong></span> Store the extrinsic conversion from <code class="computeroutput">source</code> to @ Target. </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever extrinsic implicit conversion from <code class="computeroutput">source</code> to <code class="computeroutput">Target</code> could throw. </p>
@@ -57,17 +57,17 @@
 </li></ol></div>
 </div>
 <div class="refsect2">
-<a name="idp15771600"></a><h3>
-<a name="idp15692208-bb"></a><code class="computeroutput">convertible_to</code> public member functions</h3>
+<a name="idp15785408"></a><h3>
+<a name="idp15704768-bb"></a><code class="computeroutput">convertible_to</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><a name="idp15692560-bb"></a><span class="keyword">operator</span> <span class="identifier">Target</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><a name="idp15705120-bb"></a><span class="keyword">operator</span> <span class="identifier">Target</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>Implicit conversion to <code class="computeroutput">Target</code>. </p>
 <p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">val_</code> </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput">target</code> copy constructor could throw. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">Target</span> <a name="idp15696400-bb"></a><span class="identifier">get</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">Target</span> <a name="idp15708960-bb"></a><span class="identifier">get</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
 <p>Explicit conversion to <code class="computeroutput">Target</code>. </p>
 <p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">val_</code> </p>
 <p><span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput">target</code> copy constructor could throw. </p>

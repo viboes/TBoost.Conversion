@@ -364,11 +364,17 @@ All functions in the library are thread-unsafe except when noted explicitly.
 [heading Tested compilers]
 [/=======================]
 
-[*Boost.Conversion] works well on compilers that are able to define the type traits `is_constructible` and `is_assignable` and that allows to define functions with default template parameters.
+[*Boost.Conversion] is known to work on the following platforms/compilers (lack of some C++/C++0X language support disables some functionality). The needed C++/C++0X language support is:
 
-On compilers that `is_constructible` and `is_assignable` can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros allowing to make the specialization only when needed.
+* dectype or SFINAE on expressions,
+* allow to define function template with default arguments,
+*
 
-The  `mcf` function is not provided on compilers for which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
+We are unable to define the type traits `is_constructible` and `is_assignable` if dectype and SFINAE on expressions is not available. As consequence we can not use a concept based design using SFINAE on these traits and others derived from them.
+
+On compilers that `is_constructible` and `is_assignable` can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros `BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE` and `BOOST_CONVERSION_NO_IS_ASSIGNABLE` allowing to make the specialization only when needed.
+
+The `mcf()` function and the `convertible_from` class are not provided on compilers on which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
 
 Currently, [*Boost.Conversion] has been tested in the following compilers/platforms using the trunk (Boost 1.47):
 
@@ -389,6 +395,7 @@ MinGW with
 * GCC 4.6.0
 * GCC 4.6.0 -std=c++0x
 
+[/
 Ubuntu 10.10
 
 * GCC 4.4.5
@@ -396,6 +403,7 @@ Ubuntu 10.10
 * GCC 4.5.1
 * GCC 4.5.1 -std=c++0x
 * clang 2.8
+]
 
 Darwin 10
 
@@ -423,7 +431,7 @@ Darwin 10
 [section Tutorial]
 [/====================================]
 
-[section Using extrinsic conversions and assignements]
+[section Using extrinsic conversions and assignments]
 [/====================================]
 
 When you need to make a extrinsic explicit conversion you need to include the file `boost/conversion/convert_to.hpp` and just use the __convert_to function.
@@ -433,6 +441,8 @@ When you need to make a extrinsic explicit conversion you need to include the fi
 The result of this program will evidently be
 
   2 is even.
+
+['See the source file [@../../example/even.cpp example/even.cpp]]
 
 The __convert_to function returns the explicit conversion to the target type.
 
@@ -447,7 +457,7 @@ otherwise it do
 
   target=convert_to<Target>(source);
 
-when Source is extrinsic convertible to Target.
+when `Source` is extrinsic convertible to `Target`.
 
 For example we can implement a function that swaps two convertible types as follows:
 
@@ -463,6 +473,9 @@ The result of this program will be
 [note 
 The name __convert_to could also be convert and __assign_to be assign, but I find them more coherent with the other names used by the library. If the Boost community agree on better names globally I will adopt them. 
 ]
+
+['See the source file [@../../example/swap.cpp example/swap.cpp]]
+
 
 [endsect]
 
@@ -527,6 +540,9 @@ Last the user can get the same behavior using the __try_assign_to function, whic
 
 [NO_THROW_CPP_TRY_ASSIGN_WAY]
 
+
+['See the source file [@../../example/no_throw.cpp example/no_throw.cpp]]
+
 [endsect]
 
 [section Handling with invalid conversions via a fallback]
@@ -550,6 +566,7 @@ If the Fallback type is the same as the Target, the template parameter Target ca
 The name of this function could be also __convert_to as we can overload it, but I find it more explicit this way. If the Boost community agree on a better name I will adopt it. 
 ]
 
+['See the source file [@../../example/fallback.cpp example/fallback.cpp]]
 
 [endsect]
 
@@ -622,7 +639,7 @@ and prints
   1 called
   2 called
 
-Note that extrinsic implicit convertible implies extrinsic explicit convertible but the opposite is not true. That means that if `T` is extrinsic explicit convertible to `int`, the following program will be ill formed
+Note that extrinsic implicit convertible implies extrinsic explicit convertible but the opposite is not true. That means that if `ExtrExplicitCvtToInt` is extrinsic explicit convertible to `int`, the following program will be ill formed
 
 [OVERLOAD_CPP_MCF_EXPLICIT]
 
@@ -637,6 +654,7 @@ having as result, for example
   ../example/overload.cpp:21:5: note: candidate function not viable: no known conversion from 'convertible_from<ExtrExplicitCvtToInt>' to 'int' for 1st argument
   int f(int) { return 1; }
 
+['See the source file [@../../example/overload.cpp example/overload.cpp]]
 
 
 [endsect]
@@ -850,7 +868,7 @@ This is a major evolution of the library.
 * Added converter factory `make_converter_to`.
 * Added type traits `is_extrinsic_convertible` and `is_extrinsic_assignable`.
 * Added `convertible_to`/`convertible_from` and `assignable_to` wrappers and the corresponding `mcf`, `mat` free functions.
-* Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp', and so on.
+* Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp`, and so on.
 * On compilers supporting it the interface is now concept-based, for specialization or overloading.
 
 [*Deprecated Features:]
