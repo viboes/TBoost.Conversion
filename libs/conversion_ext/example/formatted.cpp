@@ -8,59 +8,122 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//[EVEN_CPP
+//[FORMATTED_CPP
 
-    #include <boost/conversion/extractor.hpp>
-    #include <boost/conversion/std/string.hpp>
-    #include <boost/conversion/convert_to_or_fallback.hpp>
-    #include <strstream>
-    #include <iostream>
-    #include <string>
-    #include <iomanip>
-    #include <boost/assert.hpp>
+#include <boost/conversion/std/string.hpp>
+#include <boost/conversion/convert_to_or_fallback.hpp>
+#include <string>
+#include <iomanip>
+#include <boost/assert.hpp>
+
+class extract_t { };
+const extract_t extract={};
+
+
+template <typename T>
+class extractor_stream {
+  std::stringstream ios_;
+  T value_;
+  
+public:
+  
+  template<typename U>
+  extractor_stream& operator<< (U u) { return (ios_ << u, *this); }
+  
+  template<typename U>
+  extractor_stream& operator>> (U u) { return (ios_ >> u, *this); }
+  
+  
+  T operator>> (extract_t const&) {
+    T value;
+    ios_ >> value;
+    return value;
+  }
+  
+};
+
+template <typename T>
+class extract_to { };
+
+class via_stream {
+  std::stringstream ios_;
+  
+public:
+  
+  template<typename U>
+  via_stream& operator<< (U u) { return (ios_ << u, *this); }
+  
+  template<typename U>
+  via_stream& operator>> (U u) { return (ios_ >> u, *this); }
+  
+  
+  template<typename T>
+  T operator>> (extract_to<T> const&) {
+    T value;
+    ios_ >> value;
+    return value;
+  }
+  
+};
+
+
+
+int main()
+{
+  {
     using namespace boost::conversion;
-
-    int main()
-    {
-      std::string    hex_str = "FF"; // 255 in decimal
-      std::stringstream ios;
-
+    {    
+      std::string    hex_str = "0xFF"; // 255 in decimal
       // This call fails
       int   bad = convert_to_or_fallback<int>(hex_str, -1);
       BOOST_ASSERT(bad == -1); // Failed decimal conversion from "FF"
-
-      // Apply hex formatting while converting from string
-      int i = convert_to<int>(extractor<int>(
-          (ios.clear(), ios << hex_str, ios >> std::hex)));
-      BOOST_ASSERT(i == 255); // Successful hex conversion from "FF"
-
-      // Apply hex formatting while converting from string
-
-      int ii = convert_to<int>(extractor_stream<int>() << hex_str >> std::hex >> extract);
-      BOOST_ASSERT(ii == 255); // Successful hex conversion from "FF"
-
-      int iii = convert_to<int>(extractor_stream<int>() << hex_str >> std::hex);
-      BOOST_ASSERT(iii == 255); // Successful hex conversion from "FF"
-
-#if 0
-      // Apply hex, uppercase, showbase formatting while converting to string
-      std::string si = convert_to<std::string>(extractor<std::string>(
-          (ios.clear(), ios << std::showbase << std::uppercase << std::hex << i, ios)));
-      BOOST_ASSERT(si == "0XFF");
-
-      {
-      std::string double_str = "1.2345e-02";
-      std::stringstream ios;
-      double d = convert_to<double>(extractor<double>(
-          (ios.clear(), ios << double_str, ios >> std::setprecision(4) >> std::scientific)));
-
-      std::string sd= convert_to<std::string>(extractor<std::string>(
-           (ios.clear(), ios << std::setprecision(4) << std::scientific << d, ios)));
-
-      BOOST_ASSERT(sd == double_str);
-      }
-#endif
-      return 0;
     }
+    {
+      
+      std::string    hex_str = "FF"; // 255 in decimal
+      
+      // This call also fails
+      int   bad = convert_to_or_fallback<int>(hex_str, -1);
+      BOOST_ASSERT(bad == -1); // Failed decimal conversion from "FF"
+      
+      // Apply hex formatting while converting from string
+      int ii = extractor_stream<int>() << hex_str >> std::hex >> extract;
+      BOOST_ASSERT(ii == 255); // Successful hex conversion from "FF"
+      
+      // Apply hex formatting while converting from string      
+      int iii = via_stream() 
+      << hex_str 
+      >> std::hex >> extract_to<int>();
+      
+      BOOST_ASSERT(iii == 255); // Successful hex conversion from "FF"
+      
+      std::string si1 = via_stream() 
+      << std::uppercase << std::hex << ii  
+      >> extract_to<std::string>();
+      
+      BOOST_ASSERT(si1 == "FF");
+      
+      
+      // Apply hex, uppercase, showbase formatting while converting to string
+      std::string si2 = via_stream() 
+      << std::showbase << std::uppercase << std::hex << ii  
+      >> extract_to<std::string>();
+      
+      BOOST_ASSERT(si2 == "0XFF");
+      
+      std::string double_str = "1.2345e-02";
+      double d = via_stream() << double_str 
+      >> extract_to<double>();
+      
+      std::string sd= via_stream() 
+      << std::setprecision(4) << std::scientific << d
+      >> extract_to<std::string>();
+      
+      BOOST_ASSERT(sd == double_str);
+    }
+  }
+  
+  return 0;
+}
 
 //]
