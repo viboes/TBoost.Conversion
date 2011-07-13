@@ -125,10 +125,10 @@ struct McfTest {
 };
 //]
 
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< IntrCvtToInt,int >::value));
-  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< IntrCvtToInt,std::string >::value));
-  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< IntrCvtToString,int >::value));
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< IntrCvtToString,std::string >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< IntrCvtToInt,int >::value));
+  BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_convertible< IntrCvtToInt,std::string >::value));
+  BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_convertible< IntrCvtToString,int >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< IntrCvtToString,std::string >::value));
 
 void impl_intrinsic_test()
 {
