@@ -69,14 +69,14 @@ BOOST_CONVERSION_DCL_DEFAULTS(C)
   namespace boost {
       namespace conversion {
           template <>
-          struct converter_cp< A,B > : true_type {
+          struct implicit_converter_cp< A,B > : true_type {
               A operator()(B const &)
               {
                   return A();
               }
           };
           template <>
-          struct converter_cp< B,C > : true_type {
+          struct implicit_converter_cp< B,C > : true_type {
               B operator()(C const &)
               {
                   return B();
@@ -115,7 +115,7 @@ BOOST_CONVERSION_DCL_DEFAULTS(ICF_X)
 namespace boost {
   namespace conversion {
     template <>
-    struct converter_cp< ICF_X, X > : true_type {
+    struct implicit_converter_cp< ICF_X, X > : true_type {
       ICF_X operator()(X const &)
       {
         return ICF_X();
@@ -151,7 +151,7 @@ struct ICT_X {
 namespace boost {
   namespace conversion {
     template <>
-    struct converter_cp< X, ICT_X > : true_type {
+    struct implicit_converter_cp< X, ICT_X > : true_type {
       X operator()(ICT_X const &)
       {
         return X();

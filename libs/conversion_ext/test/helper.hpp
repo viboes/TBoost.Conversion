@@ -46,14 +46,14 @@ BOOST_CONVERSION_DCL_DEFAULTS(B2)
 namespace boost {
     namespace conversion {
         template <>
-        struct converter_cp< A1,B1 > : true_type {
+        struct implicit_converter_cp< A1,B1 > : true_type {
             A1 operator()(B1 const &)
             {
                 return A1();
             }
         };
         template <>
-        struct converter_cp< A2,B2 > : true_type {
+        struct implicit_converter_cp< A2,B2 > : true_type {
             A2 operator()(B2 const &)
             {
                 return A2();
