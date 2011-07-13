@@ -17,7 +17,7 @@
 #ifndef BOOST_CONVERSION_ARRAY_HPP
 #define BOOST_CONVERSION_ARRAY_HPP
 
-#include <boost/array.hpp>
+#include <boost/conversion/type_traits/boost/array.hpp>
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <algorithm>
@@ -34,22 +34,7 @@ namespace boost {
   //! trick to generate the doc. Don't take care of it
   struct trick_array{};
 #endif
-  
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class T, std::size_t N>
-  struct is_constructible< array<T,N> >  : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class T, std::size_t N>
-  struct is_constructible< array<T,N>, array<T,N> > : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class T, std::size_t N>
-  struct is_assignable< array<T,N>&, array<T,N> const& >  : true_type {};
-  template < class T, std::size_t N>
-  struct is_assignable< array<T,N>, array<T,N> >  : true_type {};
-#endif
-  
+
   namespace conversion {
 
     /**
@@ -59,7 +44,15 @@ namespace boost {
      */
     template < typename Target, typename Source, std::size_t N>
     struct converter_cp< array<Target,N>, array<Source,N>
-      BOOST_CONVERSION_REQUIRES((is_extrinsic_assignable<Target, Source>::value))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+        ExtrinsicAssignable<Target,Source>
+        )
+#elif defined(BOOST_CONVERSION_ENABLE_CND)
+        , typename enable_if_c<
+        is_extrinsic_assignable<Target, Source>::value
+        >::type
+#endif
     > : true_type
     {
       //! @Returns the array having as elements the result of the conversion of each one of the source array elements.
@@ -110,7 +103,7 @@ namespace boost {
     template < typename Target, typename Source, std::size_t N>
     struct assigner_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-        , requites()
+        , requites(
         ExtrinsicAssignable<Target,Source>
      && Assignable<Target, Source>
         )

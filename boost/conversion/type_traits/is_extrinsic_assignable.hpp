@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief Defines the type trait @c is_explicitly_convertible.
+ * @brief Defines the type trait @c is_extrinsic_assignable.
  */
 
 
@@ -21,7 +21,16 @@
 namespace boost {
 
   /**
-   * trait-type that is @c true_type when @c Target is extrinsic assignable from @c Source.
+   * States if @c Target is extrinsic assignable from @c Source.
+   *
+   * Condition: @c true_type if and only if the return expression in the following code
+   * would be well-formed:
+   * @code
+   *   assign_to(declval<Target>(), declval<Source>()); }
+   * @endcode
+   *
+   * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   *
    */
   template <class Target, class Source>
   struct is_extrinsic_assignable : conversion::assigner<Target, Source> {};

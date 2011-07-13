@@ -19,7 +19,7 @@
 #define BOOST_CONVERSION_EXTRACTOR_HPP
 
 #include <boost/conversion/convert_to.hpp>
-#include <istream>
+#include <sstream>
 
 namespace boost {
   namespace conversion {
@@ -27,21 +27,7 @@ namespace boost {
     class extract_t { };
     const extract_t extract={};
 
-    template <typename T>
-    class extractor {
-      T value_;
-
-    public:
-      extractor(std::istream &is) {
-        is >> value_;
-      }
-
-      T value() const {
-        return value_;
-      };
-      //operator T() const {return value();};
-    };
-
+    
     template <typename T>
     class extractor_stream {
       std::stringstream ios_;
@@ -56,38 +42,41 @@ namespace boost {
       extractor_stream& operator>> (U u) { return (ios_ >> u, *this); }
 
 
-      extractor<T> operator>> (extract_t const&) {
-        return extractor<T>(ios_);
+      T operator>> (extract_t const&) {
+        T value;
+        ios_ >> value;
+        return value;
       }
 
-
-      //operator T() const {return value();};
     };
-    template<typename T>
-    struct explicit_converter< T, extractor_stream<T>
-        > : true_type
-    {
-      T operator()(extractor_stream<T> const & from)
-      {
-        //return from.value();
-        return convert_to<T>(const_cast<extractor_stream<T> &>(from)>>extract);
+    
+    template <typename T>
+    class extract_to { };
+
+    class via_stream {
+      std::stringstream ios_;
+      
+    public:
+      
+      template<typename U>
+      via_stream& operator<< (U u) { return (ios_ << u, *this); }
+      
+      template<typename U>
+      via_stream& operator>> (U u) { return (ios_ >> u, *this); }
+      
+      
+      template<typename T>
+      T operator>> (extract_to<T> const&) {
+        T value;
+        ios_ >> value;
+        return value;
       }
+      
     };
+    
 
-    template<typename T>
-    struct explicit_converter< T, extractor<T>
-        > : true_type
-    {
-      T operator()(extractor<T> const & from)
-      {
-        return from.value();
-      }
-    };
 
-    template <typename Target>
-    Target extract2(std::istream &is) {
-      return convert_to<Target>(extractor<Target>(is));
-    }
+    
 
   }
 }

@@ -25,7 +25,8 @@ namespace boost {
    *
    * Condition: @c is_constructible<Target, Source>::value is @c true.
    *
-   */  template <class Source, class Target>
+   */
+  template <class Source, class Target>
   struct is_explicitly_convertible : is_constructible<Target, Source> {};
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)

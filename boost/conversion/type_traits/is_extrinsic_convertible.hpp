@@ -23,7 +23,16 @@
 namespace boost {
 
   /**
-   * trait-type that is @c true_type when @c Source is extrinsic implicit convertible to @c Target.
+   * States if @c Source is extrinsic convertible to @c Target.
+   *
+   * Condition: @c true_type if and only if the return expression in the following code
+   * would be well-formed:
+   * @code
+   *   Target test() { return implicit_convert_to<Target>(declval<Source>()); }
+   * @endcode
+   *
+   * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   *
    */
   template <class Source, class Target>
   struct is_extrinsic_convertible : conversion::converter<

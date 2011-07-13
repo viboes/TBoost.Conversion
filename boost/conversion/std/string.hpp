@@ -18,7 +18,7 @@
 #ifndef BOOST_CONVERSION_STD_STRING_HPP
 #define BOOST_CONVERSION_STD_STRING_HPP
 
-#include <string>
+#include <boost/conversion/type_traits/std/string.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #if !defined(BOOST_CONVERSION_USE_CONVERT)
@@ -33,21 +33,6 @@ namespace boost {
   //! trick to generate the doc. Don't take care of it
   struct trick_string{};
 #endif
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_constructible< std::basic_string<CharT,Traits,Alloc> >  : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_constructible< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_assignable< std::basic_string<CharT,Traits,Alloc>&, std::basic_string<CharT,Traits,Alloc> const& >  : true_type {};
-  template<typename CharT, typename Traits, typename Alloc>
-  struct is_assignable< std::basic_string<CharT,Traits,Alloc>, std::basic_string<CharT,Traits,Alloc>  >  : true_type {};
-#endif
-
 
   namespace conversion {
 

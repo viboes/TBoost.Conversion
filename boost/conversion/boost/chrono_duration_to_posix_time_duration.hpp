@@ -18,7 +18,7 @@
 #ifndef BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 #define BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 
-#include <boost/chrono/chrono.hpp>
+#include <boost/chrono/duration.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>

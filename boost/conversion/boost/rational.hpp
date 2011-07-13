@@ -18,7 +18,7 @@
 #ifndef BOOST_CONVERSION_PAIR__HPP
 #define BOOST_CONVERSION_PAIR__HPP
 
-#include <boost/rational.hpp>
+#include <boost/conversion/type_traits/boost/rational.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
@@ -31,20 +31,6 @@ namespace boost {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   //! trick to generate the doc. Don't take care of it
   struct trick_rational{};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class T>
-  struct is_constructible< rational<T> >  : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class T>
-  struct is_constructible< rational<T>, rational<T> > : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class T>
-  struct is_assignable< rational<T>, rational<T> >  : true_type {};
-  template < class T>
-  struct is_assignable< rational<T>&, rational<T> const& >  : true_type {};
 #endif
   
   namespace conversion {
