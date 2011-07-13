@@ -77,7 +77,7 @@ BOOST_CONVERSION_DCL_DEFAULTS(ExtrExplicitCvtToInt)
 namespace boost {
   namespace conversion {
     template <>
-    struct converter_cp< int, ExtrCvtToInt> : true_type {
+    struct implicit_converter_cp< int, ExtrCvtToInt> : true_type {
       int operator()(ExtrCvtToInt const&)
       {
         return 0;
@@ -91,21 +91,21 @@ namespace boost {
       }
     };
     template <>
-    struct converter_cp< int, ExtrCvtINtAndString> : true_type {
+    struct implicit_converter_cp< int, ExtrCvtINtAndString> : true_type {
       int operator()(ExtrCvtINtAndString const&)
       {
         return 0;
       }
     };
     template <>
-    struct converter_cp< std::string , ExtrCvtToString > : true_type {
+    struct implicit_converter_cp< std::string , ExtrCvtToString > : true_type {
       std::string operator()(ExtrCvtToString const&)
       {
         return "";
       }
     };
     template <>
-    struct converter_cp< std::string , ExtrCvtINtAndString > : true_type {
+    struct implicit_converter_cp< std::string , ExtrCvtINtAndString > : true_type {
       std::string operator()(ExtrCvtINtAndString const&)
       {
         return "";
