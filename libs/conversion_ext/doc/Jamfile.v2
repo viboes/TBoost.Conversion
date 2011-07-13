@@ -11,8 +11,8 @@
 path-constant nav_images :  html/images/ ; # png and svg images for home, next, note, tip...
 path-constant images_location : html ; # location of SVG and PNG images referenced by Quickbook.
 
-echo "images_location" $(images_location) ; # \guild\enums\libs\enums\doc\html
-echo "nav_images" $(nav_images) ; # \guild\enums\libs\enums\doc\html\images
+echo "images_location" $(images_location) ; 
+echo "nav_images" $(nav_images) ;
 
 import modules ;
 
@@ -35,7 +35,7 @@ if --enable-index in  [ modules.peek : ARGV ]
         # PDF native index support is probably better for PDFs as then you actually get page numbers.
 
         <auto-index-script>index.idx # Specifies the name of the script to load. 
-        # <auto-index-prefix>../../../ # Path to /enums so index.idx !scan-path can use boost/ and libs/doc.
+        # <auto-index-prefix>../../../ # Path to /conversion so index.idx !scan-path can use boost/ and libs/doc.
         <auto-index-prefix>../../.. 
         
         <quickbook-define>enable_index
@@ -167,6 +167,35 @@ else
 using doxygen ;  # Required if you want to use Doxygen.
 using quickbook ;
 
+doxygen std_type_traits
+   :
+      [ glob ../../../boost/conversion/type_traits/is_assignable.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_copy_assignable.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_constructible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_copy_constructible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_convertible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_explicitly_convertible.hpp ]
+   :
+        <xsl:param>"boost.doxygen.reftitle=Standard Type Traits"
+   ;
+
+doxygen std_type_traits_boost
+   :
+      [ glob ../../../boost/conversion/type_traits/boost/*.hpp ]
+      [ glob ../../../boost/conversion/type_traits/boost/*/*.hpp ]
+   :
+        <xsl:param>"boost.doxygen.reftitle=Boost specializations workarounds"
+        <xsl:param>boost.doxygen.header.prefix=boost/conversion/type_traits 
+   ;
+
+doxygen std_type_traits_std
+   :
+      [ glob ../../../boost/conversion/type_traits/std/*.hpp ]
+   :
+        <xsl:param>"boost.doxygen.reftitle=C++ Standard specializations workarounds"
+   ;
+
+
 doxygen core
    :
       [ glob ../../../boost/conversion.hpp ]
@@ -182,10 +211,9 @@ doxygen core
       [ glob ../../../boost/conversion/try_assign_to.hpp ]
       [ glob ../../../boost/conversion/try_convert_to.hpp ]
       [ glob ../../../boost/conversion/fp/convert_to.hpp ]
-      [ glob ../../../boost/conversion/type_traits/*.hpp ]
-      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_assignble.hpp ]
-      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_convertible.hpp ]
-      #[ glob ../../../boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp ]
+      [ glob ../../../boost/conversion/is_extrinsically_assignable.hpp ]
+      [ glob ../../../boost/conversion/is_extrinsically_convertible.hpp ]
+      [ glob ../../../boost/conversion/is_extrinsically_explicit_convertible.hpp ]
    :
         <xsl:param>"boost.doxygen.reftitle=Core"
    ;
@@ -257,14 +285,18 @@ boostbook standalone
         <format>pdf:<xsl:param>admon.graphics.path=$(boost-images)/
         <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/conversion_ext/doc/html
 
+
+        <dependency>std_type_traits
+        <dependency>std_type_traits_std
+        <dependency>std_type_traits_boost
         <dependency>core
         <dependency>std 
         <dependency>boost
         <dependency>css-install
         <dependency>png-install
         <dependency>svg-install
-        <dependency>enums-png-install
-        <dependency>enums-svg-install
+        <dependency>conversion-png-install
+        <dependency>conversion-svg-install
 
    ;
 
@@ -274,7 +306,7 @@ install css-install : $(boost-root)/doc/src/boostbook.css : <location>html ;
 install png-install : [ glob $(boost-root)/doc/src/images/*.png ] : <location>html/images ;
 install svg-install : [ glob $(boost-root)/doc/src/images/*.svg ] : <location>html/images ;
 
-install pdf-install : standalone : <install-type>PDF <location>. <name>enums.pdf ;
+install pdf-install : standalone : <install-type>PDF <location>. <name>conversion.pdf ;
 
-install enums-png-install : [ glob images/*.png ] : <location>html/images ;
-install enums-svg-install : [ glob images/*.svg ] : <location>html/images ;
+install conversion-png-install : [ glob images/*.png ] : <location>html/images ;
+install conversion-svg-install : [ glob images/*.svg ] : <location>html/images ;
