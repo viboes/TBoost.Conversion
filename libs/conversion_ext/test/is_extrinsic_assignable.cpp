@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <boost/static_assert.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
 
 
 

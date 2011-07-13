@@ -16,7 +16,7 @@
 #include <boost/conversion/convertible_to.hpp>
 #include <boost/conversion/convertible_from.hpp>
 #include <boost/conversion/assignable_to.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/static_assert.hpp>
@@ -86,8 +86,8 @@ BOOST_CONVERSION_DCL_DEFAULTS(C)
   }
 #endif
 
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< B,A >::value));
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< C,B >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< B,A >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< C,B >::value));
 
 
   void f(B) {}
@@ -99,7 +99,7 @@ BOOST_CONVERSION_DCL_DEFAULTS(C)
   }
 
   template <typename T>
-  typename boost::enable_if<boost::is_extrinsic_convertible<T,B>, void >::type
+  typename boost::enable_if<boost::conversion::is_extrinsically_convertible<T,B>, void >::type
   h(T v)
   {
     return f(convert_to<B>(v));
@@ -125,9 +125,9 @@ namespace boost {
 }
 
 BOOST_STATIC_ASSERT(( !boost::is_convertible< X,ICF_X >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< X,ICF_X >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< X,ICF_X >::value));
 #if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ICF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X,ICF_X >::value));
 #endif
 
 struct ECF_X {};
@@ -193,12 +193,12 @@ namespace boost {
 
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
-  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_convertible< X,AF_X >::value));
-  BOOST_STATIC_ASSERT(( !boost::is_extrinsic_explicit_convertible< X,AF_X >::value));
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible< X , ICF_X >::value));
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X , ICF_X >::value));
+  BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_convertible< X,AF_X >::value));
+  BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_explicit_convertible< X,AF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< X , ICF_X >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X , ICF_X >::value));
   BOOST_STATIC_ASSERT(( boost::is_copy_assignable< ICF_X >::value));
-  BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< ICF_X, X >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< ICF_X, X >::value));
 
 #endif
 

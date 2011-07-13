@@ -17,11 +17,11 @@
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( boost::is_assignable< int&, short const&>::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< int, short >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< int, short >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable< short&, int const& >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< short, int >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< A1, B1 >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable< boost::array<A1,3>, boost::array<B1,3> >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< short, int >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< A1, B1 >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< boost::array<A1,3>, boost::array<B1,3> >::value));
 #endif
 
 using namespace boost;

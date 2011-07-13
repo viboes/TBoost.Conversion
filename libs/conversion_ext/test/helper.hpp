@@ -17,8 +17,8 @@
 #include <boost/conversion/type_traits/is_constructible.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <boost/conversion/type_traits/is_assignable.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE) || defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
 #define BOOST_CONVERSION_DCL_DEFAULTS(X)                              \
@@ -96,15 +96,15 @@ namespace boost {
 #endif
 #endif
 
-    BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B1, A1>::value));
-    BOOST_STATIC_ASSERT(( boost::is_extrinsic_convertible<B2, A2>::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<B1, A1>::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<B2, A2>::value));
 
 
     #if defined(BOOST_CONVERSION_ENABLE_CND)
     BOOST_STATIC_ASSERT(( !boost::is_assignable<A1, B1>::value));
     BOOST_STATIC_ASSERT(( !boost::is_assignable<A2, B2>::value));
-    BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<A1, B1>::value));
-    BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<A2, B2>::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<A1, B1>::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<A2, B2>::value));
     #endif
 
 

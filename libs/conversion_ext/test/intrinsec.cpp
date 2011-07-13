@@ -112,14 +112,14 @@ namespace boost
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( ! boost::is_convertible< X,ECF_X >::value));
 BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible< X,ECF_X >::value));
-BOOST_STATIC_ASSERT(( ! boost::is_extrinsic_convertible< X,ECF_X >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( ! boost::conversion::is_extrinsically_convertible< X,ECF_X >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X,ECF_X >::value));
 #endif
 
 
 #if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( ! boost::is_explicitly_convertible< X,AF_X >::value));
-BOOST_STATIC_ASSERT(( ! boost::is_extrinsic_convertible< X,AF_X >::value));
+BOOST_STATIC_ASSERT(( ! boost::conversion::is_extrinsically_convertible< X,AF_X >::value));
 #endif
 
 //////////////////////////

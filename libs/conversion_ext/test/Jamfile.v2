@@ -80,7 +80,7 @@ test-suite "example" :
      [ run ../example/no_throw.cpp ]
      [ run ../example/fallback.cpp ]
      [ run ../example/overload.cpp ]
-     [ run ../example/formatted.cpp ]
+     #[ run ../example/formatted.cpp ]
     ;
 
 

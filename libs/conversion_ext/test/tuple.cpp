@@ -23,8 +23,8 @@ BOOST_STATIC_ASSERT(( boost::is_assignable<A2, A2 >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>, fusion::tuple<A1,A2> >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>&, fusion::tuple<A1,A2> const&>::value));
 BOOST_STATIC_ASSERT(( boost::is_copy_assignable<boost::fusion::tuple<A1,A2> >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_assignable<fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >::value));
-BOOST_STATIC_ASSERT(( boost::is_extrinsic_explicit_convertible<fusion::tuple<B1,B2>, fusion::tuple<A1,A2> >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >::value));
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<fusion::tuple<B1,B2>, fusion::tuple<A1,A2> >::value));
 #endif
 
 
