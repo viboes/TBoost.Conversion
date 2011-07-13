@@ -25,5 +25,8 @@ Include all the core conversion public header files. Note that you will need to 
 #include <boost/conversion/try_convert_to.hpp>
 #include <boost/conversion/convert_to_or_fallback.hpp>
 #include <boost/conversion/try_assign_to.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
+#include <boost/conversion/is_extrinsically_explicit_convertible.hpp>
 #endif
 

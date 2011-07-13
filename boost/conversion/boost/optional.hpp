@@ -48,7 +48,7 @@ namespace boost {
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
-        is_extrinsic_convertible<Source,Target>::value
+        is_extrinsically_convertible<Source,Target>::value
         >::type
 #endif
     > : true_type
@@ -74,7 +74,7 @@ namespace boost {
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
-        is_extrinsic_convertible<Source,Target>::value
+        is_extrinsically_convertible<Source,Target>::value
         && ! detail::is_optional<Source>::value
         >::type
 #endif
@@ -109,7 +109,7 @@ namespace boost {
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
-        is_extrinsic_explicit_convertible<Source,Target>::value
+        is_extrinsically_explicit_convertible<Source,Target>::value
         && ! detail::is_optional<Source>::value
         >::type
 #endif

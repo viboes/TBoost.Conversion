@@ -19,7 +19,7 @@
 
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
@@ -39,7 +39,7 @@ namespace boost {
       template  <typename Source>
       convertible_to(Source const& source
 #if defined(BOOST_CONVERSION_ENABLE_CND)
-          , typename enable_if<boost::is_extrinsic_convertible<Source,Target> >::type* dummy = 0
+          , typename enable_if<is_extrinsically_convertible<Source,Target> >::type* dummy = 0
 #endif
           )
         : val_(boost::conversion::implicit_convert_to<Target>(source))

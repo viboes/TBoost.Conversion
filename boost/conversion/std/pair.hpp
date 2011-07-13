@@ -46,8 +46,8 @@ namespace boost {
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
-          is_extrinsic_convertible<S1,T1>::value
-          && is_extrinsic_convertible<S2,T2>::value
+          is_extrinsically_convertible<S1,T1>::value
+          && is_extrinsically_convertible<S2,T2>::value
         >::type
 #endif
     > : true_type
@@ -65,8 +65,8 @@ namespace boost {
     template < class T1, class T2, class S1, class S2>
     struct assigner_cp< std::pair<T1,T2>, std::pair<S1,S2>
       BOOST_CONVERSION_REQUIRES((
-           is_extrinsic_convertible<S1,T1>::value
-        && is_extrinsic_convertible<S2,T2>::value
+           is_extrinsically_convertible<S1,T1>::value
+        && is_extrinsically_convertible<S2,T2>::value
       ))
     > : true_type
     {

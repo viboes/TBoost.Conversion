@@ -38,8 +38,8 @@ the @c boost::conversion::overload_workaround namespace.
 #include <boost/utility/enable_if.hpp>
 #include <boost/conversion/type_traits/is_copy_assignable.hpp>
 #include <boost/conversion/type_traits/is_assignable.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
+#include <boost/conversion/is_extrinsically_explicit_convertible.hpp>
 
 namespace boost {
   namespace conversion {
@@ -85,7 +85,7 @@ namespace boost {
 #else
         , typename enable_if_c<
           is_copy_assignable<Target>::value
-          && is_extrinsic_explicit_convertible<Source,Target>::value
+          && is_extrinsically_explicit_convertible<Source,Target>::value
           && ! is_assignable<Target,Source>::value
           >::type
 #endif
@@ -178,7 +178,7 @@ namespace boost {
 #else
         , typename enable_if_c<
                                          is_copy_assignable<Target>::value
-                                         && is_extrinsic_convertible<Source,Target>::value
+                                         && is_extrinsically_convertible<Source,Target>::value
                                          && ! is_assignable<Target,Source>::value
         >::type
 #endif

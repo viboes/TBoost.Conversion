@@ -35,7 +35,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <boost/conversion/detail/is_optional.hpp>
 #include <boost/optional.hpp>
 
@@ -98,14 +98,14 @@ namespace boost {
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
-    //! @Requires @c is_extrinsic_convertible<Source,Target>
+    //! @Requires @c is_extrinsically_convertible<Source,Target>
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source,
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         requires(ExtrinsicConvertible<Source,Target>)
 #else
         typename enable_if_c<
-                is_extrinsic_convertible<Source,Target>::value
+                is_extrinsically_convertible<Source,Target>::value
             && !is_explicitly_convertible<Source,Target>::value
             && !(detail::is_optional<Target>::value && !detail::is_optional<Source>::value)
         >::type
@@ -125,7 +125,7 @@ namespace boost {
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
-    //! @Requires @c is_extrinsic_explicit_convertible<Source,Target>
+    //! @Requires @c is_extrinsically_explicit_convertible<Source,Target>
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
     struct explicit_converter< optional<Target>, Source,

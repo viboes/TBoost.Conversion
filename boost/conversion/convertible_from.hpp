@@ -22,7 +22,7 @@
 
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
@@ -51,7 +51,7 @@ namespace boost {
       //! @Remark On compilers that supports C++0x default arguments for function template parameters,
       //!   this conversion operator doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template <typename Target
-      , typename boost::enable_if< boost::is_extrinsic_convertible<Source,Target>, int >::type = 0
+      , typename boost::enable_if< boost::is_extrinsically_convertible<Source,Target>, int >::type = 0
       >
       operator Target() const
       {

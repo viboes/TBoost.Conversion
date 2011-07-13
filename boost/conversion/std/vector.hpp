@@ -23,7 +23,7 @@
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 //#include <boost/conversion/pack.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
 
 
 
@@ -48,7 +48,7 @@ namespace boost {
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
-        is_extrinsic_assignable<T1,T2>::value
+        is_extrinsically_assignable<T1,T2>::value
         >::type
 #endif
     > : true_type
@@ -72,7 +72,7 @@ namespace boost {
     template < class T1, class A1, class T2, class A2>
     struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
     BOOST_CONVERSION_REQUIRES((
-        is_extrinsic_assignable<T1,T2>::value
+        is_extrinsically_assignable<T1,T2>::value
     ))
     > : true_type
     {

@@ -39,7 +39,7 @@ namespace boost {
     template < class Target, class Source>
     struct converter_cp< std::complex<Target>, std::complex<Source>
       BOOST_CONVERSION_REQUIRES((
-        is_extrinsic_convertible<Source,Target>::value
+        is_extrinsically_convertible<Source,Target>::value
       ))
     > : true_type
     {
@@ -53,7 +53,7 @@ namespace boost {
     template < class Target, class Source>
     struct assigner_cp< std::complex<Target>, std::complex<Source>
       BOOST_CONVERSION_REQUIRES((
-        is_extrinsic_convertible<Source,Target>::value
+        is_extrinsically_convertible<Source,Target>::value
       ))
     > : true_type
     {

@@ -19,8 +19,8 @@
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_convertible.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_assignable.hpp>
+#include <boost/conversion/is_extrinsically_convertible.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
@@ -47,7 +47,7 @@ namespace boost {
 //      //! @Throws Whatever @c convert_to throws.
 //      template <typename U
 //#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-//      , typename boost::enable_if< boost::is_extrinsic_convertible<Target,U>, int >::type = 0
+//      , typename boost::enable_if< is_extrinsically_convertible<Target,U>, int >::type = 0
 //#endif
 //      >
 //      operator U()
@@ -74,7 +74,7 @@ namespace boost {
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
       template <typename Source>
 #if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-      typename boost::enable_if< boost::is_extrinsic_assignable<Target,Source>, assignable_to& >::type
+      typename boost::enable_if< is_extrinsically_assignable<Target,Source>, assignable_to& >::type
 #else
       assignable_to&
 #endif
@@ -92,7 +92,7 @@ namespace boost {
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
       template <typename Source>
 #if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-      typename boost::enable_if< boost::is_extrinsic_assignable<Target,Source>, assignable_to& >::type
+      typename boost::enable_if< is_extrinsically_assignable<Target,Source>, assignable_to& >::type
 #else
       assignable_to&
 #endif

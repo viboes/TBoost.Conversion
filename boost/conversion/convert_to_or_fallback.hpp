@@ -39,7 +39,7 @@
 
 #include <boost/conversion/config.hpp>
 #include <boost/conversion/convert_to.hpp>
-#include <boost/conversion/type_traits/is_extrinsic_explicit_convertible.hpp>
+#include <boost/conversion/is_extrinsically_explicit_convertible.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -69,22 +69,22 @@ namespace boost {
     struct converter_or_fallbacker : converter_or_fallbacker_cp<Target,Source,Fallback,Enable> {};
 
     //! Specialization for @c converter_or_fallbacker when
-    //! @c is_extrinsic_explicitly_convertible<Source,Target>
-    //! @c && is_extrinsic_explicitly_convertible<Fallback,Target>.
+    //! @c is_extrinsically_explicitly_convertible<Source,Target>
+    //! @c && is_extrinsically_explicitly_convertible<Fallback,Target>.
     //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
     //!
-    //! @Requires @c is_extrinsic_explicitly_convertible<Source,Target> && @c is_extrinsic_explicitly_convertible<Fallback,Target>.
+    //! @Requires @c is_extrinsically_explicitly_convertible<Source,Target> && @c is_extrinsically_explicitly_convertible<Fallback,Target>.
     template < typename Target, typename Source, typename Fallback>
     struct converter_or_fallbacker<Target, Source, Fallback,
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         requires(ExtrinsicExplicitConvertible<Source,Target> && ExtrinsicExplicitConvertible<Fallback,Target>)
 #else
         typename enable_if_c<
-             is_extrinsic_explicit_convertible<Source,Target>::value
-          && is_extrinsic_explicit_convertible<Fallback,Target>::value
+             is_extrinsically_explicit_convertible<Source,Target>::value
+          && is_extrinsically_explicit_convertible<Fallback,Target>::value
         >::type
 #endif
     > {
