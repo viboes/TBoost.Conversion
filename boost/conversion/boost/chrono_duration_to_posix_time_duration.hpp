@@ -58,10 +58,10 @@ namespace boost {
   
   
   namespace conversion {
-    //! @brief @c converter specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
+    //! @brief @c implicit_converter specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
     //!
     template < class Rep, class Period>
-    struct converter_cp<posix_time::time_duration, chrono::duration<Rep, Period>
+    struct implicit_converter_cp<posix_time::time_duration, chrono::duration<Rep, Period>
      > : true_type
     {
       //! @Returns the duration converted to seconds+nanoseconds following the boost::posix_time::time_duration formatting.
@@ -81,11 +81,11 @@ namespace boost {
             #endif
       }
     };
-    //! @brief @c converter specialization for conversions from @c boost::posix_time::time_duration to @c boost::chrono::duration<>.
+    //! @brief @c implicit_converter specialization for conversions from @c boost::posix_time::time_duration to @c boost::chrono::duration<>.
     //!
 
     template < class Rep, class Period>
-    struct converter_cp<chrono::duration<Rep, Period>, posix_time::time_duration
+    struct implicit_converter_cp<chrono::duration<Rep, Period>, posix_time::time_duration
         > : true_type
     {
       //! @Returns the duration cast from a nanoseconds duration initialized to the total number of nanosecond of the @c from parameter.

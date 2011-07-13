@@ -29,10 +29,10 @@ namespace boost {
   
   namespace conversion {
 
-    //! @brief @c converter specialization for source and target been @c boost::numeric::interval.
+    //! @brief @c implicit_converter specialization for source and target been @c boost::numeric::interval.
     //!
     template < class Target, class PTarget, class Source, class PSource>
-    struct converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
+    struct implicit_converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
         ExtrinsicallyConvertible<Source,Target>

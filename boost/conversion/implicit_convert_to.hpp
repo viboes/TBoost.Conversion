@@ -10,7 +10,7 @@
 
 /**
  * @file
- * @brief Defines the free function @c implicit_convert_to and its customization point @c converter.
+ * @brief Defines the free function @c implicit_convert_to and its customization point @c implicit_converter.
  *
  *  The @c implicit_convert_to function converts the @c from parameter to a @c Target type.
  *
@@ -62,9 +62,9 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! This class must be specialized by the user when the default behavior of @c explicit_converter is not satisfying.
+    //! This class must be specialized by the user when the default behavior of @c implicit_converter is not satisfying.
     template < typename Target, typename Source, class Enable = void >
-    struct converter_cp : false_type {};
+    struct implicit_converter_cp : false_type {};
 
     //! Default customization point for @c implicit_convert_to.
     //!
@@ -72,19 +72,19 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! The default implementation relies on the @c converter_cp which must be specialized by the user.
+    //! The default implementation relies on the @c implicit_converter_cp which must be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
-    struct converter : converter_cp<Target,Source,Enable> {};
+    struct implicit_converter : implicit_converter_cp<Target,Source,Enable> {};
 
 
-    //! Specialization for @c converter when @c is_convertible<Source,Target>.
+    //! Specialization for @c implicit_converter when @c is_convertible<Source,Target>.
     //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //!
     //! @Requires @c is_convertible<Source,Target>
     template < typename Target, typename Source >
-    struct converter<Target, Source
+    struct implicit_converter<Target, Source
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(Convertible<Source,Target>)
 #else
@@ -112,7 +112,7 @@ namespace boost {
       template < typename Target, typename Source >
       Target implicit_convert_to(const Source& from, dummy::type_tag<Target> const&)
       {
-        return conversion::converter<Target,Source>()(from);
+        return conversion::implicit_converter<Target,Source>()(from);
       }
     }
 
@@ -137,8 +137,8 @@ namespace boost {
     //! @Params
     //! @Param{source,source of the conversion}
     //!
-    //! @Returns The result of @c converter customization point.
-    //! @Throws  Whatever the @c converter call operator throws.
+    //! @Returns The result of @c implicit_converter customization point.
+    //! @Throws  Whatever the @c implicit_converter call operator throws.
     //!
     //! @Example
     //! @code
@@ -153,7 +153,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion::impl::convert_to_impl<Target>(from);
 #else
-      return conversion::converter<Target,Source>()(from);
+      return conversion::implicit_converter<Target,Source>()(from);
 #endif
     }
   }

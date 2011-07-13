@@ -36,7 +36,7 @@ namespace boost {
    *
    */
   template <class Source, class Target>
-  struct is_extrinsically_convertible : conversion::converter<
+  struct is_extrinsically_convertible : conversion::implicit_converter<
     Target, Source
     //typename remove_reference<typename remove_cv<Target>::type>::type,
     //typename remove_reference<typename remove_cv<Source>::type>::type

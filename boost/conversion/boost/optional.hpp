@@ -37,10 +37,10 @@ namespace boost {
   namespace conversion {
 
     /**
-     * Partial specialization of @c converter for boost::optional
+     * Partial specialization of @c implicit_converter for boost::optional
      */
     template < class Target, class Source>
-    struct converter_cp
+    struct implicit_converter_cp
     < optional<Target>, optional<Source>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
@@ -62,11 +62,11 @@ namespace boost {
     };
 
 
-    //! @brief @c converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
+    //! @brief @c implicit_converter specialization to try to convert the source to @c Target::value_type when @c Target is optional.
     //!
     //! We can see this specialization as a try_convert_to function.
     template < class Target, class Source>
-    struct converter_cp< optional<Target>, Source
+    struct implicit_converter_cp< optional<Target>, Source
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
         ExtrinsicallyConvertible<Source,Target>

@@ -35,10 +35,10 @@ namespace boost {
     // std namespace can not be overloaded
 
     /**
-     * Partial specialization of @c converter_cp for @c std::pair of extrinsic convertibles.
+     * Partial specialization of @c implicit_converter_cp for @c std::pair of extrinsic convertibles.
      */
     template < class T1, class T2, class S1, class S2>
-    struct converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
+    struct implicit_converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
           ExtrinsicallyConvertible<S1,T1>

@@ -52,7 +52,7 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! This class must be specialized by the user when the default behavior of @c explicit_converter is not satisfying.
+    //! This class must be specialized by the user when the default behavior of @c assigner is not satisfying.
     template < typename Target, typename Source, class Enable = void>
     struct assigner_cp : false_type {};
 

@@ -35,10 +35,10 @@ namespace boost {
   
   namespace conversion {
 
-    //! @brief @c converter specialization for source and target been @c boost::rational.
+    //! @brief @c implicit_converter specialization for source and target been @c boost::rational.
     //!
     template < class Target, class Source>
-    struct converter_cp< rational<Target>, rational<Source>
+    struct implicit_converter_cp< rational<Target>, rational<Source>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
         ExtrinsicallyConvertible<Source,Target>

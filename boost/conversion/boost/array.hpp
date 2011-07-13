@@ -38,12 +38,12 @@ namespace boost {
   namespace conversion {
 
     /**
-     * Partial specialization of @c converter for @c boost::array of the same size
+     * Partial specialization of @c implicit_converter for @c boost::array of the same size
      *
      * !!!!!!!!!!!! boost::array is not constructible frome array<U,N> so this should be removed or replaced by explicit
      */
     template < typename Target, typename Source, std::size_t N>
-    struct converter_cp< array<Target,N>, array<Source,N>
+    struct implicit_converter_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
         ExtrinsicallyAssignable<Target,Source>
