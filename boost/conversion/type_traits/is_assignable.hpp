@@ -15,11 +15,40 @@
 #ifndef BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 #define BOOST_CONVERSION_TT_IS_ASSIGNABLE_HPP
 
-#include <boost/conversion/config.hpp>
-#include <utility>
-#include <complex>
-#include <string>
-#include <boost/fusion/tuple.hpp>
+#include <boost/config.hpp>
+#include <boost/utility/enable_if.hpp>
+
+#define BOOST_CONVERSION_REQUIRES(CND) \
+                , typename enable_if_c< CND >::type
+
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  //! Macro stating if the compiler don't support the features needed to define the @c is_assignable type trait.
+  #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+#else
+  #if ! defined(BOOST_NO_DECLTYPE)
+    #if defined _MSC_VER
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #elif defined __clang__
+    #elif defined __GNUC__
+       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+       #endif
+    #else
+    #endif
+  #else
+    #if defined _MSC_VER
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #elif defined __clang__
+         //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #elif defined __GNUC__
+       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+       #endif
+    #else
+       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #endif
+  #endif
+#endif
 
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
 namespace boost {

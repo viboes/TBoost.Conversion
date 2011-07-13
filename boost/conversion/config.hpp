@@ -26,12 +26,10 @@
 #else
   #if ! defined(BOOST_NO_DECLTYPE)
     #if defined _MSC_VER
-       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
     #elif defined __clang__
          #define BOOST_CONVERSION_ENABLE_CND
     #elif defined __GNUC__
        #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
-         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
        #endif
        #define BOOST_CONVERSION_ENABLE_CND
     #else
@@ -42,14 +40,11 @@
        #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
     #elif defined __clang__
          #define BOOST_CONVERSION_ENABLE_CND
-         //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
     #elif defined __GNUC__
        #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
-         #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
        #endif
        #define BOOST_CONVERSION_ENABLE_CND
     #else
-       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
     #endif
   #endif
 #endif

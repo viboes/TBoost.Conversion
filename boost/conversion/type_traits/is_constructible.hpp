@@ -32,6 +32,14 @@ namespace boost {
   template < class T, class... Args>
   struct is_constructible
   {};
+
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_constructible type trait.
+  #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_default_constructible type trait.
+  #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+  //! Max number of arguments to is_constructible when using variadic templates emulation.
+  #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
+
 }
 #else
 
@@ -48,15 +56,9 @@ namespace boost {
 #include <boost/utility/declval.hpp>
 #include <cstddef>
 
-// For specializations as there is a bug
-#include <utility>
-#include <boost/array.hpp>
-#include <complex>
-#include <vector>
-#include <boost/fusion/tuple.hpp>
 
-#ifndef BOOST_IS_CONSTRUCTIBLE_ARITY_MAX
-#define BOOST_IS_CONSTRUCTIBLE_ARITY_MAX 3
+#ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
+#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
 #endif
 
 namespace boost
@@ -73,7 +75,7 @@ namespace boost
         struct dummy;
     }
 
-    template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
+    template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
     struct is_constructible;
 
 #ifndef BOOST_NO_SFINAE_EXPR
@@ -96,7 +98,7 @@ namespace boost
         typedef boost::integral_constant<bool,value> type;                                              \
     };
 
-    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
     #undef M0
     #undef M1
 
@@ -107,7 +109,7 @@ namespace boost
     {                                                                                                   \
     };
 
-    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
     #undef M0
 
 
@@ -122,7 +124,7 @@ namespace boost
     {                                                                                                   \
     };
 
-    BOOST_PP_REPEAT(BOOST_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
     #undef M0
 
     #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
