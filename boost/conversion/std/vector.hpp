@@ -44,7 +44,7 @@ namespace boost {
     struct converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires
-        ExtrinsicAssignable<T1,T2>
+        ExtrinsicallyAssignable<T1,T2>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<

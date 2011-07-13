@@ -33,8 +33,8 @@ namespace boost {
     struct explicit_converter_cp< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     , requires(
-    ExtrinsicConvertible<S1,T1>
-    && ExtrinsicConvertible<S2,T2>
+    ExtrinsicallyConvertible<S1,T1>
+    && ExtrinsicallyConvertible<S2,T2>
     )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
@@ -56,9 +56,9 @@ namespace boost {
     struct explicit_converter_cp< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicConvertible<S1,T1>
-        && ExtrinsicConvertible<S2,T2>
-        && ExtrinsicConvertible<S3,T3>
+        ExtrinsicallyConvertible<S1,T1>
+        && ExtrinsicallyConvertible<S2,T2>
+        && ExtrinsicallyConvertible<S3,T3>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<

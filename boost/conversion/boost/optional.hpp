@@ -44,7 +44,7 @@ namespace boost {
     < optional<Target>, optional<Source>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicConvertible<Source,Target>
+        ExtrinsicallyConvertible<Source,Target>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
@@ -69,7 +69,7 @@ namespace boost {
     struct converter_cp< optional<Target>, Source
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicConvertible<Source,Target>
+        ExtrinsicallyConvertible<Source,Target>
         && ! Optional<Source>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
@@ -104,7 +104,7 @@ namespace boost {
     struct explicit_converter_cp< optional<Target>, Source
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicExplicit_convertible<Source,Target>
+        ExtrinsicallyExplicit_convertible<Source,Target>
         && ! Optional<Source>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)

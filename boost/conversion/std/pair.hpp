@@ -41,8 +41,8 @@ namespace boost {
     struct converter_cp< std::pair<T1,T2>, std::pair<S1,S2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-          ExtrinsicConvertible<S1,T1>
-          && ExtrinsicConvertible<S2,T2>
+          ExtrinsicallyConvertible<S1,T1>
+          && ExtrinsicallyConvertible<S2,T2>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<

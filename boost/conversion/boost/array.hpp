@@ -46,7 +46,7 @@ namespace boost {
     struct converter_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicAssignable<Target,Source>
+        ExtrinsicallyAssignable<Target,Source>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
@@ -75,7 +75,7 @@ namespace boost {
     struct assigner_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicAssignable<Target,Source>
+        ExtrinsicallyAssignable<Target,Source>
   && ! Assignable<Target, Source>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
@@ -104,7 +104,7 @@ namespace boost {
     struct assigner_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requites(
-        ExtrinsicAssignable<Target,Source>
+        ExtrinsicallyAssignable<Target,Source>
      && Assignable<Target, Source>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)

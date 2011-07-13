@@ -79,7 +79,7 @@ namespace boost {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
             CopyAssignable<Target>
-            && ExtrinsicExplicitConvertible<Source,Target>
+            && ExtrinsicallyExplicitConvertible<Source,Target>
             && ! Assignable<Target,Source>
         )
 #else
@@ -174,7 +174,7 @@ namespace boost {
     template < typename Target, typename Source, std::size_t N  >
     struct assigner<Target[N],Source[N]
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    , requires(CopyAssignable<Target> && ExtrinsicConvertible<Source,Target>)
+    , requires(CopyAssignable<Target> && ExtrinsicallyConvertible<Source,Target>)
 #else
         , typename enable_if_c<
                                          is_copy_assignable<Target>::value

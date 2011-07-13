@@ -80,7 +80,7 @@ namespace boost {
     template < typename Target, typename Source, typename Fallback>
     struct converter_or_fallbacker<Target, Source, Fallback,
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-        requires(ExtrinsicExplicitConvertible<Source,Target> && ExtrinsicExplicitConvertible<Fallback,Target>)
+        requires(ExtrinsicallyExplicitConvertible<Source,Target> && ExtrinsicallyExplicitConvertible<Fallback,Target>)
 #else
         typename enable_if_c<
              is_extrinsically_explicit_convertible<Source,Target>::value

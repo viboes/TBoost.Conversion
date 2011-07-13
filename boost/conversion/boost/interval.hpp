@@ -35,7 +35,7 @@ namespace boost {
     struct converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicConvertible<Source,Target>
+        ExtrinsicallyConvertible<Source,Target>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<
@@ -54,7 +54,7 @@ namespace boost {
     struct assigner_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
-        ExtrinsicConvertible<Source,Target>
+        ExtrinsicallyConvertible<Source,Target>
         )
 #elif defined(BOOST_CONVERSION_ENABLE_CND)
         , typename enable_if_c<

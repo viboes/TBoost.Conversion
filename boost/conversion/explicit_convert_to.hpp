@@ -102,7 +102,7 @@ namespace boost {
     template < typename Target, typename Source >
     struct explicit_converter<Target, Source,
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-        requires(ExtrinsicConvertible<Source,Target>)
+        requires(ExtrinsicallyConvertible<Source,Target>)
 #else
         typename enable_if_c<
                 is_extrinsically_convertible<Source,Target>::value
@@ -130,7 +130,7 @@ namespace boost {
     template < class Target, class Source>
     struct explicit_converter< optional<Target>, Source,
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-        requires(ExtrinsicExplicitConvertible<Source,Target>)
+        requires(ExtrinsicallyExplicitConvertible<Source,Target>)
 #else
      typename enable_if_c<
         explicit_converter<Target,Source>::value
