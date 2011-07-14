@@ -43,8 +43,6 @@ namespace boost {
 }
 #else
 
-#if 1
-
 #include <boost/config.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -85,7 +83,6 @@ namespace boost {
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #if ! defined BOOST_NO_SFINAE_EXPR
          #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
-         //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
        #else
          #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
          #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
@@ -109,8 +106,27 @@ namespace boost {
   #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
 #endif
 
-namespace boost
-{
+namespace boost {
+  namespace type_traits {
+    namespace detail {
+      namespace is_constructible {
+        //! type used instead of ... to accept any type
+        struct any {
+          template <typename T>
+          any(T);
+        };
+
+        //! type useful to compare with the sizeof
+        typedef char true_type;
+        //! type useful to compare with the sizeof
+        struct false_type { char a[2]; };
+
+        //! type useful to accept a sizeof as parameter
+        template<std::size_t N>
+        struct dummy;
+      }
+    }
+  }
 
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
@@ -280,15 +296,6 @@ namespace boost
 
   template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
   struct is_constructible;
-    namespace type_traits_detail
-    {
-
-        typedef char true_type;
-        struct false_type { char a[2]; };
-
-        template<std::size_t N>
-        struct dummy;
-    }
 
 #define M1(z,n,t) declval<A##n>()
 
@@ -297,14 +304,14 @@ namespace boost
     struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
     {                                                                                                   \
         template<class X>                                                                               \
-        static type_traits_detail::true_type                                                            \
-        test(type_traits_detail::dummy<sizeof(X(declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
+        static type_traits::detail::is_constructible::true_type                                                            \
+        test(type_traits::detail::is_constructible::dummy<sizeof(X(declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
                                                                                                            \
         template<class X>                                                                               \
-        static type_traits_detail::false_type                                                           \
+        static type_traits::detail::is_constructible::false_type                                                           \
         test(...);                                                                                      \
                                                                                                         \
-        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits::detail::is_constructible::true_type);          \
         typedef boost::integral_constant<bool,value> type;                                              \
     };
 
@@ -319,14 +326,14 @@ namespace boost
     struct is_constructible<T,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
     {
         template<class X>
-        static type_traits_detail::true_type
-        test(type_traits_detail::dummy<sizeof(X(),int())>*);
+        static type_traits::detail::is_constructible::true_type
+        test(type_traits::detail::is_constructible::dummy<sizeof(X(),int())>*);
 
         template<class X>
-        static type_traits_detail::false_type
+        static type_traits::detail::is_constructible::false_type
         test(...);
 
-        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits::detail::is_constructible::true_type);
         typedef boost::integral_constant<bool,value> type;
     };
 
@@ -387,7 +394,6 @@ namespace boost
 
 
 
-#endif
 #endif
 #endif
 
