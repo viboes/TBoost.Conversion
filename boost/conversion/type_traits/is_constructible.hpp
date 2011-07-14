@@ -71,11 +71,31 @@ namespace boost {
 #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
 #endif
 
-namespace boost
-{
-
 #if ! defined BOOST_NO_DECLTYPE
-  #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+  #if defined _MSC_VER
+    #if ! defined BOOST_NO_SFINAE_EXPR
+      #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+    #else
+      #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+      #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    #endif
+  #elif defined __clang__
+    #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+  #elif defined __GNUC__
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+       #if ! defined BOOST_NO_SFINAE_EXPR
+         #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+         //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+       #else
+         #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+         #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+       #endif
+     #else
+       #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+     #endif
+  #else
+       #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+  #endif
 #elif ! defined BOOST_NO_SFINAE_EXPR
   #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
   #if defined __clang__
@@ -88,6 +108,9 @@ namespace boost
   #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
   #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
 #endif
+
+namespace boost
+{
 
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
