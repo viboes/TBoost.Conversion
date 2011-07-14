@@ -35,8 +35,8 @@ namespace boost {
 
   //! Macro stating if the compiler doesn't support the features needed to define the @c is_constructible type trait.
   #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
-  //! Macro stating if the compiler doesn't support the features needed to define the @c is_default_constructible type trait.
-  #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+  // Macro stating if the compiler doesn't support the features needed to define the @c is_default_constructible type trait.
+  //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
   //! Max number of arguments to is_constructible when using variadic templates emulation.
   #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
 
@@ -102,6 +102,33 @@ namespace boost
     #undef M0
     #undef M1
 
+
+    #define M1(z,n,t) void
+
+    template<class T>                             \
+    struct is_constructible<T,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
+    {
+        template<class X>
+        static type_traits_detail::true_type
+        test(type_traits_detail::dummy<sizeof(X(),int())>*);
+
+        template<class X>
+        static type_traits_detail::false_type
+        test(...);
+
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);
+        typedef boost::integral_constant<bool,value> type;
+    };
+
+    template<>                             \
+    struct is_constructible<void,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
+    : boost::false_type                                                                               \
+    {                                                                                                   \
+    };
+
+    #undef M1
+
+
     #define M0(z,n,t)                                                                                   \
     template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
     struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
@@ -113,7 +140,7 @@ namespace boost
     #undef M0
 
 
-    #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
 
 #else
 
