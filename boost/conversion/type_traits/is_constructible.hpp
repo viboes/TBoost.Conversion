@@ -35,8 +35,8 @@ namespace boost {
 
   //! Macro stating if the compiler doesn't support the features needed to define the @c is_constructible type trait.
   #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
-  // Macro stating if the compiler doesn't support the features needed to define the @c is_default_constructible type trait.
-  //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_default_constructible type trait.
+  #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
   //! Max number of arguments to is_constructible when using variadic templates emulation.
   #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
 
@@ -102,12 +102,15 @@ namespace boost
     #undef M0
     #undef M1
 
-    #if defined __GNUC__
+    #if defined __clang__
+    #elif defined __GNUC__
        #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
          #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
        #endif
     #else
+    #endif
 
+    #if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
     #define M1(z,n,t) void
 
     template<class T>                             \
