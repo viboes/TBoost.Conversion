@@ -35,31 +35,31 @@
 <span class="keyword">class</span> <a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="assignable_to.html#boost.conversion.assignable_toconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <a class="link" href="assignable_to.html#idp15437088-bb"><span class="identifier">assignable_to</span></a><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  assignable_to&amp; <a class="link" href="assignable_to.html#idp15439744-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="assignable_to.html#idp15437728-bb"><span class="identifier">assignable_to</span></a><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  assignable_to&amp; <a class="link" href="assignable_to.html#idp15440384-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-    assignable_to&amp; <a class="link" href="assignable_to.html#idp15444096-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> assignable_to&amp; <a class="link" href="assignable_to.html#idp15452208-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    assignable_to&amp; <a class="link" href="assignable_to.html#idp15444736-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> assignable_to&amp; <a class="link" href="assignable_to.html#idp15452848-bb"><span class="keyword">operator</span><span class="special">=</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
   <span class="comment">// public data members</span>
   <span class="identifier">Target</span> <span class="special">&amp;</span> <span class="identifier">ref_</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp15432272"></a><h2>Description</h2>
+<a name="idp15433712"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="idp15432672"></a><h3>
+<a name="idp15434112"></a><h3>
 <a name="boost.conversion.assignable_toconstruct-copy-destruct"></a><code class="computeroutput">assignable_to</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><a name="idp15437088-bb"></a><span class="identifier">assignable_to</span><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span> r<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><a name="idp15437728-bb"></a><span class="identifier">assignable_to</span><span class="special">(</span><span class="identifier">Target</span> <span class="special">&amp;</span> r<span class="special">)</span><span class="special">;</span></pre>
 <p>default copy constructor </p>
 <p><span class="bold"><strong>Exception Safety:</strong></span> no-throw guarantee. constructor from a reference </p>
 <p><span class="bold"><strong>Exception Safety:</strong></span> no-throw guarantee. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout">assignable_to&amp; <a name="idp15439744-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> u<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout">assignable_to&amp; <a name="idp15440384-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> u<span class="special">)</span><span class="special">;</span></pre>
 <p>Assignment.</p>
 <p><span class="bold"><strong>Effects:</strong></span> Forwards the assignment to the reference. </p>
 <p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">*this</code> </p>
@@ -67,7 +67,7 @@
 </li>
 <li class="listitem">
 <pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> 
-  assignable_to&amp; <a name="idp15444096-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> s<span class="special">)</span><span class="special">;</span></pre>
+  assignable_to&amp; <a name="idp15444736-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a><span class="special">&lt;</span> <span class="identifier">Source</span> <span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> s<span class="special">)</span><span class="special">;</span></pre>
 <p>Assignment from a <code class="computeroutput"><a class="link" href="assignable_to.html" title="Class template assignable_to">assignable_to</a></code> wrapping a type <code class="computeroutput">Source</code> convertible to Target.</p>
 <p><span class="bold"><strong>Effects:</strong></span> Forwards the assignment to the reference using <code class="computeroutput">assign_to</code>. </p>
 <p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">*this</code> </p>
@@ -75,7 +75,7 @@
 <p><span class="bold"><strong>Remark(s):</strong></span> This constructor doesn't participates on overload resolution if <code class="computeroutput">Source</code> is not extrinsic assignable to <code class="computeroutput">Target</code>. </p>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> assignable_to&amp; <a name="idp15452208-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> u<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> assignable_to&amp; <a name="idp15452848-bb"></a><span class="keyword">operator</span><span class="special">=</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> u<span class="special">)</span><span class="special">;</span></pre>
 <p>Assignment from a type <code class="computeroutput">Source</code> assignable to <code class="computeroutput">Target</code>.</p>
 <p><span class="bold"><strong>Effects:</strong></span> Forwards the assignment to the reference using <code class="computeroutput">assign_to</code> </p>
 <p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">*this</code> </p>

@@ -28,7 +28,8 @@
 [def __convertible_to  `convertible_to`]
 [def __mcf  `mcf`]
 [def __convertible_from  `convertible_from`]
-[def __converter_cp  `converter_cp`]
+[def __implicit_converter_cp  `implicit_converter_cp`]
+[def __explicit_converter_cp  `explicit_converter_cp`]
 
 [def __try_convert_to  `try_convert_to`]
 [def __convert_to_or_fallback  `convert_to_or_fallback`]
@@ -38,8 +39,8 @@
 [def __assigner_cp  `assigner_cp`]
 [def __try_assign_to  `try_assign_to`]
 
-[def __is_extrinsic_convertible  `is_extrinsic_convertible`]
-[def __is_extrinsic_explicit_convertible  `is_extrinsic_explicit_convertible`]
+[def __is_extrinsically_convertible  `is_extrinsically_convertible`]
+[def __is_extrinsically_explicit_convertible  `is_extrinsically_explicit_convertible`]
 
 
 [import ../../../boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp]
@@ -94,9 +95,9 @@ Finally, you can mentally add the following to any code fragments in this docume
 [section Scope]
 [/==================]
 
-[*Boost.Conversion] manages generic extrinsic conversion between unrelated types. These conversion can be seen as implicit or explicit conversions ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2380.pdf [*N2380 - Explicit Conversion Operator Draft Working Paper (revision 2)]]).
+[*Boost.Conversion] manages extrinsic conversion between unrelated types. These conversion can be seen as implicit or explicit conversions ([@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2380.pdf [*N2380 - Explicit Conversion Operator Draft Working Paper (revision 2)]]).
 
-The conversion operator can not be overloaded with a free function in C++. In the past, there were requests to be able to overload the `static_cast` operator [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2200.pdf [*N2200 - Operator Overloading]]. The author of this library thinks that the language would be more uniform if this extrinsic overload would be possible. The new extrinsic conversion operators could take the following form 
+The conversion operator can not be overloaded with a free-standing function on C++. In the past, there were request to be able to overload the `static_cast` operator [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2200.pdf [*N2200 - Operator Overloading]]. The author of this library thinks that the language would be more uniform if this extrinsic overload would be possible. The new extrinsic conversion operators could take the following form 
 
   operator Target(const Source& val);
 
@@ -106,19 +107,96 @@ The assignment operator could also be overloaded by a free function with some li
 
   Target& operator=(Target&, Source const&);
 
-[*Boost.Conversion] provides a library emulation for this missing feature and shows some workarounds needed to take care of current C++ semantics. 
+[*Boost.Conversion] provides a library-based solution for these missing language features, shows its own limitations and propose some library workarounds needed to take care of an equivalent behavior. 
 
-In order to provide the needed functionality, two type traits are mandatory: `is_constructible` and `is_assignable`. The library provides a first implementation of these type traits that works on compilers providing some specific features. The idea is that these type traits should be added to [*Boost.TypeTraits].
+Note that [*Boost.Conversion] is not particularly concerned with cases of: 
 
-When we don't have an automatic way to detect these traits, the library provides specializations for some std and boost types. If accepted the library will provide specializations for all the standard types and optionally for all the Boost types.
+* type-to-type conversion via an input/output stream as Boost.LexicalCast does or 
+* string-to-type or type-to-string as Vladimir Batov's Boost.Convert proposal or 
+* string-to-type or type-to-string as Jeroen Habraken on going Boost.Coerce or 
+* numeric conversion as Boost.Numeric can do.
 
-Users working with compilers not supporting the definition of these traits, or users that need to make their code portable, will need to specialize these traits by hand.  
-
+When the users need to configure the conversion between specific value types they will need to use the specific interface these libraries provide.
+ 
 [endsect]
 
 
 [section Motivation]
 
+When conversion is useful, but not provided by unrelated classes, the recommended approach is to use a named free function. One example of this could be a `date_to_week(date const&)` function. 
+
+This approach works well when the source and destination is known at compile time, but when templates are involved, it becomes problematic. How can one write generic code for user-supplied classes when the source and destination types could be anything? Predicting the name becomes impossible, `operator T()` is the accepted way to express such an intent.
+
+  T t = T(u);
+
+Generic programming demands syntactic regularity. [*Boost.Conversion] propose an all-purpose templated conversion function:
+
+    template< class Target, class Source > 
+    Target explicit_convert_to( Source const & u );
+
+that can be used inside templates as follows:
+
+  T t = explicit_convert_to<T>(u);
+
+The default behavior of this function is to call explicitly the conversion operator
+
+    {
+      return Target( u );
+    }
+
+Since this relies on exactly one of the missing language feature, it would have to be specialized for each pair of types which do not themselves define conversions.
+    
+    week explicit_convert_to( date const & u ) { ... }
+
+Unfortunately this doesn't works as overload resolution doesn't take care of template type parameters that can not be deduced from the function arguments. [*Boost.Conversion] uses a customization point that takes in account the `Source` and the `Target` types.
+
+    template <typename Target, typename Source>
+    Target explicit_convert_to(Source const& from)
+    {
+      return conversion::explicit_converter<Target,Source>()(from);
+    }
+
+__convert_to is a short hand for __explicit_convert_to.
+
+To manage with extrinsically implicit conversion Boost.Conversion provides another all-purpose function template
+
+    template< class T, class U > 
+    T implicit_convert_to( U const & u );
+
+This function alone can not manage with implicit conversion, as `implicit_convert_to` needs the target type to be stated explicitly. 
+
+  f(implicit_convert_to<T>(u));
+
+  
+[*Boost.Conversion] provides an `implicitly` (make implicitly convertible from) function that creates a class providing implicit conversion operators for the `Targetv types for which the `Source` type is convertible using the `implicit_convert_to` function.  
+
+  template < class Source >
+  class convertible_from 
+  { 
+    Source data;
+  public:
+    convertible_from(Source source) : data(source) {}
+
+    // enabled if class Source is extrinsically implicit convertible to Target  
+    template < class Target > 
+    operator Target() {
+      return implicit_convert_to<Target>(*this);
+    }
+  };
+  template < class Source >
+  convertible_from<From> implicitly(Source source) 
+  { 
+    return convertible_from<Source>(source); 
+  } 
+
+
+Now the user can use the implicitly function to pass parameters that are extrinsically implicit convertibles without stating explicitly the type as follows
+  
+  T v;
+  f(implicitly(v));
+
+
+[/
 I've needed recently to convert from `boost::chrono::time_point<Clock, Duration>` to `boost::posix_time::ptime` and from  `boost::chrono::duration<Rep, Period>` to `boost::posix_time::time_duration`. These kinds of conversions are needed quite often when you use code from two different libraries that have each implemented the same concept using a different representation, and hard-coded the library interface to its own implementation. Well, this is a normal situation we can't avoid. Life is life.
 
 Quite often we need to convert unrelated types `Source` and `Target`. As these classes are unrelated, neither of them offers conversion operators to the other. Usually we get it by defining a specific function such as
@@ -134,7 +212,7 @@ In my case I started by defining
     template <typename Clock, typename Duration>
     posix_time::ptime convert_to_posix_time_ptime(const chrono::time_point<Clock, Duration>& from);
 
-Imagine now that you need to convert a `std::pair<Source, Source>` to a `std::pair<Target, Target>`. The standard defines conversion of two pair types if the related types are C++ convertible:
+Imagine now that you need to convert a `std::pair<Source, Source>` to a `std::pair<Target, Target>`. The standard defines conversion of two pairs types if the related types are C++ convertible:
 
     template <typename T1, typename T2>
     struct pair {
@@ -262,7 +340,7 @@ With __assign_to we could do
 
     assign_to(a, assign_to(b, c));
 
-and if we find this less than readable we can try with the "make assigner to" `mat' free function.
+and if we find this less than readable we can try with the "make assigner to `mat' free function.
 
     mat(a) = mat(b) = c;
 
@@ -272,7 +350,9 @@ So one of the advantages of using this common functions is uniformity. The other
 
 The library takes in account some of the features suggested by the [*Boost.Convert] library and its review, such as no-throw conversions, conversions with fallback, ...
 
+]
 [endsect]
+
 
 [/==================]
 [section Description]
@@ -283,13 +363,13 @@ The library takes in account some of the features suggested by the [*Boost.Conve
 
 * a generic __implicit_convert_to function which can be customized by the user to make implicit conversion between unrelated types.
 * a generic __explicit_convert_to function which can be customized by the user to make explicit conversion between unrelated types.
-* a generic __convert_to function (or __explicit_convert_to) for performing conversions, that behaves as a functor factory if its argument is a fusion actor.
+* a generic __convert_to function which is equivalent __explicit_convert_to or that behaves as a functor factory if its argument is a fusion actor.
 * a generic __assign_to function which can be customized by the user to make explicit assignments between unrelated types.
 * a generic __try_convert_to function which can be customized by the user to make explicit optional conversion between unrelated types.
 * a generic __try_assign_to function which can be customized by the user to make explicit optional assignments between unrelated types.
 * a generic __convert_to_or_fallback function which can be customized by the user to make explicit conversion between unrelated types, relying on a fallback when the conversion fails.
 
-* a generic __mat function returning a `assignable_to` wrapper which implements assignment by a calls to __assign_to. 
+* a generic __mat function returning a `assignable_to` wrapper which implements assignments by calls to __assign_to. 
 * a generic __mcf function returning a `convertible_from` wrapper which implements the implicit conversion operators by calls to __implicit_convert_to.
 * a __convertible_to wrapper that acts as a implicit converter when passing parameters to a function.
 
@@ -308,6 +388,16 @@ The library takes in account some of the features suggested by the [*Boost.Conve
 * conversion between `boost::optional` of explicitly convertible types.
 * conversion between `boost::rational` of explicitly convertible types.
 * conversion between Boost.Fusion sequences (tuples) of explicitly convertible types.
+
+[endsect]
+
+[section Caveats]
+
+In order to provide the needed functionality, two type traits are mandatory: `is_constructible` and `is_assignable`. The library provides a first implementation of these type traits that works on compilers providing some specific features. The idea is that these type traits should be added to [*Boost.TypeTraits].
+
+When the compiler doesn't provides with automatic ways to detect these traits, the library provides specializations for some std and boost types. If accepted the library will provide the specializations for all the standard types and optionally for all the Boost types.
+
+Users working with compilers not supporting the definition of these traits, or users that need to make their code portable, will need to specialize these traits by hand.  
 
 [endsect]
 
@@ -370,8 +460,7 @@ All functions in the library are thread-unsafe except when noted explicitly.
 * allow to define function template with default arguments,
 *
 
-We are unable to define the type traits `is_constructible` and `is_assignable` if dectype and SFINAE on expressions is not available. As consequence we can not use a concept based design using SFINAE on these traits and others derived from them.
-
+At present the author is unable to define the type traits `is_constructible` and `is_assignable` if dectype and SFINAE on expressions is not available. 
 On compilers that `is_constructible` and `is_assignable` can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros `BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE` and `BOOST_CONVERSION_NO_IS_ASSIGNABLE` allowing to make the specialization only when needed.
 
 The `mcf()` function and the `convertible_from` class are not provided on compilers on which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
@@ -449,17 +538,17 @@ The __convert_to function returns the explicit conversion to the target type.
   return Target(source);
 
 When the extrinsic conversion must be stored in a variable you can use __assign_to instead. 
-By default if the trait `is_assignable<Target,Source>` returns true, __assign_to(target,source) calls the assignment operator, 
+If the trait `is_assignable<Target,Source>` is a `true_type`, __assign_to(target,source) calls to the assignment operator, 
 
-  target=source;
+  target = source;
 
-otherwise it does
+otherwise it does 
 
-  target=convert_to<Target>(source);
+  target = convert_to<Target>(source);
 
 when `Source` is extrinsically convertible to `Target`.
 
-For example we can implement a function that swaps two convertible types as follows:
+For example the user can implement a function that swaps two convertible types as follows:
 
 [SWAP_CPP]
 
@@ -471,7 +560,7 @@ The result of this program will be
   x= 3
 
 [note 
-The name __convert_to could also be `convert` and __assign_to `assign`, but I find the current names more coherent with the other names used by the library. If the Boost community agree on better names globally I will adopt them. 
+The name __convert_to could also be `convert` and __assign_to be `assign`, but I find the current names more coherent with the other names used by the library. If the Boost community agree on better names globally I will adopt them. 
 ]
 
 ['See the source file [@../../example/swap.cpp example/swap.cpp]]
@@ -482,15 +571,15 @@ The name __convert_to could also be `convert` and __assign_to `assign`, but I fi
 [section Chaining assignments]
 [/====================================]
 
-When doing multiple assignments we use to do
+When doing multiple assignments the user use to do
 
     a = b = c;
 
-With __assign_to we could do
+With __assign_to the users could do
 
     assign_to(a, assign_to(b, c));
 
-and if we find this not really readable we can try with the [*m]ake [*a]ssigner [*t]o `mat' free function.
+and if they find this not really readable they can try with the [*m]ake [*a]ssigner [*t]o `mat' free function.
 
     mat(a) = mat(b) = c;
 
@@ -524,11 +613,11 @@ Do not forget to include these files when you use a generic class or algorithm u
 [section Handling invalid conversions]
 [/====================================]
 
-The expected behavior of __convert_to is to throw an exception when the conversion is not possible. If an action must be taken on failure we need to use a try-catch
+The expected behavior of __convert_to is to throw an exception when the conversion is not possible. If an action must be taken on failure the user needs to use a try-catch
 
 [NO_THROW_CPP_TRY_CATCH_WAY]
 
-Sometimes the user could prefer no-throw behavior. The library provides a way to get this behavior with the __try_convert_to function, which returns an optional initialized when the conversion succeeds. 
+Sometimes the user could prefer no-throw behavior. The library provides a way to get this behavior with the __try_convert_to function, which returns an optional that is initialized only when the conversion succeeds. 
 
 [NO_THROW_CPP_TRY_CONVERT_WAY]
 
@@ -552,7 +641,7 @@ In some cases the conversion failure can be ignored and the result replaced with
 
 [FALLBACK_CPP_TRY_ASSIGN_WAY]
 
-Note that we use __try_assign_to instead of __assign_to, as we don't want to have an exception if the conversion fails, as we have a fallback value already.
+Note the use __try_assign_to instead of __assign_to, as it avoids an exception if the conversion fails, as there is a fallback value already.
 
 The library provides a specific function __convert_to_or_fallback that does that exactly
 
@@ -563,7 +652,7 @@ If the Fallback type is the same as the Target, the template parameter Target ca
 [FALLBACK_CPP_CONVERT_TO_OR_FALLBACK_DEDUCED]
 
 [note 
-The name of this function could be also __convert_to as we can overload it, but I find it more explicit this way. If the Boost community agree on a better name I will adopt it. 
+The name of this function could be also __convert_to as the library can overload it, but I find it more explicit this way. If the Boost community agree on a better name I will adopt it. 
 ]
 
 ['See the source file [@../../example/fallback.cpp example/fallback.cpp]]
@@ -582,18 +671,18 @@ The advertised reader will be asking himself if the library provide implicit con
 
 If there is an implicit conversion from `T` to `int`, the preceding program will be well formed.
 
-With extrinsic conversion we want to preserve as much as possible this behavior. The problem is that as extrinsic conversions are not in the language and the compiler could not find them automatically, so we need to call explicitly to the extrinsic conversion.
+With extrinsic conversions it is desirable to preserve as much as possible this behavior. The problem is that as extrinsic conversions are not in the language and the compiler could not find them automatically, so the user needs to call explicitly to the extrinsic conversion.
 
   void f(int);
 
   T v;
-  f(convert_to<int>(v));
+  f(implicit_convert_to<int>(v));
 
 Imagine now that `f` is overloaded 
 
 [OVERLOAD_CPP_FCTS]
 
-and that we have a function that should work when `T` is either implicitly convertible to int or std::string. 
+and that the user has a function that should work when `T` is either implicitly convertible to int or std::string. 
 
 [OVERLOAD_CPP_IMPL]
 
@@ -606,16 +695,16 @@ and will result in
   1 called
   2 called
 
-But if T is *extrinsic* convertible to `int` or `std::string` we can not write a simple program that works as we don't know to which `Target` the type `T` must be converted to.
+But if T is *extrinsically* implicit convertible to `int` or `std::string` the user can not write a simple program that works as they doesn't know to which `Target` the type `T` must be converted to.
 
   T v;
   f(convert_to<???>(v));
 
-So the following fails to compile if `ExtrCvtToInt` is extrinsic convertible to `int` and `ExtrCvtToString` is extrinsic convertible to `std::string`.
+So the following fails to compile if `ExtrCvtToInt` is extrinsically convertible to `int` and `ExtrCvtToString` is extrinsically convertible to `std::string`.
 
 [OVERLOAD_CPP_IMPL_EXTRINSIC]
 
-It would be great if we could state explicitly that the parameter we are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __mcf that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
+It would be great if the user could state explicitly that the parameter they are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __mcf that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
 
 [OVERLOAD_CPP_MCF_LIKE]
 
@@ -628,7 +717,7 @@ The name __mcf ([*m]ake [*c]onvertible [*f]rom) could be changed to `implicitly`
 ```
 ] 
 
-So the following will do as expected
+So the following will work as expected
 
 [OVERLOAD_CPP_MCF]
 
@@ -639,7 +728,7 @@ and prints
   1 called
   2 called
 
-Note that extrinsic implicit convertible implies extrinsic explicit convertible but the opposite is not true. That means that if `ExtrExplicitCvtToInt` is extrinsic explicit convertible to `int`, the following program will be ill formed
+Note that extrinsically implicit convertible implies extrinsically explicit convertible but the opposite is not true. That means that if `ExtrExplicitCvtToInt` is extrinsically explicit convertible to `int`, the following program will be ill formed
 
 [OVERLOAD_CPP_MCF_EXPLICIT]
 
@@ -659,31 +748,31 @@ having as result, for example
 
 [endsect]
 
-[section How to write a function that accepts a parameter that is extrinsic convertible to a given type?]
+[section How to write a function that accepts a parameter that is extrinsically convertible to a given type?]
 [/====================================]
 
-The use of the helper function __mcf is a little bit intrusive in some cases. It would be great if we could define a function accepting a type that is extrinsic convertible,so the user will not be forced to use it. There are two alternatives:
+The use of the helper function __mcf is a little bit intrusive in some cases. It would be great if the users could define a function accepting a type that is extrinsically convertible, so the they will not be forced to use it. There are two alternatives:
 
 * overload the function using SFINAE
 * change the function prototype
 
-If we had already the function
+If the user had already the function
 
   void f(int);
 
-we can add an overload that will make explicitly the conversion as follows
+She can add an overload that will make explicitly the conversion as follows
 
   template <typename T>
-  typename enable_if<is_extrinsic_convertible<int>,void >::type 
+  typename enable_if<is_extrinsically_convertible<int>,void >::type 
   f(T v) { return convert_to<int>(v); }
 
-This template overload will be taken for overload resolution only if `T` is not `int` (as non template functions are preferred to template ones) and `T` is extrinsic convertible to `int`. `is_extrinsic_convertible` is a trait added by the library that contains a nested value field that is true or false depending on whether the `Source` type is extrinsic implicit convertible to `Target`.
+This template overload will be taken for overload resolution only if `T` is not `int` (as non template functions are preferred to template ones) and `T` is extrinsically convertible to `int`. `is_extrinsically_convertible` is a trait added by the library that contains a nested value field that is true or false depending on whether the `Source` type is extrinsically implicit convertible to `Target`.
 
-An alternative could be to define the function `f` from the beginning stating explicitly that his parameter one that is extrinsic convertible to `int`.
+An alternative could be to define the function `f` from the beginning stating explicitly that his parameter one that is extrinsically convertible to `int`.
 
   void f(convertible_to<int> v);
 
-The `convertible_to<T>` class is a `T` wrapper that is implicitly constructible from any type extrinsic constructible `T`. `convertible_to<T>` is implicitly convertible to `T`. For example, if `T` is extrinsic convertible to `int`, the following program will be well formed
+The `convertible_to<T>` class is a `T` wrapper that is implicitly constructible from any type extrinsically constructible `T`. `convertible_to<T>` is implicitly convertible to `T`. For example, if `T` is extrinsically convertible to `int`, the following program will be well formed
 
   void f(convertible_to<int> v) 
   {
@@ -712,12 +801,12 @@ While this alternative doesn't seems completely necessary, I wanted to add them 
 [section How to specialize extrinsic conversions?]
 [/====================================]
 
-__Boost_Conversion__ has a customization point for each on of the provided functions. For example, to customize the __implicit_convert_to function you should partially specialize the functor __converter_cp.
+__Boost_Conversion__ has a customization point for each on of the provided functions. For example, to customize the __implicit_convert_to function you should partially specialize the functor __implicit_converter_cp.
  
   namespace  boost { 
     namespace conversion {
       template < typename Target, typename Source, typename Enable=void >
-      struct convert_cp : true_type {
+      struct implicit_converter_cp : true_type {
         Target operator()(const Source& val)
       };
     }
@@ -735,7 +824,7 @@ A possible specialization for `std::pair` follows:
         };
 
 
-Note that the __converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsic_convertible type trait.
+Note that the __implicit_converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsically_convertible type trait.
 
 The same applies to the generic __assign_to function and its __assigner_cp.
 
@@ -771,7 +860,7 @@ The library provide a specific Phoenix functor factory having as result a functo
 [/
 [section How to convert to types needing some constructors arguments?]
 
-Sometimes we need the conversion construct the resulting type with some arguments. This could be the case for example of std::vector, for which we need to pass an allocator to the constructor. In order to maintain the same signature, the library provides a `pack` function that will wrap the Source and the Target constructor parameters in a single parameter. So the overloading must be done on the result of this `pack` function.
+Sometimes the user needs the conversion construct the resulting type with some arguments. This could be the case for example of std::vector, for which the user could want to pass an allocator to the constructor. In order to maintain the same signature, the library provides a `pack` function that will wrap the Source and the Target constructor parameters in a single parameter. So the overloading must be done on the result of this `pack` function.
 
 [endsect]
 ]
@@ -838,6 +927,11 @@ Sometimes we need the conversion construct the resulting type with some argument
     [Bronek Kozicki.]
 ]
 
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/prot/14882fdis/n3291.pdf [*N3291 - Working Draft, Standard for Programming Language C++]]]
+    []
+]
+
 ]
 
 [endsect]
@@ -845,6 +939,31 @@ Sometimes we need the conversion construct the resulting type with some argument
 [endsect]
 [section Reference]
 
+This reference consists of several sections:
+
+* Type Traits Extensions defines some standard type traits that are missing to [*Boost.TypeTraits]. 
+
+[note
+
+The intent is to move this section to the to the [*Boost.TypeTraits] library.
+See  [@http://www.open-std.org/jtc1/sc22/wg21/prot/14882fdis/n3291.pdf [*N3291 - Working Draft, Standard for Programming Language C++]] 20.9.4.3	Type properties.
+
+]
+
+
+* Core: Contains the core features of the library
+* C++ Standard classes specializations: Contains specializations for some of the C++ standard types. Files in this section are not included by the  <boost/conversion.hpp> file and must be included explicitly when needed.
+* Boost classes specializations: Contains specializations for some of the C++ standard types. Files in this section are not included by the  <boost/conversion.hpp> file and must be included explicitly when needed.
+
+
+
+
+[section Type Traits Extensions]
+
+[xinclude std_type_traits.xml]
+[xinclude std_type_traits_std.xml]
+[xinclude std_type_traits_boost.xml]
+[endsect]
 [xinclude core.xml]
 [xinclude std.xml]
 [xinclude boost.xml]
@@ -858,7 +977,7 @@ Sometimes we need the conversion construct the resulting type with some argument
 
 [section:history Appendix: History]
 
-[section [*Version 0.6.0, July 10, 2011] ]
+[section [*Version 0.6.0, July 16, 2011] ]
 
 This is a major evolution of the library.
 
@@ -866,7 +985,7 @@ This is a major evolution of the library.
 
 * Added `try_convert_to`, `try_assign_to`, `convert_to_or_fallback` functions.
 * Added converter factory `make_converter_to`.
-* Added type traits `is_extrinsic_convertible` and `is_extrinsic_assignable`.
+* Added type traits `is_extrinsically_convertible` and `is_extrinsically_assignable`.
 * Added `convertible_to`/`convertible_from` and `assignable_to` wrappers and the corresponding `mcf`, `mat` free functions.
 * Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp`, and so on.
 * On compilers supporting it the interface is now concept-based, for specialization or overloading.
@@ -1168,52 +1287,7 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 
 [heading For later releases]
 
-* Conversion between types for which numeric_cast works.
 
-[/
-[heading Make a proposal to the C++ standard]
-
-C++1x has explicit conversion operators, but they must always be defined in the source class. The same applies to the assignment operator, it must be defined on the Target class.
-
-It will be interesting to be able to add constructors and assignments operators to the class std::pair, so we can say that two pairs are convertible if the parameters are explicitly convertible using a convert_to function
-
-    template<class U , class V>
-    //requires HasConvertTo<T1, const U&> && HasConvertTo<T2, const V&>
-    std::pair& operator=(const std::pair<U , V>& p) {
-        return std::make_pair(convert_to<T1>(p.first), convert_to<T2>(p.second));
-    }
-
-But this is not possible. We can not add operations to a class.
-
-Another possibility could be to make an evolution to the standard, so the convertible concept takes car of extrinsic conversions. We could be able to implicitly or explicitly add extrinsic conversion operators between unrelated types. Non-member assignment operators could also be specialized.
-
-  template < typename To, typename From >
-  operator To(const From& val);
-
-  template < typename To, typename From >
-  To& operator=(To& to, const From& from);
-
-For example we could define the explicit conversion from as chrono::time_point<Clock, Duration> to posix_time::ptime follows
-
-    template < class Clock, class Duration>
-    explicit operator boost::posix_time::ptime(const boost::chrono::time_point<Clock, Duration>& from) {
-        typedef boost::chrono::time_point<Clock, Duration> time_point_t;
-        typedef boost::chrono::nanoseconds duration_t;
-        typedef boost::duration_t::rep rep_t;
-        rep_t d = boost::chrono::duration_cast<duration_t>(from.time_since_epoch()).count();
-        rep_t sec = d/1000000000;
-        rep_t nsec = d%1000000000;
-        return  boost::posix_time::from_time_t(0)+
-                boost::posix_time::seconds(static_cast<long>(sec))+
-                boost::posix_time::nanoseconds(nsec);
-    }
-
-With this explicit conversion and the equivalent for duration, the actual definition of std::pair will allows to 
-
-    std::pair<chrono::time_point<Clock, Duration>, boost::chrono::duration<Rep, Period> > tp_dur_pair;
-    std::pair<boost::posix_time::ptime, boost::posix_time::time_duration> ppt;
-    ppt = tp_dur_pair;
-]
 
 [endsect]
 [endsect]
