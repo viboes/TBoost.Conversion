@@ -56,137 +56,6 @@ namespace boost {
 #include <boost/utility/declval.hpp>
 #include <cstddef>
 
-
-#ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
-#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
-#endif
-
-namespace boost
-{
-    namespace type_traits_detail
-    {
-        template<class T>
-        T declval();
-
-        typedef char true_type;
-        struct false_type { char a[2]; };
-
-        template<std::size_t N>
-        struct dummy;
-    }
-
-    template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
-    struct is_constructible;
-
-#ifndef BOOST_NO_SFINAE_EXPR
-
-    #define M1(z,n,t) type_traits_detail::declval<A##n>()
-
-    #define M0(z,n,t)                                                                                   \
-    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-    struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
-    {                                                                                                   \
-        template<class X>                                                                               \
-        static type_traits_detail::true_type                                                            \
-        test(type_traits_detail::dummy<sizeof(X(type_traits_detail::declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
-                                                                                                           \
-        template<class X>                                                                               \
-        static type_traits_detail::false_type                                                           \
-        test(...);                                                                                      \
-                                                                                                        \
-        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
-        typedef boost::integral_constant<bool,value> type;                                              \
-    };
-
-    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-    #undef M0
-    #undef M1
-
-    #if defined __clang__
-    #elif defined __GNUC__
-       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
-         #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-       #endif
-    #else
-    #endif
-
-    #if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-    #define M1(z,n,t) void
-
-    template<class T>                             \
-    struct is_constructible<T,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
-    {
-        template<class X>
-        static type_traits_detail::true_type
-        test(type_traits_detail::dummy<sizeof(X(),int())>*);
-
-        template<class X>
-        static type_traits_detail::false_type
-        test(...);
-
-        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);
-        typedef boost::integral_constant<bool,value> type;
-    };
-
-    template<>                             \
-    struct is_constructible<void,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
-    : boost::false_type                                                                               \
-    {                                                                                                   \
-    };
-
-    #undef M1
-
-    #endif
-
-
-    #define M0(z,n,t)                                                                                   \
-    template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-    struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
-      : boost::false_type                                                                               \
-    {                                                                                                   \
-    };
-
-    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-    #undef M0
-
-
-
-#else
-
-    #define M0(z,n,t)                                                                                   \
-    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-    struct is_constructible<T, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
-      : boost::false_type                                                                               \
-    {                                                                                                   \
-    };
-
-    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-    #undef M0
-
-    #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
-    #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-    // these specializations are needed when BOOST_NO_SFINAE_EXPR is defined
-
-
-#endif
-
-#ifdef  BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-    // default constructor
-    template <> struct is_constructible< int  >  : true_type {};
-#endif
-#ifdef  BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
-    template <class T> struct is_constructible< T*, T* const &  >  : true_type {};
-    template <> struct is_constructible< int, const int  >  : true_type {};
-    template <> struct is_constructible< int, int const& >  : true_type {};
-    template <> struct is_constructible< double, const double  >  : true_type {};
-    template <> struct is_constructible< double, double const& >  : true_type {};
-#endif
-
-
-}
-
-#else
-#include <boost/utility/declval.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/type_traits/is_scalar.hpp>
@@ -196,17 +65,31 @@ namespace boost
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_all_extents.hpp>
-#include <boost/config.hpp>
-#if defined(BOOST_NO_DECLTYPE)
-#include <boost/typeof/typeof.hpp>
-#endif // defined(BOOST_NO_DECLTYPE)
-#include <utility>
-#include <boost/array.hpp>
-#include <complex>
-#include <vector>
-#include <boost/fusion/tuple.hpp>
 
-namespace boost {
+
+#ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
+#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
+#endif
+
+namespace boost
+{
+
+#if ! defined BOOST_NO_DECLTYPE
+  #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+#elif ! defined BOOST_NO_SFINAE_EXPR
+  #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+  #if defined __clang__
+  #elif defined __GNUC__
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
+       #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+     #endif
+  #endif
+#else
+  #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+  #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+#endif
+
+#if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
   namespace detail {
 
@@ -216,32 +99,20 @@ namespace boost {
         any(T);
       };
       template <class T>
-#if defined(BOOST_NO_DECLTYPE)
-      BOOST_TYPEOF_TPL((T(), true_type()))
-#else
       decltype((T(), true_type()))
-#endif
       test0(T&);
       false_type
       test0(any);
 
       template <class T, class A1>
-#if defined(BOOST_NO_DECLTYPE)
-      BOOST_TYPEOF_TPL((T(declval<A1>()), true_type()))
-#else
       decltype((T(declval<A1>()), true_type()))
-#endif
       test1(T&, A1);
       template <class A1>
       false_type
       test1(any, A1);
 
       template <class T, class A1, class A2>
-#if defined(BOOST_NO_DECLTYPE)
-      BOOST_TYPEOF_TPL((T(declval<A1>(),declval<A2>()), true_type()))
-#else
       decltype((T(declval<A1>(),declval<A2>()), true_type()))
-#endif
       test2(T&, A1, A2);
       template <class A1, class A2>
       false_type
@@ -250,33 +121,21 @@ namespace boost {
       struct imp0 // false, T is not a scalar
           : public common_type
                    <
-#if defined(BOOST_NO_DECLTYPE)
-          BOOST_TYPEOF_TPL(test0(declval<T&>()))
-#else
           decltype(test0(declval<T&>()))
-#endif
                    >::type
       {};
       template <bool, class T, class A1>
       struct imp1 // false, T is not a scalar
           : public common_type
                    <
-#if defined(BOOST_NO_DECLTYPE)
-          BOOST_TYPEOF_TPL(test1(declval<T&>(), declval<A1>()))
-#else
           decltype(test1(declval<T&>(), declval<A1>()))
-#endif
                    >::type
       {};
       template <bool, class T, class A1, class A2>
       struct imp2 // false, T is not a scalar
           : public common_type
                    <
-#if defined(BOOST_NO_DECLTYPE)
-          BOOST_TYPEOF_TPL(test2(declval<T&>(), declval<A1>(), declval<A2>()))
-#else
           decltype(test2(declval<T&>(), declval<A1>(), declval<A2>()))
-#endif
                    >::type
       {};
       template <class T>
@@ -374,37 +233,6 @@ namespace boost {
                                                T, A1>
       {};
 
-  template <class A1, class A2, class B1, class B2>
-  struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2>, detail::is_constructible::nat>
-      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
-        {};
-
-#if 0
-  template <class T1, class T2, std::size_t N>
-  struct is_constructible< boost::array<T1,N>, boost::array<T2,N> , detail::is_constructible::nat>
-      : integral_constant<bool, is_constructible<T1,T2>::value  >
-        {};
-#endif
-  template < class Target, class Source>
-  struct is_constructible< std::complex<Target>, std::complex<Source>, detail::is_constructible::nat >
-      : integral_constant<bool, is_constructible<Target,Source>::value  >
-        {};
-
-  template < class T1, class A1, class T2, class A2>
-  struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> , detail::is_constructible::nat>
-      : integral_constant<bool, is_constructible<T1,T2>::value  >
-        {};
-
-  template <class A1, class A2, class B1, class B2>
-  struct is_constructible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
-      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
-        {};
-
-  template <class A1, class A2, class A3, class B1, class B2, class B3>
-  struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
-      : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value&& is_constructible<A3,B3>::value >
-        {};
-
   namespace detail {
     namespace is_constructible {
       template <class A, std::size_t N>
@@ -423,7 +251,117 @@ namespace boost {
           {};
     }
   }
+
+
+#elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+
+  template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
+  struct is_constructible;
+    namespace type_traits_detail
+    {
+
+        typedef char true_type;
+        struct false_type { char a[2]; };
+
+        template<std::size_t N>
+        struct dummy;
+    }
+
+#define M1(z,n,t) declval<A##n>()
+
+    #define M0(z,n,t)                                                                                   \
+    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+    {                                                                                                   \
+        template<class X>                                                                               \
+        static type_traits_detail::true_type                                                            \
+        test(type_traits_detail::dummy<sizeof(X(declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
+                                                                                                           \
+        template<class X>                                                                               \
+        static type_traits_detail::false_type                                                           \
+        test(...);                                                                                      \
+                                                                                                        \
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);          \
+        typedef boost::integral_constant<bool,value> type;                                              \
+    };
+
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+    #undef M1
+
+    #if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    #define M1(z,n,t) void
+
+    template<class T>                             \
+    struct is_constructible<T,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
+    {
+        template<class X>
+        static type_traits_detail::true_type
+        test(type_traits_detail::dummy<sizeof(X(),int())>*);
+
+        template<class X>
+        static type_traits_detail::false_type
+        test(...);
+
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail::true_type);
+        typedef boost::integral_constant<bool,value> type;
+    };
+
+    template<>                             \
+    struct is_constructible<void,void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
+    : boost::false_type                                                                               \
+    {                                                                                                   \
+    };
+
+    #undef M1
+
+    #endif
+
+
+    #define M0(z,n,t)                                                                                   \
+    template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+      : boost::false_type                                                                               \
+    {                                                                                                   \
+    };
+
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+
+
+#else
+
+    template<class T, class A=void, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, class A, = void BOOST_PP_INTERCEPT)>
+    struct is_constructible;
+
+    #define M0(z,n,t)                                                                                   \
+    template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+    struct is_constructible<T, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+      : boost::false_type                                                                               \
+    {                                                                                                   \
+    };
+
+    BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    #undef M0
+
+#endif
+
+#ifdef  BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+    // default constructor
+    template <> struct is_constructible< int  >  : true_type {};
+#endif
+#ifdef  BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
+    template <class T> struct is_constructible< T*, T* const &  >  : true_type {};
+    template <> struct is_constructible< int, const int  >  : true_type {};
+    template <> struct is_constructible< int, int const& >  : true_type {};
+    template <> struct is_constructible< double, const double  >  : true_type {};
+    template <> struct is_constructible< double, double const& >  : true_type {};
+#endif
+
+
 }
+
+
 
 
 #endif
