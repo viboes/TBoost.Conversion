@@ -29,11 +29,11 @@ namespace boost {
   namespace conversion {
 
     //! wrapper providing implicit conversion operation to any type extrinsicaly implicit convertible from @c Source.
-    
-    //! This wrapper is used indirectly through the @mcf function to pass a @c Source parameter to a function waiting a parameter @c Target 
+
+    //! This wrapper is used indirectly through the @mcf function to pass a @c Source parameter to a function waiting a parameter @c Target
     //! extrinsicaly convertible from it.
-    //! 
-    //! Requires @c Source must be CopyConstructible 
+    //!
+    //! Requires @c Source must be CopyConstructible
 
     template <typename Source>
     class convertible_from {
@@ -51,17 +51,17 @@ namespace boost {
       //! @Remark On compilers that supports C++0x default arguments for function template parameters,
       //!   this conversion operator doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template <typename Target
-      , typename boost::enable_if< boost::is_extrinsically_convertible<Source,Target>, int >::type = 0
+      , typename boost::enable_if< is_extrinsically_convertible<Source,Target>, int >::type = 0
       >
       operator Target() const
       {
-        return conversion::implicit_convert_to<Target>(val_);
+        return implicit_convert_to<Target>(val_);
       }
 
     };
     //! @brief makes a wrapper implicitly convertible to types extrinsicly implicit convertibles from @c Source.
-    
-    //! The result provides implicitly conversion to any type which is extrinsic implicit convertible from @c Source.  
+
+    //! The result provides implicitly conversion to any type which is extrinsic implicit convertible from @c Source.
     //! @Returns convertible_from<Source>(s).
     //! @NoThrow.
     //! @Example

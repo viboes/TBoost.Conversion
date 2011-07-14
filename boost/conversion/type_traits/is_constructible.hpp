@@ -102,6 +102,11 @@ namespace boost
     #undef M0
     #undef M1
 
+    #if defined __GNUC__
+       #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
+         #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+       #endif
+    #else
 
     #define M1(z,n,t) void
 
@@ -128,6 +133,8 @@ namespace boost
 
     #undef M1
 
+    #endif
+
 
     #define M0(z,n,t)                                                                                   \
     template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
@@ -140,7 +147,6 @@ namespace boost
     #undef M0
 
 
-    //#define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
 
 #else
 
