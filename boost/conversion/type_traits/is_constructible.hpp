@@ -47,10 +47,12 @@ namespace boost {
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/declval.hpp>
@@ -131,6 +133,9 @@ namespace boost {
         struct dummy;
   }
 
+  template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
+  struct is_constructible;
+
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
   namespace type_traits_detail_is_constructible {
@@ -140,8 +145,6 @@ namespace boost {
     test0(T&);
     false_type
     test0(any);
-
-
 
 #define M1(z,n,t) declval<A##n>()
 
@@ -175,7 +178,6 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
 #undef M0
 #undef M1
 
-
       template <class T>
       struct imp0<true, T>
           : public is_scalar<T>
@@ -187,12 +189,12 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
           {};
 
 #define M0(z,n,t)                                                                         \
-template <class T, class X, class Y BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>\
-struct imp2<true, T, X, Y BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A) >               \
+template <class T, BOOST_PP_ENUM_PARAMS(n, class A)>\
+struct imp##n<true, T, BOOST_PP_ENUM_PARAMS(n, A) >               \
   : public false_type                                                                     \
   {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXM2, M0, ~)
+BOOST_PP_REPEAT_FROM_TO(2,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 #define M0(z,n,t)                                                                   \
@@ -214,6 +216,8 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
 BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
 #undef M0
 
+
+
 #define M0(z,n,t)                                                               \
   template <class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>      \
   struct imp##n<false, A[] BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>     \
@@ -225,8 +229,6 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
 
   }
 
-  template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
-  struct is_constructible;
 
 #define M1(z,n,t) || is_void<A##n>::value
 
@@ -264,8 +266,6 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 #elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
 
-  template<class T, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>
-  struct is_constructible;
 
 #define M1(z,n,t) declval<A##n>()
 
@@ -330,9 +330,6 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
 
 
 #else
-
-    template<class T, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, class A, = void BOOST_PP_INTERCEPT)>
-    struct is_constructible;
 
 #define M0(z,n,t)                                                                                   \
 template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
