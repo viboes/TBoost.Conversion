@@ -324,20 +324,6 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
   }
 
 
-
-
-#ifdef  BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-    // default constructor
-    template <> struct is_constructible< int  >  : true_type {};
-#endif
-#ifdef  BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
-    template <class T> struct is_constructible< T*, T* const &  >  : true_type {};
-    template <> struct is_constructible< int, const int  >  : true_type {};
-    template <> struct is_constructible< int, int const& >  : true_type {};
-    template <> struct is_constructible< double, const double  >  : true_type {};
-    template <> struct is_constructible< double, double const& >  : true_type {};
-#endif
-
 }
 
 #endif
