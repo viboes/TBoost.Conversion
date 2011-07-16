@@ -71,8 +71,6 @@ namespace boost {
 
 #ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
 #define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
-#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1 4
-#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXM2 1
 #endif
 
 #if ! defined BOOST_NO_DECLTYPE
@@ -133,7 +131,7 @@ namespace boost {
         struct dummy;
   }
 
-  template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
+  template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_INC(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX), class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
   struct is_constructible;
 
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
@@ -149,20 +147,20 @@ namespace boost {
 #define M1(z,n,t) declval<A##n>()
 
 #define M0(z,n,t)                                                           \
-  template <class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>  \
-  decltype((T(declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)), true_type()))                       \
-  BOOST_PP_CAT(test,BOOST_PP_INC(n))(T&, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A));
+  template <class T, BOOST_PP_ENUM_PARAMS(n, class A)>  \
+  decltype((T(BOOST_PP_ENUM(n, M1, ~)), true_type()))                       \
+  test##n(T&, BOOST_PP_ENUM_PARAMS(n, A));
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
 
 #define M0(z,n,t)                                                           \
-  template <class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                               \
+  template <BOOST_PP_ENUM_PARAMS(n, class A)>                               \
   false_type                                                                \
-  BOOST_PP_CAT(test,BOOST_PP_INC(n))(any, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A));
+  test##n(any, BOOST_PP_ENUM_PARAMS(n, A));
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 #define M1(z,n,t) declval<A##n>()
@@ -174,7 +172,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
                  >::type                                                              \
                  {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
 
@@ -204,7 +202,7 @@ BOOST_PP_REPEAT_FROM_TO(2,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
                               T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>    \
     {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 #define M0(z,n,t)                                                               \
@@ -213,7 +211,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
     : public false_type    \
   {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 
@@ -224,7 +222,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
     : public false_type                                                         \
   {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
   }
@@ -241,7 +239,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
               T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                  \
   {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 
@@ -252,12 +250,12 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
         {};
 
 #define M0(z,n,t)                                                                                           \
-  template <class A, std::size_t N, class X BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>          \
-  struct BOOST_PP_CAT(imp,BOOST_PP_INC(n))<false, A[N], X BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>  \
+  template <class A, std::size_t N, BOOST_PP_ENUM_PARAMS(n, class A)>          \
+  struct imp##n<false, A[N], BOOST_PP_ENUM_PARAMS(n, A)>  \
     : public false_type                                                                                     \
       {};
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 
@@ -270,12 +268,12 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #define M1(z,n,t) declval<A##n>()
 
 #define M0(z,n,t)                                                                                   \
-template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                    \
-struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                        \
+template<class T, BOOST_PP_ENUM_PARAMS(n, class A)>                    \
+struct is_constructible<T, BOOST_PP_ENUM_PARAMS(n, A)>                        \
 {                                                                                                   \
     template<class X>                                                                               \
     static type_traits_detail_is_constructible::yes_type                                                            \
-    test(type_traits_detail_is_constructible::dummy<sizeof(X(declval<A>() BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM(n, M1, ~)))>*);   \
+    test(type_traits_detail_is_constructible::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);   \
                                                                                                     \
     template<class X>                                                                               \
     static type_traits_detail_is_constructible::no_type                                             \
@@ -285,7 +283,7 @@ struct is_constructible<T,A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>    
     typedef boost::integral_constant<bool,value> type;                                              \
 };
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
 
@@ -308,7 +306,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
     };
 
     template<>
-    struct is_constructible<void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M1, ~)>
+    struct is_constructible<void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
     : boost::false_type
     {
     };
@@ -325,20 +323,20 @@ struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>
 {                                                                                                   \
 };
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAXP1, M0, ~)
+BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 
 #else
 
 #define M0(z,n,t)                                                                                   \
-template<class T, class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-struct is_constructible<T, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
+template<class T, BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+struct is_constructible<T, BOOST_PP_ENUM_PARAMS(n, A)>                          \
   : boost::false_type                                                                               \
 {                                                                                                   \
 };
 
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+    BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 #endif
