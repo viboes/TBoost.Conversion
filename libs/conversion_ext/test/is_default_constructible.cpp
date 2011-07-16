@@ -44,7 +44,7 @@ struct A
     A();
 };
 
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
 namespace boost
 {
   template <> struct is_constructible< A >  : true_type {};
