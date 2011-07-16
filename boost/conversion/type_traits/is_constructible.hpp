@@ -230,7 +230,9 @@ BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
         static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);
         typedef boost::integral_constant<bool,value> type;
     };
-
+#else
+    template<bool, class T>
+    struct imp0 : public false_type  {};
 #endif
 
 
