@@ -34,7 +34,8 @@ namespace boost {
   struct is_copy_constructible : is_constructible<
     T,
     T const&
-//    const typename add_lvalue_reference<T>::type
+    // TODO see why this doesn't works
+    //const typename add_lvalue_reference<T>::type
     > {};
 
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -42,10 +43,10 @@ namespace boost {
   struct is_copy_constructible<void> : false_type {};
   template <typename T>
   struct is_copy_constructible<T&> : true_type {};
-  template <typename T>
-  struct is_copy_constructible<T[]> : false_type {};
-  template <typename T, std::size_t N>
-  struct is_copy_constructible<T[N]> : false_type {};
+//  template <typename T>
+//  struct is_copy_constructible<T[]> : false_type {};
+//  template <typename T, std::size_t N>
+//  struct is_copy_constructible<T[N]> : false_type {};
 #endif
 
 }

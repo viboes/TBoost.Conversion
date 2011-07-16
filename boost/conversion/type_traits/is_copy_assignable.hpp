@@ -44,6 +44,8 @@ namespace boost {
    */
   template <typename T>
   struct is_copy_assignable<T&> : true_type {};
+  template <>
+  struct is_copy_assignable<void> : false_type {};
 
 #endif
 }

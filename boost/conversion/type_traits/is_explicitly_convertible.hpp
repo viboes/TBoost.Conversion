@@ -102,9 +102,7 @@ namespace boost {
   #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
 #endif
 
-#if defined BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
-//#error
-#endif
+
 namespace boost {
   namespace type_traits_detail_is_explicitly_convertible {
         //! type used instead of ... to accept any type
@@ -188,7 +186,7 @@ struct imp
 // specialization for scalar or reference: depend on the source is convertible to the target
       template <class S, class T>
       struct imp<true, S, T>
-          : public integral_constant<bool,is_constructible<T,S>::value || imp<false,S,T>::value >
+          : public integral_constant<bool,is_convertible<S,T>::value || imp<false,S,T>::value >
           {};
 
 // specialization for NOT void, abstract, function or any of the parameters is void:
