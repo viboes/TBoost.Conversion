@@ -17,6 +17,7 @@
 
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_constructible.hpp>
+#include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <boost/fusion/tuple.hpp>
 
 
@@ -42,6 +43,16 @@ namespace boost {
   template <class A1, class A2, class A3, class B1, class B2, class B3>
   struct is_constructible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
     : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value&& is_constructible<A3,B3>::value >
+      {};
+
+  template <class A1, class A2, class B1, class B2>
+  struct is_explicitly_convertible< fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >
+    : integral_constant<bool, is_explicitly_convertible<A1,B1>::value && is_explicitly_convertible<A2,B2>::value >
+      {};
+
+  template <class A1, class A2, class A3, class B1, class B2, class B3>
+  struct is_explicitly_convertible< fusion::tuple<A1,A2,A3>, fusion::tuple<B1,B2,B3> >
+    : integral_constant<bool, is_explicitly_convertible<A1,B1>::value && is_explicitly_convertible<A2,B2>::value&& is_explicitly_convertible<A3,B3>::value >
       {};
 
   template <class A1, class A2, class B1, class B2>

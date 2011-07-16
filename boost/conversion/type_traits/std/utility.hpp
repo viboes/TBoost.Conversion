@@ -17,6 +17,7 @@
 
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_constructible.hpp>
+#include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <utility>
 
 
@@ -46,6 +47,10 @@ namespace boost {
   template <class A1, class A2, class B1, class B2>
   struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >
     : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
+      {};
+  template <class A1, class A2, class B1, class B2>
+  struct is_explicitly_convertible< std::pair<A1,A2>, std::pair<B1,B2> >
+    : integral_constant<bool, is_explicitly_convertible<A1,B1>::value && is_explicitly_convertible<A2,B2>::value >
       {};
 
   template <class A1, class A2, class B1, class B2>

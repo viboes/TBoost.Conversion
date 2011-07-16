@@ -137,30 +137,37 @@ namespace boost {
   namespace type_traits_detail_is_constructible {
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
+    // specific test functions for 0 args which are not templates
     template <class T>
     decltype((T(), true_type()))
     test0(T&);
     false_type
     test0(any);
 
+    // specific positive test functions for #Args>0
 #define M1(z,n,t) declval<A##n>()
 
-#define M0(z,n,t)                                                           \
+#define M0(z,n,t)                                       \
   template <class T, BOOST_PP_ENUM_PARAMS(n, class A)>  \
-  decltype((T(BOOST_PP_ENUM(n, M1, ~)), true_type()))                       \
+  decltype((T(BOOST_PP_ENUM(n, M1, ~)), true_type()))   \
   test##n(T&, BOOST_PP_ENUM_PARAMS(n, A));
 
 BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
 
-#define M0(z,n,t)                                                           \
-  template <BOOST_PP_ENUM_PARAMS(n, class A)>                               \
-  false_type                                                                \
+    // specific negative test functions for #Args>0
+#define M0(z,n,t)                                       \
+  template <BOOST_PP_ENUM_PARAMS(n, class A)>           \
+  false_type                                            \
   test##n(any, BOOST_PP_ENUM_PARAMS(n, A));
 
-    BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
+
+
+// specialization for void, abstract, function or any of the parameters is void, scalar or reference
+// depend is whether T(declval<Args>() ...) is well formed
 
 #define M1(z,n,t) declval<A##n>()
 #define M0(z,n,t)                                                                     \
@@ -175,27 +182,28 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
 
-//////////////
-
-
 #elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
 
+// specialization for void, abstract, function or any of the parameters is void, scalar or reference
+// and at least 1 arg:
+// depend is whether X(declval<Args>() ...) is well formed
 
 #define M1(z,n,t) declval<A##n>()
 
 #define M0(z,n,t)                                                                                   \
-template<bool, class T, BOOST_PP_ENUM_PARAMS(n, class A)>                    \
-struct imp##n                        \
+template<bool, class T, BOOST_PP_ENUM_PARAMS(n, class A)>                                           \
+struct imp##n                                                                                       \
 {                                                                                                   \
     template<class X>                                                                               \
-    static type_traits_detail_is_constructible::yes_type                                                            \
-    test(type_traits_detail_is_constructible::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);   \
+    static type_traits_detail_is_constructible::yes_type                                            \
+    test(type_traits_detail_is_constructible::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);          \
                                                                                                     \
     template<class X>                                                                               \
     static type_traits_detail_is_constructible::no_type                                             \
     test(...);                                                                                      \
                                                                                                     \
-    static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);          \
+    static const bool value =                                                                       \
+              sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);          \
     typedef boost::integral_constant<bool,value> type;                                              \
 };
 
@@ -205,6 +213,9 @@ BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 #if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
 
+// specialization for void, abstract, function or any of the parameters is void, scalar or reference
+// and no arg:
+// depend is whether X() seen as a constructor call is well formed
     template<bool, class T>
     struct imp0
     {
@@ -225,37 +236,47 @@ BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 #else
 
-#define M0(z,n,t)                                                                                   \
-template<bool, class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-struct imp##n                          \
-  : boost::false_type                                                                               \
-{                                                                                                   \
+// specialization for void, abstract, function or any of the parameters is void, scalar or reference when
+// the compiler doesn't support any know technique that
+// allows to detect if X(declval<Args>() ...) is well formed
+// always false. The user of the library needs to specialize this trait for its owns types.
+
+#define M0(z,n,t)                                                                 \
+template<bool, class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>     \
+struct imp##n                                                                     \
+  : boost::false_type                                                             \
+{                                                                                 \
 };
 
     BOOST_PP_REPEAT_FROM_TO(0,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 #endif
-//////////////
 
+// specialization for scalar or reference with 1 arg: depend is the arg is scalar
       template <class T>
       struct imp0<true, T>
           : public is_scalar<T>
           {};
 
+// specialization for scalar or reference with 1 arg: depend is the arg is convertible to the type
       template <class T, class A1>
       struct imp1<true, T, A1>
           : public is_convertible<A1, T>
           {};
+// specialization for scalar or reference with multiple args: always false
 
-#define M0(z,n,t)                                                                         \
-template <class T, BOOST_PP_ENUM_PARAMS(n, class A)>\
+#define M0(z,n,t)                                                 \
+template <class T, BOOST_PP_ENUM_PARAMS(n, class A)>              \
 struct imp##n<true, T, BOOST_PP_ENUM_PARAMS(n, A) >               \
-  : public false_type                                                                     \
+  : public false_type                                             \
   {};
 
 BOOST_PP_REPEAT_FROM_TO(2,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
+
+// specialization for NOT void, abstract, function or any of the parameters is void:
+      // depends on whether the type is scalar or reference
 
 #define M0(z,n,t)                                                                   \
   template <bool, class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>    \
@@ -267,6 +288,7 @@ BOOST_PP_REPEAT_FROM_TO(2,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
+// specialization for void, abstract, function or any of the parameters is void: always false
 #define M0(z,n,t)                                                               \
   template <class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>      \
   struct void_check##n<true, T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)> \
@@ -277,6 +299,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 
 
+// specialization for unbounded arrays: always false
 
 #define M0(z,n,t)                                                               \
   template <class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>      \
@@ -289,12 +312,13 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
   }
 
-#if 1
+
+// defines is_constructible, depending on whether T is void, abstract, function or any of the parameters is void
 #define M1(z,n,t) || is_void<A##n>::value
 
 #define M0(z,n,t)                                                                 \
   template <class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>        \
-  struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>     \
+  struct is_constructible<T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>      \
     : public type_traits_detail_is_constructible::void_check##n<is_void<T>::value \
               || is_abstract<T>::value  || is_function<T>::value                  \
               BOOST_PP_REPEAT(n, M1, ~),                                          \
@@ -303,18 +327,19 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
-#endif
 
   namespace type_traits_detail_is_constructible {
+  // specialization for bounded arrays without arguments: depends on the type
     template <class A, std::size_t N>
     struct imp0<false, A[N]>
         : public boost::is_constructible<typename remove_all_extents<A>::type>
         {};
 
-#define M0(z,n,t)                                                                                           \
-  template <class A, std::size_t N, BOOST_PP_ENUM_PARAMS(n, class A)>          \
-  struct imp##n<false, A[N], BOOST_PP_ENUM_PARAMS(n, A)>  \
-    : public false_type                                                                                     \
+    // specialization for bounded arrays with arguments: always false
+#define M0(z,n,t)                                                         \
+  template <class A, std::size_t N, BOOST_PP_ENUM_PARAMS(n, class A)>     \
+  struct imp##n<false, A[N], BOOST_PP_ENUM_PARAMS(n, A)>                  \
+    : public false_type                                                   \
       {};
 
     BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
