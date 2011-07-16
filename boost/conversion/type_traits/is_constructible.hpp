@@ -134,9 +134,8 @@ namespace boost {
   template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_INC(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX), class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
   struct is_constructible;
 
-#if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
-
   namespace type_traits_detail_is_constructible {
+#if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
     template <class T>
     decltype((T(), true_type()))
@@ -175,6 +174,69 @@ BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
 #undef M1
+
+//////////////
+
+
+#elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+
+
+#define M1(z,n,t) declval<A##n>()
+
+#define M0(z,n,t)                                                                                   \
+template<bool, class T, BOOST_PP_ENUM_PARAMS(n, class A)>                    \
+struct imp##n                        \
+{                                                                                                   \
+    template<class X>                                                                               \
+    static type_traits_detail_is_constructible::yes_type                                                            \
+    test(type_traits_detail_is_constructible::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);   \
+                                                                                                    \
+    template<class X>                                                                               \
+    static type_traits_detail_is_constructible::no_type                                             \
+    test(...);                                                                                      \
+                                                                                                    \
+    static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);          \
+    typedef boost::integral_constant<bool,value> type;                                              \
+};
+
+BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+#undef M0
+#undef M1
+
+#if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
+
+    template<bool, class T>
+    struct imp0
+    {
+        template<class X>
+        static type_traits_detail_is_constructible::yes_type
+        test(type_traits_detail_is_constructible::dummy<sizeof(X(),int())>*);
+
+        template<class X>
+        static type_traits_detail_is_constructible::no_type
+        test(...);
+
+        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);
+        typedef boost::integral_constant<bool,value> type;
+    };
+
+#endif
+
+
+#else
+
+#define M0(z,n,t)                                                                                   \
+template<bool, class T BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
+struct imp##n                          \
+  : boost::false_type                                                                               \
+{                                                                                                   \
+};
+
+    BOOST_PP_REPEAT_FROM_TO(0,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
+#undef M0
+
+#endif
+//////////////
 
       template <class T>
       struct imp0<true, T>
@@ -227,7 +289,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
   }
 
-
+#if 1
 #define M1(z,n,t) || is_void<A##n>::value
 
 #define M0(z,n,t)                                                                 \
@@ -241,7 +303,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 #undef M0
-
+#endif
 
   namespace type_traits_detail_is_constructible {
     template <class A, std::size_t N>
@@ -262,84 +324,7 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
   }
 
 
-#elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
 
-
-#define M1(z,n,t) declval<A##n>()
-
-#define M0(z,n,t)                                                                                   \
-template<class T, BOOST_PP_ENUM_PARAMS(n, class A)>                    \
-struct is_constructible<T, BOOST_PP_ENUM_PARAMS(n, A)>                        \
-{                                                                                                   \
-    template<class X>                                                                               \
-    static type_traits_detail_is_constructible::yes_type                                                            \
-    test(type_traits_detail_is_constructible::dummy<sizeof(X(BOOST_PP_ENUM(n, M1, ~)))>*);   \
-                                                                                                    \
-    template<class X>                                                                               \
-    static type_traits_detail_is_constructible::no_type                                             \
-    test(...);                                                                                      \
-                                                                                                    \
-    static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);          \
-    typedef boost::integral_constant<bool,value> type;                                              \
-};
-
-BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-#undef M0
-#undef M1
-
-#if ! defined BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-#define M1(z,n,t) type_traits_detail_is_constructible::nat
-
-    template<class T>
-    struct is_constructible<T>
-    {
-        template<class X>
-        static type_traits_detail_is_constructible::yes_type
-        test(type_traits_detail_is_constructible::dummy<sizeof(X(),int())>*);
-
-        template<class X>
-        static type_traits_detail_is_constructible::no_type
-        test(...);
-
-        static const bool value = sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);
-        typedef boost::integral_constant<bool,value> type;
-    };
-
-    template<>
-    struct is_constructible<void, BOOST_PP_ENUM(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M1, ~)>
-    : boost::false_type
-    {
-    };
-
-#undef M1
-
-#endif
-
-
-#define M0(z,n,t)                                                                                   \
-template<class A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-struct is_constructible<void, A BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, A)>                          \
-  : boost::false_type                                                                               \
-{                                                                                                   \
-};
-
-BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-#undef M0
-
-
-#else
-
-#define M0(z,n,t)                                                                                   \
-template<class T, BOOST_PP_ENUM_PARAMS(n, class A)>                             \
-struct is_constructible<T, BOOST_PP_ENUM_PARAMS(n, A)>                          \
-  : boost::false_type                                                                               \
-{                                                                                                   \
-};
-
-    BOOST_PP_REPEAT_FROM_TO(1,BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
-#undef M0
-
-#endif
 
 #ifdef  BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
     // default constructor
