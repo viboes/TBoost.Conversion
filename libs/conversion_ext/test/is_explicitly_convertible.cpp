@@ -8,7 +8,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
 #include <iostream>
 #include <boost/static_assert.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
@@ -24,8 +23,8 @@ struct A
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
 namespace boost
 {
-  template <> struct is_constructible< A, int >  : true_type {};
-  template <> struct is_constructible< A, double >  : true_type {};
+  template <> struct is_explicitly_convertible< int, A >  : true_type {};
+  template <> struct is_explicitly_convertible< double, A >  : true_type {};
   template <> struct is_constructible< A, int, double >  : true_type {};
   template <> struct is_constructible< A, A const& >  : true_type {};
 }

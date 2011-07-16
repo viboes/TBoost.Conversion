@@ -53,7 +53,6 @@ int main()
   BOOST_STATIC_ASSERT((boost::is_constructible<A, int, double>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<A, A const&>::value));
   BOOST_STATIC_ASSERT((!boost::is_constructible<void>::value));
-  // BUG: We need to add specializations for void
   BOOST_STATIC_ASSERT((!boost::is_constructible<void,A>::value));
   BOOST_STATIC_ASSERT((boost::is_constructible<B>::value));
 }

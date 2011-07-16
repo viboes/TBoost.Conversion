@@ -91,8 +91,17 @@ namespace boost
   template <> struct is_constructible< AA, A const& >  : true_type {};
   template <> struct is_constructible< CC, B const& >  : true_type {};
   template <> struct is_constructible< AE, B >  : true_type {};
+
 }
 #endif
+
+#if defined BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
+namespace boost
+{
+  template <> struct is_explicitly_convertible< X, ECF_X >  : true_type {};
+}
+#endif
+
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
 namespace boost
 {
