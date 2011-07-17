@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief Defines the type trait @c is_copy_assignable.
+ * @brief Defines the type trait @c is_destructible.
  */
 
 
@@ -43,7 +43,12 @@ namespace boost {
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
   template <class T>
-  struct is_destructible;
+  struct is_destructible
+  {};
+
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_destructible type trait for classes.
+  #define BOOST_CONVERSION_NO_IS_DESTRUCTIBLE
+
 }
 #else
 

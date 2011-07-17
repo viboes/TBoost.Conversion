@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /**
  * @file
- * @brief Defines the type trait @c is_copy_assignable.
+ * @brief Defines the type trait @c is_move_assignable.
  */
 
 
