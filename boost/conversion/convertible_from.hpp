@@ -12,7 +12,7 @@
 /*!
  @file
  @brief
- Defines the free function @c mcf.
+ Defines the free function @c implicitly.
  */
 #ifndef BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 #define BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
@@ -30,7 +30,7 @@ namespace boost {
 
     //! wrapper providing implicit conversion operation to any type extrinsicaly implicit convertible from @c Source.
 
-    //! This wrapper is used indirectly through the @mcf function to pass a @c Source parameter to a function waiting a parameter @c Target
+    //! This wrapper is used indirectly through the @implicitly function to pass a @c Source parameter to a function waiting a parameter @c Target
     //! extrinsicaly convertible from it.
     //!
     //! Requires @c Source must be CopyConstructible
@@ -71,12 +71,17 @@ namespace boost {
     //!   static void fct()
     //!   {
     //!     T v;
-    //!     std::cout << f(mcf(v)) << " called" << std::endl;
+    //!     std::cout << f(implicitly(v)) << " called" << std::endl;
     //!   }
     //! };
     //! @endcode
+    //~ template <typename Source>
+    //~ convertible_from<Source> implicitly(Source s)
+    //~ {
+      //~ return convertible_from<Source>(s);
+    //~ }
     template <typename Source>
-    convertible_from<Source> mcf(Source s)
+    convertible_from<Source> implicitly(Source s)
     {
       return convertible_from<Source>(s);
     }

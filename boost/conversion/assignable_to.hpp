@@ -12,7 +12,7 @@
 /*!
  @file
  @brief
- Defines the free function @c mat.
+ Defines the free function @c lvalue.
  */
 #ifndef BOOST_CONVERSION_ASSIGNABLE_TO_HPP
 #define BOOST_CONVERSION_ASSIGNABLE_TO_HPP
@@ -106,8 +106,13 @@ namespace boost {
 
     //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
     //! @NoThrow.
+    //~ template <typename Target>
+    //~ assignable_to<Target> mat(Target& r)
+    //~ {
+      //~ return assignable_to<Target>(r);
+    //~ }
     template <typename Target>
-    assignable_to<Target> mat(Target& r)
+    assignable_to<Target> lvalue(Target& r)
     {
       return assignable_to<Target>(r);
     }
