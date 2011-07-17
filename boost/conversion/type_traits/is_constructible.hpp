@@ -25,7 +25,9 @@ namespace boost {
    * Condition: @c true_type if and only if the following variable definition would be well-formed for
    * some invented variable t:
    *
+   * @code
    *   T t(decval<Args>()...);
+   * @endcode
    *
    * @Requires @c T and all types in the parameter pack @c Args must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
    */
@@ -54,7 +56,6 @@ namespace boost {
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/declval.hpp>
 #include <cstddef>
 
