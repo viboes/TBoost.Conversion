@@ -932,6 +932,13 @@ Sometimes the user needs the conversion construct the resulting type with some a
     []
 ]
 
+[
+    [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3047.html [*N3047 - Fixing is_constructible and is_explicitly_convertible]]]
+    [Daniel Krugler]
+]
+
+   
+
 ]
 
 [endsect]
@@ -989,6 +996,16 @@ This is a major evolution of the library.
 * Added `convertible_to`/`convertible_from` and `assignable_to` wrappers and the corresponding `mcf`, `mat` free functions.
 * Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp`, and so on.
 * On compilers supporting it the interface is now concept-based, for specialization or overloading.
+* Added type traits that should be included in Boost.TypeTraits 
+  * `is_assignable`, 
+  * `is_copy_assignable`, 
+  * `is_move_assignable`, 
+  * `is_constructible`, 
+  * `is_default_constructible`, 
+  * `is_copy_constructible`, 
+  * `is_move_constructible`, 
+  * `is_explictly_convertible`.
+
 
 [*Deprecated Features:]
 
@@ -1282,14 +1299,17 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 
 [heading Tasks to do before review]
 
-* Document type traits specialization.
-* 
+* Document type traits specialization when the compiler doesn't supports the definition of the type traits.
+* Take in account move semantics while considering the proposed type traits.
+
+[heading Tasks to do if the library is accepted]
+
 
 [heading For later releases]
 
-
+* Analize the impact of move semantics to the extrinsic conversion and assignments.
+* Add the type traits specializations for the C++ Standard types.
 
 [endsect]
 [endsect]
-
 

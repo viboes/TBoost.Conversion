@@ -171,8 +171,12 @@ doxygen std_type_traits
    :
       [ glob ../../../boost/conversion/type_traits/is_assignable.hpp ]
       [ glob ../../../boost/conversion/type_traits/is_copy_assignable.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_move_assignable.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_destructible.hpp ]
       [ glob ../../../boost/conversion/type_traits/is_constructible.hpp ]
       [ glob ../../../boost/conversion/type_traits/is_copy_constructible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_move_constructible.hpp ]
+      [ glob ../../../boost/conversion/type_traits/is_default_constructible.hpp ]
       [ glob ../../../boost/conversion/type_traits/is_convertible.hpp ]
       [ glob ../../../boost/conversion/type_traits/is_explicitly_convertible.hpp ]
    :
