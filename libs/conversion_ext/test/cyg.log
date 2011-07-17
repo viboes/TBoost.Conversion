@@ -1,0 +1,16 @@
+warning: mismatched versions of Boost.Build engine and core
+warning: Boost.Build engine (bjam) is 03.1.19
+warning: Boost.Build core (at /cygdrive/d/boost/trunk/tools/build/v2) is 2011.04-svn
+...patience...
+...patience...
+...found 1636 targets...
+...updating 8 targets...
+gcc.compile.c++ ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-4.3.4/debug/overload.o
+gcc.compile.c++ ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-0x/debug/overload.o
+gcc.link ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-4.3.4/debug/overload.exe
+testing.capture-output ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-4.3.4/debug/overload.run
+**passed** ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-4.3.4/debug/overload.test
+gcc.link ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-0x/debug/overload.exe
+testing.capture-output ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-0x/debug/overload.run
+**passed** ../../../bin.v2/libs/conversion_ext/test/overload.test/gcc-0x/debug/overload.test
+...updated 8 targets...

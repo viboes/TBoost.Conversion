@@ -216,11 +216,11 @@ namespace boost {
       (void)y1_1;// remove warning: unused variable
 #endif
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-      ICF_X y2(mcf(x));
+      ICF_X y2(implicitly(x));
       (void)y2;// remove warning: unused variable
 #endif
       assign_to(y1,x);
-      mat(y1) = x;
+      lvalue(y1) = x;
     }
   }
 
@@ -236,10 +236,10 @@ namespace boost {
       (void)y;// remove warning: unused variable
       ECF_X y1_1(explicit_convert_to<ECF_X>(x));
       (void)y1_1;// remove warning: unused variable
-      //ECF_X y1_2(mcf(x)); // fail as there is no implicit conversion.
+      //ECF_X y1_2(implicitly(x)); // fail as there is no implicit conversion.
       ECF_X y2 = explicit_convert_to<ECF_X>(x);
       (void)y2;// remove warning: unused variable
-      //mat(y2) = x; // fails as no implicit conversion
+      //lvalue(y2) = x; // fails as no implicit conversion
     }
 
   }
@@ -255,7 +255,7 @@ namespace boost {
       (void)x1_1;// remove warning: unused variable
 #endif
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-      X x2(mcf(y));
+      X x2(implicitly(y));
       (void)x2;// remove warning: unused variable
 #endif
       X x3=implicit_convert_to<X>(y);
@@ -265,11 +265,11 @@ namespace boost {
       (void)x3_1;// remove warning: unused variable
 #endif
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-      X x4=mcf(y);
+      X x4=implicitly(y);
       (void)x4;// remove warning: unused variable
 #endif
       assign_to(x1,y);
-      mat(x1) = y;
+      lvalue(x1) = y;
     }
 
   }
@@ -291,7 +291,7 @@ namespace boost {
       AF_X y2;
       //y2=x;  // compile fails
       assign_to(y2,x);
-      mat(y2)=x;
+      lvalue(y2)=x;
     }
   }
 ////
@@ -315,7 +315,7 @@ void explicit_assign_to() {
   A a;
   //assign_to(a, b);
   mca(a)= b;
-  mat(a)= b;
+  lvalue(a)= b;
 }
 
 void explicit_chain_assign_to() {
@@ -325,7 +325,7 @@ void explicit_chain_assign_to() {
   A a;
   assign_to(a, assign_to(b,c));
   mca(a)= mca(b) = c;
-  mat(a)= mat(b) = c;
+  lvalue(a)= lvalue(b) = c;
 }
 
 void implicit_conversion_via_mca() {
@@ -333,11 +333,11 @@ void implicit_conversion_via_mca() {
   f(mca(c));
 }
 
-void implicit_conversion_via_mcf() {
+void implicit_conversion_via_implicitly() {
   using namespace boost::conversion;
   C c;
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-  f(mcf(c));
+  f(implicitly(c));
 #endif
   f(convertible_to<B>(c));
 }
@@ -365,7 +365,7 @@ int main( )
   explicit_assign_to();
   explicit_chain_assign_to();
   implicit_conversion_via_mca();
-  implicit_conversion_via_mcf();
+  implicit_conversion_via_implicitly();
   implicit_conversion_via_convertible_to();
   implicit_conversion_via_sfinae();
 #endif

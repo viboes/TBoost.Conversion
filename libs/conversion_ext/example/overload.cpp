@@ -120,7 +120,7 @@ struct McfTest {
   static void whichOverload()
   {
     T v;
-    std::cout << f(mcf(v)) << " called" << std::endl;
+    std::cout << f(implicitly(v)) << " called" << std::endl;
   }
 };
 //]
@@ -147,7 +147,7 @@ void impl_extrinsic_test()
   //]
 }
 
-void mcf_extrinsic_test()
+void implicitly_extrinsic_test()
 {
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
   //[OVERLOAD_CPP_MCF
@@ -169,7 +169,7 @@ int main()
 {
 
   impl_intrinsic_test();
-  mcf_extrinsic_test();
+  implicitly_extrinsic_test();
 
   return 0;
 }

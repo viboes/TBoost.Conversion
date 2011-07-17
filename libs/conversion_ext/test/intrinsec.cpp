@@ -174,11 +174,11 @@ void explicit_convert_to_with_explicit_constructor() {
     ECF_X y1_1(explicit_convert_to<ECF_X>(x));
     (void)y1_1; // WARNING removal
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-    //ECF_X y1_2(mcf(x)); // should fail as ambiguous: ECF_X(X) and ECF_X(ECF_X&const). fails only with gcc4.3. 0x
+    //ECF_X y1_2(implicitly(x)); // should fail as ambiguous: ECF_X(X) and ECF_X(ECF_X&const). fails only with gcc4.3. 0x
 #endif
 
 #if defined(BOOST_CONVERSION_MCF_ENABLED)
-    //impl_cnv(mcf(x)); // fail as x is not implicit convertible to ECF_X.
+    //impl_cnv(implicitly(x)); // fail as x is not implicit convertible to ECF_X.
 #endif
     ECF_X y3 = explicit_convert_to<ECF_X>(x);
     (void)y3; // WARNING removal
@@ -227,7 +227,7 @@ void assign_to_with_assignemet_operator() {
     y2=x;
 #if defined(BOOST_CONVERSION_ENABLE_CND)
     assign_to(y2,x);
-    mat(y2)=x;
+    lvalue(y2)=x;
 #endif
   }
   {
