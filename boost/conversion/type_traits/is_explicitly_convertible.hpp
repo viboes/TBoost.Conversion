@@ -20,16 +20,22 @@
 namespace boost {
 
   /**
-   * States if @c Source is is_explicitly_convertible to @c Target.
+   * States if @c Source is is explicitly convertible to @c Target.
    *
    * Condition: @c true_type if and only if the following would be well-formed for
-   * some invented function f:
+   * some invented function test:
    *
-   * Target f() {
-   *   return static_cast<Target>(decval<Source>());
+   * @code
+   * Target test() {
+   *   return static_cast<Target>(declval<Source>());
    * }
+   * @endcode
    *
-   * @Requires @c Source and @ Target must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   * @Requires @c Source and @c Target must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   * @Remark @c is_explicitly_convertible has been removed from the C++0x proposal since
+   * <b>N3047 - Fixing is_constructible and is_explicitly_convertible</b>
+   * was accepted. The library uses by default the static_cast version. Users can force the is_constructible version by defining
+   *  @c BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE.
    */
   template < class Source, class Target>
   struct is_explicitly_convertible
@@ -38,12 +44,14 @@ namespace boost {
   //! Macro stating if the compiler doesn't support the features needed to define the @c is_explicitly_convertible type trait.
   #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
 
-
+  //! The library uses by default the static_cast version. Users can force the is_constructible version by defining
+  //! @c BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE.
+  #define BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
 }
 #else
 #include <boost/conversion/type_traits/is_constructible.hpp>
 
-#if 0
+#if BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
 
 
 namespace boost {
