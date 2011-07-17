@@ -54,6 +54,8 @@ test-suite "type_traits" :
      [ compile is_extrinsic_assignable.cpp ]
      [ compile is_convertible.cpp ]
      [ compile is_extrinsic_convertible.cpp ]
+     [ compile is_move_assignable.cpp ]
+     [ compile is_move_constructible.cpp ]
     ;
 
 
