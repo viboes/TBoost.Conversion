@@ -68,11 +68,6 @@ namespace boost {
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_all_extents.hpp>
 
-
-#ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
-#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
-#endif
-
 #if ! defined BOOST_NO_DECLTYPE
   #if defined _MSC_VER
     #if ! defined BOOST_NO_SFINAE_EXPR
@@ -130,6 +125,169 @@ namespace boost {
         template<std::size_t N>
         struct dummy;
   }
+}
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+namespace boost {
+  namespace type_traits_detail_is_constructible {
+
+
+    // template <class T, class... Args> struct is_constructible;
+
+    //      main is_constructible test
+#if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+    #ifndef BOOST_NO_RVALUE_REFERENCES
+    template <class T, class ...Args>
+    //decltype(move(T(declval<Args>()...)), true_type())
+    decltype(T(declval<Args>()...), true_type())
+    test(T&&, Args&& ...);
+    template <class ...Args>
+    false_type
+    test(any, Args&& ...);
+    #else
+    template <class T, class ...Args>
+    decltype(T(declval<Args>()...), true_type())
+    test(T&, Args& ...);
+    template <class ...Args>
+    false_type
+    test(any, Args& ...);
+    #endif
+
+    template <bool, class T, class... Args>
+    struct imp // false, T is not a scalar
+        : public common_type
+                 <
+                     decltype(test(declval<T>(), declval<Args>()...))
+                 >::type
+        {};
+#elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+
+    template <bool, class T, class... Args>
+    struct imp // false, T is not a scalar
+    {
+      template<class X>
+      static type_traits_detail_is_constructible::yes_type
+      test(type_traits_detail_is_constructible::dummy<sizeof(X(declval<Args>()...))>*);
+
+      template<class X>
+      static type_traits_detail_is_constructible::no_type
+      test(...);
+
+      static const bool value =
+                sizeof(test<T>(0)) == sizeof(type_traits_detail_is_constructible::yes_type);
+      typedef boost::integral_constant<bool,value> type;
+    };
+
+
+#else
+     template <bool, class T, class... Args>
+     struct imp // false, T is not a scalar
+            : public false_type
+        {};
+#endif
+
+    //      function types are not constructible
+
+    template <class R, class... A1, class... A2>
+    struct imp<false, R(A1...), A2...>
+        : public false_type
+        {};
+
+    //      handle scalars and reference types
+
+    //      Scalars are default constructible, references are not
+
+    template <class T>
+    struct imp<true, T>
+        : public is_scalar<T>
+        {};
+
+    //      Scalars and references are constructible from one arg if that arg is
+    //          implicitly convertible to the scalar or reference.
+
+    template <class T, class A0>
+    struct imp<true, T, A0> : is_convertible<A0,T>
+        {};
+
+    //      Scalars and references are not constructible from multiple args.
+
+    template <class T, class A0, class ...Args>
+    struct imp<true, T, A0, Args...>
+        : public false_type
+        {};
+
+    //      Treat scalars and reference types separately
+
+    template <bool, class T, class... Args>
+    struct void_check
+        : public imp<is_scalar<T>::value || is_reference<T>::value,
+                                    T, Args...>
+        {};
+
+    //      If any of T or Args is void, is_constructible should be false
+
+    template <class T, class... Args>
+    struct void_check<true, T, Args...>
+        : public false_type
+        {};
+
+    template <class ...Args> struct contains_void;
+
+    template <> struct contains_void<> : false_type {};
+
+    template <class A0, class ...Args>
+    struct contains_void<A0, Args...>
+    {
+        static const bool value = is_void<A0>::value ||
+                                  contains_void<Args...>::value;
+    };
+
+  }
+
+  //      is_constructible entry point
+
+  template <class T, class... Args>
+  struct  is_constructible
+      : public type_traits_detail_is_constructible::void_check<
+                 type_traits_detail_is_constructible::contains_void<T, Args...>::value
+                                          || is_abstract<T>::value,
+                                             T, Args...>
+      {};
+
+  namespace type_traits_detail_is_constructible {
+
+    //      Array types are default constructible if their element type
+    //      is default constructible
+
+    template <class A, size_t N>
+    struct imp<false, A[N]>
+        : public is_constructible<typename remove_all_extents<A>::type>
+        {};
+
+    //      Otherwise array types are not constructible by this syntax
+
+    template <class A, size_t N, class ...Args>
+    struct imp<false, A[N], Args...>
+        : public false_type
+        {};
+
+    //      Incomplete array types are not constructible
+
+    template <class A, class ...Args>
+    struct imp<false, A[], Args...>
+        : public false_type
+        {};
+
+  }
+}
+#else  // BOOST_NO_VARIADIC_TEMPLATES
+
+/////////////////
+
+#ifndef BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX
+#define BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX 3
+#endif
+
+namespace boost {
 
   template <class T,  BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_INC(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX), class A, = type_traits_detail_is_constructible::nat BOOST_PP_INTERCEPT)>      \
   struct is_constructible;
@@ -349,10 +507,9 @@ BOOST_PP_REPEAT(BOOST_CONVERSION_TT_IS_CONSTRUCTIBLE_ARITY_MAX, M0, ~)
 
 
   }
-
-
 }
 
-#endif
-#endif
+#endif // variadic
+#endif // doc
+#endif // header
 
