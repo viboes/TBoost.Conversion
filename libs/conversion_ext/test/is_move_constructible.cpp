@@ -80,7 +80,7 @@ int main()
   BOOST_STATIC_ASSERT(( boost::is_move_constructible<double>::value));
   BOOST_STATIC_ASSERT(( boost::is_move_constructible<int*>::value));
   BOOST_STATIC_ASSERT(( boost::is_move_constructible<const int*>::value));
-#if ! defined BOOST_NO_RVALUE_REFERENCES
+#if defined BOOST_CONVERSION_TT_IS_MOVE_CONSTRUCTIBLE_USES_RVALUE
   BOOST_STATIC_ASSERT(( boost::is_move_constructible<B>::value));
 #endif
 }
