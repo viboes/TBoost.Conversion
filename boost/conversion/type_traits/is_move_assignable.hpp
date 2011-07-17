@@ -21,6 +21,22 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/add_lvalue_reference.hpp>
 
+#if ! defined BOOST_NO_RVALUE_REFERENCES
+  #if defined _MSC_VER
+  #elif defined __clang__
+      #define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
+  #elif defined __GNUC__
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+     #else
+      #define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
+     #endif
+  #else
+      #define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
+  #endif
+#else
+#endif
+
+
 namespace boost {
 
   /**
@@ -32,7 +48,7 @@ namespace boost {
    */
   template <class T>
   struct is_move_assignable :
-#if ! defined BOOST_NO_RVALUE_REFERENCES
+#if defined BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
     is_assignable<T&, T&&>
 #else
     is_copy_assignable<T>
@@ -48,6 +64,8 @@ namespace boost {
    */
 //  template <typename T>
 //  struct is_move_assignable<T&> : true_type {};
+  template <typename A>
+  struct is_move_assignable<A[]> : false_type {};
   template <>
   struct is_move_assignable<void> : false_type {};
 

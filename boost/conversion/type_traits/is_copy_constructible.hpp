@@ -43,8 +43,8 @@ namespace boost {
   struct is_copy_constructible<void> : false_type {};
   template <typename T>
   struct is_copy_constructible<T&> : true_type {};
-//  template <typename T>
-//  struct is_copy_constructible<T[]> : false_type {};
+  template <typename T>
+  struct is_copy_constructible<T[]> : false_type {};
 //  template <typename T, std::size_t N>
 //  struct is_copy_constructible<T[N]> : false_type {};
 #endif
