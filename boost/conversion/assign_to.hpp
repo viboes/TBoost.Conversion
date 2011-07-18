@@ -45,7 +45,6 @@ namespace boost {
   namespace conversion {
 
 
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! Customization point for @c assign_to.
     //!
     //! @tparam Target target type of the conversion.
@@ -196,45 +195,6 @@ namespace boost {
         return to;
       }
     };
-
-
-#else
-    template < typename Target, typename Source, class Enable = void>
-    struct assigner_cp :  true_type
-    {
-      //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator.
-      //! @Throws Whatever the underlying assignment operator of the @c Target class throws.
-      Target& operator()(Target& to, const Source& from)
-      {
-        to = ::boost::conversion::implicit_convert_to<Target>(from);
-        return to;
-      }
-    };
-    template < typename Target, typename Source, class Enable = void>
-    struct assigner : assigner_cp<Target,Source,Enable> {};
-
-    //! Partial specialization for c-array types.
-    //!
-    //! @Requires @c Target must be CopyAssinable and @c @c Source must be extrinsic convertible to @c Target.
-    template < typename Target, typename Source, std::size_t N  >
-    struct assigner<Target[N],Source[N]
-    > : true_type
-    {
-      //! @Effects  Converts the @c from parameter to the @c to parameter, using by default the assignment operator on each one of the array elements.
-      //! @Throws  Whatever the underlying assignment operator of the @c Target class throws.
-      //! @Basic
-      Target*& operator()(Target(&to)[N], const Source(& from)[N])
-      {
-        for (std::size_t i = 0; i < N; ++i)
-        {
-          to[i] = ::boost::conversion::implicit_convert_to<Target>(from[i]);
-        }
-        return to;
-      }
-    };
-
-#endif
-
 
   }
 

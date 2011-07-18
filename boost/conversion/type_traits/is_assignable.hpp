@@ -18,11 +18,6 @@
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#if ! defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-#define BOOST_CONVERSION_REQUIRES(CND) \
-                , typename enable_if_c< CND >::type
-#endif
-
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   //! Macro stating if the compiler don't support the features needed to define the @c is_assignable type trait.
   #define BOOST_CONVERSION_NO_IS_ASSIGNABLE

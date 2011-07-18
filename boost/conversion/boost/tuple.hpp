@@ -36,7 +36,7 @@ namespace boost {
     ExtrinsicallyConvertible<S1,T1>
     && ExtrinsicallyConvertible<S2,T2>
     )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_convertible<S1,T1>::value
      && is_extrinsically_convertible<S2,T2>::value
@@ -60,7 +60,7 @@ namespace boost {
         && ExtrinsicallyConvertible<S2,T2>
         && ExtrinsicallyConvertible<S3,T3>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_convertible<S1,T1>::value
         && is_extrinsically_convertible<S2,T2>::value

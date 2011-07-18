@@ -75,11 +75,7 @@ namespace boost {
     //!   }
     //! };
     //! @endcode
-    //~ template <typename Source>
-    //~ convertible_from<Source> implicitly(Source s)
-    //~ {
-      //~ return convertible_from<Source>(s);
-    //~ }
+
     template <typename Source>
     convertible_from<Source> implicitly(Source s)
     {

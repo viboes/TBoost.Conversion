@@ -72,36 +72,6 @@ namespace boost {
       }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    /**
-     * Partial specialization of @c assigner_cp for convertibles to std::string.
-     */
-    template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner_cp< std::basic_string<CharT,Traits,Alloc>, T
-    > : true_type
-    {
-      std::basic_string<CharT,Traits,Alloc>&
-      operator()(std::basic_string<CharT,Traits,Alloc>& to, const T& from)
-      {
-        to = boost::conversion::convert_to<std::basic_string<CharT,Traits,Alloc> >(from);
-        return to;
-      }
-    };
-    /**
-     * Partial specialization of @c assigner_cp for convertibles from std::string.
-     */
-    template<typename T, typename CharT, typename Traits, typename Alloc>
-    struct assigner_cp< T, std::basic_string<CharT,Traits,Alloc>
-    > : true_type
-    {
-      T& operator()(T& to, const std::basic_string<CharT,Traits,Alloc>& from)
-      {
-        to = boost::conversion::convert_to<T>(from);
-        return to;
-      }
-    };
-#endif
-
   }
 }
 

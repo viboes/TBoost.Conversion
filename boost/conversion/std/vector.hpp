@@ -46,7 +46,7 @@ namespace boost {
         , requires
         ExtrinsicallyAssignable<T1,T2>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_assignable<T1,T2>::value
         >::type
@@ -65,15 +65,20 @@ namespace boost {
         }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Partial specialization of @c assigner_cp for @c std::vector of extrinsic convertibles.
      */
     template < class T1, class A1, class T2, class A2>
     struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
-    BOOST_CONVERSION_REQUIRES((
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires
+        ExtrinsicallyAssignable<T1,T2>
+        )
+#else
+        , typename enable_if_c<
         is_extrinsically_assignable<T1,T2>::value
-    ))
+        >::type
+#endif
     > : true_type
     {
         std::vector<T1,A1>& operator()(
@@ -87,7 +92,6 @@ namespace boost {
             return to;
         }
     };
-#endif
 
   }
 }

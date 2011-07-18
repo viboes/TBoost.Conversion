@@ -44,7 +44,7 @@ namespace boost {
           ExtrinsicallyConvertible<S1,T1>
           && ExtrinsicallyConvertible<S2,T2>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
           is_extrinsically_convertible<S1,T1>::value
           && is_extrinsically_convertible<S2,T2>::value
@@ -58,16 +58,22 @@ namespace boost {
         }
     };
 
-#if !defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     /**
      * Partial specialization of @c assigner_cp for @c std::pair of extrinsic convertibles.
      */
     template < class T1, class T2, class S1, class S2>
     struct assigner_cp< std::pair<T1,T2>, std::pair<S1,S2>
-      BOOST_CONVERSION_REQUIRES((
-           is_extrinsically_convertible<S1,T1>::value
-        && is_extrinsically_convertible<S2,T2>::value
-      ))
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        , requires(
+          ExtrinsicallyConvertible<S1,T1>
+          && ExtrinsicallyConvertible<S2,T2>
+        )
+#else
+        , typename enable_if_c<
+          is_extrinsically_convertible<S1,T1>::value
+          && is_extrinsically_convertible<S2,T2>::value
+        >::type
+#endif
     > : true_type
     {
         std::pair<T1,T2>& operator()(std::pair<T1,T2>& to, const std::pair<S1,S2>& from)
@@ -77,7 +83,6 @@ namespace boost {
             return to;
         }
     };
-#endif
   }
 }
 

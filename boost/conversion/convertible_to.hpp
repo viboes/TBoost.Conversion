@@ -38,15 +38,11 @@ namespace boost {
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic convertible to @c Target.
       template  <typename Source>
       convertible_to(Source const& source
-#if defined(BOOST_CONVERSION_ENABLE_CND)
           , typename enable_if<is_extrinsically_convertible<Source,Target> >::type* dummy = 0
-#endif
           )
         : val_(boost::conversion::implicit_convert_to<Target>(source))
       {
-#if defined(BOOST_CONVERSION_ENABLE_CND)
         (void)dummy; // remove warning dummy not used
-#endif
       }
 
       //! Implicit conversion to @c Target.

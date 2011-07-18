@@ -48,7 +48,7 @@ namespace boost {
         , requires(
         ExtrinsicallyAssignable<Target,Source>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_assignable<Target, Source>::value
         >::type
@@ -78,7 +78,7 @@ namespace boost {
         ExtrinsicallyAssignable<Target,Source>
   && ! Assignable<Target, Source>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_assignable<Target,Source>::value
   && ! is_assignable<Target, Source>::value
@@ -99,7 +99,6 @@ namespace boost {
     /**
      * Partial specialization of @c assigner for @c boost::array of the same size
      */
-#if defined(BOOST_CONVERSION_ENABLE_CND) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     template < typename Target, typename Source, std::size_t N>
     struct assigner_cp< array<Target,N>, array<Source,N>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -107,7 +106,7 @@ namespace boost {
         ExtrinsicallyAssignable<Target,Source>
      && Assignable<Target, Source>
         )
-#elif defined(BOOST_CONVERSION_ENABLE_CND)
+#else
         , typename enable_if_c<
         is_extrinsically_assignable<Target,Source>::value
      && is_assignable<Target, Source>::value
@@ -125,7 +124,6 @@ namespace boost {
         return to;
       }
     };
-#endif
   }
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)

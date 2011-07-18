@@ -118,7 +118,7 @@ namespace boost {
 
     namespace impl {
       template <typename Target, typename Source>
-      Target convert_to_impl(Source const& from)
+      Target implicit_convert_to_impl(Source const& from)
       {
         using namespace boost::conversion::impl_2;
         //use boost::conversion::impl_2::implicit_convert_to if ADL fails
@@ -151,7 +151,7 @@ namespace boost {
     implicit_convert_to(Source const& from)
     {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
-      return boost::conversion::impl::convert_to_impl<Target>(from);
+      return boost::conversion::impl::implicit_convert_to_impl<Target>(from);
 #else
       return conversion::implicit_converter<Target,Source>()(from);
 #endif

@@ -45,7 +45,6 @@
 
 namespace boost {
   namespace conversion {
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)  || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! Customization point for @c convert_to_or_fallback.
     //!
     //! @tparam Target target type of the conversion.
@@ -103,46 +102,7 @@ namespace boost {
         }
       }
     };
-#else
-    //! @tparam Target target type of the conversion.
-    //! @tparam Source source type of the conversion.
-    //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-    template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
-    struct converter_or_fallbacker_cp {};
 
-    //! Default @c converter_or_fallbacker.
-    //! @tparam Target target type of the conversion.
-    //! @tparam Source source type of the conversion.
-    //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-    template < typename Target, typename Source, typename Fallback=Target, class Enable = void>
-    struct converter_or_fallbacker : converter_or_fallbacker_cp<Target,Source,Fallback,Enable> {};
-
-    //! @tparam Target target type of the conversion.
-    //! @tparam Source source type of the conversion.
-    //! @tparam Fallback type of the fallback value which must be explicitly convertible to @c Target.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-    template < typename Target, typename Source, typename Fallback>
-    struct converter_or_fallbacker<Target, Source, Fallback>
-    {
-      //!
-      //! @Requires @c Fallback must be convertible to @c Target and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
-      //! @Returns The converted value if the conversion succeeds or the fallback.
-      //! @Throws  Whatever the conversion from @c Fallback to @c Target can throws when the conversion fails.
-      Target operator()(const Source& val, Fallback const& fallback)
-      {
-        try
-        {
-          return boost::conversion::convert_to<Target>(val);
-        }
-        catch (...)
-        {
-          return boost::conversion::convert_to<Target>(fallback);
-        }
-      }
-    };
-#endif
 
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
@@ -186,13 +146,9 @@ namespace boost {
     //! int t=boost::conversion::convert_to_or_fallback<int>(s,-1);
     //! @endcode
     template <typename Target, typename Source, typename Fallback>
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)  || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     typename enable_if_c<
          ! is_same<Target,Fallback>::value
     , Target>::type
-#else
-    Target
-#endif
     convert_to_or_fallback(Source const& from, Fallback const& fallback) {
 #if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
@@ -200,7 +156,6 @@ namespace boost {
       return conversion::converter_or_fallbacker<Target,Source,Fallback>()(from, fallback);
 #endif
     }
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)  || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     //! @brief Extrinsic conversion function with fallback.
     //! Converts the @c from parameter to a @c Target type. If the conversion fails the fallback value is used to construct a Target @c instance.
     //! @tparam Target target type of the conversion.
@@ -221,7 +176,6 @@ namespace boost {
       return conversion::converter_or_fallbacker<Target,Source>()(from, fallback);
 #endif
     }
-#endif
   }
 }
 

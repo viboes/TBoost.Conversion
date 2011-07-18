@@ -41,20 +41,6 @@ namespace boost {
       //! @NoThrow.
       assignable_to(Target& r) : ref_(r) {}
 
-//      //! Implicit conversion to @c U.
-//      //! @Effects Forwards the conversion from the reference using @c conver_to.
-//      //! @Returns @c *this
-//      //! @Throws Whatever @c convert_to throws.
-//      template <typename U
-//#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-//      , typename boost::enable_if< is_extrinsically_convertible<Target,U>, int >::type = 0
-//#endif
-//      >
-//      operator U()
-//      {
-//        return boost::conversion::convert_to<U>(ref_);
-//      }
-
       //! Assignment.
       //!
       //! @Effects Forwards the assignment to the reference.
@@ -73,7 +59,7 @@ namespace boost {
       //! @Throws Whatever @c assign_to throws.
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
       template <typename Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+#if !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
       typename boost::enable_if< is_extrinsically_assignable<Target,Source>, assignable_to& >::type
 #else
       assignable_to&
@@ -91,7 +77,7 @@ namespace boost {
       //! @Throws Whatever @c assign_to throws.
       //! @Remark This constructor doesn't participates on overload resolution if @c Source is not extrinsic assignable to @c Target.
       template <typename Source>
-#if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+#if !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
       typename boost::enable_if< is_extrinsically_assignable<Target,Source>, assignable_to& >::type
 #else
       assignable_to&
@@ -106,11 +92,6 @@ namespace boost {
 
     //! The result is able to transform conversion by convert_to calls and assignments by assign_to calls.
     //! @NoThrow.
-    //~ template <typename Target>
-    //~ assignable_to<Target> mat(Target& r)
-    //~ {
-      //~ return assignable_to<Target>(r);
-    //~ }
     template <typename Target>
     assignable_to<Target> lvalue(Target& r)
     {
