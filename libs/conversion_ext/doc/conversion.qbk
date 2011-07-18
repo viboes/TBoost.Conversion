@@ -26,7 +26,7 @@
 [def __implicit_convert_to  `implicit_convert_to`]
 [def __convert_to  `convert_to`]
 [def __convertible_to  `convertible_to`]
-[def __mcf  `mcf`]
+[def __implicitly  `implicitly`]
 [def __convertible_from  `convertible_from`]
 [def __implicit_converter_cp  `implicit_converter_cp`]
 [def __explicit_converter_cp  `explicit_converter_cp`]
@@ -35,7 +35,7 @@
 [def __convert_to_or_fallback  `convert_to_or_fallback`]
 [def __assign_to  `assign_to`]
 [def __assignable_to  `assignable_to`]
-[def __mat  `mat`]
+[def __lvalue  `lvalue`]
 [def __assigner_cp  `assigner_cp`]
 [def __try_assign_to  `try_assign_to`]
 
@@ -340,11 +340,11 @@ With __assign_to we could do
 
     assign_to(a, assign_to(b, c));
 
-and if we find this less than readable we can try with the "make assigner to `mat' free function.
+and if we find this less than readable we can try with the "make assigner to `lvalue' free function.
 
-    mat(a) = mat(b) = c;
+    lvalue(a) = lvalue(b) = c;
 
-The behavior of `mat` recalls the `tie` function of [*Boost.Tuple], but instead of invoking multiple assignments, it invokes a single `assign_to` call.
+The behavior of `lvalue` recalls the `tie` function of [*Boost.Tuple], but instead of invoking multiple assignments, it invokes a single `assign_to` call.
 
 So one of the advantages of using this common functions is uniformity. The other is that now we are able to find all the explicit conversions to one type, as we can do with explicit casts.
 
@@ -369,8 +369,8 @@ The library takes in account some of the features suggested by the [*Boost.Conve
 * a generic __try_assign_to function which can be customized by the user to make explicit optional assignments between unrelated types.
 * a generic __convert_to_or_fallback function which can be customized by the user to make explicit conversion between unrelated types, relying on a fallback when the conversion fails.
 
-* a generic __mat function returning a `assignable_to` wrapper which implements assignments by calls to __assign_to. 
-* a generic __mcf function returning a `convertible_from` wrapper which implements the implicit conversion operators by calls to __implicit_convert_to.
+* a generic __lvalue function returning a `assignable_to` wrapper which implements assignments by calls to __assign_to. 
+* a generic __implicitly function returning a `convertible_from` wrapper which implements the implicit conversion operators by calls to __implicit_convert_to.
 * a __convertible_to wrapper that acts as a implicit converter when passing parameters to a function.
 
 [/* a generic `convert_to_via` function which convert a type `From` to another `To` using a temporary one `Via`.]
@@ -463,7 +463,7 @@ All functions in the library are thread-unsafe except when noted explicitly.
 At present the author is unable to define the type traits `is_constructible` and `is_assignable` if dectype and SFINAE on expressions is not available. 
 On compilers that `is_constructible` and `is_assignable` can not be detected by the library, the user will need to specialize these traits explicitly. The library defines two macros `BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE` and `BOOST_CONVERSION_NO_IS_ASSIGNABLE` allowing to make the specialization only when needed.
 
-The `mcf()` function and the `convertible_from` class are not provided on compilers on which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
+The `implicitly()` function and the `convertible_from` class are not provided on compilers on which `BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS` is defined.
 
 Currently, [*Boost.Conversion] has been tested in the following compilers/platforms using the trunk (Boost 1.47):
 
@@ -579,12 +579,12 @@ With __assign_to the users could do
 
     assign_to(a, assign_to(b, c));
 
-and if they find this not really readable they can try with the [*m]ake [*a]ssigner [*t]o `mat' free function.
+and if they find this not really readable they can try with the [*m]ake [*a]ssigner [*t]o `lvalue' free function.
 
-    mat(a) = mat(b) = c;
+    lvalue(a) = lvalue(b) = c;
 
 [note 
-The name __mat could be replaced by lvalue as it builds a lvalue that is able to works with extrinsic conversions.
+The name __lvalue could be replaced by lvalue as it builds a lvalue that is able to works with extrinsic conversions.
 
 ```
     lvalue(a) = lvalue(b) = c;
@@ -704,12 +704,12 @@ So the following fails to compile if `ExtrCvtToInt` is extrinsically convertible
 
 [OVERLOAD_CPP_IMPL_EXTRINSIC]
 
-It would be great if the user could state explicitly that the parameter they are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __mcf that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
+It would be great if the user could state explicitly that the parameter they are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __implicitly that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
 
 [OVERLOAD_CPP_MCF_LIKE]
 
 [note 
-The name __mcf ([*m]ake [*c]onvertible [*f]rom) could be changed to `implicitly` if this considered better by  the Boost community.
+The name __implicitly ([*m]ake [*c]onvertible [*f]rom) could be changed to `implicitly` if this considered better by  the Boost community.
 
 ```
   T v;
@@ -735,7 +735,7 @@ Note that extrinsically implicit convertible implies extrinsically explicit conv
 having as result, for example
 
   ../example/overload.cpp:102:18: error: no matching function for call to 'f'
-      std::cout << f(mcf(v)) << " called" << std::endl;
+      std::cout << f(implicitly(v)) << " called" << std::endl;
                  ^
   ../example/overload.cpp:134:34: note: in instantiation of member function 'McfTest<ExtrExplicitCvtToInt>::whichOverload' requested here
     McfTest<ExtrExplicitCvtToInt>::whichOverload();
@@ -751,7 +751,7 @@ having as result, for example
 [section How to write a function that accepts a parameter that is extrinsically convertible to a given type?]
 [/====================================]
 
-The use of the helper function __mcf is a little bit intrusive in some cases. It would be great if the users could define a function accepting a type that is extrinsically convertible, so the they will not be forced to use it. There are two alternatives:
+The use of the helper function __implicitly is a little bit intrusive in some cases. It would be great if the users could define a function accepting a type that is extrinsically convertible, so the they will not be forced to use it. There are two alternatives:
 
 * overload the function using SFINAE
 * change the function prototype
@@ -993,10 +993,11 @@ This is a major evolution of the library.
 * Added `try_convert_to`, `try_assign_to`, `convert_to_or_fallback` functions.
 * Added converter factory `make_converter_to`.
 * Added type traits `is_extrinsically_convertible` and `is_extrinsically_assignable`.
-* Added `convertible_to`/`convertible_from` and `assignable_to` wrappers and the corresponding `mcf`, `mat` free functions.
-* Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp`, and so on.
+* Added `convertible_to`, `convertible_from` and `assignable_to` wrappers and the corresponding `implicitly` and `lvalue` free functions.
+* Added two levels of customization points `converter`/`converter_cp`, `assigner'/`assigner_cp`, and so on to simplify the customizations for the users.
 * On compilers supporting it the interface is now concept-based, for specialization or overloading.
-* Added type traits that should be included in Boost.TypeTraits 
+* Added type traits that have a better place in Boost.TypeTraits:
+
   * `is_assignable`, 
   * `is_copy_assignable`, 
   * `is_move_assignable`, 
@@ -1012,7 +1013,7 @@ This is a major evolution of the library.
 * The customization point using ADL has been disabled as it makes the library more complex.
 * `pack` will be removed before review as is not well designed, and a tuple of references should works as well.
 * `convert_to_via` will be removed before review as don't really useful.
-* `mca` will be removed before review, the news `mcf` and `mat` should be used..
+* `mca` will be removed before review, the news `implicitly` and `lvalue` should be used..
 
 [endsect]
 
@@ -1028,20 +1029,20 @@ This is a major evolution of the library.
 
 [*New Features:]
 
-* Added a pack function able to pack the Source and the Target constructor arguments in one parameter.
-* Added conversion between std::vector of explicitly convertible types.
-* Added is_convertible_to meta-function. Inherits: If an imaginary lvalue of type From is convertible to type To using convert_to then inherits from true_type, otherwise inherits from false_type.
+* Added a `pack` function able to pack the `Source` and the `Target` constructor arguments in one parameter.
+* Added conversion between `std::vector` of explicitly convertible types.
+* Added `is_convertible_to` meta-function. Inherits: If an imaginary lvalue of type `From` is convertible to type `To` using `convert_to` then inherits from `true_type`, otherwise inherits from `false_type`.
 
     template <class From, class To>
     struct is_convertible : public true_type-or-false_type {};
 
-* Added is_assignable_to meta-function.
+* Added `is_assignable_to` meta-function.
 
 [endsect]
 
 [section [*Version 0.4.0, October 27, 2009] ]
 
-['Applying the same technique that boost::swap applies making use of ADL]
+['Applying the same technique that `boost::swap` applies making use of ADL]
 
 [*New Features:]
 
@@ -1232,8 +1233,8 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
     [[convert_to_with_builtin_types]    [run]       [check `convert_to` works for builting types]     [Pass]   [#]]
     [[assign_to_with_builtin_types]     [run]       [check `assign_to` works for builtin types]      [Pass]   [#]]
     [[assign_to_transitive]             [run]       [Use of `assign_to` transitively]                 [Pass]   [#]]
-    [[mat_assign_to_with_builtin_types] [run]       [check `mca` `works` for builtin types]      [Pass]   [#]]
-    [[mat_assign_to_transitive]         [run]       [use of `mca` to multiple assignments]           [Pass]   [#]]
+    [[lvalue_assign_to_with_builtin_types] [run]       [check `mca` `works` for builtin types]      [Pass]   [#]]
+    [[lvalue_assign_to_transitive]         [run]       [use of `mca` to multiple assignments]           [Pass]   [#]]
 ]
 [endsect]
 
@@ -1258,7 +1259,7 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
     [[Name]                 [kind]  [Description]                                           [Result] [Ticket]]
     [[explicit_convert_to]  [run]   [check `convert_to` works when `convert_to` is overloaded]  [Pass]   [#]]
     [[explicit_assign_to]   [run]   [check `assign_to` works when `assign_to` is overloaded]    [Pass]   [#]]
-    [[explicit_mat]   [run]   [check `mat` works when `assign_to` is overloaded]    [Pass]   [#]]
+    [[explicit_lvalue]   [run]   [check `lvalue` works when `assign_to` is overloaded]    [Pass]   [#]]
 ]
 [endsect]
 
