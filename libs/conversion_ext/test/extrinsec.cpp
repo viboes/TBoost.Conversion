@@ -126,9 +126,7 @@ namespace boost {
 
 BOOST_STATIC_ASSERT(( !boost::is_convertible< X,ICF_X >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< X,ICF_X >::value));
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
-  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X,ICF_X >::value));
-#endif
+BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X,ICF_X >::value));
 
 struct ECF_X {};
 BOOST_CONVERSION_DCL_DEFAULTS(ECF_X)
@@ -192,7 +190,6 @@ namespace boost {
 }
 
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
   BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_convertible< X,AF_X >::value));
   BOOST_STATIC_ASSERT(( !boost::conversion::is_extrinsically_explicit_convertible< X,AF_X >::value));
   BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible< X , ICF_X >::value));
@@ -200,7 +197,6 @@ namespace boost {
   BOOST_STATIC_ASSERT(( boost::is_copy_assignable< ICF_X >::value));
   BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< ICF_X, X >::value));
 
-#endif
 
 //////////////////////////
 
@@ -211,11 +207,10 @@ namespace boost {
       ICF_X y1(implicit_convert_to<ICF_X>(x));
       (void)y1;// remove warning: unused variable
 
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       ICF_X y1_1(convert_to<ICF_X>(x));
       (void)y1_1;// remove warning: unused variable
-#endif
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
       ICF_X y2(implicitly(x));
       (void)y2;// remove warning: unused variable
 #endif
@@ -250,21 +245,17 @@ namespace boost {
       ICT_X y;
       X x1(implicit_convert_to<X>(y));
       (void)x1;// remove warning: unused variable
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       X x1_1(convert_to<X>(y));
       (void)x1_1;// remove warning: unused variable
-#endif
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
       X x2(implicitly(y));
       (void)x2;// remove warning: unused variable
 #endif
       X x3=implicit_convert_to<X>(y);
       (void)x3;// remove warning: unused variable
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       X x3_1=convert_to<X>(y);
       (void)x3_1;// remove warning: unused variable
-#endif
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
       X x4=implicitly(y);
       (void)x4;// remove warning: unused variable
 #endif
@@ -295,9 +286,6 @@ namespace boost {
     }
   }
 ////
-
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
-
 
 void explicit_convert_to() {
   using namespace boost::conversion;
@@ -336,7 +324,7 @@ void implicit_conversion_via_mca() {
 void implicit_conversion_via_implicitly() {
   using namespace boost::conversion;
   C c;
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
   f(implicitly(c));
 #endif
   f(convertible_to<B>(c));
@@ -351,7 +339,6 @@ void implicit_conversion_via_sfinae() {
   C c;
   h(c);
 }
-#endif
 
 int main( )
 {
@@ -360,7 +347,6 @@ int main( )
   xconvert_to_with_implicit_conversion_operator();
   xconvert_to_with_explicit_conversion_operator();
   xassign_to_with_assignemet_operator();
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
   explicit_convert_to();
   explicit_assign_to();
   explicit_chain_assign_to();
@@ -368,7 +354,6 @@ int main( )
   implicit_conversion_via_implicitly();
   implicit_conversion_via_convertible_to();
   implicit_conversion_via_sfinae();
-#endif
   return boost::report_errors();
 }
 

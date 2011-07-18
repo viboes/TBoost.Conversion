@@ -68,24 +68,20 @@ void explicit_convert_to()
   {
     B1 b1;
     boost::optional<B1> b=b1;
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(b));
       BOOST_TEST(a);
     }
-#endif
     boost::optional<A1> a(boost::conversion::implicit_convert_to<boost::optional<A1> >(b));
     BOOST_TEST(a);
   }
 
   {
     B1 b1;
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       boost::optional<A1> a(boost::conversion::convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
       BOOST_TEST(a);
     }
-#endif
     boost::optional<A1> a(boost::conversion::implicit_convert_to<boost::optional<A1> >(boost::optional<B1>(b1)));
     BOOST_TEST(a);
   }
@@ -93,12 +89,10 @@ void explicit_convert_to()
   { // target is not assigned when the source is not initialized
     boost::optional<B1> b;
     boost::optional<A1> a;
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       a=boost::conversion::convert_to<boost::optional<A1> >(b);
       BOOST_TEST(!a);
     }
-#endif
     a=boost::conversion::implicit_convert_to<boost::optional<A1> >(b);
     BOOST_TEST(!a);
   }
@@ -106,12 +100,10 @@ void explicit_convert_to()
   { // target is not assigned when the source is not initialized
     boost::optional<C1> c;
     boost::optional<A1> a;
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       a=boost::conversion::convert_to<boost::optional<A1> >(c);
       BOOST_TEST(!a);
     }
-#endif
     a=boost::conversion::implicit_convert_to<boost::optional<A1> >(c);
     BOOST_TEST(!a);
   }
@@ -121,12 +113,10 @@ void explicit_convert_to()
     boost::optional<C1> c=c1;
     boost::optional<A1> a;
     try {
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
       {
         a=boost::conversion::convert_to<boost::optional<A1> >(c);
         BOOST_TEST(false);
       }
-#endif
       a=boost::conversion::implicit_convert_to<boost::optional<A1> >(c);
       BOOST_TEST(false);
     } catch (...) {  }

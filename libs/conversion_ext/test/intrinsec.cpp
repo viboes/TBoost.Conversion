@@ -118,18 +118,12 @@ namespace boost
 #endif
 
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( ! boost::is_convertible< X,ECF_X >::value));
 BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible< X,ECF_X >::value));
 BOOST_STATIC_ASSERT(( ! boost::conversion::is_extrinsically_convertible< X,ECF_X >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< X,ECF_X >::value));
-#endif
-
-
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( ! boost::is_explicitly_convertible< X,AF_X >::value));
 BOOST_STATIC_ASSERT(( ! boost::conversion::is_extrinsically_convertible< X,AF_X >::value));
-#endif
 
 //////////////////////////
 
@@ -173,11 +167,11 @@ void explicit_convert_to_with_explicit_constructor() {
     BOOST_CONVERSION_CONSTRUCT(ECF_X, y, x); // Maybe a macro !!!
     ECF_X y1_1(explicit_convert_to<ECF_X>(x));
     (void)y1_1; // WARNING removal
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
     //ECF_X y1_2(implicitly(x)); // should fail as ambiguous: ECF_X(X) and ECF_X(ECF_X&const). fails only with gcc4.3. 0x
 #endif
 
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
     //impl_cnv(implicitly(x)); // fail as x is not implicit convertible to ECF_X.
 #endif
     ECF_X y3 = explicit_convert_to<ECF_X>(x);
@@ -225,30 +219,24 @@ void assign_to_with_assignemet_operator() {
     //AF_X y1(x);  // compile fails
     AF_X y2;
     y2=x;
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     assign_to(y2,x);
     lvalue(y2)=x;
-#endif
   }
   {
     A a(0);
     AA aa(0);
     aa=a;
     }
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     {
     A a(0);
     AA aa(0);
     assign_to(aa,a);
     }
-#endif
 }
 void mca_with_assignemet_operator() {
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     A a(0);
     AA aa(0);
     mca(aa) =a;
-#endif
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -257,21 +245,17 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     AA aa(1);
     aa=b;
     }
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     {
     B b;
     AA aa(1);
     mca(aa)=b;
     assign_to(aa,b);
     }
-#endif
 }
 void mca_with_assignemet_operator_and_implicit_constructor() {
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     B b;
     AA aa(1);
     mca(aa)=b;
-#endif
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -280,22 +264,18 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     CC cc(1);
     cc=c;
     }
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     {
     C c;
     CC cc(1);
     mca(cc)=c;
     //assign_to(cc,c);
     }
-#endif
 }
 
 void mca_with_assignemet_operator_and_conversion_operator() {
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     C c;
     CC cc(1);
     mca(cc)=c;
-#endif
 }
 
 

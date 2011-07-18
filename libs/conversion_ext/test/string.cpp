@@ -23,7 +23,6 @@ typedef int A1;
 typedef short B1;
 
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( boost::is_copy_assignable<bool >::value));
 BOOST_STATIC_ASSERT(( boost::is_copy_assignable<std::string >::value));
 BOOST_STATIC_ASSERT(( !boost::is_assignable<std::string, bool >::value));
@@ -32,7 +31,6 @@ BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<s
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<bool, std::string>::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<std::string, bool >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<bool, std::string >::value));
-#endif
 
 void explicit_convert_to() {
   bool b1=true;

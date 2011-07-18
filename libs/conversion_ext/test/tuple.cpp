@@ -17,7 +17,6 @@
 using namespace boost;
 #include <boost/static_assert.hpp>
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( boost::is_assignable<A1, A1 >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable<A2, A2 >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>, fusion::tuple<A1,A2> >::value));
@@ -25,26 +24,22 @@ BOOST_STATIC_ASSERT(( boost::is_assignable<fusion::tuple<A1,A2>&, fusion::tuple<
 BOOST_STATIC_ASSERT(( boost::is_copy_assignable<boost::fusion::tuple<A1,A2> >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<fusion::tuple<A1,A2>, fusion::tuple<B1,B2> >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<fusion::tuple<B1,B2>, fusion::tuple<A1,A2> >::value));
-#endif
 
 
 void explicit_convert_to() {
     B1 b1;
     B2 b2;
     fusion::tuple<B1,B2> b;
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     {
       fusion::tuple<A1,A2> a1(boost::conversion::convert_to<fusion::tuple<A1,A2> >(b));
       fusion::tuple<A1,A2> a2(boost::conversion::convert_to<fusion::tuple<A1,A2> >(fusion::tuple<B1,B2>(b1,b2)));
       fusion::tuple<A1,A2> a3(boost::conversion::convert_to<fusion::tuple<A1,A2> >(fusion::make_tuple(b1,b2)));
     }
-#endif
     fusion::tuple<A1,A2> a1(boost::conversion::explicit_convert_to<fusion::tuple<A1,A2> >(b));
     fusion::tuple<A1,A2> a2(boost::conversion::explicit_convert_to<fusion::tuple<A1,A2> >(fusion::tuple<B1,B2>(b1,b2)));
     fusion::tuple<A1,A2> a3(boost::conversion::explicit_convert_to<fusion::tuple<A1,A2> >(fusion::make_tuple(b1,b2)));
 }
 void explicit_assign_to() {
-#if defined(BOOST_CONVERSION_ENABLE_CND)
     B1 b1;
     B2 b2;
     fusion::tuple<A1,A2> a;
@@ -52,7 +47,6 @@ void explicit_assign_to() {
     boost::conversion::assign_to(a, b);
     boost::conversion::assign_to(a, fusion::tuple<B1,B2>(b1,b2));
     boost::conversion::assign_to(a, fusion::make_tuple(b1,b2));
-#endif
 
 }
 

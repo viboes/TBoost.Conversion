@@ -21,12 +21,10 @@ typedef short B1;
 
 void explicit_convert_to() {
     boost::chrono::seconds a(3);
-#if defined(BOOST_CONVERSION_ENABLE_CND)|| !defined(BOOST_NO_SFINAE_EXPR)
     {
       boost::posix_time::time_duration b(boost::conversion::convert_to<boost::posix_time::time_duration >(a));
       boost::chrono::seconds c(boost::conversion::convert_to<boost::chrono::seconds>(b));
     }
-#endif
     boost::posix_time::time_duration b(boost::conversion::implicit_convert_to<boost::posix_time::time_duration >(a));
     boost::chrono::seconds c(boost::conversion::implicit_convert_to<boost::chrono::seconds>(b));
 }

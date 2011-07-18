@@ -99,13 +99,10 @@ namespace boost {
     BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<B1, A1>::value));
     BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<B2, A2>::value));
 
-
-    #if defined(BOOST_CONVERSION_ENABLE_CND)
     BOOST_STATIC_ASSERT(( !boost::is_assignable<A1, B1>::value));
     BOOST_STATIC_ASSERT(( !boost::is_assignable<A2, B2>::value));
     BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<A1, B1>::value));
     BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<A2, B2>::value));
-    #endif
 
 
 #endif //BOOST_CONVERSION_TEST_HELPER__HPP

@@ -20,12 +20,10 @@ typedef short B1;
 
 void explicit_convert_to() {
     chrono::system_clock::time_point a=chrono::system_clock::now();
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       posix_time::ptime b(boost::conversion::convert_to<posix_time::ptime >(a));
       chrono::system_clock::time_point c(boost::conversion::convert_to<chrono::system_clock::time_point>(b));
     }
-#endif
     posix_time::ptime b(boost::conversion::implicit_convert_to<posix_time::ptime >(a));
     chrono::system_clock::time_point c(boost::conversion::implicit_convert_to<chrono::system_clock::time_point>(b));
 

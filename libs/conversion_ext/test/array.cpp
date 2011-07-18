@@ -15,23 +15,19 @@
 #include "helper.hpp"
 #include <boost/static_assert.hpp>
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( boost::is_assignable< int&, short const&>::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< int, short >::value));
 BOOST_STATIC_ASSERT(( boost::is_assignable< short&, int const& >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< short, int >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< A1, B1 >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< boost::array<A1,3>, boost::array<B1,3> >::value));
-#endif
 
 using namespace boost;
 
 void explicit_convert_to() {
     boost::array<B1,3> bs;
     boost::array<A1,3> as;
-#if defined(BOOST_CONVERSION_ENABLE_CND)|| !defined(BOOST_NO_SFINAE_EXPR)
     as = boost::conversion::convert_to<boost::array<A1,3> >(bs);
-#endif
     as = boost::conversion::implicit_convert_to<boost::array<A1,3> >(bs);
 
 }

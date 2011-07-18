@@ -20,12 +20,10 @@ void explicit_convert_to() {
     B1 b1(3);
     B1 b2(2);
     boost::rational<B1> b(1,2);
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
       boost::rational<A1> a1(boost::conversion::convert_to<boost::rational<A1> >(b));
       boost::rational<A1> a2(boost::conversion::convert_to<boost::rational<A1> >(boost::rational<B1>(b1,b2)));
     }
-#endif
     boost::rational<A1> a1(boost::conversion::implicit_convert_to<boost::rational<A1> >(b));
     boost::rational<A1> a2(boost::conversion::implicit_convert_to<boost::rational<A1> >(boost::rational<B1>(b1,b2)));
 

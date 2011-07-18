@@ -24,30 +24,23 @@
 
 using namespace boost;
 
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
 BOOST_STATIC_ASSERT(( !boost::is_constructible<std::pair<A1,A2>, std::pair<B1,B2> >::value));
 BOOST_STATIC_ASSERT(( !boost::is_explicitly_convertible<std::pair<B1,B2>, std::pair<A1,A2> >::value));
 BOOST_STATIC_ASSERT(( !boost::is_convertible<std::pair<B1,B2>, std::pair<A1,A2> >::value));
-#endif
-
-#if defined(BOOST_CONVERSION_ENABLE_CND)
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<std::pair<B1,B2>, std::pair<A1,A2> >::value));
 BOOST_STATIC_ASSERT(( !boost::is_assignable<std::pair<A1,A2>, std::pair<B1,B2> >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::assigner<std::pair<A1,A2>, std::pair<B1,B2> >::value));
 BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable<std::pair<A1,A2>, std::pair<B1,B2> >::value));
-#endif
 
 void explicit_convert_to() {
     B1 b1;
     B2 b2;
     std::pair<B1,B2> b;
-#if defined(BOOST_CONVERSION_ENABLE_CND) || !defined(BOOST_NO_SFINAE_EXPR)
     {
     std::pair<A1,A2> a1(boost::conversion::convert_to<std::pair<A1,A2> >(b));
     std::pair<A1,A2> a2(boost::conversion::convert_to<std::pair<A1,A2> >(std::pair<B1,B2>(b1,b2)));
     std::pair<A1,A2> a3(boost::conversion::convert_to<std::pair<A1,A2> >(std::make_pair(b1,b2)));
     }
-#endif
     std::pair<A1,A2> a1(boost::conversion::implicit_convert_to<std::pair<A1,A2> >(b));
     std::pair<A1,A2> a2(boost::conversion::implicit_convert_to<std::pair<A1,A2> >(std::pair<B1,B2>(b1,b2)));
     std::pair<A1,A2> a3(boost::conversion::implicit_convert_to<std::pair<A1,A2> >(std::make_pair(b1,b2)));
