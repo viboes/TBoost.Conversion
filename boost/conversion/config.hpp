@@ -56,7 +56,7 @@
 #if defined(BOOST_CONVERSION_ENABLE_CND) && !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
   #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
   #else
-    #define BOOST_CONVERSION_MCF_ENABLED
+    #define BOOST_CONVERSION_IMPLICITLY_ENABLED
   #endif
 #endif
 

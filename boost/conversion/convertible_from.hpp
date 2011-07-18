@@ -18,7 +18,7 @@
 #define BOOST_CONVERSION_CONVERTIBLE_FROM_HPP
 
 #include <boost/conversion/config.hpp>
-#if defined(BOOST_CONVERSION_MCF_ENABLED) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED) || defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
 
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
