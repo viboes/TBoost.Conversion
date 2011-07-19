@@ -22,10 +22,7 @@
 #include <boost/conversion/type_traits/std/vector.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-//#include <boost/conversion/pack.hpp>
 #include <boost/conversion/is_extrinsically_assignable.hpp>
-
-
 
 namespace boost {
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
