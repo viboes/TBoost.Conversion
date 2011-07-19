@@ -114,9 +114,9 @@ namespace boost {
   }
 }
 
-//[OVERLOAD_CPP_MCF_LIKE
+//[OVERLOAD_CPP_IMPLICITLY_LIKE
 template <typename T>
-struct McfTest {
+struct ImplicitlyTest {
   static void whichOverload()
   {
     T v;
@@ -149,18 +149,18 @@ void impl_extrinsic_test()
 
 void implicitly_extrinsic_test()
 {
-#if defined(BOOST_CONVERSION_MCF_ENABLED)
-  //[OVERLOAD_CPP_MCF
+#if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
+  //[OVERLOAD_CPP_IMPLICITLY
   McfTest<IntrCvtToInt>::whichOverload();
-  McfTest<IntrCvtToString>::whichOverload();
-  McfTest<ExtrCvtToInt>::whichOverload();
-  McfTest<ExtrCvtToString>::whichOverload();
-  //McfTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
+  ImplicitlyTest<IntrCvtToString>::whichOverload();
+  ImplicitlyTest<ExtrCvtToInt>::whichOverload();
+  ImplicitlyTest<ExtrCvtToString>::whichOverload();
+  //ImplicitlyTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
 #endif
   #if 0
-  //[OVERLOAD_CPP_MCF_EXPLICIT
-  McfTest<ExtrExplicitCvtToInt>::whichOverload();
+  //[OVERLOAD_CPP_IMPLICITLY_EXPLICIT
+  ImplicitlyTest<ExtrExplicitCvtToInt>::whichOverload();
   //]
   #endif
 }

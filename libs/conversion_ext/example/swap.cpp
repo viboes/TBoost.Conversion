@@ -29,9 +29,7 @@
       std::cout << "i= " << i << std::endl;
       std::cout << "x= " << x << std::endl;
 
-#if defined(BOOST_CONVERSION_ENABLE_CND)
       swap_convertibles(i, x);
-#endif
 
       std::cout << "i= " << i << std::endl;
       std::cout << "x= " << x << std::endl;
