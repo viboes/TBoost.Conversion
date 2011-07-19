@@ -11,8 +11,9 @@
 
 #include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/convertible_from.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/ca_wrapper.hpp>
+#include <boost/conversion/assignable_to.hpp>
 #include <boost/conversion/convertible_to.hpp>
 #include <boost/conversion/convertible_from.hpp>
 #include <boost/conversion/assignable_to.hpp>
@@ -302,7 +303,6 @@ void explicit_assign_to() {
   B b;
   A a;
   //assign_to(a, b);
-  mca(a)= b;
   lvalue(a)= b;
 }
 
@@ -312,14 +312,9 @@ void explicit_chain_assign_to() {
   B b;
   A a;
   assign_to(a, assign_to(b,c));
-  mca(a)= mca(b) = c;
   lvalue(a)= lvalue(b) = c;
 }
 
-void implicit_conversion_via_mca() {
-  C c;
-  f(mca(c));
-}
 
 void implicit_conversion_via_implicitly() {
   using namespace boost::conversion;
@@ -350,7 +345,6 @@ int main( )
   explicit_convert_to();
   explicit_assign_to();
   explicit_chain_assign_to();
-  implicit_conversion_via_mca();
   implicit_conversion_via_implicitly();
   implicit_conversion_via_convertible_to();
   implicit_conversion_via_sfinae();

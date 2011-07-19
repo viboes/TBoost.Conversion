@@ -11,7 +11,7 @@
 #include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
-#include <boost/conversion/ca_wrapper.hpp>
+#include <boost/conversion/assignable_to.hpp>
 #include <boost/conversion/assignable_to.hpp>
 #include <boost/conversion/convertible_from.hpp>
 #include <iostream>
@@ -233,10 +233,10 @@ void assign_to_with_assignemet_operator() {
     assign_to(aa,a);
     }
 }
-void mca_with_assignemet_operator() {
+void lvalue_with_assignemet_operator() {
     A a(0);
     AA aa(0);
-    mca(aa) =a;
+    lvalue(aa) =a;
 }
 
 void assign_to_with_assignemet_operator_and_implicit_constructor() {
@@ -248,14 +248,14 @@ void assign_to_with_assignemet_operator_and_implicit_constructor() {
     {
     B b;
     AA aa(1);
-    mca(aa)=b;
+    lvalue(aa)=b;
     assign_to(aa,b);
     }
 }
-void mca_with_assignemet_operator_and_implicit_constructor() {
+void lvalue_with_assignemet_operator_and_implicit_constructor() {
     B b;
     AA aa(1);
-    mca(aa)=b;
+    lvalue(aa)=b;
 }
 
 void assign_to_with_assignemet_operator_and_conversion_operator() {
@@ -267,15 +267,15 @@ void assign_to_with_assignemet_operator_and_conversion_operator() {
     {
     C c;
     CC cc(1);
-    mca(cc)=c;
+    lvalue(cc)=c;
     //assign_to(cc,c);
     }
 }
 
-void mca_with_assignemet_operator_and_conversion_operator() {
+void lvalue_with_assignemet_operator_and_conversion_operator() {
     C c;
     CC cc(1);
-    mca(cc)=c;
+    lvalue(cc)=c;
 }
 
 
@@ -288,9 +288,9 @@ int main( )
   assign_to_with_assignemet_operator();
   assign_to_with_assignemet_operator_and_implicit_constructor();
   assign_to_with_assignemet_operator_and_conversion_operator();
-  mca_with_assignemet_operator();
-  mca_with_assignemet_operator_and_implicit_constructor();
-  mca_with_assignemet_operator_and_conversion_operator();
+  lvalue_with_assignemet_operator();
+  lvalue_with_assignemet_operator_and_implicit_constructor();
+  lvalue_with_assignemet_operator_and_conversion_operator();
 
   return boost::report_errors();
 

@@ -11,8 +11,8 @@
 
 #include <iostream>
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/conversion/ca_wrapper.hpp>
 #include <boost/conversion/convert_to.hpp>
+#include <boost/conversion/assignable_to.hpp>
 #include <boost/conversion/include.hpp>
 #include <boost/static_assert.hpp>
 
@@ -181,7 +181,7 @@ void assign_to_with_builtin_types() {
     boost::conversion::assign_to(l, ul);
 }
 
-void mca_assign_to_with_builtin_types() {
+void lvalue_assign_to_with_builtin_types() {
     char c=0;
     short s=1;
     int i=2;
@@ -191,41 +191,41 @@ void mca_assign_to_with_builtin_types() {
     unsigned int ui(i);
     unsigned long ul(l);
 
-    boost::conversion::mca(c) = c;
-    boost::conversion::mca(c) = s;
-    boost::conversion::mca(c) = i;
-    boost::conversion::mca(c) = l;
-    boost::conversion::mca(c) = uc;
-    boost::conversion::mca(c) = us;
-    boost::conversion::mca(c) = ui;
-    boost::conversion::mca(c) = ul;
+    boost::conversion::lvalue(c) = c;
+    boost::conversion::lvalue(c) = s;
+    boost::conversion::lvalue(c) = i;
+    boost::conversion::lvalue(c) = l;
+    boost::conversion::lvalue(c) = uc;
+    boost::conversion::lvalue(c) = us;
+    boost::conversion::lvalue(c) = ui;
+    boost::conversion::lvalue(c) = ul;
 
-    boost::conversion::mca(s) = c;
-    boost::conversion::mca(s) = s;
-    boost::conversion::mca(s) = i;
-    boost::conversion::mca(s) = l;
-    boost::conversion::mca(s) = uc;
-    boost::conversion::mca(s) = us;
-    boost::conversion::mca(s) = ui;
-    boost::conversion::mca(s) = ul;
+    boost::conversion::lvalue(s) = c;
+    boost::conversion::lvalue(s) = s;
+    boost::conversion::lvalue(s) = i;
+    boost::conversion::lvalue(s) = l;
+    boost::conversion::lvalue(s) = uc;
+    boost::conversion::lvalue(s) = us;
+    boost::conversion::lvalue(s) = ui;
+    boost::conversion::lvalue(s) = ul;
 
-    boost::conversion::mca(i) = c;
-    boost::conversion::mca(i) = s;
-    boost::conversion::mca(i) = i;
-    boost::conversion::mca(i) = l;
-    boost::conversion::mca(i) = uc;
-    boost::conversion::mca(i) = us;
-    boost::conversion::mca(i) = ui;
-    boost::conversion::mca(i) = ul;
+    boost::conversion::lvalue(i) = c;
+    boost::conversion::lvalue(i) = s;
+    boost::conversion::lvalue(i) = i;
+    boost::conversion::lvalue(i) = l;
+    boost::conversion::lvalue(i) = uc;
+    boost::conversion::lvalue(i) = us;
+    boost::conversion::lvalue(i) = ui;
+    boost::conversion::lvalue(i) = ul;
 
-    boost::conversion::mca(l) = c;
-    boost::conversion::mca(l) = s;
-    boost::conversion::mca(l) = i;
-    boost::conversion::mca(l) = l;
-    boost::conversion::mca(l) = uc;
-    boost::conversion::mca(l) = us;
-    boost::conversion::mca(l) = ui;
-    boost::conversion::mca(l) = ul;
+    boost::conversion::lvalue(l) = c;
+    boost::conversion::lvalue(l) = s;
+    boost::conversion::lvalue(l) = i;
+    boost::conversion::lvalue(l) = l;
+    boost::conversion::lvalue(l) = uc;
+    boost::conversion::lvalue(l) = us;
+    boost::conversion::lvalue(l) = ui;
+    boost::conversion::lvalue(l) = ul;
 }
 
 void assign_to_transitive() {
@@ -236,11 +236,11 @@ void assign_to_transitive() {
 
 }
 
-void mca_assign_to_transitive() {
+void lvalue_assign_to_transitive() {
     {
     int a=0; int b=0; int c=0;
 
-    boost::conversion::mca(a) = boost::conversion::mca(b) = boost::conversion::mca(c) = 1;
+    boost::conversion::lvalue(a) = boost::conversion::lvalue(b) = boost::conversion::lvalue(c) = 1;
 
     }
 }
@@ -297,9 +297,9 @@ int main( )
   convert_to_with_builtin_types();
   implicit_convert_to_with_builtin_types();
   assign_to_with_builtin_types();
-  mca_assign_to_with_builtin_types();
+  lvalue_assign_to_with_builtin_types();
   assign_to_transitive();
-  mca_assign_to_transitive();
+  lvalue_assign_to_transitive();
   fp_convert_to();
   return boost::report_errors();
 }
