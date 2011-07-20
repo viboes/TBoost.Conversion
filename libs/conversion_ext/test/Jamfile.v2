@@ -40,6 +40,8 @@ project :
         <toolset>msvc:<cxxflags>/wd4127
         <toolset>msvc:<cxxflags>/wd4244
         <toolset>msvc:<cxxflags>-D_SCL_SECURE_NO_WARNINGS
+	<define>BOOST_CONVERSION_DOUBLE_CP
+
 
 ;
 

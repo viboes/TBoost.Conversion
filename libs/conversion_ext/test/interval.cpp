@@ -34,7 +34,7 @@ void explicit_assign_to() {
     boost::numeric::interval<A1> a(1,4);
     boost::numeric::interval<B1> b(1,4);
     boost::conversion::assign_to(a,b);
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
     assign_to(a,b);
 #endif
     boost::conversion::assign_to(a,boost::numeric::interval<B1>(b1,b2));

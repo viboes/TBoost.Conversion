@@ -50,7 +50,7 @@ struct C{};
 BOOST_CONVERSION_DCL_DEFAULTS(C)
 
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
   A convert_to(const B&, dummy::type_tag<A> const&) {
     return A();
   }

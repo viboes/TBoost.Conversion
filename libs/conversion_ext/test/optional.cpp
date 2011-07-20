@@ -29,7 +29,7 @@ template <> struct is_assignable< X&, X const& >  : true_type {};   \
 #endif
 
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
 struct A1{};
 struct B1{};
 struct C1{};
@@ -134,7 +134,7 @@ void explicit_assign_to()
     boost::conversion::assign_to(a, boost::optional<B1>(b1));
     BOOST_TEST(a);
   }
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
   { // assign_to can be used when found by ADL
     B1 b1;
     boost::optional<A1> a;

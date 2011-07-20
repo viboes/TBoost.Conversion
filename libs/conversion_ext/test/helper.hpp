@@ -76,7 +76,7 @@ namespace boost {
 
     }
 }
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     A1 convert_to(const B1&, boost::conversion::dummy::type_tag<A1> const&) {
         return A1();
