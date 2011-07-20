@@ -71,7 +71,7 @@ namespace boost {
     };
   }
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   namespace numeric {
     template < class Target, class PTarget, class Source, class PSource>

@@ -126,7 +126,7 @@ namespace boost {
     };
   }
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
+#if defined(BOOST_CONVERSION_DOUBLE_CP2)
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
   //! @brief @c assign_to overloading for source and target been @c boost::array of the same size.
   //!
