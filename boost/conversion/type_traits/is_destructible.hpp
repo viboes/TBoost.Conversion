@@ -12,11 +12,8 @@
  * @brief Defines the type trait @c is_destructible.
  */
 
-
 #ifndef BOOST_CONVERSION_TT_IS_DESTRUCTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_DESTRUCTIBLE_HPP
-
-
 
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
 namespace boost {
@@ -126,6 +123,8 @@ namespace boost {
     {
         U u;
     };
+    template <class T, bool False = is_void<T>::value || is_abstract<T>::value, bool True = is_scalar<T>::value >
+    struct imp;
 #if defined BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_DECLTYPE
 
     template <class T>
@@ -139,14 +138,14 @@ namespace boost {
     false_type
     selector(any);
 
-    template <class T, bool = is_void<T>::value || is_abstract<T>::value, bool = is_scalar<T>::value >
-    struct imp
+    template <class T>
+    struct imp<T,false,false>
     : public common_type<decltype(selector(declval<T>()))>::type {};
 
 #elif defined BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_SIZEOF
 
-    template <class T, bool = is_void<T>::value || is_abstract<T>::value, bool = is_scalar<T>::value >
-    struct imp
+    template <class T>
+    struct imp<T,false,false>
     {
       template<class X>
       static type_traits_detail_is_destructible::yes_type
@@ -162,8 +161,8 @@ namespace boost {
     };
 
 #else
-    template <class T, bool = is_void<T>::value || is_abstract<T>::value, bool = is_scalar<T>::value >
-    struct imp
+    template <class T>
+    struct imp<T,false,false>
     : public false_type {};
 #endif
     template <class T, bool IsScalar>
@@ -178,24 +177,31 @@ namespace boost {
   struct is_destructible
       : public type_traits_detail_is_destructible::imp<T> {};
 
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-
   /**
    * @c is_destructible specialization for reference types.
    *
-   * Condition: references are always copy assignable.
+   * Condition: references are always destructible.
    */
   template <typename T>
   struct is_destructible<T&> : true_type {};
+  /**
+   * @c is_destructible specialization for unbound arrays.
+   *
+   * Condition: unbound arrays are no destructible.
+   */
   template <typename A>
   struct is_destructible<A[]> : false_type {};
+  /**
+   * @c is_destructible specialization for bound arrays.
+   *
+   * Condition: is_destructible<A>.
+   */
   template <typename A, std::size_t N>
   struct is_destructible<A[N]> : is_destructible<A> {};
 
-#endif
 }
 
 
-#endif
-#endif
+#endif // doc
+#endif // header
 
