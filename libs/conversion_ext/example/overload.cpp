@@ -140,29 +140,31 @@ void impl_intrinsic_test()
 }
 void impl_extrinsic_test()
 {
+#if 0
   //[OVERLOAD_CPP_IMPL_EXTRINSIC
-  //ImplTest<ExtrCvtToInt>::whichOverload(); // compile fail
-  //ImplTest<ExtrCvtToString>::whichOverload(); // compile fail
-  //ImplTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
+  ImplTest<ExtrCvtToInt>::whichOverload(); // compile fail
+  ImplTest<ExtrCvtToString>::whichOverload(); // compile fail
+  ImplTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
+#endif
 }
 
 void implicitly_extrinsic_test()
 {
 #if defined(BOOST_CONVERSION_IMPLICITLY_ENABLED)
   //[OVERLOAD_CPP_IMPLICITLY
-  McfTest<IntrCvtToInt>::whichOverload();
+  ImplicitlyTest<IntrCvtToInt>::whichOverload();
   ImplicitlyTest<IntrCvtToString>::whichOverload();
   ImplicitlyTest<ExtrCvtToInt>::whichOverload();
   ImplicitlyTest<ExtrCvtToString>::whichOverload();
   //ImplicitlyTest<ExtrCvtINtAndString>::whichOverload(); // compile fail
   //]
 #endif
-  #if 0
+#if 0
   //[OVERLOAD_CPP_IMPLICITLY_EXPLICIT
   ImplicitlyTest<ExtrExplicitCvtToInt>::whichOverload();
   //]
-  #endif
+#endif
 }
 
 int main()
