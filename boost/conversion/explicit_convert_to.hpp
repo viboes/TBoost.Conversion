@@ -34,6 +34,7 @@
 #include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/add_reference.hpp>
 #include <boost/conversion/type_traits/is_explicitly_convertible.hpp>
 #include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <boost/conversion/detail/is_optional.hpp>
@@ -87,6 +88,7 @@ namespace boost {
     {
       //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
+      //Target operator()(const typename add_reference<Source>::type val)
       Target operator()(const Source& val)
       {
         return Target((val));
