@@ -10,27 +10,30 @@
 
 /**
  * @file
- * @brief Defines the free function @c implicit_convert_to and its customization point @c implicit_converter.
+ * @brief Defines the free function @c implicit_convert_to and its customization
+ *  point @c implicit_converter.
  *
- *  The @c implicit_convert_to function converts the @c from parameter to a @c Target type.
+ * The @c implicit_convert_to function converts the @c from parameter to a
+ *  @c Target type and is intended to be used in a implicit context.
+ *
+ * The default behavior call the implicit conversion when @c Source is
+ * implicitly convertible to @c Target
+ *
+ * When the default behavior is not satisfactory or it doesn't takes care of
+ *  specific types, the user could customize the behavior of
+ *  @c implicit_convert_to in two ways:
+ *
+ *  * overload the @c implicit_convert_to on any namespace found by ADL from the
+ *  @c Source or the @c Target. A trick is used to overload on the return type
+ *  by adding a dummy parameter depending on the @c Target.
+ *  * partially specialize the @c boost::conversion::implicit_converter_cp struct.
+ *
+ *  @note As we can not add new functions on the @c std namespace, partial
+ *  specialization is the only option.
  *
  */
 #ifndef BOOST_CONVERSION_IMPLICIT_CONVERT_TO_HPP
 #define BOOST_CONVERSION_IMPLICIT_CONVERT_TO_HPP
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
-/**
- *  A user adapting another type could need to overload the @c implicit_convert_to free function
- *  if the default behavior is not satisfactory.
- *  The user can add the @c implicit_convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
- *  A trick is used to overload on the return type by adding a dummy parameter having the Target.
- *
- *  But sometimes, as it is the case for the standard classes,
- *  we can not add new functions on the @c std namespace, so we need a different technique.
- *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::implicit_convert_to struct.
- *
- */
-#endif
-
 
 #include <boost/conversion/config.hpp>
 #include <boost/type_traits/integral_constant.hpp>
@@ -40,9 +43,8 @@
 namespace boost {
   namespace conversion {
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
     namespace dummy {
-      //! tag used to overload a function returning T.
+      //! tag used to overload a function returning the parameter @c T.
       //!
       //! @tparam T The wrapped return type.
       //! Users overloading the @c implicit_convert_to function must use this tag.
@@ -53,16 +55,15 @@ namespace boost {
         typedef T type;
       };
     }
-#endif
 
-
-    //! Customization point for @c implicit_convert_to.
+    //! Customization point for @c implicit_convert_to free function.
     //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! This class must be specialized by the user when the default behavior of @c implicit_converter is not satisfying.
+    //! This class can be specialized by the user when the default behavior of
+    //! @c implicit_converter doesn't takes care of he specific types.
     template < typename Target, typename Source, class Enable = void >
     struct implicit_converter_cp : false_type {};
 
@@ -72,12 +73,14 @@ namespace boost {
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! The default implementation relies on the @c implicit_converter_cp which must be specialized by the user.
+    //! The default implementation relies on the @c implicit_converter_cp which
+    //! must be specialized by the user.
     template < typename Target, typename Source, class Enable = void >
     struct implicit_converter : implicit_converter_cp<Target,Source,Enable> {};
 
 
-    //! Specialization for @c implicit_converter when @c is_convertible<Source,Target>.
+    //! Specialization for @c implicit_converter when
+    //! @c is_convertible<Source,Target>.
     //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -92,15 +95,17 @@ namespace boost {
 #endif
     > : true_type
     {
-      //! @Effects Converts the @c from parameter to an instance of the @c Target type, using the conversion operator or copy constructor.
-      //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class throws.
+      /**
+       * @Effects Converts the @c from parameter to an instance of the
+       *  @c Target type, using the conversion operator or copy constructor.
+       * @Throws Whatever the underlying conversion @c Target operator of the @c Source class throws.
+       */
       Target operator()(typename add_reference<const Source>::type val)
       {
         return val;
       }
     };
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -110,23 +115,24 @@ namespace boost {
       //! @Throws  Whatever the underlying conversion @c Target operator of the @c Source class or the copy constructor of the @c Target class throws.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename Target, typename Source >
-      Target implicit_convert_to(const Source& from, dummy::type_tag<Target> const&)
+      typename enable_if_c<
+        conversion::implicit_converter<Target,Source>::value
+      , Target>::type
+      implicit_convert_to(const Source& from, dummy::type_tag<Target> const&)
       {
         return conversion::implicit_converter<Target,Source>()(from);
       }
     }
 
-    namespace impl {
-      template <typename Target, typename Source>
-      Target implicit_convert_to_impl(Source const& from)
-      {
-        using namespace boost::conversion::impl_2;
-        //use boost::conversion::impl_2::implicit_convert_to if ADL fails
-        return implicit_convert_to(from, dummy::type_tag<Target>());
-      }
-    }
 #endif
-#endif
+
+  } // namespace conversion
+} // namespace boost
+
+#include <boost/conversion/is_extrinsically_convertible_tagged.hpp>
+
+namespace boost {
+  namespace conversion {
 
     //! @brief Extrinsic conversion function.
     //! Converts the @c from parameter to an instance of the @c Target type.
@@ -147,17 +153,17 @@ namespace boost {
     //! t=boost::conversion::implicit_convert_to<Target>(s);
     //! @endcode
     template <typename Target, typename Source>
-    Target
+    typename enable_if_c<
+        is_extrinsically_convertible_tagged<Source, Target>::value
+    , Target>::type
     implicit_convert_to(Source const& from)
     {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
-      return boost::conversion::impl::implicit_convert_to_impl<Target>(from);
-#else
-      return conversion::implicit_converter<Target,Source>()(from);
-#endif
+      using namespace boost::conversion::impl_2;
+      //use boost::conversion::impl_2::implicit_convert_to if ADL fails
+      return implicit_convert_to(from, dummy::type_tag<Target>());
     }
-  }
-}
+  } // namespace conversion
+} // namespace boost
 
-#endif
+#endif // header
 

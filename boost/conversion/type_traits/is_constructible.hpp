@@ -66,7 +66,7 @@ namespace boost {
 #include <boost/type_traits/is_abstract.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/is_convertible.hpp>
+#include <boost/conversion/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_all_extents.hpp>
 
 #if ! defined BOOST_NO_DECLTYPE

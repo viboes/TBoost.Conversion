@@ -18,8 +18,10 @@
 #ifndef BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 #define BOOST_CONVERSION_CHRONO_DURATION_TO_POSIX_TIME_DURATION_HPP
 
-#include <boost/chrono/duration.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/conversion/type_traits/boost/chrono/duration.hpp>
+//#include <boost/chrono/duration.hpp>
+#include <boost/conversion/type_traits/boost/date_time/posix_time/posix_time_types.hpp>
+//#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
 #include <boost/config.hpp>
@@ -29,32 +31,32 @@ namespace boost {
   //! trick to generate the doc. Don't take care of it
   struct trick_chrono_duration{};
 #endif
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template <> struct is_constructible< posix_time::time_duration >  : true_type {};           
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template <> struct is_constructible< posix_time::time_duration, posix_time::time_duration const& >  : true_type {}; 
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template <> struct is_assignable< posix_time::time_duration&, posix_time::time_duration const& >  : true_type {};   
-  template <> struct is_assignable< posix_time::time_duration, posix_time::time_duration >  : true_type {};   
-#endif
+//#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+//  template <> struct is_constructible< posix_time::time_duration >  : true_type {};
+//#endif
+//#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+//  template <> struct is_constructible< posix_time::time_duration, posix_time::time_duration const& >  : true_type {};
+//#endif
+//#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+//  template <> struct is_assignable< posix_time::time_duration&, posix_time::time_duration const& >  : true_type {};
+//  template <> struct is_assignable< posix_time::time_duration, posix_time::time_duration >  : true_type {};
+//#endif
 
-  
-#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class Rep, class Period >
-  struct is_constructible< chrono::duration<Rep, Period> >  : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class Rep, class Period >
-  struct is_constructible< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> > : true_type {};
-#endif
-#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class Rep, class Period >
-  struct is_assignable< chrono::duration<Rep, Period>&, chrono::duration<Rep, Period> const& >  : true_type {};
-  template < class Rep, class Period >
-  struct is_assignable< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> >  : true_type {};
-#endif
+
+//#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
+//  template < class Rep, class Period >
+//  struct is_constructible< chrono::duration<Rep, Period> >  : true_type {};
+//#endif
+//#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
+//  template < class Rep, class Period >
+//  struct is_constructible< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> > : true_type {};
+//#endif
+//#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
+//  template < class Rep, class Period >
+//  struct is_assignable< chrono::duration<Rep, Period>&, chrono::duration<Rep, Period> const& >  : true_type {};
+//  template < class Rep, class Period >
+//  struct is_assignable< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> >  : true_type {};
+//#endif
   
   
   namespace conversion {
@@ -96,40 +98,6 @@ namespace boost {
     };
 
   }
-
-#if defined(BOOST_CONVERSION_DOUBLE_CP2)
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-  namespace chrono {
-
-    //! @brief @c assign_to overloading for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
-    //!
-    //! @Effects As if <c>to = boost::conversion::convert_to<duration<Rep, Period>>(from)</c>.
-    //! @Returns The @c to parameter reference.
-
-    template < class Rep, class Period>
-    inline chrono::duration<Rep, Period> & assign_to(chrono::duration<Rep, Period> & to, const posix_time::time_duration& from)
-    {
-        to = boost::conversion::convert_to<duration<Rep, Period> >(from);
-        return to;
-    }
-  }
-
-  namespace posix_time {
-
-    //! @brief @c assign_to overloading for conversions from @c boost::posix_time::time_duration to @c boost::chrono::duration<>.
-    //!
-    //! @Effects As if <c>to = boost::conversion::convert_to<time_duration>(from)</c>.
-    //! @Returns The @c to parameter reference.
-    template < class Rep, class Period>
-    inline time_duration& assign_to(time_duration& to, const chrono::duration<Rep, Period>& from)
-    {
-        to = boost::conversion::convert_to<time_duration>(from);
-        return to;
-    }
-  }
-
-#endif
-#endif
 }
 
 #endif

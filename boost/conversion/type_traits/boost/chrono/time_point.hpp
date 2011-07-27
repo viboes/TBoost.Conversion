@@ -12,8 +12,8 @@
  * @brief Type traits specializations for <boost/chrono/time_point.hpp> types.
  */
 
-#ifndef BOOST_CONVERSION_TT_BOOST_CHRONO_DURATION_HPP
-#define BOOST_CONVERSION_TT_BOOST_CHRONO_DURATION_HPP
+#ifndef BOOST_CONVERSION_TT_BOOST_CHRONO_TIME_POINT_HPP
+#define BOOST_CONVERSION_TT_BOOST_CHRONO_TIME_POINT_HPP
 
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_constructible.hpp>

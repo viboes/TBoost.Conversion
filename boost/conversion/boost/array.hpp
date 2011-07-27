@@ -40,7 +40,7 @@ namespace boost {
     /**
      * Partial specialization of @c implicit_converter for @c boost::array of the same size
      *
-     * !!!!!!!!!!!! boost::array is not constructible frome array<U,N> so this should be removed or replaced by explicit
+     * !!!!!!!!!!!! boost::array is not constructible from array<U,N> so this should be removed or replaced by explicit
      */
     template < typename Target, typename Source, std::size_t N>
     struct implicit_converter_cp< array<Target,N>, array<Source,N>
@@ -125,20 +125,6 @@ namespace boost {
       }
     };
   }
-
-#if defined(BOOST_CONVERSION_DOUBLE_CP2)
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-  //! @brief @c assign_to overloading for source and target been @c boost::array of the same size.
-  //!
-  //! @Effects converts each one of the source array elements and store the result in the corresponding index on the target array.
-  //! @Returns The @c to parameter reference.
-  template < typename Target, typename Source, std::size_t N>
-  inline array<Target,N>& assign_to(array<Target,N>& to, array<Source,N> const & from)
-  {
-    return conversion::assigner<array<Target,N>, array<Source,N> >()(to, from);
-  }
-#endif
-#endif
 }
 
 #endif

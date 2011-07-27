@@ -70,18 +70,6 @@ namespace boost {
       }
     };
   }
-
-#if defined(BOOST_CONVERSION_DOUBLE_CP2)
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-  namespace numeric {
-    template < class Target, class PTarget, class Source, class PSource>
-    inline interval<Target,PTarget>& assign_to(interval<Target,PTarget>& to, const interval<Source,PSource>& from)
-    {
-      return conversion::assigner<interval<Target,PTarget>, interval<Source,PSource> >()(to, from);
-    }
-  }
-#endif
-#endif
 }
 
 #endif

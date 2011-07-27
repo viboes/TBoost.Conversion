@@ -20,7 +20,6 @@
 #ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
 #define BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
  The default implementation applies the conversion @c Target operator of the @c Source class or
  the copy constructor of the @c Target class. When an exception is thrown the fallback is returned.
@@ -35,7 +34,6 @@
  *  we can not add new functions on the @c std namespace, so we need a different technique.
  *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::convert_to_or_fallback struct.
  */
-#endif
 
 #include <boost/conversion/config.hpp>
 #include <boost/conversion/convert_to.hpp>
@@ -104,7 +102,6 @@ namespace boost {
     };
 
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -129,7 +126,6 @@ namespace boost {
       }
     }
 #endif
-#endif
 
     //! @brief Extrinsic conversion function with fallback.
     //! Converts the @c from parameter to a @c Target type. If the conversion fails the fallback value is used to construct a Target @c instance.
@@ -150,11 +146,7 @@ namespace boost {
          ! is_same<Target,Fallback>::value
     , Target>::type
     convert_to_or_fallback(Source const& from, Fallback const& fallback) {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
-#else
-      return conversion::converter_or_fallbacker<Target,Source,Fallback>()(from, fallback);
-#endif
     }
     //! @brief Extrinsic conversion function with fallback.
     //! Converts the @c from parameter to a @c Target type. If the conversion fails the fallback value is used to construct a Target @c instance.
@@ -170,11 +162,7 @@ namespace boost {
     //! @endcode
     template <typename Target, typename Source>
     Target convert_to_or_fallback(Source const& from, Target const& fallback) {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion::impl::convert_to_or_fallback_impl<Target>(from, fallback);
-#else
-      return conversion::converter_or_fallbacker<Target,Source>()(from, fallback);
-#endif
     }
   }
 }

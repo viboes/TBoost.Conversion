@@ -15,48 +15,214 @@
 #ifndef BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_HPP
 #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_HPP
 
-#include <boost/conversion/implicit_convert_to.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/remove_cv.hpp>
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+namespace boost {
+  namespace conversion {
+    /**
+     * States if @c Source is extrinsically explicit convertible to @c Target.
+     *
+     * Condition: @c true_type if and only if the return expression in the following code
+     * would be well-formed:
+     * @code
+     *   Target test() { return implicit_convert_to<Target>(declval<Source>()); }
+     * @endcode
+     *
+     * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+     *
+     */
+    template <class Source, class Target>
+    struct is_extrinsically_convertible {};
+
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_extrinsically_convertible type trait for classes.
+  #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+
+  }
+}
+#else
+
+#include <boost/conversion/config.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/common_type.hpp>
+#include <boost/type_traits/is_scalar.hpp>
+#include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/is_abstract.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/is_function.hpp>
+#include <boost/utility/declval.hpp>
 #include <boost/fusion/tuple.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
+#include <boost/conversion/type_traits/is_convertible.hpp>
+#include <boost/conversion/implicit_convert_to.hpp>
+
+#if ! defined BOOST_CONVERSION_USES_SFINAE
+//#if 0
+#define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+#else
+#if ! defined BOOST_NO_DECLTYPE
+  #if defined _MSC_VER
+    #if ! defined BOOST_NO_SFINAE_EXPR
+      #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_SIZEOF
+    #else
+      #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+    #endif
+  #elif defined __clang__
+    #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
+  #elif defined __GNUC__
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+       #if ! defined BOOST_NO_SFINAE_EXPR
+         #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_SIZEOF
+       #else
+         #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+       #endif
+     #else
+       #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
+     #endif
+  #else
+       #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
+  #endif
+#elif ! defined BOOST_NO_SFINAE_EXPR
+  #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_SIZEOF
+  #if defined __clang__
+  #elif defined __GNUC__
+  #endif
+#else
+  #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+#endif
+#endif
+
+#if ! defined BOOST_NO_RVALUE_REFERENCES
+  #if defined _MSC_VER
+  #elif defined __clang__
+      #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_USES_RVALUE
+  #elif defined __GNUC__
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+     #else
+      #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_USES_RVALUE
+     #endif
+  #else
+      #define BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_USES_RVALUE
+  #endif
+#endif
 
 namespace boost {
   namespace conversion {
 
-  /**
-   * States if @c Source is extrinsically convertible to @c Target.
-   *
-   * Condition: @c true_type if and only if the return expression in the following code
-   * would be well-formed:
-   * @code
-   *   Target test() { return implicit_convert_to<Target>(declval<Source>()); }
-   * @endcode
-   *
-   * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
-   *
-   */
+  namespace detail_is_extrinsically_convertible {
+    struct any {
+      template <typename T>
+      any(T);
+    };
+    //! type useful to compare with the sizeof
+    typedef char yes_type;
+    //! type useful to compare with the sizeof
+    struct no_type { char a[2]; };
+
+    //! type useful to accept a sizeof as parameter
+    template<std::size_t N>
+    struct dummy;
+
+    template <class S, class T,
+    bool True =
+           (is_void<S>::value && is_void<T>::value)
+        || ((is_scalar<T>::value || is_reference<T>::value) && is_convertible<S,T>::value)
+    ,
+    bool False =
+           (is_void<S>::value && !is_void<T>::value)
+        || (!is_void<S>::value && is_void<T>::value)
+        || is_abstract<T>::value
+        || is_function<T>::value
+        >
+    struct imp;
+
+#if defined BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
+#error
+    template <class S, class T>
+    struct imp<S,T,false,false>
+    {
+      template <class S1, class T1>
+      static decltype((
+          ::boost::conversion::implicit_convert_to<T1>(declval<S1>()) // EXPR
+          , true_type()))
+      #if defined BOOST_CONVERSION_TT_IS_EXTRINSIC_CONVERTIBLE_TAGGED_USES_RVALUE
+      selector(S1&&, T1&&);
+      #else
+      selector(S1&, T1&);
+      #endif
+
+      template <class S1, class T1>
+      static false_type
+      selector(any,any);
+
+      typedef typename common_type<decltype(selector(declval<S>(), declval<T>()))>::type type;
+    };
+#elif defined BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_SIZEOF
+#error
+
+    template <class S, class T>
+    struct imp<S,T,false,false>
+    {
+      template<class X, class Y>
+      static detail_is_extrinsically_convertible::yes_type
+      selector(detail_is_extrinsically_convertible::dummy<
+          sizeof(
+              ::boost::conversion::implicit_convert_to<T1>(declval<S1>()) // EXPR
+          )
+          >*);
+
+      template<class X, class Y>
+      static detail_is_extrinsically_convertible::no_type
+      selector(...);
+
+      static const bool value =
+        sizeof(selector<S,T>(0)) ==
+        sizeof(detail_is_extrinsically_convertible::yes_type);
+      typedef boost::integral_constant<bool,value> type;
+    };
+
+#else
+    template <class S, class T>
+    struct imp<S,T,false,false>
+    : public is_extrinsically_convertible_tagged<S,T> {};
+#endif
+    template <class S, class T, std::size_t N>
+    struct imp<S[N],T[N],false,false>
+    : public false_type {};
+    template <class S, class T, std::size_t N>
+    struct imp<S[N],T,false,false>
+    : public false_type {};
+    template <class S, class T, std::size_t N>
+    struct imp<S,T[N],false,false>
+    : public false_type {};
+    template <class S, class T>
+    struct imp<S[],T[],false,false>
+    : public false_type {};
+    template <class S, class T>
+    struct imp<S[],T,false,false>
+    : public false_type {};
+    template <class S, class T>
+    struct imp<S,T[],false,false>
+    : public false_type {};
+
+    template <class S,class T,bool B>
+    struct imp<S, T, true,B>
+        : public true_type {};
+
+    template <class S,class T,bool B>
+    struct imp<S, T, B,true>
+        : public false_type {};
+  }
+
   template <class Source, class Target>
-  struct is_extrinsically_convertible : conversion::implicit_converter<
-    Target, Source
-    //typename remove_reference<typename remove_cv<Target>::type>::type,
-    //typename remove_reference<typename remove_cv<Source>::type>::type
-    > {};
-#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+  struct is_extrinsically_convertible
+      : public detail_is_extrinsically_convertible::imp<Source, Target> {};
+
   template <class T>
   struct is_extrinsically_convertible<fusion::void_,T> : false_type {};
-  template <>
-  struct is_extrinsically_convertible<void, void> : true_type {};
-  template <>
-  struct is_extrinsically_convertible<const void,void> : true_type {};
-  template <>
-  struct is_extrinsically_convertible<void, const void> : true_type {};
-  template <>
-  struct is_extrinsically_convertible<const void, const void> : true_type {};
-#endif
 
   }
 }
 
 
+#endif
 #endif
 

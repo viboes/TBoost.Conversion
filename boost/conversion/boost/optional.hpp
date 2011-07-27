@@ -133,22 +133,6 @@ namespace boost {
     };
 
   }
-
-#if defined(BOOST_CONVERSION_DOUBLE_CP2)
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-  //! @brief @c assign_to overloading for source and target been @c boost::optional.
-  //!
-  //! @Effects As if <c>to = boost::conversion::implicit_convert_to<optional<Target> >(from)</c>.
-  //! @Returns The @c to parameter reference.
-  template < class Target, class Source>
-  inline optional<Target>& assign_to(optional<Target>& to, const optional<Source>& from)
-  {
-    to = boost::conversion::implicit_convert_to<optional<Target> >(from);
-    return to;
-  }
-#endif
-#endif
-
 }
 
 #endif

@@ -18,7 +18,6 @@ The function @c assign_to assigns the @c from parameter to the @c to parameter.
  */
 #ifndef BOOST_CONVERSION_ASSIGN_TO_HPP
 #define BOOST_CONVERSION_ASSIGN_TO_HPP
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
 A user adapting another type could need to specialize the @c assign_to free function if the default behavior is not satisfactory.
 The user can add the @c assign_to overloading on the namespace of the Source or Target classes.
@@ -27,7 +26,6 @@ so we need a different technique. The technique consists in partially specialize
 the @c boost::conversion::overload_workaround namespace.
 
  */
-#endif
 
 #include <boost/conversion/config.hpp>
 
@@ -198,7 +196,6 @@ namespace boost {
 
   }
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl_2 {
 
@@ -208,22 +205,36 @@ namespace boost {
     //! @Throws  Whatever the underlying the assignment operator of the @c Target class throws.
     //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
     template < typename Target, typename Source >
-    Target& assign_to(Target& to, const Source& from)
+    typename enable_if_c<
+      conversion::assigner<Target,Source>::value
+    , Target&>::type
+    assign_to(Target& to, const Source& from)
     {
       return conversion::assigner<Target,Source>()(to, from);
     }
   }
+#endif
 
+
+}
+
+#include <boost/conversion/is_extrinsically_assignable_tagged.hpp>
+
+namespace boost {
+#if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl {
     template <typename Target, typename Source>
-    Target& assign_to_impl(Target& to, const Source& from)
+    Target&
+    //typename enable_if_c<
+    //    is_extrinsically_assignable_tagged<Source,Target>::value
+    //, Target&>::type
+    assign_to_impl(Target& to, const Source& from)
     {
       using namespace boost::conversion_impl_2;
       //use boost::conversion_impl_2::assign_to if ADL fails
       return assign_to(to, from);
     }
   }
-#endif
 #endif
   namespace conversion {
 
@@ -248,13 +259,13 @@ namespace boost {
 
 
     template <typename Target, typename Source>
-    Target& assign_to(Target& to, const Source& from)
+    Target&
+    //typename enable_if_c<
+    //    is_extrinsically_assignable_tagged<Source,Target>::value
+    //, Target&>::type
+    assign_to(Target& to, const Source& from)
     {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion_impl::assign_to_impl<Target, Source>(to, from);
-#else
-      return conversion::assigner<Target,Source>()(to, from);
-#endif
     }
   }
 }

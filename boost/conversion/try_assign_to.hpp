@@ -20,8 +20,6 @@ The function @c try_assign_to assigns the @c from parameter to the @c to paramet
 #ifndef BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
 #define BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
-
 /**
 The user can add the @c try_assign_to overloading on the namespace of the Source or Target classes.
 But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace,
@@ -33,7 +31,6 @@ instead of calling directly to the @c try_assign_to member function, @c try_assi
 on a class with the same name in the namespace @c overload_workaround.
 Thus the user can specialize partially this class.
 */
-#endif
 
 
 #include <cstddef> //for std::size_t
@@ -103,7 +100,6 @@ namespace boost {
 
   }
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
   namespace conversion_impl_2 {
     //! @brief Default @c try_assign_to overload, used when ADL fails.
@@ -129,7 +125,7 @@ namespace boost {
     }
   }
 #endif
-#endif
+
   namespace conversion {
 
     //! @brief try to assign a target from a source
@@ -148,11 +144,7 @@ namespace boost {
     template <typename Target, typename Source>
     bool try_assign_to(Target& to, const Source& from)
     {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
-#else
-      return conversion::try_assigner<Target,Source>()(to, from);
-#endif
     }
   }
 }

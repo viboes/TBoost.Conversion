@@ -20,7 +20,6 @@
 #ifndef BOOST_CONVERSION_TRY_CONVERT_TO_HPP
 #define BOOST_CONVERSION_TRY_CONVERT_TO_HPP
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 /**
  *  A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
 
@@ -33,8 +32,6 @@
  *  we can not add new functions on the @c std namespace, so we need a different technique.
  *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::try_convert_to struct.
 */
-#endif
-
 
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/boost/optional.hpp>
@@ -67,7 +64,6 @@ namespace boost {
       }
     };
 
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     namespace impl_2 {
 
@@ -91,7 +87,6 @@ namespace boost {
       }
     }
 #endif
-#endif
 
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -107,11 +102,7 @@ namespace boost {
     //! @endcode
     template <typename Target, typename Source>
     optional<Target> try_convert_to(Source const& from) {
-#if defined(BOOST_CONVERSION_DOUBLE_CP)
       return boost::conversion::impl::try_convert_to_impl<Target>(from);
-#else
-      return conversion::try_converter<Target,Source>()(from);
-#endif
     }
   }
 
