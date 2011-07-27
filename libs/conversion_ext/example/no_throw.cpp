@@ -25,6 +25,7 @@ void try_catch_way()
   int t;
   try {
     t = convert_to<int>(str);
+    (void)t; // warning removal
     BOOST_ASSERT(false);
   } catch(...)   {
     std::cout << " Not an integer" << std::endl;

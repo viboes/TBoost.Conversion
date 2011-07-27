@@ -220,10 +220,12 @@ int main()
   BOOST_STATIC_ASSERT((!boost::is_convertible<const Array&, Function*>::value));
   BOOST_STATIC_ASSERT((!boost::is_convertible<const Array&, Function*const >::value));
 
+#if ! defined _MSC_VER
   BOOST_STATIC_ASSERT((!boost::is_convertible<Array&, Array>::value));
   BOOST_STATIC_ASSERT((!boost::is_convertible<Array&, const Array>::value));
   BOOST_STATIC_ASSERT((!boost::is_convertible<const Array&, Array>::value));
   BOOST_STATIC_ASSERT((!boost::is_convertible<const Array&, const Array>::value));
+#endif
 
   BOOST_STATIC_ASSERT(( boost::is_convertible<Array&, Array&>::value));
   BOOST_STATIC_ASSERT(( boost::is_convertible<Array&, const Array&>::value));

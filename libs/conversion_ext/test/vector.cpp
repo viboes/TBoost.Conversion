@@ -58,8 +58,10 @@ void explicit_assign_to() {
 
 int main( )
 {
+#if ! defined _MSC_VER
   explicit_convert_to();
   explicit_assign_to();
+#endif
   return boost::report_errors();
 }
 

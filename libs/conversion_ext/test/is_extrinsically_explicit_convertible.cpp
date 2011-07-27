@@ -34,8 +34,8 @@ namespace boost
 
   template <> struct is_extrinsically_explicit_convertible< int, A >  : true_type {};
   template <> struct is_extrinsically_explicit_convertible< double, A >  : true_type {};
-  template <> struct is_constructible< A, int, double >  : true_type {};
-  template <> struct is_constructible< A, A const& >  : true_type {};
+  //template <> struct is_constructible< A, int, double >  : true_type {};
+  //template <> struct is_constructible< A, A const& >  : true_type {};
 }
 }
 #endif
@@ -249,11 +249,12 @@ int main()
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Function*>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Function*const >::value));
 
+#if ! defined _MSC_VER
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<Array&, Array>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<Array&, const Array>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Array>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, const Array>::value));
-
+#endif
   // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, Array&>::value));
   // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, const Array&>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Array&>::value));

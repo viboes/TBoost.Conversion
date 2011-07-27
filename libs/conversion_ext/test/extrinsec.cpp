@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
+#include <boost/conversion/implicit_convert_to.hpp>
 #include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/convertible_from.hpp>
