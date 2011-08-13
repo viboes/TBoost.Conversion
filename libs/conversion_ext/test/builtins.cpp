@@ -21,6 +21,7 @@
 
 #include <boost/conversion/fp/convert_to.hpp>
 #include <boost/phoenix/core/argument.hpp>
+#include <boost/static_assert.hpp>
 
 
 void convert_to_with_builtin_types() {
@@ -140,6 +141,8 @@ void assign_to_with_builtin_types() {
     unsigned int ui(i);
     unsigned long ul(l);
 
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable_tagged< char,int >::value));
+
     boost::conversion::assign_to(c, 0);
     boost::conversion::assign_to(c, c);
     boost::conversion::assign_to(c, s);
@@ -190,6 +193,10 @@ void lvalue_assign_to_with_builtin_types() {
     unsigned short us(s);
     unsigned int ui(i);
     unsigned long ul(l);
+    BOOST_STATIC_ASSERT(( boost::is_scalar< char>::value));
+    BOOST_STATIC_ASSERT(( boost::is_assignable< char,int >::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable< char,int >::value));
+    BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable_tagged< char,int >::value));
 
     boost::conversion::lvalue(c) = c;
     boost::conversion::lvalue(c) = s;
