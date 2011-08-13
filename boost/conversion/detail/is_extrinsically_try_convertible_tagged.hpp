@@ -85,7 +85,6 @@ namespace boost {
   #endif
 #elif ! defined BOOST_NO_SFINAE_EXPR
   #if defined __clang__
-#error
 #define BOOST_CONVERSION_IS_EXTRINSIC_TRY_CONVERTIBLE_TAGGED_USES_SIZEOF
   #elif defined __GNUC__
     #define BOOST_CONVERSION_IS_EXTRINSIC_TRY_CONVERTIBLE_TAGGED_USES_SIZEOF

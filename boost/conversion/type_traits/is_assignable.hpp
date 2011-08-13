@@ -56,7 +56,6 @@ namespace boost {
   #if defined _MSC_VER
      #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __clang__
-    #error
     #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
