@@ -16,6 +16,9 @@
 #ifndef BOOST_CONVERSION_TT_IS_MOVE_CONSTRUCTIBLE_HPP
 #define BOOST_CONVERSION_TT_IS_MOVE_CONSTRUCTIBLE_HPP
 
+#include <boost/conversion/type_traits/detail/any.hpp>
+#include <boost/conversion/type_traits/detail/yes_no_types.hpp>
+#include <boost/conversion/type_traits/detail/dummy_size.hpp>
 #include <boost/conversion/type_traits/is_constructible.hpp>
 #include <boost/conversion/type_traits/is_copy_constructible.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -46,7 +49,7 @@ namespace boost {
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
-  template <class T>
+  template <typename T>
   struct is_move_constructible :
 #if defined BOOST_CONVERSION_TT_IS_MOVE_CONSTRUCTIBLE_USES_RVALUE
     is_constructible<T, typename add_rvalue_reference<T>::type>

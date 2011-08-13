@@ -15,6 +15,9 @@
 
 #ifndef BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_HPP
 #define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_HPP
+#include <boost/conversion/type_traits/detail/any.hpp>
+#include <boost/conversion/type_traits/detail/yes_no_types.hpp>
+#include <boost/conversion/type_traits/detail/dummy_size.hpp>
 
 #include <boost/conversion/type_traits/is_assignable.hpp>
 #include <boost/conversion/type_traits/is_copy_assignable.hpp>
@@ -46,7 +49,7 @@ namespace boost {
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
-  template <class T>
+  template <typename T>
   struct is_move_assignable :
 #if defined BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
     is_assignable<T&, T&&>

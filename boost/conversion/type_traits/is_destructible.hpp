@@ -23,7 +23,7 @@ namespace boost {
    * Condition: @c true_type if and only if given:
    *
    * @code
-   *   template <class U>
+   *   template <typename U>
    *   struct test {
    *     U u;
    *   };
@@ -39,7 +39,7 @@ namespace boost {
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
-  template <class T>
+  template <typename T>
   struct is_destructible
   {};
 
@@ -51,6 +51,9 @@ namespace boost {
 
 
 #include <boost/config.hpp>
+#include <boost/conversion/type_traits/detail/any.hpp>
+#include <boost/conversion/type_traits/detail/yes_no_types.hpp>
+#include <boost/conversion/type_traits/detail/dummy_size.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/type_traits/is_scalar.hpp>
@@ -104,30 +107,19 @@ namespace boost {
 #endif
 
 namespace boost {
-  namespace type_traits_detail_is_destructible {
-    struct any {
-      template <typename T>
-      any(T);
-    };
-    //! type useful to compare with the sizeof
-    typedef char yes_type;
-    //! type useful to compare with the sizeof
-    struct no_type { char a[2]; };
-
-    //! type useful to accept a sizeof as parameter
-    template<std::size_t N>
-    struct dummy;
-
-    template <class U>
+  namespace type_traits {
+    namespace detail {
+      namespace is_destructible {
+    template <typename U>
     struct test
     {
         U u;
     };
-    template <class T, bool False = is_void<T>::value || is_abstract<T>::value, bool True = is_scalar<T>::value >
+    template <typename T, bool False = is_void<T>::value || is_abstract<T>::value, bool True = is_scalar<T>::value >
     struct imp;
 #if defined BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_DECLTYPE
 
-    template <class T>
+    template <typename T>
     decltype((declval<test<T> >().~test<T>(), true_type()))
     #if defined BOOST_CONVERSION_TT_IS_DESTRUCTIBLE_USES_RVALUE
     selector(T&&);
@@ -138,44 +130,46 @@ namespace boost {
     false_type
     selector(any);
 
-    template <class T>
+    template <typename T>
     struct imp<T,false,false>
     : public common_type<decltype(selector(declval<T>()))>::type {};
 
 #elif defined BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_SIZEOF
 
-    template <class T>
+    template <typename T>
     struct imp<T,false,false>
     {
-      template<class X>
-      static type_traits_detail_is_destructible::yes_type
-      selector(type_traits_detail_is_destructible::dummy<sizeof(declval<test<T> >().~test<T>(),int())>*);
+      template<typename X>
+      static yes_type
+      selector(dummy_size<sizeof(declval<test<T> >().~test<T>(),int())>*);
 
-      template<class X>
-      static type_traits_detail_is_destructible::no_type
+      template<typename X>
+      static no_type
       selector(...);
 
       static const bool value =
-                sizeof(selector<T>(0)) == sizeof(type_traits_detail_is_destructible::yes_type);
+                sizeof(selector<T>(0)) == sizeof(yes_type);
       typedef boost::integral_constant<bool,value> type;
     };
 
 #else
-    template <class T>
+    template <typename T>
     struct imp<T,false,false>
     : public false_type {};
 #endif
-    template <class T, bool IsScalar>
+    template <typename T, bool IsScalar>
     struct imp<T, true, IsScalar>
         : public false_type {};
-    template <class T>
+    template <typename T>
     struct imp<T, false, true>
         : public true_type {};
 
+      }
+    }
   }
-  template <class T>
+  template <typename T>
   struct is_destructible
-      : public type_traits_detail_is_destructible::imp<T> {};
+      : public type_traits::detail::is_destructible::imp<T> {};
 
   /**
    * @c is_destructible specialization for reference types.

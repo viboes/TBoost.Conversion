@@ -23,28 +23,28 @@
 namespace boost {
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class T, class A>
+  template < typename T, typename A>
   struct is_constructible< std::vector<T,A> >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class T, class A>
+  template < typename T, typename A>
   struct is_constructible< std::vector<T,A>, std::vector<T,A> > : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class T, class A>
+  template < typename T, typename A>
   struct is_assignable< std::vector<T,A>&, std::vector<T,A> const& >  : true_type {};
-  template < class T, class A>
+  template < typename T, typename A>
   struct is_assignable< std::vector<T,A>, std::vector<T,A> >  : true_type {};
 #endif
 
   // these specializations are needed because the libraries define the assignment operator without using SFINAE
 
-  template < class T1, class A1, class T2, class A2>
+  template < typename T1, typename A1, typename T2, typename A2>
   struct is_constructible< std::vector<T1,A1>, std::vector<T2,A2> >
     : integral_constant<bool, is_constructible<T1,T2>::value  >
       {};
 
-  template < class T1, class A1, class T2, class A2>
+  template < typename T1, typename A1, typename T2, typename A2>
   struct is_assignable< std::vector<T1,A1>, std::vector<T2,A2> >
       : integral_constant<bool, is_assignable<T1,T2>::value  >
         {};

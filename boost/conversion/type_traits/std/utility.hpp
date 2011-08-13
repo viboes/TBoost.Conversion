@@ -26,34 +26,34 @@ namespace boost {
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
   //! Specialization for std::pair<T,U> default constructor
-  template < class T, class U>
+  template < typename T, typename U>
   struct is_constructible< std::pair<T,U> >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
   //! Specialization for std::pair<T,U> default copy constructor
-  template < class T, class U>
+  template < typename T, typename U>
   struct is_constructible< std::pair<T,U>, std::pair<T,U> const& >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
   //! Specialization for std::pair<T,U> assignment operator
-  template < class T, class U>
+  template < typename T, typename U>
   struct is_assignable< std::pair<T,U>, std::pair<T,U> >  : true_type {};
   //! Specialization for std::pair<T,U> assignment operator
-  template < class T, class U>
+  template < typename T, typename U>
   struct is_assignable< std::pair<T,U>&, std::pair<T,U> const& >  : true_type {};
 #endif
 
   // these specializations are needed because the libraries define the assignment operator without using SFINAE
-  template <class A1, class A2, class B1, class B2>
+  template <typename A1, typename A2, typename B1, typename B2>
   struct is_constructible< std::pair<A1,A2>, std::pair<B1,B2> >
     : integral_constant<bool, is_constructible<A1,B1>::value && is_constructible<A2,B2>::value >
       {};
-  template <class A1, class A2, class B1, class B2>
+  template <typename A1, typename A2, typename B1, typename B2>
   struct is_explicitly_convertible< std::pair<A1,A2>, std::pair<B1,B2> >
     : integral_constant<bool, is_explicitly_convertible<A1,B1>::value && is_explicitly_convertible<A2,B2>::value >
       {};
 
-  template <class A1, class A2, class B1, class B2>
+  template <typename A1, typename A2, typename B1, typename B2>
   struct is_assignable< std::pair<A1,A2>, std::pair<B1,B2> >
       : integral_constant<bool, is_assignable<A1,B1>::value && is_assignable<A2,B2>::value >
         {};

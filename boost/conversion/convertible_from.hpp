@@ -24,6 +24,7 @@
 #include <boost/conversion/assign_to.hpp>
 #include <boost/conversion/is_extrinsically_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/conversion/type_traits/is_copy_constructible.hpp>
 
 namespace boost {
   namespace conversion {
@@ -35,7 +36,17 @@ namespace boost {
     //!
     //! Requires @c Source must be CopyConstructible
 
-    template <typename Source>
+    template <typename Source, typename Enable =
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(
+            CopyConstructible<Source>
+        )
+#else
+        typename enable_if_c<
+            is_copy_constructible<Source>::value
+          >::type
+#endif
+          >
     class convertible_from {
       Source val_;
     public:
@@ -59,9 +70,10 @@ namespace boost {
       }
 
     };
-    //! @brief makes a wrapper implicitly convertible to types extrinsicly implicit convertibles from @c Source.
 
-    //! The result provides implicitly conversion to any type which is extrinsic implicit convertible from @c Source.
+    //! @brief makes a wrapper implicitly convertible to types extrinsicly implicit convertibles from @c Source.
+    //!
+    //! The result provides implicitly conversion to any type which is extrinsically implicit convertible from @c Source.
     //! @Returns convertible_from<Source>(s).
     //! @NoThrow.
     //! @Example
@@ -77,7 +89,11 @@ namespace boost {
     //! @endcode
 
     template <typename Source>
-    convertible_from<Source> implicitly(Source s)
+    typename enable_if_c<
+      is_copy_constructible<Source>::value
+    , convertible_from<Source>
+    >::type
+    implicitly(Source s)
     {
       return convertible_from<Source>(s);
     }

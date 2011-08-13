@@ -31,38 +31,11 @@ namespace boost {
   //! trick to generate the doc. Don't take care of it
   struct trick_chrono_duration{};
 #endif
-//#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-//  template <> struct is_constructible< posix_time::time_duration >  : true_type {};
-//#endif
-//#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-//  template <> struct is_constructible< posix_time::time_duration, posix_time::time_duration const& >  : true_type {};
-//#endif
-//#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-//  template <> struct is_assignable< posix_time::time_duration&, posix_time::time_duration const& >  : true_type {};
-//  template <> struct is_assignable< posix_time::time_duration, posix_time::time_duration >  : true_type {};
-//#endif
-
-
-//#if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-//  template < class Rep, class Period >
-//  struct is_constructible< chrono::duration<Rep, Period> >  : true_type {};
-//#endif
-//#if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-//  template < class Rep, class Period >
-//  struct is_constructible< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> > : true_type {};
-//#endif
-//#if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-//  template < class Rep, class Period >
-//  struct is_assignable< chrono::duration<Rep, Period>&, chrono::duration<Rep, Period> const& >  : true_type {};
-//  template < class Rep, class Period >
-//  struct is_assignable< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> >  : true_type {};
-//#endif
-  
   
   namespace conversion {
     //! @brief @c implicit_converter specialization for conversions from @c boost::chrono::duration<> to @c boost::posix_time::time_duration.
     //!
-    template < class Rep, class Period>
+    template < typename Rep, typename Period>
     struct implicit_converter_cp<posix_time::time_duration, chrono::duration<Rep, Period>
      > : true_type
     {
@@ -86,7 +59,7 @@ namespace boost {
     //! @brief @c implicit_converter specialization for conversions from @c boost::posix_time::time_duration to @c boost::chrono::duration<>.
     //!
 
-    template < class Rep, class Period>
+    template < typename Rep, typename Period>
     struct implicit_converter_cp<chrono::duration<Rep, Period>, posix_time::time_duration
         > : true_type
     {

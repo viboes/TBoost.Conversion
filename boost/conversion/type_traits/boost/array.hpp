@@ -23,7 +23,7 @@ namespace boost {
 
   // These specializations are needed because the std library implementation is not using SFINAE
 
-  template <class T1, class T2, std::size_t N>
+  template <typename T1, typename T2, std::size_t N>
   struct is_assignable< boost::array<T1,N>, boost::array<T2,N> >
       : integral_constant<bool, is_assignable<T1,T2>::value  >
         {};

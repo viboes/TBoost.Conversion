@@ -31,7 +31,7 @@ namespace boost {
      * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
      *
      */
-    template <class Source, class Target>
+    template <typename Source, typename Target>
     struct is_extrinsically_explicit_convertible_tagged {};
 
   //! Macro stating if the compiler doesn't support the features needed to define the @c is_extrinsically_explicit_convertible type trait for classes.
@@ -43,6 +43,9 @@ namespace boost {
 
 
 #include <boost/conversion/config.hpp>
+#include <boost/conversion/detail/any.hpp>
+#include <boost/conversion/detail/yes_no_types.hpp>
+#include <boost/conversion/detail/dummy_size.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
 #include <boost/type_traits/is_scalar.hpp>
@@ -50,7 +53,6 @@ namespace boost {
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/utility/declval.hpp>
-#include <boost/conversion/explicit_convert_to.hpp>
 #include <boost/conversion/type_traits/is_convertible.hpp>
 
 #if ! defined BOOST_NO_DECLTYPE
@@ -65,9 +67,8 @@ namespace boost {
 #error
     #define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_DECLTYPE
   #elif defined __GNUC__
-     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+     #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
        #if ! defined BOOST_NO_SFINAE_EXPR
-#error
          #define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
        #else
          #define BOOST_CONVERSION_NO_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED
@@ -82,10 +83,10 @@ namespace boost {
   #endif
 #elif ! defined BOOST_NO_SFINAE_EXPR
   #if defined __clang__
-#error
-#define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
+    #error
+    #define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
   #elif defined __GNUC__
-    #define BOOST_CONVERSION_NO_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED
+    #define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
   #else
     #error
     #define BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
@@ -111,22 +112,11 @@ namespace boost {
 namespace boost {
   namespace conversion {
   namespace impl_2 {}
-  namespace detail_is_extrinsically_explicit_convertible_tagged {
-  using namespace boost::conversion::impl_2;
-    struct any {
-      template <typename T>
-      any(T);
-    };
-    //! type useful to compare with the sizeof
-    typedef char yes_type;
-    //! type useful to compare with the sizeof
-    struct no_type { char a[2]; };
+    namespace detail {
+      namespace is_extrinsically_explicit_convertible_tagged {
+        using namespace boost::conversion::impl_2;
 
-    //! type useful to accept a sizeof as parameter
-    template<std::size_t N>
-    struct dummy;
-
-    template <class S, class T,
+    template <typename S, typename T,
     bool True =
            (is_void<S>::value && is_void<T>::value)
         || ((is_scalar<T>::value || is_reference<T>::value) && is_convertible<S,T>::value)
@@ -140,10 +130,10 @@ namespace boost {
     struct imp;
 
 #if defined BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_DECLTYPE
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S,T,false,false>
     {
-      template <class S1, class T1>
+      template <typename S1, typename T1>
       static decltype((
           explicit_convert_to(declval<S1>(), conversion::dummy::type_tag<T1>()) // EXPR
           , true_type()))
@@ -153,7 +143,7 @@ namespace boost {
       selector(S1&, T1&);
       #endif
 
-      template <class S1, class T1>
+      template <typename S1, typename T1>
       static false_type
       selector(any,any);
 
@@ -162,65 +152,68 @@ namespace boost {
 
 #elif defined BOOST_CONVERSION_IS_EXTRINSIC_EXPLICIT_CONVERTIBLE_TAGGED_USES_SIZEOF
 
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S,T,false,false>
     {
-      template<class X, class Y>
-      static detail_is_extrinsically_explicit_convertible_tagged::yes_type
-      selector(detail_is_extrinsically_explicit_convertible_tagged::dummy<
+      template<typename S1, typename T1>
+      static yes_type
+      selector(
+        dummy_size<
           sizeof(
-          explicit_convert_to(declval<X>(), conversion::dummy::type_tag<Y>()) // EXPR
+            explicit_convert_to(declval<S1>(), conversion::dummy::type_tag<T1>()) // EXPR
           )
-          >*);
+        >*
+      );
 
-      template<class X, class Y>
-      static detail_is_extrinsically_explicit_convertible_tagged::no_type
+      template<typename S1, typename T1>
+      static no_type
       selector(...);
 
       static const bool value =
         sizeof(selector<S,T>(0)) ==
-        sizeof(detail_is_extrinsically_explicit_convertible_tagged::yes_type);
+        sizeof(yes_type);
       typedef boost::integral_constant<bool,value> type;
     };
 
 #else
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S,T,false,false>
     : public conversion::explicit_converter<T,S> {};
 #endif
-    template <class S, class T, std::size_t N>
+    template <typename S, typename T, std::size_t N>
     struct imp<S[N],T[N],false,false>
     : public false_type {};
-    template <class S, class T, std::size_t N>
+    template <typename S, typename T, std::size_t N>
     struct imp<S[N],T,false,false>
     : public false_type {};
-    template <class S, class T, std::size_t N>
+    template <typename S, typename T, std::size_t N>
     struct imp<S,T[N],false,false>
     : public false_type {};
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S[],T[],false,false>
     : public false_type {};
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S[],T,false,false>
     : public false_type {};
-    template <class S, class T>
+    template <typename S, typename T>
     struct imp<S,T[],false,false>
     : public false_type {};
 
-    template <class S,class T,bool B>
+    template <typename S,typename T,bool B>
     struct imp<S, T, true,B>
         : public true_type {};
 
-    template <class S,class T,bool B>
+    template <typename S,typename T,bool B>
     struct imp<S, T, B,true>
         : public false_type {};
 
-  } // detail
+      } // is_extrinsically_explicit_convertible_tagged
+    } // detail
 
 
-  template <class Source, class Target>
+  template <typename Source, typename Target>
   struct is_extrinsically_explicit_convertible_tagged
-      : public detail_is_extrinsically_explicit_convertible_tagged::imp<Source, Target> {};
+      : public detail::is_extrinsically_explicit_convertible_tagged::imp<Source, Target> {};
 
 } // conversion
 } // boost

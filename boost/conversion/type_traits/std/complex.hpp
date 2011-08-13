@@ -24,27 +24,27 @@
 namespace boost {
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class T >
+  template < typename T >
   struct is_constructible< std::complex<T> >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class T >
+  template < typename T >
   struct is_constructible< std::complex<T>, std::complex<T> > : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class T >
+  template < typename T >
   struct is_assignable< std::complex<T>, std::complex<T> >  : true_type {};
-  template < class T >
+  template < typename T >
   struct is_assignable< std::complex<T>&, std::complex<T> const& >  : true_type {};
 #endif
 
   // These specializations are needed because the std library implementation is not using SFINAE
-  template < class Target, class Source>
+  template < typename Target, typename Source>
   struct is_constructible< std::complex<Target>, std::complex<Source> >
     : integral_constant<bool, is_constructible<Target,Source>::value  >
       {};
 
-  template < class Target, class Source>
+  template < typename Target, typename Source>
   struct is_assignable< std::complex<Target>, std::complex<Source> >
       : integral_constant<bool, is_assignable<Target,Source>::value  >
         {};

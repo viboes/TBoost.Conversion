@@ -30,7 +30,7 @@ namespace boost {
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
-  template <class T>
+  template <typename T>
   struct is_copy_constructible : is_constructible<
     T,
     T const&

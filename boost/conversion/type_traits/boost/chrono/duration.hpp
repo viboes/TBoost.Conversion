@@ -22,17 +22,17 @@
 namespace boost {
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class Rep, class Period >
+  template < typename Rep, typename Period >
   struct is_constructible< chrono::duration<Rep, Period> >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class Rep, class Period >
+  template < typename Rep, typename Period >
   struct is_constructible< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> > : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class Rep, class Period >
+  template < typename Rep, typename Period >
   struct is_assignable< chrono::duration<Rep, Period>&, chrono::duration<Rep, Period> const& >  : true_type {};
-  template < class Rep, class Period >
+  template < typename Rep, typename Period >
   struct is_assignable< chrono::duration<Rep, Period>, chrono::duration<Rep, Period> >  : true_type {};
 #endif
 

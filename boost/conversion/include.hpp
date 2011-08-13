@@ -11,7 +11,7 @@
 /*!
  @file
  @brief
-Include all the core conversion public header files. Note that you will need to include explicitly the C++ standard or Boost specific files when using specific classes.
+Includes all the core conversion public header files. Note that you will need to include explicitly the C++ standard or Boost specific files when using specific classes.
  */
 
 #ifndef BOOST_CONVERSION_INCLUDE_HPP

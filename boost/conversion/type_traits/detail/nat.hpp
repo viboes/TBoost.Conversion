@@ -7,23 +7,22 @@
 // See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-
 /**
  * @file
- *
+ * @brief Defines the any type useful to catch any type on overloadin resolution.
  */
-#ifndef BOOST_CONVERSION_CONFIG_HPP
-#define BOOST_CONVERSION_CONFIG_HPP
 
-#include <boost/config.hpp>
-#include <boost/utility/enable_if.hpp>
+#ifndef BOOST_CONVERSION_TT_DETAIL_NAT_HPP
+#define BOOST_CONVERSION_TT_DETAIL_NAT_HPP
 
-#if !defined(BOOST_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-  #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
-  #else
-    #define BOOST_CONVERSION_IMPLICITLY_ENABLED
-  #endif
-#endif
+namespace boost {
+  namespace type_traits {
+    namespace detail {
+      //! not a type. used as default of variadic templates
+      struct nat {};
+    } // detail
+  } // type_traits
+} // boost
 
-#endif
+#endif // header
 

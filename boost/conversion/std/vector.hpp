@@ -37,7 +37,7 @@ namespace boost {
     /**
      * Partial specialization of @c implicit_converter_cp for @c std::vector of extrinsic convertibles.
      */
-    template < class T1, class A1, class T2, class A2>
+    template < typename T1, typename A1, typename T2, typename A2>
     struct implicit_converter_cp< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires
@@ -65,7 +65,7 @@ namespace boost {
     /**
      * Partial specialization of @c assigner_cp for @c std::vector of extrinsic convertibles.
      */
-    template < class T1, class A1, class T2, class A2>
+    template < typename T1, typename A1, typename T2, typename A2>
     struct assigner_cp< std::vector<T1,A1>, std::vector<T2,A2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires

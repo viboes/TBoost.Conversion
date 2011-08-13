@@ -36,7 +36,7 @@ namespace boost {
 
     //! @brief @c implicit_converter specialization for source and target been @c boost::rational.
     //!
-    template < class Target, class Source>
+    template < typename Target, typename Source>
     struct implicit_converter_cp< rational<Target>, rational<Source>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
@@ -55,7 +55,7 @@ namespace boost {
         return rational<Target>(boost::conversion::convert_to<Target>(from.numerator()), boost::conversion::convert_to<Target>(from.denominator()));
       }
     };
-    template < class Target, class Source>
+    template < typename Target, typename Source>
     struct assigner_cp< rational<Target>, rational<Source>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(

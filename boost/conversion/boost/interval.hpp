@@ -31,7 +31,7 @@ namespace boost {
 
     //! @brief @c implicit_converter specialization for source and target been @c boost::numeric::interval.
     //!
-    template < class Target, class PTarget, class Source, class PSource>
+    template < typename Target, typename PTarget, typename Source, typename PSource>
     struct implicit_converter_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(
@@ -50,7 +50,7 @@ namespace boost {
         return numeric::interval<Target,PTarget>(boost::conversion::implicit_convert_to<Target>(from.lower()), boost::conversion::implicit_convert_to<Source>(from.upper()));
       }
     };
-    template < class Target, class PTarget, class Source, class PSource>
+    template < typename Target, typename PTarget, typename Source, typename PSource>
     struct assigner_cp< numeric::interval<Target,PTarget>, numeric::interval<Source,PSource>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(

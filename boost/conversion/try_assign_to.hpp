@@ -12,42 +12,69 @@
  @brief
  Defines the free function @c try_assign_to and its customization point @c try_assigner.
 
-The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignment done and @c false otherwise.
-
+ The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignment done and @c false otherwise.
 
  */
 
 #ifndef BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
 #define BOOST_CONVERSION_TRY_ASSIGN_TO_HPP
 
-/**
-The user can add the @c try_assign_to overloading on the namespace of the Source or Target classes.
-But sometimes as it is the case for the standard classes, we can not add new functions on the std namespace,
-so we need a different technique.
-
-The technique consists in partially specialize on the function @c try_assign_to on the @c boost::conversion namespace.
-For compilers for which we can not partially specialize a function a trick is used:
-instead of calling directly to the @c try_assign_to member function, @c try_assign_to calls to the static operation apply
-on a class with the same name in the namespace @c overload_workaround.
-Thus the user can specialize partially this class.
-*/
-
-
+#include <boost/conversion/config.hpp>
 #include <cstddef> //for std::size_t
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/assign_to.hpp>
+#include <boost/conversion/type_traits/is_default_constructible.hpp>
+#include <boost/conversion/type_traits/is_copy_constructible.hpp>
+#include <boost/conversion/type_traits/is_copy_assignable.hpp>
+#include <boost/conversion/is_extrinsically_assignable.hpp>
 
 namespace boost {
   namespace conversion {
+
     //! Customization point for @c try_assign_to.
-    //!
-    //! @tparam Target target type of the conversion.
-    //! @tparam Source source type of the conversion.
-    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
-    //!
-    //! This struct can be specialized by the user.
-    template < typename Target, typename Source, class Enable = void >
-    struct try_assigner
+  //!
+  //! @tparam Target target type of the conversion.
+  //! @tparam Source source type of the conversion.
+  //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+  //!
+  //! This class must be specialized by the user when the default behavior of @c try_assign_to is not satisfying.
+  template < typename Target, typename Source, typename Enable = void >
+  struct try_assigner_cp : false_type {};
+
+  //! Default @c try_converter.
+  //!
+  //! @tparam Target target type of the conversion.
+  //! @tparam Source source type of the conversion.
+  //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+  //!
+  //! The default implementation relies on the @c try_assigner_cp which must be specialized by the user.
+  template < typename Target, typename Source, typename Enable = void >
+  struct try_assigner : try_assigner_cp<Target,Source,Enable> {};
+
+  //! Specialization for @c try_assigner when @c is_extrinsically_explicit_convertible<Source,Target>.
+  //!
+  //! @tparam Target target type of the conversion.
+  //! @tparam Source source type of the conversion.
+  //!
+  //! @Requires @c is_extrinsically_explicit_convertible<Source,Target>
+
+
+    template < typename Target, typename Source >
+    struct try_assigner<Target, Source,
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+    requires(
+        CopyConstructible<Target>
+    && CopyAssignable<Target>
+    && ExtrinsicallyAssignable<Target,Source>
+    )
+#else
+        typename enable_if_c<
+          is_copy_constructible<Target>::value
+          && is_copy_assignable<Target>::value
+          && is_extrinsically_assignable<Target,Source>::value
+        >::type
+#endif
+    > : true_type
     {
       //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::assign_to(to, from) must be well formed.
       //! @Effects  Converts the @c from parameter to the @c to parameter, using @c assign_to.
@@ -73,9 +100,23 @@ namespace boost {
     //! specialization for c-arrays
     //!
     template < typename Target, typename Source, std::size_t N  >
-    struct try_assigner<Target[N],Source[N]>
+    struct try_assigner<Target[N],Source[N],
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(
+            DefaultConstructible<Target[N]>
+        && ExtrinsicallyAssignable<Target[N],Target[N]>
+        && ExtrinsicallyAssignable<Target,Source>
+        )
+#else
+        typename enable_if_c<
+          is_default_constructible<Target[N]>::value
+          && is_extrinsically_assignable<Target[N],Target[N]>::value
+          && is_extrinsically_assignable<Target,Source>::value
+        >::type
+#endif
+    > : true_type
     {
-      //! @Effects  Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
+      //! @Effects Converts the @c from parameter to  the @c to parameter, using by default the assignment operator on each vector element.
       //! @NoThrow
       //! @Returns the converted value if success or the fallback when conversion fails.
       bool operator()(Target(&to)[N], const Source(& from)[N])
@@ -109,7 +150,10 @@ namespace boost {
     //! @Returns the converted value if success or the fallback when conversion fails.
     //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
     template < typename Target, typename Source >
-    bool try_assign_to(Target& to, const Source& from)
+    typename enable_if_c<
+      conversion::try_assigner<Target,Source>::value
+    , bool >::type
+    try_assign_to(Target& to, const Source& from)
     {
       return conversion::try_assigner<Target,Source>()(to, from);
     }
@@ -125,7 +169,11 @@ namespace boost {
     }
   }
 #endif
+}
 
+#include <boost/conversion/detail/is_extrinsically_try_assignable_tagged.hpp>
+
+namespace boost {
   namespace conversion {
 
     //! @brief try to assign a target from a source
@@ -142,7 +190,10 @@ namespace boost {
     //! bool b = boost::conversion::try_assign_to(t,s);
     //! @endcode
     template <typename Target, typename Source>
-    bool try_assign_to(Target& to, const Source& from)
+    typename enable_if_c<
+      is_extrinsically_try_assignable_tagged<Target, Source>::value
+    , bool >::type
+    try_assign_to(Target& to, const Source& from)
     {
       return conversion_impl::try_assign_to_impl<Target, Source>(to, from);
     }

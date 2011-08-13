@@ -37,7 +37,7 @@ namespace boost {
    * was accepted. The library uses by default the static_cast version. Users can force the is_constructible version by defining
    *  @c BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE.
    */
-  template < class Source, class Target>
+  template < typename Source, typename Target>
   struct is_explicitly_convertible
   {};
 
@@ -57,9 +57,9 @@ namespace boost {
 
 namespace boost {
 
-  template <class Source, class Target>
+  template <typename Source, typename Target>
   struct is_explicitly_convertible : is_constructible<Target, Source> {};
-  template <class Target>
+  template <typename Target>
   struct is_explicitly_convertible<void,Target> : false_type {};
 
 
@@ -68,6 +68,9 @@ namespace boost {
 #else
 
 #include <boost/config.hpp>
+#include <boost/conversion/type_traits/detail/any.hpp>
+#include <boost/conversion/type_traits/detail/yes_no_types.hpp>
+#include <boost/conversion/type_traits/detail/dummy_size.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/declval.hpp>
 #include <cstddef>
@@ -113,41 +116,25 @@ namespace boost {
 
 
 namespace boost {
-  namespace type_traits_detail_is_explicitly_convertible {
-        //! type used instead of ... to accept any type
-        struct any {
-          template <typename T>
-          any(T);
-        };
-
-        //! type useful to compare with the sizeof
-        typedef char yes_type;
-        //! type useful to compare with the sizeof
-        struct no_type { char a[2]; };
-
-        //! type useful to accept a sizeof as parameter
-        template<std::size_t N>
-        struct dummy;
-  }
-
-
-  namespace type_traits_detail_is_explicitly_convertible {
+  namespace type_traits {
+    namespace detail {
+      namespace is_explicitly_convertible {
 #if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
 
     // specific positive test functions
-  template <class S, class T>
+  template <typename S, typename T>
   decltype((static_cast<T>(declval<S>()), true_type()))
   test(T&, S);
 
     // specific negative test functions
-  template <class S>
+  template <typename S>
   false_type
   test(any, S);
 
 // specialization for NOT void, abstract, function or any of the parameters is void, scalar or reference
 // depends on whether static_cast<T>(declval<S>()) is well formed
 
-    template <bool, class S, class T>
+    template <bool, typename S, typename T>
     struct imp
       : public common_type<decltype(test(declval<T&>(), declval<S>()))>::type
     {};
@@ -158,19 +145,19 @@ namespace boost {
 // specialization for void, abstract, function or any of the parameters is void, scalar or reference
 // depends on whether static_cast<T>(declval<Args>() ...) is well formed
 
-template<bool, class S, class T>
+template<bool, typename S, typename T>
 struct imp
 {
-    template<class X>
-    static type_traits_detail_is_explicitly_convertible::yes_type
-    test(type_traits_detail_is_explicitly_convertible::dummy<sizeof(static_cast<X>(declval<S>()))>*);
+    template<typename X>
+    static yes_type
+    test(dummy_size<sizeof(static_cast<X>(declval<S>()))>*);
 
-    template<class X>
-    static type_traits_detail_is_explicitly_convertible::no_type
+    template<typename X>
+    static no_type
     test(...);
 
     static const bool value =
-              sizeof(test<T>(0)) == sizeof(type_traits_detail_is_explicitly_convertible::yes_type);
+              sizeof(test<T>(0)) == sizeof(yes_type);
     typedef boost::integral_constant<bool,value> type;
 };
 
@@ -182,7 +169,7 @@ struct imp
 // allows to detect if static_cast<Target>(declval<Source>()) is well formed
 // always false. The user of the library needs to specialize this trait for its owns types.
 
-template<bool, class S, class T>
+template<bool, typename S, typename T>
 struct imp
   : boost::false_type
 {
@@ -193,7 +180,7 @@ struct imp
 
 
 // specialization for scalar or reference: depend on the source is convertible to the target
-      template <class S, class T>
+      template <typename S, typename T>
       struct imp<true, S, T>
           : public integral_constant<bool,is_convertible<S,T>::value || imp<false,S,T>::value >
           {};
@@ -201,7 +188,7 @@ struct imp
 // specialization for NOT void, abstract, function or any of the parameters is void:
       // depends on whether the type is scalar or reference
 
-  template <bool, class S, class T>
+  template <bool, typename S, typename T>
   struct void_check
     : public imp<is_scalar<T>::value || is_reference<T>::value,
                               S, T>
@@ -209,7 +196,7 @@ struct imp
 
 
 // specialization for void, abstract, function or any of the parameters is void: always false
-  template <class S, class T>
+  template <typename S, typename T>
   struct void_check<true, S, T>
     : public false_type
   {};
@@ -217,18 +204,20 @@ struct imp
 
 // specialization for unbounded arrays: always false
 
-  template <class S, class A>
+  template <typename S, typename A>
   struct imp<false, S, A[]>
     : public false_type
   {};
 
+      }
+    }
   }
 
 
 // defines is_explicitly_convertible, depending on whether T is void, abstract, function or any of the parameters is void
-  template <class S, class T>
+  template <typename S, class T>
   struct is_explicitly_convertible
-    : public type_traits_detail_is_explicitly_convertible::void_check<is_void<T>::value
+    : public type_traits::detail::is_explicitly_convertible::void_check<is_void<T>::value
               || is_abstract<T>::value  || is_function<T>::value
               || is_void<S>::value,
               S, T>

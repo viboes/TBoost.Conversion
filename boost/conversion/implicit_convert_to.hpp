@@ -16,7 +16,7 @@
  * The @c implicit_convert_to function converts the @c from parameter to a
  *  @c Target type and is intended to be used in a implicit context.
  *
- * The default behavior call the implicit conversion when @c Source is
+ * The default behavior returns the implicit conversion when @c Source is
  * implicitly convertible to @c Target
  *
  * When the default behavior is not satisfactory or it doesn't takes care of
@@ -64,7 +64,7 @@ namespace boost {
     //!
     //! This class can be specialized by the user when the default behavior of
     //! @c implicit_converter doesn't takes care of he specific types.
-    template < typename Target, typename Source, class Enable = void >
+    template < typename Target, typename Source, typename Enable = void >
     struct implicit_converter_cp : false_type {};
 
     //! Default customization point for @c implicit_convert_to.
@@ -75,7 +75,7 @@ namespace boost {
     //!
     //! The default implementation relies on the @c implicit_converter_cp which
     //! must be specialized by the user.
-    template < typename Target, typename Source, class Enable = void >
+    template < typename Target, typename Source, typename Enable = void >
     struct implicit_converter : implicit_converter_cp<Target,Source,Enable> {};
 
 
@@ -100,7 +100,7 @@ namespace boost {
        *  @c Target type, using the conversion operator or copy constructor.
        * @Throws Whatever the underlying conversion @c Target operator of the @c Source class throws.
        */
-      Target operator()(typename add_reference<const Source>::type val)
+      Target operator()(const Source& val)
       {
         return val;
       }
@@ -118,7 +118,8 @@ namespace boost {
       typename enable_if_c<
         conversion::implicit_converter<Target,Source>::value
       , Target>::type
-      implicit_convert_to(const Source& from, dummy::type_tag<Target> const&)
+      implicit_convert_to(const Source& from,
+          dummy::type_tag<Target> const&)
       {
         return conversion::implicit_converter<Target,Source>()(from);
       }
@@ -129,7 +130,7 @@ namespace boost {
   } // namespace conversion
 } // namespace boost
 
-#include <boost/conversion/is_extrinsically_convertible_tagged.hpp>
+#include <boost/conversion/detail/is_extrinsically_convertible_tagged.hpp>
 
 namespace boost {
   namespace conversion {
@@ -148,15 +149,15 @@ namespace boost {
     //!
     //! @Example
     //! @code
-    //! Target t;
-    //! Source s;
-    //! t=boost::conversion::implicit_convert_to<Target>(s);
+    //!   Target t;
+    //!   Source s;
+    //!   t=boost::conversion::implicit_convert_to<Target>(s);
     //! @endcode
     template <typename Target, typename Source>
     typename enable_if_c<
         is_extrinsically_convertible_tagged<Source, Target>::value
     , Target>::type
-    implicit_convert_to(Source const& from)
+    implicit_convert_to(const Source& from)
     {
       using namespace boost::conversion::impl_2;
       //use boost::conversion::impl_2::implicit_convert_to if ADL fails

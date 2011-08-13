@@ -22,17 +22,17 @@
 namespace boost {
 
 #if defined(BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE)
-  template < class Clock, class Duration>
+  template < typename Clock, typename Duration>
   struct is_constructible< chrono::time_point<Clock, Duration> >  : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE)
-  template < class Clock, class Duration>
+  template < typename Clock, typename Duration>
   struct is_constructible< chrono::time_point<Clock, Duration>, chrono::time_point<Clock, Duration> > : true_type {};
 #endif
 #if defined(BOOST_CONVERSION_NO_IS_ASSIGNABLE)
-  template < class Clock, class Duration>
+  template < typename Clock, typename Duration>
   struct is_assignable< chrono::time_point<Clock, Duration>&, chrono::time_point<Clock, Duration> const& >  : true_type {};
-  template < class Clock, class Duration>
+  template < typename Clock, typename Duration>
   struct is_assignable< chrono::time_point<Clock, Duration>, chrono::time_point<Clock, Duration> >  : true_type {};
 #endif
 

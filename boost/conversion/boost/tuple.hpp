@@ -29,7 +29,7 @@ namespace boost {
   
   namespace conversion {
 
-    template < class T1, class T2, class S1, class S2>
+    template < typename T1, typename T2, typename S1, typename S2>
     struct explicit_converter_cp< fusion::tuple<T1,T2>, fusion::tuple<S1,S2>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
     , requires(
@@ -52,7 +52,7 @@ namespace boost {
         );
       }
     };
-    template < class T1, class T2, class T3, class S1, class S2, class S3>
+    template < typename T1, typename T2, typename T3, typename S1, typename S2, typename S3>
     struct explicit_converter_cp< fusion::tuple<T1,T2,T3>, fusion::tuple<S1,S2,S3>
 #if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
         , requires(

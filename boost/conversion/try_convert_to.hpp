@@ -14,40 +14,58 @@
 
  The @c try_convert_to function converts the @c from parameter to a @c Target type and returns an optional<Target>, uninitialized if conversion fails.
  
-
  */
 
 #ifndef BOOST_CONVERSION_TRY_CONVERT_TO_HPP
 #define BOOST_CONVERSION_TRY_CONVERT_TO_HPP
 
-/**
- *  A user adapting specific types could need to specialize the @c try_convert_to free function if the default behavior is not satisfactory or if the specialization can perform better.
-
- *  A user adapting another type could need to overload the @c try_convert_to free function
- *  if the default behavior is not satisfactory.
- *  The user can add the @c try_convert_to overloading on any namespace found by ADL from the @c Source or the @c Target.
- *  A trick is used to overload on the return type by adding a dummy parameter having the Target.
- *
- *  But sometimes, as it is the case for the standard classes,
- *  we can not add new functions on the @c std namespace, so we need a different technique.
- *  In this case the user can partially specialize the @c boost::conversion::overload_workaround::try_convert_to struct.
-*/
-
+#include <boost/conversion/config.hpp>
 #include <boost/conversion/convert_to.hpp>
 #include <boost/conversion/boost/optional.hpp>
+#include <boost/conversion/is_extrinsically_explicit_convertible.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace conversion {
+  namespace conversion  {
     //! Customization point for @c try_convert_to.
     //!
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
     //! @tparam Enable A dummy template parameter that can be used for SFINAE.
     //!
-    //! This struct can be specialized by the user.
-    template < typename Target, typename Source, class Enable = void >
-    struct try_converter {
-      //! @Requires @c Target must be CopyConstructible and @c ::boost::conversion::convert_to<Target>(from) must be well formed.
+    //! This class must be specialized by the user when the default behavior of @c try_convert_to is not satisfying.
+    template < typename Target, typename Source, typename Enable = void >
+    struct try_converter_cp : false_type {};
+
+    //! Default @c try_converter.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //! @tparam Enable A dummy template parameter that can be used for SFINAE.
+    //!
+    //! The default implementation relies on the @c try_converter_cp which must be specialized by the user.
+    template < typename Target, typename Source, typename Enable = void >
+    struct try_converter : try_converter_cp<Target,Source,Enable> {};
+
+    //! Specialization for @c try_converter when @c is_extrinsically_explicit_convertible<Source,Target>.
+    //!
+    //! @tparam Target target type of the conversion.
+    //! @tparam Source source type of the conversion.
+    //!
+    //! @Requires @c is_extrinsically_explicit_convertible<Source,Target>
+    template < typename Target, typename Source>
+    struct try_converter<Target, Source,
+#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
+        requires(ExtrinsicallyExplicitConvertible<Source,Target>)
+#else
+        typename enable_if_c<
+          is_extrinsically_explicit_convertible<Source,Target>::value
+        >::type
+#endif
+    > : true_type
+    {
+      //! @Requires @c ::boost::conversion::convert_to<Target>(from) must be well formed.
       //! @Effects  Converts the @c from parameter to an instance of the @c Target type, using by default the conversion operator or copy constructor.
       //! @NoThrow
       //! @Returns A optional<Ratget> uninitialized when conversion fails.
@@ -74,7 +92,10 @@ namespace boost {
       //! @Returns A optional<Target> uninitialized when conversion fails.
       //! Forwards the call to the overload workaround, which can yet be specialized by the user for standard C++ types.
       template < typename Target, typename Source >
-      optional<Target> try_convert_to(const Source& from, dummy::type_tag<Target> const&) {
+      typename enable_if_c<
+        conversion::try_converter<Target,Source>::value
+      , optional<Target> >::type
+      try_convert_to(const Source& from, dummy::type_tag<Target> const&) {
         return conversion::try_converter<Target,Source>()(from);
       }
     }
@@ -87,6 +108,13 @@ namespace boost {
       }
     }
 #endif
+  }
+}
+
+#include <boost/conversion/detail/is_extrinsically_try_convertible_tagged.hpp>
+
+namespace boost {
+  namespace conversion {
 
     //! @tparam Target target type of the conversion.
     //! @tparam Source source type of the conversion.
@@ -101,11 +129,13 @@ namespace boost {
     //! res=boost::conversion::try_convert_to<Target>(s);
     //! @endcode
     template <typename Target, typename Source>
-    optional<Target> try_convert_to(Source const& from) {
+    typename enable_if_c<
+      is_extrinsically_try_convertible_tagged<Source,Target>::value
+    , optional<Target> >::type
+    try_convert_to(Source const& from) {
       return boost::conversion::impl::try_convert_to_impl<Target>(from);
     }
   }
-
 }
 
 #endif
