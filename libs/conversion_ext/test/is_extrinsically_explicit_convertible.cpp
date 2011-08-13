@@ -257,7 +257,7 @@ int main()
 #endif
   // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, Array&>::value));
   // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, const Array&>::value));
-  BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Array&>::value));
+  // BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, Array&>::value));
   // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<const Array&, const Array&>::value));
 
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<Array&, char>::value));
@@ -270,10 +270,10 @@ int main()
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, char&>::value));
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, const char&>::value));
 
-  // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, char*>::value));
-  // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, const char*>::value));
-  BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, char*>::value));
-  // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<const Array&, const char*>::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, char*>::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Array&, const char*>::value));
+  //BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const Array&, char*>::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<const Array&, const char*>::value));
   }
   {
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<char, void>::value));
@@ -309,7 +309,7 @@ int main()
 
   //BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<char, char&>::value));
   BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<char, const char&>::value));
-  BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const char, char&>::value));
+  //BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const char, char&>::value));
   BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<const char, const char&>::value));
 
   BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<char, char*>::value));

@@ -26,8 +26,8 @@ namespace boost                                                       \
 {                                                                     \
   template <> struct is_constructible< X >  : true_type {};           \
   template <> struct is_constructible< X, X const& >  : true_type {}; \
-template <> struct is_assignable< X&, X const& >  : true_type {};   \
-template <> struct is_assignable< X, X >  : true_type {};   \
+  template <> struct is_assignable< X&, X const& >  : true_type {};   \
+  template <> struct is_assignable< X, X >  : true_type {};   \
 }
 #else
 #define BOOST_CONVERSION_DCL_DEFAULTS(X)

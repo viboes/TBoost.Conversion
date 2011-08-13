@@ -214,6 +214,7 @@ void explicit_convert_to_with_explicit_conversion_operator() {
 
 }
 void assign_to_with_assignemet_operator() {
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_assignable_tagged< AF_X, X >::value));
   {
     X x;
     //AF_X y1(x);  // compile fails

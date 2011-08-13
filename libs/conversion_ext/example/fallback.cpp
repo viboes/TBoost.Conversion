@@ -28,6 +28,10 @@ void try_assign_to_way()
 
 void convert_to_or_fallback_way()
 {
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< std::string,int >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible< short,int >::value));
+  BOOST_STATIC_ASSERT(( boost::conversion::converter_or_fallbacker< int, std::string, short >::value));
+
   std::string str="not an int";
   //[FALLBACK_CPP_CONVERT_TO_OR_FALLBACK
   short f=-1;

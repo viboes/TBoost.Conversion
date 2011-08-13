@@ -11,6 +11,7 @@
 //[EVEN_CPP
 
     #include <boost/conversion/convert_to.hpp>
+    #include <boost/conversion/std/string.hpp>
     #include <iostream>
     using namespace boost::conversion;
 
@@ -21,7 +22,8 @@
     }
     int main()
     {
-      if (is_even(2))
+      std::string str = "2";
+      if (is_even(str))
         std::cout << "2 is even" << std::endl;
       else
         std::cout << "2 is odd" << std::endl;
