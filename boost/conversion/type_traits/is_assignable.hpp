@@ -57,7 +57,8 @@ namespace boost {
      #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __clang__
     //#define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
-    #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+    #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
+    //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
@@ -65,6 +66,8 @@ namespace boost {
        #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
      #endif
   #else
+    #error
+    #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
   #endif
 #elif ! defined BOOST_NO_SFINAE_EXPR
   #if defined _MSC_VER
@@ -87,6 +90,9 @@ namespace boost {
 #include <boost/conversion/type_traits/detail/dummy_size.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/common_type.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_scalar.hpp>
+#include <boost/type_traits/is_reference.hpp>
 #include <boost/utility/declval.hpp>
 #endif // !defined(BOOST_IS_ASSIGNABLE)
 
@@ -98,9 +104,10 @@ namespace boost {
   namespace type_traits {
     namespace detail {
       namespace is_assignable {
-        template <typename T,typename S,
-          bool True = false,
-          bool False = false >
+        template <typename T,typename S
+          , bool True =
+              ((is_scalar<T>::value || is_reference<T>::value) && is_convertible<S,T>::value)
+          , bool False = false >
         struct imp;
 
 #if defined BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
