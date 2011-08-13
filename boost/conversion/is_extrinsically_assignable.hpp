@@ -59,8 +59,8 @@ namespace boost {
       #define BOOST_CONVERSION_NO_IS_EXTRINSIC_ASSIGNABLE
     #endif
   #elif defined __clang__
-#error
-    #define BOOST_CONVERSION_IS_EXTRINSIC_ASSIGNABLE_USES_DECLTYPE
+    #define BOOST_CONVERSION_NO_IS_EXTRINSIC_ASSIGNABLE
+    //#define BOOST_CONVERSION_IS_EXTRINSIC_ASSIGNABLE_USES_DECLTYPE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #if ! defined BOOST_NO_SFINAE_EXPR

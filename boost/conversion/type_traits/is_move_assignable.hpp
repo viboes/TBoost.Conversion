@@ -27,7 +27,7 @@
 #if ! defined BOOST_NO_RVALUE_REFERENCES
   #if defined _MSC_VER
   #elif defined __clang__
-      #define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
+      //#define BOOST_CONVERSION_TT_IS_MOVE_ASSIGNABLE_USES_RVALUE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
      #else

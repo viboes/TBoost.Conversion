@@ -62,7 +62,8 @@ namespace boost {
       #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
     #endif
   #elif defined __clang__
-    #define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
+    #define BOOST_CONVERSION_NO_IS_EXTRINSIC_CONVERTIBLE
+    //#define BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
        #if ! defined BOOST_NO_SFINAE_EXPR
@@ -118,7 +119,6 @@ namespace boost {
         struct imp;
 
 #if defined BOOST_CONVERSION_IS_EXTRINSIC_CONVERTIBLE_USES_DECLTYPE
-#error
         template <typename S, typename T>
         struct imp<S,T,false,false>
         {
