@@ -103,7 +103,6 @@ namespace boost {
   #if defined __clang__
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
-#error
        #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
      #endif
   #endif
