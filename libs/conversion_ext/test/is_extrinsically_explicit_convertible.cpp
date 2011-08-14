@@ -402,14 +402,14 @@ int main()
   BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<const char*, const char*>::value));
   }
   {
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, const NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, const volatile NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, volatile NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const NonCopyable&, const NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const NonCopyable&, const volatile NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<volatile NonCopyable&, const volatile NonCopyable&>::value));
-  // BUG BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const volatile NonCopyable&, const volatile NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, const NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, const volatile NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<NonCopyable&, volatile NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const NonCopyable&, const NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const NonCopyable&, const volatile NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<volatile NonCopyable&, const volatile NonCopyable&>::value));
+  BOOST_STATIC_ASSERT((boost::conversion::is_extrinsically_explicit_convertible<const volatile NonCopyable&, const volatile NonCopyable&>::value));
   // BUG BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<const NonCopyable&, NonCopyable&>::value));
   }
 }
