@@ -61,6 +61,7 @@ namespace boost {
     //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
+#error
        #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
      #else
        #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
@@ -125,7 +126,11 @@ namespace boost {
           static false_type
           selector(...);
 
-          typedef decltype(selector<T,S>(0)) type;
+          static const bool value =
+            sizeof(selector<T,S>(0)) ==
+            sizeof(yes_type);
+          typedef boost::integral_constant<bool,value> type;
+          //typedef decltype(selector<T,S>(0)) type;
         };
 
 #elif defined BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
@@ -207,7 +212,7 @@ namespace boost {
         template <> struct imp< int, unsigned char, false, false > : true_type  {};
         template <> struct imp< int, short, false, false > : true_type  {};
         template <> struct imp< int, unsigned short, false, false > : true_type  {};
-        template <> struct imp< int, int, false, false > : true_type  {};
+        //template <> struct imp< int, int, false, false > : true_type  {};
         template <> struct imp< int, unsigned int, false, false > : true_type  {};
         template <> struct imp< int, long, false, false > : true_type  {};
         template <> struct imp< int, unsigned long, false, false > : true_type  {};

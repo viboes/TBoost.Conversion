@@ -86,6 +86,7 @@ namespace boost {
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #if ! defined BOOST_NO_SFINAE_EXPR
+#error
          #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
        #else
          #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
@@ -102,6 +103,7 @@ namespace boost {
   #if defined __clang__
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 7 )
+#error
        #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
      #endif
   #endif

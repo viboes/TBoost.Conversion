@@ -67,8 +67,10 @@ namespace boost {
    */
 //  template <typename T>
 //  struct is_move_assignable<T&> : true_type {};
-  template <typename A>
-  struct is_move_assignable<A[]> : false_type {};
+    template <typename T>
+    struct is_move_assignable<T[]> : false_type {};
+    template <typename T, std::size_t N>
+    struct is_move_assignable<T[N]> : false_type {};
   template <>
   struct is_move_assignable<void> : false_type {};
 

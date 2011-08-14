@@ -65,8 +65,8 @@ namespace boost {
 //  struct is_move_constructible<T&> : true_type {};
   template <typename T>
   struct is_move_constructible<T[]> : false_type {};
-//  template <typename T, std::size_t N>
-//  struct is_move_constructible<T[N]> : false_type {};
+  template <typename T, std::size_t N>
+  struct is_move_constructible<T[N]> : false_type {};
 #endif
 
 }
