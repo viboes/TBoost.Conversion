@@ -125,7 +125,7 @@ When the users need to configure the conversion between specific value types the
 
 When conversion is useful, but not provided by unrelated classes, the recommended approach is to use a named free function. One example of this could be a `date_to_week(date const&)` function. 
 
-This approach works well when the source and destination is known at compile time, but when templates are involved, it becomes problematic. How can one write generic code for user-supplied classes when the source and destination types could be anything? Predicting the name becomes impossible, `operator T()` is the accepted way to express such an intent.
+This approach works well when the source and destination are known at compile time, but when templates are involved, it becomes problematic. How can one write generic code for user-supplied classes when the source and destination types could be anything? Predicting the name becomes impossible, `operator T()` is the accepted way to express such an intent.
 
   T t = T(u);
 
@@ -134,41 +134,35 @@ Generic programming demands syntactic regularity. [*Boost.Conversion] propose an
     template< class Target, class Source > 
     Target explicit_convert_to( Source const & u );
 
+[note __convert_to is a short hand for __explicit_convert_to.]
+
 that can be used inside templates as follows:
 
   T t = explicit_convert_to<T>(u);
 
-The default behavior of this function is to call explicitly the conversion operator
+When the Source is explicitly convertible to the Target this function calls explicitly the conversion operator
 
     {
       return Target( u );
     }
 
-Since this relies on exactly one of the missing language feature, it would have to be specialized for each pair of types which do not themselves define conversions.
+This function would have to be specialized for each pair of types which do not themselves define an explicit conversion.
     
     week explicit_convert_to( date const & u ) { ... }
 
-Unfortunately this doesn't works as overload resolution doesn't take care of template type parameters that can not be deduced from the function arguments. [*Boost.Conversion] uses a customization point that takes in account the `Source` and the `Target` types.
-
-    template <typename Target, typename Source>
-    Target explicit_convert_to(Source const& from)
-    {
-      return conversion::explicit_converter<Target,Source>()(from);
-    }
-
-__convert_to is a short hand for __explicit_convert_to.
+Unfortunately this doesn't works as overload resolution doesn't take care of template type parameters that can not be deduced from the function arguments. [*Boost.Conversion] provides a customization customization point that takes in account the `Source` and the `Target` types (see below).
 
 To manage with extrinsically implicit conversion Boost.Conversion provides another all-purpose function template
 
-    template< class T, class U > 
-    T implicit_convert_to( U const & u );
+    template< class Tatget, class Source > 
+    Target implicit_convert_to( Source const & u );
 
 This function alone can not manage with implicit conversion, as `implicit_convert_to` needs the target type to be stated explicitly. 
 
   f(implicit_convert_to<T>(u));
 
   
-[*Boost.Conversion] provides an `implicitly` (make implicitly convertible from) function that creates a class providing implicit conversion operators for the `Targetv types for which the `Source` type is convertible using the `implicit_convert_to` function.  
+[*Boost.Conversion] provides an `implicitly` (make implicitly convertible from) function that creates a class providing implicit conversion operators for `Target` types for which the `Source` type is convertible using the `implicit_convert_to` function.  
 
   template < class Source >
   class convertible_from 
@@ -340,7 +334,7 @@ With __assign_to we could do
 
     assign_to(a, assign_to(b, c));
 
-and if we find this less than readable we can try with the "make assigner to `lvalue' free function.
+and if we find this less readable we can try with the "make assigner to `lvalue' free function.
 
     lvalue(a) = lvalue(b) = c;
 
@@ -584,12 +578,7 @@ and if they find this not really readable they can try with the [*m]ake [*a]ssig
     lvalue(a) = lvalue(b) = c;
 
 [note 
-The name __lvalue could be replaced by lvalue as it builds a lvalue that is able to works with extrinsic conversions.
-
-```
-    lvalue(a) = lvalue(b) = c;
-```
-
+The name __lvalue comes from the fact that it builds a lvalue that is able to works with extrinsic conversions.
 ]
 
 [endsect]
@@ -704,22 +693,14 @@ So the following fails to compile if `ExtrCvtToInt` is extrinsically convertible
 
 [OVERLOAD_CPP_IMPL_EXTRINSIC]
 
-It would be great if the user could state explicitly that the parameter they are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __implicitly that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from, so the following will be correct and call to the expected `f` overload.
+Why ADLIt would be great if the user could state explicitly that the parameter they are passing to `f` can be implicitly convertible to the `f` parameter type. The library provides a function __implicitly that makes a wrapper around a type that implicitly converts to any type that is extrinsically convertible from its argument.
 
-[OVERLOAD_CPP_MCF_LIKE]
+[OVERLOAD_CPP_IMPLICITLY_LIKE]
 
-[note 
-The name __implicitly ([*m]ake [*c]onvertible [*f]rom) could be changed to `implicitly` if this considered better by  the Boost community.
 
-```
-  T v;
-  f(implicitly(v));
-```
-] 
+So the following will be correct and call to the expected `f` overload.
 
-So the following will work as expected
-
-[OVERLOAD_CPP_MCF]
+[OVERLOAD_CPP_IMPLICITLY]
 
 and prints
 
@@ -730,15 +711,15 @@ and prints
 
 Note that extrinsically implicit convertible implies extrinsically explicit convertible but the opposite is not true. That means that if `ExtrExplicitCvtToInt` is extrinsically explicit convertible to `int`, the following program will be ill formed
 
-[OVERLOAD_CPP_MCF_EXPLICIT]
+[OVERLOAD_CPP_IMPLICITLY_EXPLICIT]
 
 having as result, for example
 
   ../example/overload.cpp:102:18: error: no matching function for call to 'f'
       std::cout << f(implicitly(v)) << " called" << std::endl;
                  ^
-  ../example/overload.cpp:134:34: note: in instantiation of member function 'McfTest<ExtrExplicitCvtToInt>::whichOverload' requested here
-    McfTest<ExtrExplicitCvtToInt>::whichOverload();
+  ../example/overload.cpp:134:34: note: in instantiation of member function 'ImplicitTest<ExtrExplicitCvtToInt>::whichOverload' requested here
+    ImplicitTest<ExtrExplicitCvtToInt>::whichOverload();
                                  ^
   ../example/overload.cpp:21:5: note: candidate function not viable: no known conversion from 'convertible_from<ExtrExplicitCvtToInt>' to 'int' for 1st argument
   int f(int) { return 1; }
@@ -854,6 +835,16 @@ The library provide a specific Phoenix functor factory having as result a functo
   BOOST_ASSERT(integers[1] == 16);
   BOOST_ASSERT(integers[2] == 17);
   BOOST_ASSERT(integers[3] == 18);
+
+[endsect]
+
+[section Usage of __implicit_convert_to, __explicit_convert_to or __assign_to]
+
+The users should use __assign_to whenever they had used operator=(), that is when there is already a target variable.
+
+The users should use the conversion forms __implicit_convert_to, __explicit_convert_to  whenever they had used the conversion operator Target(), either implicit or explicitly.  
+
+
 
 [endsect]
 
@@ -1109,7 +1100,170 @@ A `Source` class is convertible to a `Target` class if:
 [endsect]
 [endsect]
 
+
 [section:rationale Appendix: Design Rationale]
+
+[heading Why overloading the conversion functions doesn't works?]
+
+
+For example, the prototype of __implicit_convert_to is
+
+    template <typename Target, typename Source>
+    Target
+    implicit_convert_to(Source const& from);
+
+The users could overload this function with a specific source type, as it appears as a parameter of the function, but they can not overload on the source and the target types.
+
+To overcome this limitation the library could opt for two alternatives:
+
+* Add a dummy parameter that can covey the Target type.
+* Implements the conversion function forwarding the call to a specific converter functor.
+
+
+Adding a dummy parameter could look something like
+
+
+    template <typename Target, typename Source>
+    Target implicit_convert_to(Source const& from, dummy::tag_type<Target> const&);
+
+Callers of this function need to pass the additional parameter as for example
+
+    MyTarget t = implicit_convert_to(from, dummy::tag_type<MyTarget>()); 
+    
+User specializations consists just in overloading this function.
+
+    MyTarget implicit_convert_to(MySource const& from, dummy<MyTarget> const&);
+    
+
+The advantages are
+
+* the call doesn't needs to be qualified by the boost::conversion namespace and ADL will choose the correct overload.
+
+The drawbacks are 
+
+* the unreadable syntax,
+* the possible default implementation provided by the library would not be accessible as far as the user doesn't includes the boost::conversion namespace.
+* we can not add new functions on the std namespace, so we can not overload the behavior for standard classes,
+so a different technique is needed.
+
+
+Implementing the conversion function by forwarding the call to a specific converter functor as follows
+
+    template <typename Target, typename Source>
+    Target
+    implicit_convert_to(Source const& from)
+    {
+      return implicit_converter<Target,Source>()(from);
+    }
+
+User specializations consists just in specializing the functor implicit_converter.
+
+  namespace boost { 
+    namespace conversion {
+      struct implicit_converter<MyTarget, MySource> {
+        MyTarget operator()(MySource const& from) 
+        {
+          // return the specific conversion;
+        }
+      };
+    } 
+  }
+
+The advantages are
+
+* the technique can be applied to types on the standard namespace
+* the library can call to the customization point after providing a default implementation.
+
+The drawbacks are 
+
+* The users need to qualify with boost::conversion every call to implicit_converter or introduce the namespace boost::conversion via the using statement.
+
+
+The library provides a mixture of the preceding alternatives:
+
+* defines a boost::conversion::convert_to function
+* that relies on an internal function which introduces an internal namespace on which the default implementation is found by ADL if no best choice is found.
+* this default implementation forwards the call to the customization functor
+* which can be partially specialized by the user. 
+  
+
+The library implements the conversion function forwarding the call to a specific converter functor as follows
+
+    template <typename Target, typename Source>
+    Target
+    implicit_convert_to(Source const& from)
+    {
+      return implicit_converter<Target,Source>()(from);
+    }
+
+
+The converter functor must define the operator() as follows:
+
+    template < typename Target, typename Source, class Enable = void >
+    struct implicit_converter
+    {
+      Target operator()(typename add_reference<const Source>::type val)
+      {
+        ...
+      }
+    };
+
+The library provides a specialization of this class for classes Target and Source satisfying Convertible<Source,Target> as follows:
+
+    
+    template < typename Target, typename Source >
+    struct implicit_converter<Target, Source
+        , typename enable_if_c< is_convertible<Source,Target>::value >::type
+    > : true_type
+    {
+      Target operator()(typename add_reference<const Source>::type val)
+      {
+        return val;
+      }
+    };
+
+
+In the same way the library provides a specialization of this class, the users can specialize this converter functor as the class has the source and the target types as parameters.
+
+One of the problems using SFINAE, is that all the conditions must be complementary. So the user needs to know what are the other conditions and ensure that there is no ambiguity.
+
+    template <  >
+    struct implicit_converter<MyTarget, MySource
+        , typename enable_if_c< ! is_convertible<MySource,MyTarget>::value >::type
+    > : true_type
+    {
+      MyTarget operator()(typename add_reference<const MySource>::type val)
+      {
+        // return a specific conversion ;
+      }
+    };
+
+[heading Why the library provides two-level customization point for conversion functions?]
+
+While the preceding technique allows the users to override the default specialization, it is quite dependent on the conditions the library makes a specialization. While the condition for the implicit_converter is simple, other functions can have a much more complex condition for which the library makes a specialization.
+
+
+To make easier the work of the users the library defines a catch all definition that delegates to a second functor.
+
+    template < typename Target, typename Source, class Enable = void >
+    struct implicit_converter_cp : false_type {};
+    
+    template < typename Target, typename Source, class Enable = void >
+    struct implicit_converter : implicit_converter_cp<Target,Source,Enable> {};
+
+Now the users can friendly specialize implicit_converter_cp as the library doesn't provides any specialization of this class by default.
+
+[/
+[heading Why the library provides two-level customization point for assignment function?]
+
+The overloading problem found on the conversion functions doesn't appears for the assignment function, as the function parameters determine the source and the target types. 
+
+    template <typename Target, typename Source>
+    Target& assign_to(Target& to, const Source& from);
+
+]
+
+
 
 [/
 [heading Trick to avoid recursion on the convert_to calls]
@@ -1158,7 +1312,7 @@ This default value needs however to give the Target template parameter
     a= convert_to<A>(b);
 
 
-[heading Mathematical background]
+[heading Loss of precision]
 
 Let be
 
@@ -1166,11 +1320,7 @@ Let be
     B b;
     C c;
 
-* Reflexive: A is convertible to A if it is CopyConstructible or a specialization of convert_to is provided.
-
-* Anti-Symetric : A convertible to B don't implies B convertible to A
-
-* Loss of precision: Conversions can loss precision but not at infinitum
+Conversions can loss precision but not at infinitum
 
 Two convertible types don't loss precision if
 
@@ -1184,16 +1334,6 @@ If they can loss precision they satisfy
     a2 = convert_to<A>(b)
     assert(a==a2 || ct(a2)==b
 
-* Transitive: A convertible to B && B convertible to C implies A convertible to C
-
-The implementation could use a intermediary B b to make the conversion or make the conversion directly.
-
-    template <>
-    convert_to<C,A>(const C& c) {
-        return convert_to<A>(convert_to<B>(c));
-    }
-
-The library provides a convert_to_via function which helps to implement that.
 
 
 [heading Ambiguity of multiple overloadings]
@@ -1204,6 +1344,9 @@ The library provides a convert_to_via function which helps to implement that.
 [endsect]
 
 [section:implementation Appendix: Implementation Notes]
+
+[heading Why `implicit_converter_cp< std::vector<T1,A1>, std::vector<T2,A2> >` can not relay on `assign_to< std::vector<T1,A1>, std::vector<T2,A2> >`?]
+
 
 
 [heading Why `convert_to` between tuples is not implemented using `boost::fusion::transform`?]
@@ -1305,6 +1448,7 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 
 [heading Tasks to do if the library is accepted]
 
+* Try to remove the constraint that a converter must inherit from true_type to help on the is_extrinsically_convertible prefdicate, and use the same techniques that are use to detect is_assignable, is_destructible, ...
 
 [heading For later releases]
 

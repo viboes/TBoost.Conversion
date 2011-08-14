@@ -31,11 +31,11 @@
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../index.html#header.boost.conversion.type_traits.is_constructible_hpp" title="Header &lt;boost/conversion/type_traits/is_constructible.hpp&gt;">boost/conversion/type_traits/is_constructible.hpp</a>&gt;
 
-</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> Args<span class="special">&gt;</span> 
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> Args<span class="special">&gt;</span> 
 <span class="keyword">struct</span> <a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a> <span class="special">{</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp14630352"></a><h2>Description</h2>
+<a name="idp14660208"></a><h2>Description</h2>
 <p>States if <code class="computeroutput">T</code> is constructible from <code class="computeroutput">Args</code>.</p>
 <p>Condition: <code class="computeroutput">true_type</code> if and only if the following variable definition would be well-formed for some invented variable t:</p>
 <pre class="programlisting">   <span class="identifier">T</span> <span class="identifier">t</span><span class="special">(</span><span class="identifier">decval</span><span class="special">&lt;</span><span class="identifier">Args</span><span class="special">&gt;</span><span class="special">(</span><span class="special">)</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>

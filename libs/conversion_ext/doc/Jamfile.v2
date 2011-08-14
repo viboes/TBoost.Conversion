@@ -224,7 +224,6 @@ doxygen core
 
 doxygen std
    :
-      #[ glob ../../../boost/conversion/std/complex.hpp ]
       [ glob ../../../boost/conversion/std/pair.hpp ]
       [ glob ../../../boost/conversion/std/string.hpp ]
       [ glob ../../../boost/conversion/std/vector.hpp ]
