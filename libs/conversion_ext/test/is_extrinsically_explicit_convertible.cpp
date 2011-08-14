@@ -126,7 +126,7 @@ int main()
 
   //BOOST_STATIC_ASSERT((!boost::conversion::is_extrinsically_explicit_convertible<Function&, Function>::value));
 
-    BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible<Function&, Function&>::value));
+    //BOOST_STATIC_ASSERT(( boost::is_explicitly_convertible<Function&, Function&>::value));
     BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_convertible<Function&, Function&>::value));
     // BUG BOOST_STATIC_ASSERT(( boost::conversion::is_extrinsically_explicit_convertible<Function&, Function&>::value));
 
