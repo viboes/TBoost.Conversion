@@ -51,7 +51,7 @@ namespace boost {
 #else
 #include <boost/conversion/type_traits/is_constructible.hpp>
 
-#define BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
+//#define BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
 #ifdef BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
 
 
@@ -84,32 +84,31 @@ namespace boost {
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_all_extents.hpp>
+#include <boost/conversion/type_traits/is_constructible.hpp>
 
 
 #if ! defined BOOST_NO_DECLTYPE
   #if defined _MSC_VER
-    #if ! defined BOOST_NO_SFINAE_EXPR
-      #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
-    #else
       #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
-    #endif
   #elif defined __clang__
-    #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+    #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_DECLTYPE
+    //#define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_SIZEOF
+    //#define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #if ! defined BOOST_NO_SFINAE_EXPR
-         #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+         #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_SIZEOF
        #else
          #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
        #endif
      #else
-       #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+       #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_DECLTYPE
      #endif
   #else
-       #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+       #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_DECLTYPE
   #endif
 #elif ! defined BOOST_NO_SFINAE_EXPR
-  #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+  #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_SIZEOF
 #else
   #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
 #endif
@@ -119,28 +118,30 @@ namespace boost {
   namespace type_traits {
     namespace detail {
       namespace is_explicitly_convertible {
-#if defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
+#if defined BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_DECLTYPE
 
     // specific positive test functions
   template <typename S, typename T>
-  decltype((static_cast<T>(declval<S>()), true_type()))
-  test(T&, S);
+  decltype((
+      static_cast<T>(declval<S>()), true_type()
+      ))
+  selector(int);
 
     // specific negative test functions
-  template <typename S>
+  template<typename S, typename T>
   false_type
-  test(any, S);
+  selector(...);
 
 // specialization for NOT void, abstract, function or any of the parameters is void, scalar or reference
 // depends on whether static_cast<T>(declval<S>()) is well formed
 
     template <bool, typename S, typename T>
     struct imp
-      : public common_type<decltype(test(declval<T&>(), declval<S>()))>::type
+      : public common_type<decltype(selector<S,T>(0))>::type
     {};
 
 
-#elif defined BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
+#elif defined BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_SIZEOF
 
 // specialization for void, abstract, function or any of the parameters is void, scalar or reference
 // depends on whether static_cast<T>(declval<Args>() ...) is well formed
@@ -148,16 +149,16 @@ namespace boost {
 template<bool, typename S, typename T>
 struct imp
 {
-    template<typename X>
+    template<typename S1, typename T1>
     static yes_type
-    test(dummy_size<sizeof(static_cast<X>(declval<S>()))>*);
+    selector(dummy_size<sizeof(static_cast<T1>(declval<S1>()))>*);
 
-    template<typename X>
+    template<typename S1, typename T1>
     static no_type
-    test(...);
+    selector(...);
 
     static const bool value =
-              sizeof(test<T>(0)) == sizeof(yes_type);
+              sizeof(selector<S,T>(0)) == sizeof(yes_type);
     typedef boost::integral_constant<bool,value> type;
 };
 
@@ -170,10 +171,7 @@ struct imp
 // always false. The user of the library needs to specialize this trait for its owns types.
 
 template<bool, typename S, typename T>
-struct imp
-  : boost::false_type
-{
-};
+struct imp : ::boost::is_constructible<T, S> {};
 
 
 #endif
@@ -182,7 +180,7 @@ struct imp
 // specialization for scalar or reference: depend on the source is convertible to the target
       template <typename S, typename T>
       struct imp<true, S, T>
-          : public integral_constant<bool,is_convertible<S,T>::value || imp<false,S,T>::value >
+          : public integral_constant<bool,::boost::is_convertible<S,T>::value || imp<false,S,T>::value >
           {};
 
 // specialization for NOT void, abstract, function or any of the parameters is void:
@@ -190,8 +188,9 @@ struct imp
 
   template <bool, typename S, typename T>
   struct void_check
-    : public imp<is_scalar<T>::value || is_reference<T>::value,
-                              S, T>
+    : public imp<
+        false //is_scalar<T>::value || is_reference<T>::value
+        , S, T>
     {};
 
 
@@ -217,10 +216,11 @@ struct imp
 // defines is_explicitly_convertible, depending on whether T is void, abstract, function or any of the parameters is void
   template <typename S, class T>
   struct is_explicitly_convertible
-    : public type_traits::detail::is_explicitly_convertible::void_check<is_void<T>::value
-              || is_abstract<T>::value  || is_function<T>::value
-              || is_void<S>::value,
-              S, T>
+    : public type_traits::detail::is_explicitly_convertible::void_check<
+              is_void<S>::value
+              //|| is_abstract<T>::value  || is_function<T>::value
+              //|| is_void<T>::value
+              , S, T>
   {};
 
 
