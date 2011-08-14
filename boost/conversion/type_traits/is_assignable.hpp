@@ -61,8 +61,12 @@ namespace boost {
     //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
-       #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
-     #else
+#if ! defined BOOST_NO_SFINAE_EXPR
+#define BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
+#else
+#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+#endif
+    #else
        #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
      #endif
   #else
@@ -107,7 +111,10 @@ namespace boost {
         template <typename T,typename S
           , bool True =
               ((is_scalar<T>::value || is_reference<T>::value) && is_convertible<S,T>::value)
-          , bool False = false >
+          , bool False =
+                 is_void<T>::value
+              || is_void<S>::value
+          >
         struct imp;
 
 #if defined BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
@@ -119,17 +126,31 @@ namespace boost {
           static decltype((
               declval<T1>() = declval<S1>()
               , true_type()))
+#if    1
           selector(int);
-
+#elif defined    BOOST_CONVERSION_TT_IS_ASSIGNABLE_USES_RVALUE
+          selector(T1&&, S1&&);
+#else
+          selector(T1, S1&);
+#endif
           template <typename T1, typename S1>
           static false_type
+#if    1
           selector(...);
-
-          static const bool value =
-            sizeof(selector<T,S>(0)) ==
-            sizeof(yes_type);
+#elif defined  BOOST_CONVERSION_TT_IS_ASSIGNABLE_USES_RVALUE
+          selector(any, S1&&);
+#else
+          selector(any, S1&);
+#endif
+          //static const bool value =
+          //  sizeof(selector<T,S>(0)) ==
+          //  sizeof(yes_type);
           //typedef boost::integral_constant<bool,value> type;
+#if    1
           typedef decltype(selector<T,S>(0)) type;
+#else
+          typedef decltype(selector(declval<T>(), declval<S>())) type;
+#endif
         };
 
 #elif defined BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
