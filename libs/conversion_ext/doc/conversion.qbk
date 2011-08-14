@@ -779,39 +779,6 @@ While this alternative doesn't seems completely necessary, I wanted to add them 
  
 [endsect]
 
-[section How to specialize extrinsic conversions?]
-[/====================================]
-
-__Boost_Conversion__ has a customization point for each on of the provided functions. For example, to customize the __implicit_convert_to function you should partially specialize the functor __implicit_converter_cp.
- 
-  namespace  boost { 
-    namespace conversion {
-      template < typename Target, typename Source, typename Enable=void >
-      struct implicit_converter_cp : true_type {
-        Target operator()(const Source& val)
-      };
-    }
-  }
-
-A possible specialization for `std::pair` follows:
-
-        template <typename Target1, typename Target2, typename Source1, typename Source2>
-        struct convert_cp< std::pair<Target1,Target2>, std::pair<Source1,Source2> > : true_type
-        {
-            std::pair<Target1,Target2> operator()(std::pair<Source1,Source2>& v) 
-            {
-                return std::pair<T1,T2>(convert_to<T1>(from.first), convert_to<T2>(from.second));
-            }
-        };
-
-
-Note that the __implicit_converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsically_convertible type trait.
-
-The same applies to the generic __assign_to function and its __assigner_cp.
-
-    
-[endsect]
-
 [section Functors]
 
 The library provide a specific Phoenix functor factory having as result a functor that will call to the __convert_to function lazily.
@@ -840,13 +807,98 @@ The library provide a specific Phoenix functor factory having as result a functo
 
 [section Usage of __implicit_convert_to, __explicit_convert_to or __assign_to]
 
-The users should use __assign_to whenever they had used operator=(), that is when there is already a target variable.
+The users should use __assign_to whenever they had used operator=(), that is, when there is already a target variable.
 
 The users should use the conversion forms __implicit_convert_to, __explicit_convert_to  whenever they had used the conversion operator Target(), either implicit or explicitly.  
 
 
+[endsect]
+
+[section How to specialize extrinsic conversions?]
+[/====================================]
+
+__Boost_Conversion__ has two customization point for each one of the provided functions:
+
+* specializing the associated customization functor
+* overloading a variant of the function to customize
+
+For example, to customize the __implicit_convert_to function you could partially specialize the functor __implicit_converter_cp.
+ 
+  namespace  boost { 
+    namespace conversion {
+      template < typename Target, typename Source, typename Enable=void >
+      struct implicit_converter_cp : true_type {
+        Target operator()(const Source& val)
+      };
+    }
+  }
+
+A possible specialization for `std::pair` follows:
+
+        template <typename Target1, typename Target2, typename Source1, typename Source2>
+        struct implicit_convert_cp< std::pair<Target1,Target2>, std::pair<Source1,Source2> 
+          , typename enable_if_c<
+                is_extrinsically_convertible<Source1, Target1>::value
+            && is_extrinsically_convertible<Source2, Target2>::value
+          >::type
+        > : true_type
+        {
+            std::pair<Target1,Target2> operator()(std::pair<Source1,Source2>& v) 
+            {
+                return std::pair<T1,T2>(implicit_convert_to<T1>(from.first), implicit_convert_to<T2>(from.second));
+            }
+        };
+
+
+Note that the __implicit_converter_cp specialization inherits from `boost::true_type`. This is needed as used by the __is_extrinsically_convertible type trait.
+
+Note also the use of the `Enable` parameter to constraint the specialization to the enable types using the `enable_if` family functions.
+
+An alternative customization point is to overload a variant of the conversion to specialize that adds a dummy parameter that can covey the return type when needed.
+
+For example the __explicit_convert_to function can be specialized by overloading the function
+
+    template <typename Target, typename Source>
+    Target explicit_convert_to(Source const& from, dummy::type_tag<Target> const&);
+
+This is particular useful when we want explicit conversion on compilers that don't support explicit conversion operators. For example the Boost.Opaque library define a mixing to add explicit conversion to a specific type as follows:
+
+    template <typename T>
+    struct using_explicit_conversion_to {
+        template <typename Final, typename Base>
+        struct type: Base {
+    #     if ! defined BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
+            explicit operator T() const
+            {
+              return T(Final::underlying(this));
+            }
+    #     endif
+            friend T explicit_convert_to(Final const& rhs,
+                boost::conversion::dummy::type_tag<T> const&)
+            {
+              return T(Final::underlying(rhs));
+            }
+        };
+    };
+
+While the `explicit operator T() const;` can be defined only on compilers supporting explicit conversion operators, the `explicit_convert_to` variant can be overloaded on most of the compilers, providing a portable solution.
+    
+[endsect]
+
+[section What to do when the compiler doesn't supports the definition of the needed type traits?]
+
+When the compiler doesn't supports the definition of some of the type traits, the library doesn't work as the user could expect. For each trait the library provides a macro that states if the library can define correctly the type trait. For example, BOOST_CONVERSION_NO_IS_ASSIGNABLE. In this case the user needs to specialize the type trait explicitly as follows:
+
+  #if defined BOOST_CONVERSION_NO_IS_ASSIGNABLE
+  namespace boost
+  {
+    template <> struct is_assignable< X&, X const& >  : true_type {};
+  }
+  #endif 
 
 [endsect]
+
+
 
 [/
 [section How to convert to types needing some constructors arguments?]
@@ -1124,11 +1176,11 @@ Adding a dummy parameter could look something like
 
 
     template <typename Target, typename Source>
-    Target implicit_convert_to(Source const& from, dummy::tag_type<Target> const&);
+    Target implicit_convert_to(Source const& from, dummy::type_tag<Target> const&);
 
 Callers of this function need to pass the additional parameter as for example
 
-    MyTarget t = implicit_convert_to(from, dummy::tag_type<MyTarget>()); 
+    MyTarget t = implicit_convert_to(from, dummy::type_tag<MyTarget>()); 
     
 User specializations consists just in overloading this function.
 
@@ -1443,8 +1495,6 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 
 [heading Tasks to do before review]
 
-* Document type traits specialization when the compiler doesn't supports the definition of the type traits.
-* Take in account move semantics while considering the proposed type traits.
 
 [heading Tasks to do if the library is accepted]
 
