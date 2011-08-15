@@ -63,6 +63,7 @@ if --enable-index in  [ modules.peek : ARGV ]
                                  Pre=\"<p><b>Requires:</b>\" \\
                                  Requires=\"<p><b>Requires:</b>\" \\
                                  Post=\"<p><b>Post-conditions:</b>\" \\
+                                 Condition=\"<p><b>Condition:</b>\" \\
                                  Remark=\"<p><b>Remark(s):</b>\" \\
                                  Note=\"<p><b>Note(s):</b>\" \\
                                  See=\"<p><b>See:</b>\" \\
@@ -126,6 +127,7 @@ else
                                  Throws=\"<p><b>Throws:</b>\" \\
                                  Pre=\"<p><b>Requires:</b>\" \\
                                  Requires=\"<p><b>Requires:</b>\" \\
+                                 Condition=\"<p><b>Condition:</b>\" \\
                                  Post=\"<p><b>Post-conditions:</b>\" \\
                                  Remark=\"<p><b>Remark(s):</b>\" \\
                                  Note=\"<p><b>Note(s):</b>\" \\

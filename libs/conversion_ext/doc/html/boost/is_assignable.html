@@ -37,8 +37,27 @@
 <div class="refsect1">
 <a name="idp14721616"></a><h2>Description</h2>
 <p>States if the <code class="computeroutput">Target</code> is assignable from the <code class="computeroutput">Source</code>.</p>
-<p>Condition: <code class="computeroutput">true_type</code> if <code class="computeroutput">declval&lt;Target&gt;() = declval&lt;Source&gt;()</code> is well-formed when treated as an unevaluated operand.</p>
-<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Target</code> and <code class="computeroutput">Source</code> must be complete types, (possibly cv-qualified) void, or arrays of unknown bound. </p>
+<p><span class="bold"><strong>Condition:</strong></span>: <code class="computeroutput">true_type</code> if <code class="computeroutput">declval&lt;Target&gt;() = declval&lt;Source&gt;()</code> is well-formed when treated as an unevaluated operand.</p>
+<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Target</code> and <code class="computeroutput">Source</code> must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.</p>
+<p><span class="bold"><strong>Remark(s):</strong></span></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>On compilers providing an intrinsic for this trait, the intrinsic will be used.</p></li>
+<li class="listitem"><p>On C++0x mode, <code class="computeroutput">std::is_assignable</code> will be used when available.</p></li>
+<li class="listitem"><p>On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.</p></li>
+<li class="listitem">
+<p>Otherwise,</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>the library will provide specialization for the builtin types in this file,</p></li>
+<li class="listitem"><p>the library will provide specialization for specific standard types in the associated <code class="computeroutput">type_traits/std/file.hpp</code> </p></li>
+<li class="listitem"><p>the library will provide specialization for specific boost types in the associated <code class="computeroutput">type_traits/boost/file.hpp</code> </p></li>
+<li class="listitem"><p>the user will need to provide other specific specializations. </p></li>
+</ul></div>
+<p>
+</p>
+</li>
+</ul></div>
+<p>
+</p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

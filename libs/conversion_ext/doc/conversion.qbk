@@ -1495,15 +1495,15 @@ And last thanks to Gordon Woodhull for proposing himself as review manager of th
 
 [heading Tasks to do before review]
 
+* Improve the doc as much as possible.
 
 [heading Tasks to do if the library is accepted]
 
-* Try to remove the constraint that a converter must inherit from true_type to help on the is_extrinsically_convertible prefdicate, and use the same techniques that are use to detect is_assignable, is_destructible, ...
+* Add the type traits specializations for the C++ Standard types.
 
 [heading For later releases]
 
-* Analize the impact of move semantics to the extrinsic conversion and assignments.
-* Add the type traits specializations for the C++ Standard types.
+* Analyze the impact of move semantics to the extrinsic conversion and assignments functions.
 
 [endsect]
 [endsect]

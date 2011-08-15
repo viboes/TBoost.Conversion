@@ -35,9 +35,9 @@
 <span class="keyword">struct</span> <a class="link" href="is_destructible.html" title="Struct template is_destructible">is_destructible</a> <span class="special">{</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp14900128"></a><h2>Description</h2>
+<a name="idp14919824"></a><h2>Description</h2>
 <p>States if <code class="computeroutput">T</code> is destructible.</p>
-<p>Condition: <code class="computeroutput">true_type</code> if and only if given:</p>
+<p><span class="bold"><strong>Condition:</strong></span>: <code class="computeroutput">true_type</code> if and only if given:</p>
 <pre class="programlisting">   <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
    <span class="keyword">struct</span> <span class="identifier">test</span> <span class="special">{</span>
      <span class="identifier">U</span> <span class="identifier">u</span><span class="special">;</span>
@@ -47,7 +47,26 @@
 <pre class="programlisting">   <span class="identifier">test</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span><span class="special">::</span><span class="special">~</span><span class="identifier">test</span><span class="special">(</span><span class="special">)</span><span class="special">;</span>
 </pre>
 <p>is well formed;</p>
-<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">T</code> must be a complete type, (possibly cv-qualified) void, or an array of unknown bound. </p>
+<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">T</code> must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.</p>
+<p><span class="bold"><strong>Remark(s):</strong></span></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>On compilers providing an intrinsic for this trait, the intrinsic will be used.</p></li>
+<li class="listitem"><p>On C++0x mode, <code class="computeroutput">std::is_destructible</code> will be used when available.</p></li>
+<li class="listitem"><p>On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.</p></li>
+<li class="listitem">
+<p>Otherwise,</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>the library will provide specialization for the builtin types in this file,</p></li>
+<li class="listitem"><p>the library will provide specialization for specific standard types in the associated <code class="computeroutput">type_traits/std/file.hpp</code> </p></li>
+<li class="listitem"><p>the library will provide specialization for specific boost types in the associated <code class="computeroutput">type_traits/boost/file.hpp</code> </p></li>
+<li class="listitem"><p>the user will need to provide other specific specializations. </p></li>
+</ul></div>
+<p>
+</p>
+</li>
+</ul></div>
+<p>
+</p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

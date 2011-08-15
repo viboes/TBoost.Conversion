@@ -35,15 +35,24 @@
 <span class="keyword">struct</span> <a class="link" href="is_explicitly_convertible.html" title="Struct template is_explicitly_convertible">is_explicitly_convertible</a> <span class="special">{</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp14947360"></a><h2>Description</h2>
+<a name="idp14973584"></a><h2>Description</h2>
 <p>States if <code class="computeroutput">Source</code> is is explicitly convertible to <code class="computeroutput">Target</code>.</p>
-<p>Condition: <code class="computeroutput">true_type</code> if and only if the following would be well-formed for some invented function test:</p>
+<p><span class="bold"><strong>Condition:</strong></span>: <code class="computeroutput">true_type</code> if and only if the following would be well-formed for some invented function test:</p>
 <pre class="programlisting"> <span class="identifier">Target</span> <span class="identifier">test</span><span class="special">(</span><span class="special">)</span> <span class="special">{</span>
    <span class="keyword">return</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">Target</span><span class="special">&gt;</span><span class="special">(</span><span class="identifier">declval</span><span class="special">&lt;</span><span class="identifier">Source</span><span class="special">&gt;</span><span class="special">(</span><span class="special">)</span><span class="special">)</span><span class="special">;</span>
  <span class="special">}</span>
 </pre>
 <p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">Source</code> and <code class="computeroutput">Target</code> must be complete types, (possibly cv-qualified) void, or arrays of unknown bound. </p>
-<p><span class="bold"><strong>Remark(s):</strong></span> <code class="computeroutput"><a class="link" href="is_explicitly_convertible.html" title="Struct template is_explicitly_convertible">is_explicitly_convertible</a></code> has been removed from the C++0x proposal since <span class="bold"><strong>N3047 - Fixing <a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a> and <a class="link" href="is_explicitly_convertible.html" title="Struct template is_explicitly_convertible">is_explicitly_convertible</a></strong></span> was accepted. The library uses by default the static_cast version. Users can force the <a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a> version by defining <code class="computeroutput">BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE</code>. </p>
+<p><span class="bold"><strong>Remark(s):</strong></span> <code class="computeroutput"><a class="link" href="is_explicitly_convertible.html" title="Struct template is_explicitly_convertible">is_explicitly_convertible</a></code> has been removed from the C++0x proposal since <span class="bold"><strong>N3047 - Fixing <a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a> and <a class="link" href="is_explicitly_convertible.html" title="Struct template is_explicitly_convertible">is_explicitly_convertible</a></strong></span> was accepted.</p>
+<p><span class="bold"><strong>Remark(s):</strong></span></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>On compilers providing an intrinsic for this trait, the intrinsic will be used.</p></li>
+<li class="listitem"><p>On C++0x mode, <code class="computeroutput">std::is_assignable</code> will be used when available.</p></li>
+<li class="listitem"><p>On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation using the <code class="computeroutput">static_cast</code> version</p></li>
+<li class="listitem"><p>Otherwise it relies on the <code class="computeroutput"><a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a></code> version. </p></li>
+</ul></div>
+<p>
+</p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

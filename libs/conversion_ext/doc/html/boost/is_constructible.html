@@ -35,12 +35,31 @@
 <span class="keyword">struct</span> <a class="link" href="is_constructible.html" title="Struct template is_constructible">is_constructible</a> <span class="special">{</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp14753856"></a><h2>Description</h2>
+<a name="idp14761904"></a><h2>Description</h2>
 <p>States if <code class="computeroutput">T</code> is constructible from <code class="computeroutput">Args</code>.</p>
-<p>Condition: <code class="computeroutput">true_type</code> if and only if the following variable definition would be well-formed for some invented variable t:</p>
+<p><span class="bold"><strong>Condition:</strong></span>: <code class="computeroutput">true_type</code> if and only if the following variable definition would be well-formed for some invented variable t:</p>
 <pre class="programlisting">   <span class="identifier">T</span> <span class="identifier">t</span><span class="special">(</span><span class="identifier">decval</span><span class="special">&lt;</span><span class="identifier">Args</span><span class="special">&gt;</span><span class="special">(</span><span class="special">)</span><span class="special">...</span><span class="special">)</span><span class="special">;</span>
 </pre>
-<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">T</code> and all types in the parameter pack <code class="computeroutput">Args</code> must be complete types, (possibly cv-qualified) void, or arrays of unknown bound. </p>
+<p><span class="bold"><strong>Requires:</strong></span> <code class="computeroutput">T</code> and all types in the parameter pack <code class="computeroutput">Args</code> must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.</p>
+<p><span class="bold"><strong>Remark(s):</strong></span></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><p>On compilers providing an intrinsic for this trait, the intrinsic will be used.</p></li>
+<li class="listitem"><p>On C++0x mode, <code class="computeroutput">std::is_constructible</code> will be used when available.</p></li>
+<li class="listitem"><p>On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.</p></li>
+<li class="listitem">
+<p>Otherwise,</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem"><p>the library will provide specialization for the builtin types in this file,</p></li>
+<li class="listitem"><p>the library will provide specialization for specific standard types in the associated <code class="computeroutput">type_traits/std/file.hpp</code> </p></li>
+<li class="listitem"><p>the library will provide specialization for specific boost types in the associated <code class="computeroutput">type_traits/boost/file.hpp</code> </p></li>
+<li class="listitem"><p>the user will need to provide other specific specializations. </p></li>
+</ul></div>
+<p>
+</p>
+</li>
+</ul></div>
+<p>
+</p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
