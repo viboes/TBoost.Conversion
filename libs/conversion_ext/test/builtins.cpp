@@ -252,34 +252,6 @@ void lvalue_assign_to_transitive() {
     }
 }
 
-template <typename T, typename Enable = void>
-struct is_lazy
-    : boost::mpl::false_
-{};
-
-template <typename T, typename Enabled=void>
-struct enable_functor : boost::mpl::false_ {};
-
-template <typename T>
-struct is_lazy<T, typename boost::enable_if<boost::phoenix::is_actor<T> >::type >
-    : boost::mpl::true_
-{};
-template <typename T>
-struct enable_functor<T, typename boost::enable_if<boost::phoenix::is_actor<T> >::type>  : boost::mpl::true_ {};
-
-template <typename T>
-void assert_enable_functor(T const&) {
-  BOOST_STATIC_ASSERT(is_lazy<T>::type::value==true);
-  BOOST_STATIC_ASSERT(enable_functor<T>::type::value==true);
-  BOOST_STATIC_ASSERT(boost::conversion::enable_functor<T>::type::value==true);
-}
-
-template <typename T>
-void assert_not_enable_functor(T const&) {
-  //BOOST_STATIC_ASSERT(boost::conversion::enable_functor<T>::type::value==false);
-  BOOST_STATIC_ASSERT(is_lazy<T>::type::value==false);
-}
-
 void fp_convert_to() {
   {
     //char c=0;
@@ -289,9 +261,6 @@ void fp_convert_to() {
 
     using boost::phoenix::placeholders::_1;
 
-    //s=boost::conversion::fp::convert_to<short>(_1)(l) ;
-    assert_not_enable_functor(i);
-    assert_enable_functor(_1);
     s=boost::conversion::convert_to<short>(_1)(l) ;
     BOOST_TEST(s==3);
 
