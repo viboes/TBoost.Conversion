@@ -25,7 +25,7 @@
 #include <boost/type_traits/add_rvalue_reference.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 
-#if ! defined BOOST_NO_RVALUE_REFERENCES
+#if ! defined BOOST_NO_RVALUE_REFERENCES && ! defined BOOST_CONVERSION_DOXYGEN_INVOKED
   #if defined _MSC_VER
   #elif defined __clang__
       #define BOOST_CONVERSION_TT_IS_MOVE_CONSTRUCTIBLE_USES_RVALUE
@@ -45,9 +45,15 @@ namespace boost {
   /**
    * States if @c T is move constructible.
    *
-   * Condition: <c>is_constructible<T, T&&>::value</c> is @c true.
+   * @Condition: <c>is_constructible<T, T&&>::value</c> is @c true.
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
+   *
+   * @Remark
+   *   - On compilers providing an intrinsic for this trait, the intrinsic will be used.
+   *   - On C++0x mode, @c std::is_move_constructible will be used when available.
+   *   - On compilers supporting RVALUE_REFERENCES the trait is equivalent to <c>is_assignable<T&, T&&></c>.
+   *
    */
   template <typename T>
   struct is_move_constructible :

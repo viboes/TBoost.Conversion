@@ -22,7 +22,7 @@ namespace boost {
   /**
    * States if @c T is constructible from @c Args.
    *
-   * Condition: @c true_type if and only if the following variable definition would be well-formed for
+   * @Condition: @c true_type if and only if the following variable definition would be well-formed for
    * some invented variable t:
    *
    * @code
@@ -30,6 +30,17 @@ namespace boost {
    * @endcode
    *
    * @Requires @c T and all types in the parameter pack @c Args must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   *
+   * @Remark
+   *   - On compilers providing an intrinsic for this trait, the intrinsic will be used.
+   *   - On C++0x mode, @c std::is_constructible will be used when available.
+   *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.
+   *   - Otherwise,
+   *     - the library will provide specialization for the builtin types in this file,
+   *     - the library will provide specialization for specific standard types in the associated @c type_traits/std/file.hpp
+   *     - the library will provide specialization for specific boost types in the associated @c type_traits/boost/file.hpp
+   *     - the user will need to provide other specific specializations.
+   *
    */
   template < typename T, typename... Args>
   struct is_constructible
@@ -75,12 +86,8 @@ namespace boost {
 
 #if ! defined BOOST_NO_DECLTYPE
   #if defined _MSC_VER
-    #if ! defined BOOST_NO_SFINAE_EXPR
-      #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_SIZEOF
-    #else
       #define BOOST_CONVERSION_NO_IS_CONSTRUCTIBLE
       #define BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
-    #endif
   #elif defined __clang__
     #define BOOST_CONVERSION_IS_CONSTRUCTIBLE_USES_DECLTYPE
   #elif defined __GNUC__

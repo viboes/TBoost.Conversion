@@ -23,13 +23,13 @@
  *  specific types, the user could customize the behavior of
  *  @c implicit_convert_to in two ways:
  *
- *  * overload the @c implicit_convert_to on any namespace found by ADL from the
+ *    - overload the @c implicit_convert_to on any namespace found by ADL from the
  *  @c Source or the @c Target. A trick is used to overload on the return type
  *  by adding a dummy parameter depending on the @c Target.
- *  * partially specialize the @c boost::conversion::implicit_converter_cp struct.
+ *    - partially specialize the @c boost::conversion::implicit_converter_cp struct.
  *
  *  @note As we can not add new functions on the @c std namespace, partial
- *  specialization is the only option.
+ *  specialization is the only option in these cases.
  *
  */
 #ifndef BOOST_CONVERSION_IMPLICIT_CONVERT_TO_HPP

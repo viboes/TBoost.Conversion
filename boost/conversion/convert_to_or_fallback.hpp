@@ -22,6 +22,18 @@
  *  @c Source class or the copy constructor of the @c Target class.
  *  When an exception is thrown the fallback is returned.
  *   Of course if both exist the conversion is ambiguous.
+ *
+ * When the default behavior is not satisfactory or doesn't takes care of
+ *  specific types, the user could customize the behavior of
+ *  @c convert_to_or_fallback in two ways:
+ *
+ *    - overload the @c convert_to_or_fallback on any namespace found by ADL from the
+ *  @c Source or the @c Target. A trick is used to overload on the return type
+ *  by adding a dummy parameter depending on the @c Target.
+ *    - partially specialize the @c boost::conversion::converter_or_fallbacker_cp struct.
+ *
+ *  @note As we can not add new functions on the @c std namespace, partial
+ *  specialization is the only option in these cases.
  */
 
 #ifndef BOOST_CONVERSION_CONVERT_TO_OR_FALLBACK_HPP

@@ -20,7 +20,7 @@ namespace boost {
   /**
    * States if @c T is destructible.
    *
-   * Condition: @c true_type if and only if given:
+   * @Condition: @c true_type if and only if given:
    *
    * @code
    *   template <typename U>
@@ -38,6 +38,16 @@ namespace boost {
    * is well formed;
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
+   *
+   * @Remark
+   *   - On compilers providing an intrinsic for this trait, the intrinsic will be used.
+   *   - On C++0x mode, @c std::is_destructible will be used when available.
+   *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.
+   *   - Otherwise,
+   *     - the library will provide specialization for the builtin types in this file,
+   *     - the library will provide specialization for specific standard types in the associated @c type_traits/std/file.hpp
+   *     - the library will provide specialization for specific boost types in the associated @c type_traits/boost/file.hpp
+   *     - the user will need to provide other specific specializations.
    */
   template <typename T>
   struct is_destructible
@@ -63,11 +73,7 @@ namespace boost {
 
 #if ! defined BOOST_NO_DECLTYPE
   #if defined _MSC_VER
-    #if ! defined BOOST_NO_SFINAE_EXPR
-      #define BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_SIZEOF
-    #else
       #define BOOST_CONVERSION_NO_IS_DESTRUCTIBLE
-    #endif
   #elif defined __clang__
     #define BOOST_CONVERSION_IS_DESTRUCTIBLE_USES_DECLTYPE
   #elif defined __GNUC__

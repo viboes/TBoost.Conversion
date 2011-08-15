@@ -20,19 +20,12 @@
 
 
 #include <boost/conversion/explicit_convert_to.hpp>
+#include <boost/conversion/is_extrinsically_explicit_convertible.hpp>
 
 namespace boost {
 
   namespace conversion {
-    //! meta-function to state if the parameter is a place_holder
-    //!
-    //! @tparam T The type to check for.
-    //! @tparam Enable A dummy parameter that can be used for SFINAE.
 
-    //! The nested type @c type is @c false_type or @c true_type which default to @c false_type.
-    //!   Specific specialization would make this meta-function to be @c true_type.
-    template <typename T, typename Enabled=void>
-    struct enable_functor : false_type {};
 
 
     //! @brief Extrinsic conversion function.
@@ -50,7 +43,11 @@ namespace boost {
     //! This function doesn't participate on overload resolution when @c conversion::enable_functor<Source>::type is mpl::true_.
     template <typename Target, typename Source>
 #if !defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    typename disable_if<typename conversion::enable_functor<Source>::type, Target>::type
+    //typename disable_if<typename conversion::enable_functor<Source>::type, Target>::type
+    typename enable_if_c<
+      conversion::is_extrinsically_explicit_convertible<Source,Target>::value,
+      Target
+    >::type
 #else
     Target
 #endif

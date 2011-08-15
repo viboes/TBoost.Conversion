@@ -22,7 +22,7 @@ namespace boost {
   /**
    * States if @c Source is is explicitly convertible to @c Target.
    *
-   * Condition: @c true_type if and only if the following would be well-formed for
+   * @Condition: @c true_type if and only if the following would be well-formed for
    * some invented function test:
    *
    * @code
@@ -34,8 +34,13 @@ namespace boost {
    * @Requires @c Source and @c Target must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
    * @Remark @c is_explicitly_convertible has been removed from the C++0x proposal since
    * <b>N3047 - Fixing is_constructible and is_explicitly_convertible</b>
-   * was accepted. The library provides the @c static_cast version when the compiler supports the needed features,
-   * otherwise it relies on the @c is_constructible version.
+   * was accepted.
+   *
+   * @Remark
+   *   - On compilers providing an intrinsic for this trait, the intrinsic will be used.
+   *   - On C++0x mode, @c std::is_assignable will be used when available.
+   *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation using the @c static_cast version
+   *   - Otherwise it relies on the @c is_constructible version.
    */
   template < typename Source, typename Target>
   struct is_explicitly_convertible

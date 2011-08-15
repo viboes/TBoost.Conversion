@@ -21,15 +21,27 @@ namespace boost {
   /**
    * States if the @c Target is assignable from the @c Source.
    *
-   * Condition: @c true_type if <c>declval<Target>() = declval<Source>()</c> is well-formed when treated as an
+   * @Condition: @c true_type if <c>declval<Target>() = declval<Source>()</c> is well-formed when treated as an
    * unevaluated operand.
    *
    * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+   *
+   * @Remark
+   *   - On compilers providing an intrinsic for this trait, the intrinsic will be used.
+   *   - On C++0x mode, @c std::is_assignable will be used when available.
+   *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.
+   *   - Otherwise,
+   *     - the library will provide specialization for the builtin types in this file,
+   *     - the library will provide specialization for specific standard types in the associated @c type_traits/std/file.hpp
+   *     - the library will provide specialization for specific boost types in the associated @c type_traits/boost/file.hpp
+   *     - the user will need to provide other specific specializations.
    */
   template < typename Target, typename Source>
   struct is_assignable
   {};
-  //! Macro stating if the compiler don't support the features needed to define the @c is_assignable type trait.
+
+  //! Macro stating if the compiler doesn't support the features needed to provide a valid implementation of @c is_assignable type trait.
+  //! In this case the user needs to provide specific specializations.
   #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
 }
 #else
@@ -51,21 +63,20 @@ namespace boost {
 #endif
 
 #if defined(BOOST_IS_ASSIGNABLE)
-#define BOOST_CONVERSION_IS_ASSIGNABLE_USES_INTRINSICS
+  #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_INTRINSICS
 #elif ! defined(BOOST_NO_DECLTYPE)
   #if defined _MSC_VER
      #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __clang__
     //#define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
     #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
-    //#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
-#if ! defined BOOST_NO_SFINAE_EXPR
-#define BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
-#else
-#define BOOST_CONVERSION_NO_IS_ASSIGNABLE
-#endif
+        #if ! defined BOOST_NO_SFINAE_EXPR
+          #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_SIZEOF
+        #else
+          #define BOOST_CONVERSION_NO_IS_ASSIGNABLE
+        #endif
     #else
        #define BOOST_CONVERSION_IS_ASSIGNABLE_USES_DECLTYPE
      #endif
@@ -128,6 +139,7 @@ namespace boost {
               , true_type()))
 #if    1
           selector(int);
+          // I don't know why the following code doesn't works.
 #elif defined    BOOST_CONVERSION_TT_IS_ASSIGNABLE_USES_RVALUE
           selector(T1&&, S1&&);
 #else
@@ -137,11 +149,13 @@ namespace boost {
           static false_type
 #if    1
           selector(...);
+          // I don't know why the following code doesn't works.
 #elif defined  BOOST_CONVERSION_TT_IS_ASSIGNABLE_USES_RVALUE
           selector(any, S1&&);
 #else
           selector(any, S1&);
 #endif
+          // I don't know why the following code doesn't works.
           //static const bool value =
           //  sizeof(selector<T,S>(0)) ==
           //  sizeof(yes_type);
@@ -149,6 +163,7 @@ namespace boost {
 #if    1
           typedef decltype(selector<T,S>(0)) type;
 #else
+          // I don't know why the following code doesn't works.
           typedef decltype(selector(declval<T>(), declval<S>())) type;
 #endif
         };

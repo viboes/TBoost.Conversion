@@ -26,9 +26,12 @@ namespace boost {
   /**
    * States if @c T is default constructible.
    *
-   * Condition: <c>is_constructible<T>::value</c> is @c true.
+   * @Condition: <c>is_constructible<T>::value</c> is @c true.
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
+   *
+   * @Remark
+   *   - @see BOOST_CONVERSION_NO_IS_DEFAULT_CONSTRUCTIBLE
    */
   template <typename T>
   struct is_default_constructible : is_constructible<

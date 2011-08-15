@@ -25,7 +25,7 @@ namespace boost {
   /**
    * States if @c T is copy assignable.
    *
-   * Condition: <c>is_assignable<T&, T const&>::value</c> is @c true.
+   * @Condition: <c>is_assignable<T&, T const&>::value</c> is @c true.
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */

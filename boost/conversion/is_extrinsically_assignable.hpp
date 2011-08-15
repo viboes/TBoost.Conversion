@@ -21,19 +21,25 @@ namespace boost {
     /**
      * States if @c Target is extrinsically assignable from @c Source.
      *
-     * Condition: @c true_type if and only if the return expression in the following code
+     * @Condition: @c true_type if and only if the return expression in the following code
      * would be well-formed:
+     *
      * @code
      *   assign_to(declval<Target>(), declval<Source>()); }
      * @endcode
+     *
      * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
+     *
+     * @Remark
+     *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.
+     *   - Otherwise, the trait is equivalent to @c boost::conversion::assigner<Target,Source>.
      *
      */
     template <typename Target, typename Source>
     struct is_extrinsically_assignable {};
 
-  //! Macro stating if the compiler doesn't support the features needed to define the @c is_extrinsically_assignable type trait for classes.
-  #define BOOST_CONVERSION_NO_IS_EXTRINSIC_ASSIGNABLE
+    //! Macro stating if the compiler doesn't support the features needed to define the @c is_extrinsically_assignable type trait.
+    #define BOOST_CONVERSION_NO_IS_EXTRINSIC_ASSIGNABLE
 
   }
 }

@@ -21,14 +21,18 @@ namespace boost {
     /**
      * States if @c Source is extrinsically explicit convertible to @c Target.
      *
-     * Condition: @c true_type if and only if the return expression in the following code
+     * @Condition: @c true_type if and only if the return expression in the following code
      * would be well-formed:
+     *
      * @code
      *   Target test() { return explicit_convert_to<Target>(declval<Source>()); }
      * @endcode
      *
      * @Requires @c Target and @c Source must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
      *
+     * @Remark
+     *   - On compilers supporting SFINAE_EXPR or DECLTYPE the library provided a valid implementation.
+     *   - Otherwise, the trait is equivalent to @c boost::conversion::explicit_converter<Target,Source>.
      */
     template <class Source, class Target>
     struct is_extrinsically_explicit_convertible {};

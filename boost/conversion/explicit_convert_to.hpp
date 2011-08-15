@@ -19,17 +19,17 @@
  * implicitly convertible to @c Target and the extrinsic implicit conversion when
  * @c Source is extrinsically implicitly convertible to @c Target.
  *
- * When the default behavior is not satisfactory or it doesn't takes care of
+ * When the default behavior is not satisfactory or doesn't takes care of
  *  specific types, the user could customize the behavior of
  *  @c explicit_convert_to in two ways:
  *
- *  * overload the @c explicit_convert_to on any namespace found by ADL from the
+ *    - overload the @c explicit_convert_to on any namespace found by ADL from the
  *  @c Source or the @c Target. A trick is used to overload on the return type
  *  by adding a dummy parameter depending on the @c Target.
- *  * partially specialize the @c boost::conversion::explicit_converter_cp struct.
+ *    - partially specialize the @c boost::conversion::explicit_converter_cp struct.
  *
  *  @note As we can not add new functions on the @c std namespace, partial
- *  specialization is the only option.
+ *  specialization is the only option in these cases.
  */
 
 #ifndef BOOST_CONVERSION_EXPLICIT_CONVERT_TO_HPP

@@ -7,13 +7,27 @@
 // See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-/*!
- @file
- @brief
- Defines the free function @c try_assign_to and its customization point @c try_assigner.
-
- The function @c try_assign_to assigns the @c from parameter to the @c to parameter. Return @c true if assignment done and @c false otherwise.
-
+/**
+ *  @file
+ *  @brief
+ *  Defines the free function @c try_assign_to and its customization point @c try_assigner.
+ *
+ *  The function @c try_assign_to assigns the @c from parameter to the @c to parameter.
+ *  Return @c true if assignment done and @c false otherwise.
+ *
+ * The default behavior stores a roll-back value before doing the assignment so the value can be rolled-back if assignment fails
+ * when the @c Source is extrinsically assignable to the @c Target.
+ *
+ * When the default behavior is not satisfactory or doesn't takes care of
+ *  specific types, the user could customize the behavior of
+ *  @c try_assign_to in two ways:
+ *
+ *    - overload the @c try_assign_to on any namespace found by ADL from the
+ *  @c Source or the @c Target.
+ *    - partially specialize the @c boost::conversion::try_assigner_cp struct.
+ *
+ *  @note As we can not add new functions on the @c std namespace, partial
+ *  specialization is the only option in these cases.
  */
 
 #ifndef BOOST_CONVERSION_TRY_ASSIGN_TO_HPP

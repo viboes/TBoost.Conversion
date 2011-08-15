@@ -7,12 +7,28 @@
 // See http://www.boost.org/libs/conversion for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-/*!
- @file
- @brief
- Defines the free function @c try_convert_to and its customization point @c try_converter.
-
- The @c try_convert_to function converts the @c from parameter to a @c Target type and returns an optional<Target>, uninitialized if conversion fails.
+/**
+ *  @file
+ *  @brief
+ *  Defines the free function @c try_convert_to and its customization point @c try_converter.
+ *
+ *  The @c try_convert_to function converts the @c from parameter to a @c Target type and returns an optional<Target>,
+ *  uninitialized if conversion fails.
+ *
+ * The default behavior return a make_optional of the conversion when the @c Source is extrinsically explicit convertible to the @c Target.
+ * A try_catch is used to protect from exceptions, and return an uninitialized optional if conversion fails.
+ *
+ * When the default behavior is not satisfactory or doesn't takes care of
+ *  specific types, the user could customize the behavior of
+ *  @c try_convert_to in two ways:
+ *
+ *    - overload the @c try_assign_to on any namespace found by ADL from the
+ *  @c Source or the @c Target. A trick is used to overload on the return type
+ *  by adding a dummy parameter depending on the @c Target.
+ *    - partially specialize the @c boost::conversion::try_converter_cp struct.
+ *
+ *  @note As we can not add new functions on the @c std namespace, partial
+ *  specialization is the only option in these cases.
  
  */
 

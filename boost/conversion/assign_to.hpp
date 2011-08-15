@@ -15,6 +15,20 @@
  *
  * The function @c assign_to assigns the @c from parameter to the @c to parameter.
  *
+ * The default behavior uses the assignment operator when the @c Target is assignable from the @c Source,
+ * or makes an implicit conversion of the @ Source before assignment when the @c Source is
+ * implicitly convertible to @c Target.
+ *
+ * When the default behavior is not satisfactory or doesn't takes care of
+ *  specific types, the user could customize the behavior of
+ *  @c assign_to in two ways:
+ *
+ *    - overload the @c assign_to on any namespace found by ADL from the
+ *  @c Source or the @c Target.
+ *    - partially specialize the @c boost::conversion::assigner_cp struct.
+ *
+ *  @note As we can not add new functions on the @c std namespace, partial
+ *  specialization is the only option in these cases.
  */
 
 #ifndef BOOST_CONVERSION_ASSIGN_TO_HPP

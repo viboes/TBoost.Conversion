@@ -26,7 +26,7 @@ namespace boost {
   /**
    * States if @c T is copy constructible.
    *
-   * Condition: <c>is_constructible<T, T const&>::value</c> is @c true.
+   * @Condition: <c>is_constructible<T, T const&>::value</c> is @c true.
    *
    * @Requires @c T must be a complete type, (possibly cv-qualified) void, or an array of unknown bound.
    */
