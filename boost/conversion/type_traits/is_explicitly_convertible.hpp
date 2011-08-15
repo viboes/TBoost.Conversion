@@ -34,38 +34,22 @@ namespace boost {
    * @Requires @c Source and @c Target must be complete types, (possibly cv-qualified) void, or arrays of unknown bound.
    * @Remark @c is_explicitly_convertible has been removed from the C++0x proposal since
    * <b>N3047 - Fixing is_constructible and is_explicitly_convertible</b>
-   * was accepted. The library uses by default the static_cast version. Users can force the is_constructible version by defining
-   *  @c BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE.
+   * was accepted. The library provides the @c static_cast version when the compiler supports the needed features,
+   * otherwise it relies on the @c is_constructible version.
    */
   template < typename Source, typename Target>
   struct is_explicitly_convertible
   {};
 
-  //! Macro stating if the compiler doesn't support the features needed to define the @c is_explicitly_convertible type trait.
+  //! Macro stating if the compiler doesn't support the features needed to define the @c is_explicitly_convertible type trait
+  //! using the @c static_cast version.
+  //! In this case the trait is equivalent to @c is_constructible<Target,Source>.
+
   #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
 
-  //! The library uses by default the static_cast version. Users can force the is_constructible version by defining
-  //! @c BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE.
-  #define BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
 }
 #else
 #include <boost/conversion/type_traits/is_constructible.hpp>
-
-//#define BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
-#ifdef BOOST_CONVERSION_TT_IS_EXPLICITLY_CONVERTIBLE_USES_IS_CONSTRUCTIBLE
-
-
-namespace boost {
-
-  template <typename Source, typename Target>
-  struct is_explicitly_convertible : is_constructible<Target, Source> {};
-  template <typename Target>
-  struct is_explicitly_convertible<void,Target> : false_type {};
-
-
-}
-
-#else
 
 #include <boost/config.hpp>
 #include <boost/conversion/type_traits/detail/any.hpp>
@@ -92,8 +76,6 @@ namespace boost {
       #define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
   #elif defined __clang__
     #define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_DECLTYPE
-    //#define BOOST_CONVERSION_IS_EXPLICIT_CONVERTIBLE_USES_SIZEOF
-    //#define BOOST_CONVERSION_NO_IS_EXPLICIT_CONVERTIBLE
   #elif defined __GNUC__
      #if __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ < 4 )
        #if ! defined BOOST_NO_SFINAE_EXPR
@@ -226,7 +208,6 @@ struct imp : ::boost::is_constructible<T, S> {};
 
 }
 
-#endif
-#endif
-#endif
+#endif // doc
+#endif // header
 
