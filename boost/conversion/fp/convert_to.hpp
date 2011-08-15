@@ -40,30 +40,6 @@ BOOST_PHOENIX_DEFINE_EXPRESSION(
 
 namespace boost { 
   namespace conversion {
-#if 1
-    //! meta-function to state if the parameter is a place_holder
-    //!
-    //! @tparam T The type to check for.
-    //! @tparam Enable A dummy parameter that can be used for SFINAE.
-
-    //! The nested type @c type is @c false_type or @c true_type which default to @c false_type.
-    //!   Specific specialization would make this meta-function to be @c true_type.
-    template <typename T, typename Enabled=void>
-    struct enable_functor : false_type {};
-
-    //! @c enable_functor meta-function specialization for types @c T satisfying @c phoenix::is_actor<T>.
-
-    //! The nested type @ type is @c true_type.
-    template <typename T>
-    struct enable_functor<T
-#if defined(BOOST_CONVERSION_DOXYGEN_INVOKED)
-    , requires(PhoenixActor<T>)
-#else
-    , typename enable_if<phoenix::is_actor<T> >::type
-#endif
-    >  : true_type {};
-
-#endif
     namespace detail {
       struct convert_to_eval
       {
