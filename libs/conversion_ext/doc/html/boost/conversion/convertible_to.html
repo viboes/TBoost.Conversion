@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Class template convertible_to</title>
+<link rel="stylesheet" href="../.././boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.0">
+<link rel="home" href="../../index.html" title="Toward Boost.Conversion 0.6.0">
+<link rel="up" href="../../index.html#header.boost.conversion.convertible_to_hpp" title="Header &lt;boost/conversion/convertible_to.hpp&gt;">
+<link rel="prev" href="implicitly.html" title="Function template implicitly">
+<link rel="next" href="explicit_converter_cp.html" title="Struct template explicit_converter_cp">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="implicitly.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.convertible_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="explicit_converter_cp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry">
+<a name="boost.conversion.convertible_to"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template convertible_to</span></h2>
+<p>boost::conversion::convertible_to &#8212; wrapper providing implicit conversion operation to <code class="computeroutput">Target</code>. </p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../index.html#header.boost.conversion.convertible_to_hpp" title="Header &lt;boost/conversion/convertible_to.hpp&gt;">boost/conversion/convertible_to.hpp</a>&gt;
+
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Target<span class="special">&gt;</span> 
+<span class="keyword">class</span> <a class="link" href="convertible_to.html" title="Class template convertible_to">convertible_to</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="comment">// <a class="link" href="convertible_to.html#boost.conversion.convertible_toconstruct-copy-destruct">construct/copy/destruct</a></span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> 
+    <a class="link" href="convertible_to.html#idp16114128-bb"><span class="identifier">convertible_to</span></a><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="special">,</span> 
+                   <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span> <a class="link" href="is_extrinsically_conver_idp16276016.html" title="Struct template is_extrinsically_convertible">is_extrinsically_convertible</a><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="comment">// <a class="link" href="convertible_to.html#idp16105472-bb">public member functions</a></span>
+  <a class="link" href="convertible_to.html#idp16105856-bb"><span class="keyword">operator</span> <span class="identifier">Target</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+  <span class="identifier">Target</span> <a class="link" href="convertible_to.html#idp16110000-bb"><span class="identifier">get</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">}</span><span class="special">;</span></pre></div>
+<div class="refsect1">
+<a name="idp16444640"></a><h2>Description</h2>
+<div class="refsect2">
+<a name="idp16445040"></a><h3>
+<a name="boost.conversion.convertible_toconstruct-copy-destruct"></a><code class="computeroutput">convertible_to</code> 
+        public
+       construct/copy/destruct</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<pre class="literallayout"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Source<span class="special">&gt;</span> 
+  <a name="idp16114128-bb"></a><span class="identifier">convertible_to</span><span class="special">(</span><span class="identifier">Source</span> <span class="keyword">const</span> <span class="special">&amp;</span> source<span class="special">,</span> 
+                 <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span> <a class="link" href="is_extrinsically_conver_idp16276016.html" title="Struct template is_extrinsically_convertible">is_extrinsically_convertible</a><span class="special">&lt;</span> <span class="identifier">Source</span><span class="special">,</span> <span class="identifier">Target</span> <span class="special">&gt;</span> <span class="special">&gt;</span><span class="special">::</span><span class="identifier">type</span> <span class="special">*</span> dummy <span class="special">=</span> <span class="number">0</span><span class="special">)</span><span class="special">;</span></pre>
+<p>Constructor from a extrinsic implicitly convertible to <code class="computeroutput">Target</code>. </p>
+<p><span class="bold"><strong>Effects:</strong></span> Store the extrinsic conversion from <code class="computeroutput">source</code> to @ Target. </p>
+<p><span class="bold"><strong>Throws:</strong></span> Whatever extrinsic implicit conversion from <code class="computeroutput">source</code> to <code class="computeroutput">Target</code> could throw. </p>
+<p><span class="bold"><strong>Remark(s):</strong></span> This constructor doesn't participates on overload resolution if <code class="computeroutput">Source</code> is not extrinsic convertible to <code class="computeroutput">Target</code>. </p>
+</li></ol></div>
+</div>
+<div class="refsect2">
+<a name="idp16471040"></a><h3>
+<a name="idp16105472-bb"></a><code class="computeroutput">convertible_to</code> public member functions</h3>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+<pre class="literallayout"><a name="idp16105856-bb"></a><span class="keyword">operator</span> <span class="identifier">Target</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>Implicit conversion to <code class="computeroutput">Target</code>. </p>
+<p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">val_</code> </p>
+<p><span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput">target</code> copy constructor could throw. </p>
+</li>
+<li class="listitem">
+<pre class="literallayout"><span class="identifier">Target</span> <a name="idp16110000-bb"></a><span class="identifier">get</span><span class="special">(</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>Explicit conversion to <code class="computeroutput">Target</code>. </p>
+<p><span class="bold"><strong>Returns:</strong></span> <code class="computeroutput">val_</code> </p>
+<p><span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput">target</code> copy constructor could throw. </p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2009 -2011 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="implicitly.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../index.html#header.boost.conversion.convertible_to_hpp"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="explicit_converter_cp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
